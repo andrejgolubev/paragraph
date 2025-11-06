@@ -47,9 +47,10 @@ def create_refresh_token(data: dict):          # New
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM) #type: ignore
 
 
-def create_access_token(data: dict):
+def create_access_token(data: dict): 
     """
     Создаёт JWT с payload (sub, role, id, exp).
+    в data подаётся словарь в ручке из users.py с данными.
     """
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -69,14 +70,14 @@ async def get_current_user(token: str = Depends(oauth2_scheme),
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])  #type: ignore
-        nickname: str = payload.get("sub")
+        email: str = payload.get("sub")
         
-        if not nickname:
+        if not email:
             raise credentials_exception
     except jwt.exceptions:
         raise credentials_exception
     result = await db.scalars(
-        select(UserModel).where(UserModel.email == nickname, UserModel.is_active == True))
+        select(UserModel).where(UserModel.email == email, UserModel.is_active == True))
     user = result.first()
     if not user:
         raise credentials_exception

@@ -83,8 +83,8 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(),
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token = create_access_token(data={"sub": user.nickname, "role": user.role, "id": user.user_id})
-    refresh_token = create_refresh_token(data={"sub": user.nickname, "role": user.role, "id": user.user_id})
+    access_token = create_access_token(data={"sub": user.email, "role": user.role, "id": user.user_id})
+    refresh_token = create_refresh_token(data={"sub": user.email, "role": user.role, "id": user.user_id})
     
     return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 

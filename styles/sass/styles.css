@@ -1,0 +1,140 @@
+/* Reset and base styles  */
+* {
+  padding: 0px;
+  margin: 0px;
+  border: none;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Links */
+a, a:link, a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+/* Common */
+aside, nav, footer, header, section, main {
+  display: block;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+ul, ul li {
+  list-style: none;
+}
+
+img {
+  vertical-align: top;
+}
+
+img, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+address {
+  font-style: normal;
+}
+
+/* Form */
+input, textarea, button, select {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background-color: transparent;
+}
+
+input::-ms-clear {
+  display: none;
+}
+
+button, input[type=submit] {
+  display: inline-block;
+  box-shadow: none;
+  background-color: transparent;
+  background: none;
+  cursor: pointer;
+}
+
+input:focus, input:active,
+button:focus, button:active {
+  outline: none;
+}
+
+button::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+
+label {
+  cursor: pointer;
+}
+
+legend {
+  display: block;
+}
+
+input[type=file] {
+  max-width: 100%;
+}
+
+@font-face {
+  font-family: "Unbounded";
+  src: url("../styles/static/fonts/Unbounded-VariableFont_wght.ttf");
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/Manrope-VariableFont_wght.ttf");
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav {
+  width: 1400px;
+  height: 70px;
+}
+.nav_logo {
+  padding-top: 7px;
+}
+.nav_item {
+  display: inline-block;
+  padding-inline: 25px;
+  padding-top: 1rem;
+  font-family: "Manrope", serif;
+  font-weight: 500;
+  font-size: 24px;
+  letter-spacing: 0.08em;
+  color: #292833;
+}
+.nav a {
+  color: #292833;
+}
+
+.nav_list {
+  display: flex;
+  justify-content: space-between;
+}
+
+.profile-icon {
+  margin: 13px 25px 0 0;
+}
+
+.toggle {
+  margin: 26px 25px 0 0;
+}
+
+/*# sourceMappingURL=styles.css.map */

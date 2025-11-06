@@ -1,0 +1,47 @@
+@use './normalize.scss';
+@use './fonts.scss';
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav {
+  width: 1400px;
+  height: 70px;
+
+  &_logo{
+    padding-top:7px;
+  }
+
+  &_item {
+    display: inline-block;
+    padding-inline: 25px;
+    padding-top: 1rem;
+    font-family: 'Manrope', serif;
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: 0.08em;
+    color: #292833;
+
+  }
+
+  a{
+    color: #292833;
+  }
+}
+
+.nav_list {
+  display: flex;
+  justify-content: space-between;
+
+}
+
+.profile-icon{
+  margin: 13px 25px 0 0;
+}
+
+.toggle{
+  margin: 26px 25px 0 0;
+}
