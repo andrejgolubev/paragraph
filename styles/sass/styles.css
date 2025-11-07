@@ -97,6 +97,52 @@ input[type=file] {
   font-family: "Manrope";
   src: url("../fonts/Manrope-VariableFont_wght.ttf");
 }
+.custom-select {
+  position: relative;
+}
+
+.custom-select select {
+  appearance: none;
+  width: 100%;
+  font-size: 1.15rem;
+  font-family: "Manrope", serif;
+  padding: 0.675em 3em 0.675em 1.5em;
+  background-color: #fff;
+  border: 1px rgb(207, 222, 227) dashed;
+  border-radius: 0.5rem;
+  color: #292833;
+  cursor: pointer;
+}
+
+.custom-select::before,
+.custom-select::after {
+  --size: 0.3rem;
+  content: "";
+  position: absolute;
+  right: 1rem;
+  pointer-events: none;
+}
+
+.custom-select::before {
+  border-left: var(--size) solid transparent;
+  border-right: var(--size) solid transparent;
+  border-bottom: var(--size) solid rgb(135, 178, 208);
+  top: 40%;
+}
+
+.custom-select::after {
+  border-left: var(--size) solid transparent;
+  border-right: var(--size) solid transparent;
+  border-top: var(--size) solid rgb(135, 178, 208);
+  top: 55%;
+}
+
+/* Styles when a valid option is selected (other than placeholder) */
+.custom-select.select-valid select {
+  background-color: rgb(135, 178, 208);
+  border-color: rgb(135, 178, 208);
+}
+
 .header {
   width: auto;
   margin-inline: 10px;
@@ -142,7 +188,7 @@ input[type=file] {
 }
 
 .toggle {
-  margin: 26px 0 0 0;
+  margin: 20px 0 0 0;
 }
 
 .main {
@@ -165,32 +211,38 @@ input[type=file] {
 .main-content .options .corpuses p {
   font-family: "Manrope", sans-serif;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 16px;
   letter-spacing: 0.06em;
-  color: rgba(41, 40, 51, 0.52);
+  color: rgba(29, 29, 33, 0.1);
 }
 .main-content .tip {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.8);
+  background-image: url("../static/tip-bg.png");
   border: 1px rgb(207, 222, 227) dashed;
   border-radius: 8px;
   width: 573px;
   height: 132px;
   margin-top: 20px;
 }
+.main-content .tip_arrow {
+  position: relative;
+  margin-bottom: 30px;
+  margin-right: 30px;
+}
 .main-content .tip_text {
   display: inline-block;
   align-items: center;
 }
 .main-content .tip_text p {
-  font-weight: 400;
+  font-family: "Manrope";
+  font-weight: 500;
   font-size: 16px;
   line-height: 140%;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.09em;
   text-align: center;
-  color: #443f4b;
+  color: rgba(41, 40, 51, 0.5);
 }
 
 /*# sourceMappingURL=styles.css.map */

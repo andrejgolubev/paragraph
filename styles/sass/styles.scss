@@ -1,5 +1,6 @@
 @use './normalize.scss';
 @use './fonts.scss';
+@use './dropdown.scss';
 
 .header {
   width: auto;
@@ -49,7 +50,7 @@
 }
 
 .toggle {
-  margin: 26px 0 0 0;
+  margin: 20px 0 0 0;
 }
 
 
@@ -75,9 +76,9 @@
       p {
         font-family: 'Manrope', sans-serif;
         font-weight: 400;
-        font-size: 12px;
+        font-size: 16px;
         letter-spacing: 0.06em;
-        color: rgba(41, 40, 51, 0.52);
+        color: rgba(29, 29, 33, 0.10);
       }
     }
   }
@@ -86,26 +87,38 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.8);
+    // background: rgba(255, 255, 255, 0.8);
+    background-image: url('../static/tip-bg.png');
     border: 1px rgb(207, 222, 227) dashed;
     border-radius: 8px;
     width: 573px;
     height: 132px;
     margin-top: 20px;
 
+    &_arrow{
+      position: relative;
+      // right: 725px;
+      margin-bottom: 30px;
+      margin-right: 30px;
+    }
+
     &_text {
       display: inline-block;
       align-items: center;
-
+    
       p {
-        font-weight: 400;
+
+        font-family: 'Manrope';
+        font-weight: 500;
         font-size: 16px;
         line-height: 140%;
-        letter-spacing: 0.04em;
+        letter-spacing: 0.09em;
         text-align: center;
-        color: #443f4b;
+        color: rgba(41, 40, 51, 0.5);
       }
     }
   }
 
-}
+} 
+
+
