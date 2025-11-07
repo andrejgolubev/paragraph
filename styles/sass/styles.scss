@@ -2,46 +2,110 @@
 @use './fonts.scss';
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  width: auto;
+  margin-inline: 10px;
 }
 
 .nav {
-  width: 1400px;
+  width: auto;
   height: 70px;
+  margin-left: auto;
 
-  &_logo{
-    padding-top:7px;
+  &_logo {
+    padding-top: 7px;
+    width: 100%;
+    max-width: 175px;
+    padding-right: auto;
   }
 
   &_item {
     display: inline-block;
-    padding-inline: 25px;
+    padding-inline: 15px;
     padding-top: 1rem;
     font-family: 'Manrope', serif;
     font-weight: 500;
     font-size: 24px;
     letter-spacing: 0.08em;
     color: #292833;
-
   }
 
-  a{
+  a {
     color: #292833;
   }
 }
 
 .nav_list {
+  width: auto;
   display: flex;
   justify-content: space-between;
-
 }
 
-.profile-icon{
-  margin: 13px 25px 0 0;
+.selected {
+  font-weight: 700;
 }
 
-.toggle{
-  margin: 26px 25px 0 0;
+.profile-icon {
+  margin: -3px 0 0 0;
+}
+
+.toggle {
+  margin: 26px 0 0 0;
+}
+
+
+.main {
+  width: auto;
+  height: auto;
+  min-height: 1500px;
+  // background-image: url('../static/bg-light.png');
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(98, 170, 255, 0.8) 100%);
+  ;
+}
+
+.main-content {
+  margin: 28px 0 0 25px;
+
+  .options {
+    display: flex;
+    gap: 30px;
+
+    .corpuses {
+      padding-left: 20px;
+
+      p {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        color: rgba(41, 40, 51, 0.52);
+      }
+    }
+  }
+
+  .tip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px rgb(207, 222, 227) dashed;
+    border-radius: 8px;
+    width: 573px;
+    height: 132px;
+    margin-top: 20px;
+
+    &_text {
+      display: inline-block;
+      align-items: center;
+
+      p {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 140%;
+        letter-spacing: 0.04em;
+        text-align: center;
+        color: #443f4b;
+      }
+    }
+  }
+
 }
