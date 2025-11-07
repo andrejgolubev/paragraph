@@ -39,20 +39,29 @@
   width: auto;
   display: flex;
   justify-content: space-between;
+
+  
+
+
 }
 
 .selected {
   font-weight: 700;
 }
 
-.profile-icon {
-  margin: -3px 0 0 0;
-}
+.links {
+  .nav_item:not(.nav_logo) a:hover {
+    color: rgb(104, 209, 241);
+  }
 
-.toggle {
-  margin: 20px 0 0 0;
+  .profile-icon {
+    margin: -3px 0 0 0;
+  }
+  
+  .toggle {
+    margin: 20px 0 0 0;
+  }
 }
-
 
 .main {
   width: auto;
@@ -71,8 +80,7 @@
     gap: 30px;
 
     .corpuses {
-      padding-left: 20px;
-
+      padding-left: -2px;
       p {
         font-family: 'Manrope', sans-serif;
         font-weight: 400;
@@ -91,7 +99,7 @@
     background-image: url('../static/tip-bg.png');
     border: 1px rgb(207, 222, 227) dashed;
     border-radius: 8px;
-    width: 573px;
+    width: 572px;
     height: 132px;
     margin-top: 20px;
 
