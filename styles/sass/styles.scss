@@ -137,6 +137,9 @@
         color: rgba(41, 40, 51, 0.5);
       }
     }
+    img{
+      user-select: none;
+    }
   }
 
 }
@@ -178,12 +181,15 @@
   td {
     padding: 12px 0;
     padding-left: 10px;
-
-    &:first-child {
-      font-size: smaller;
-      text-align: center;
-      font-weight: normal;
+    &:first-child{
+      text-align: left;
+      font-weight: bold;
+      p:last-child{
+        font-size: 14px;
+        font-weight: normal;
+      }
     }
+    
   }
 
   tbody {

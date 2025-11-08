@@ -249,6 +249,9 @@ input[type=file] {
   text-align: center;
   color: rgba(41, 40, 51, 0.5);
 }
+.main-content .tip img {
+  user-select: none;
+}
 
 .table {
   margin-top: 25px;
@@ -281,8 +284,12 @@ input[type=file] {
 }
 .table th:first-child,
 .table td:first-child {
-  font-size: smaller;
-  text-align: center;
+  text-align: left;
+  font-weight: bold;
+}
+.table th:first-child p:last-child,
+.table td:first-child p:last-child {
+  font-size: 14px;
   font-weight: normal;
 }
 .table tbody {
