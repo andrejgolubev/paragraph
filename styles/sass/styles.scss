@@ -57,8 +57,9 @@
     a:hover {
       color: rgb(180, 211, 220);
     }
-    .toggle:hover{
-      background-color: rgb(237, 219, 85);
+
+    .toggle:hover {
+      stroke: rgb(237, 219, 85);
     }
   }
 
@@ -78,7 +79,7 @@
   height: auto;
   min-height: 1500px;
   // background-image: url('../static/bg-light.png');
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(98, 170, 255, 0.8) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(98, 170, 255, 0.8) 75%);
   ;
 }
 
@@ -108,7 +109,7 @@
     justify-content: center;
     // background: rgba(255, 255, 255, 0.8);
     background-image: url('../static/tip-bg.png');
-    border: 1px rgb(207, 222, 227) dashed;
+    border: 2px rgb(207, 222, 227) dashed;
     border-radius: 8px;
     width: 572px;
     height: 132px;
@@ -145,21 +146,32 @@
 
   margin-top: 25px;
   border-collapse: collapse;
-  min-width: 1150px;
-  width: 99%;
+  width: 98.25%;
   border: #bce7ff;
-  border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.5);
   font-family: 'Manrope', sans-serif;
-  // box-shadow: #292833;
+  box-shadow: 10px 10px 10px 10px rgba(2, 0, 0, 0.1);
 
   thead {
     height: 60px;
 
-    tr {
-      background-color: rgba(46, 110, 205, 0.1);
+    tr:not(.table) {
+      background-color: rgba(46, 110, 205, 0.2);
       text-align: left;
+
     }
+
+    th {
+      p:first-child {
+        font-weight: normal;
+        font-size: small;
+      }
+    }
+  }
+
+  th:first-child {
+    font-weight: 300;
+    font-size: smaller;
   }
 
   th,
@@ -175,6 +187,8 @@
   }
 
   tbody {
+    background-color: #ffffff;
+
     tr {
       border-bottom: 1px solid #dddddd;
     }

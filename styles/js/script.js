@@ -6,4 +6,4 @@ document.addEventListener('DOMContentLoaded', function() {
     customSelect.classList.toggle('select-valid', selectElement.value !== "");
   };
   selectElement.addEventListener('change', updateSelectStyles);
-});
+}); 
