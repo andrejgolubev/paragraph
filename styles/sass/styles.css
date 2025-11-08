@@ -100,44 +100,39 @@ input[type=file] {
 .custom-select {
   position: relative;
 }
-
 .custom-select select {
   appearance: none;
   width: 100%;
   font-size: 16px;
   font-family: "Manrope", serif;
   padding: 0.675em 7.5em 0.675em 1.5em;
-  background-color: #fff;
   border: 1px rgb(207, 222, 227) dashed;
   border-radius: 0.5rem;
   color: #292833;
   cursor: pointer;
 }
-
-.custom-select::before,
-.custom-select::after {
+.custom-select::before, .custom-select::after {
   --size: 0.3rem;
   content: "";
   position: absolute;
   right: 1rem;
   pointer-events: none;
 }
-
 .custom-select::before {
   border-left: var(--size) solid transparent;
   border-right: var(--size) solid transparent;
   border-bottom: var(--size) solid rgb(135, 178, 208);
   top: 40%;
 }
-
 .custom-select::after {
   border-left: var(--size) solid transparent;
   border-right: var(--size) solid transparent;
   border-top: var(--size) solid rgb(135, 178, 208);
   top: 55%;
 }
-
-/* Styles when a valid option is selected (other than placeholder) */
+.custom-select {
+  /* Styles when a valid option is selected (other than placeholder) */
+}
 .custom-select.select-valid select {
   background-color: rgb(135, 178, 208);
   border-color: rgb(135, 178, 208);
@@ -183,11 +178,21 @@ input[type=file] {
   font-weight: 700;
 }
 
-.profile-icon {
+.links .nav_item:not(.nav_logo) a,
+.links .toggle,
+.links .profile-icon {
+  transition: all 0.3s ease 0s;
+}
+.links .nav_item:not(.nav_logo) a:hover {
+  color: rgb(180, 211, 220);
+}
+.links .nav_item:not(.nav_logo) .toggle:hover {
+  background-color: rgb(237, 219, 85);
+}
+.links .profile-icon {
   margin: -3px 0 0 0;
 }
-
-.toggle {
+.links .toggle {
   margin: 20px 0 0 0;
 }
 
@@ -243,6 +248,41 @@ input[type=file] {
   letter-spacing: 0.09em;
   text-align: center;
   color: rgba(41, 40, 51, 0.5);
+}
+
+.table {
+  margin-top: 25px;
+  border-collapse: collapse;
+  min-width: 1150px;
+  width: 99%;
+  border: #bce7ff;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  font-family: "Manrope", sans-serif;
+}
+.table thead {
+  height: 60px;
+}
+.table thead tr {
+  background-color: rgba(46, 110, 205, 0.1);
+  text-align: left;
+}
+.table th,
+.table td {
+  padding: 12px 0;
+  padding-left: 10px;
+}
+.table th:first-child,
+.table td:first-child {
+  font-size: smaller;
+  text-align: center;
+  font-weight: normal;
+}
+.table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+.table tbody tr:last-of-type {
+  border-bottom: 2px solid rgba(46, 110, 205, 0.3);
 }
 
 /*# sourceMappingURL=styles.css.map */
