@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-import re
+import json
 
 def garb_remove(string:str): 
     return ' '.join(string.split())
@@ -11,13 +11,20 @@ HEADERS = {
    "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 YaBrowser/25.10.0.0 Safari/537.36'
 }
 
+url543z = requests.get('https://rasp.rsreu.ru/schedule-frame/group?faculty=4&group=1639&date=2025-11-03').text
+url543c = requests.get('https://rasp.rsreu.ru/schedule-frame/group?faculty=4&group=1639&date=2025-11-10').text
 url5413z = requests.get('https://rasp.rsreu.ru/schedule-frame/group?faculty=0&group=1633&date=').text
-url5413с = requests.get('https://rasp.rsreu.ru/schedule-frame/group?faculty=0&group=1633&date=').text
+url5413с = requests.get('https://rasp.rsreu.ru/schedule-frame/group?faculty=4&group=1633&date=2025-11-10').text
 url5423z = requests.get('https://rasp.rsreu.ru/schedule-frame/group?faculty=4&group=1638&date=2025-11-03').text
+url5423c = requests.get('https://rasp.rsreu.ru/schedule-frame/group?faculty=4&group=1638&date=2025-11-10').text
 
 LINKS = {
+    '543z':url543z,
+    '543c': url543c,
     '5413z': url5413z,
     '5423z': url5423z,
+    '5423z': url5423z,
+    '5423c': url5423c,
 }
 
 SCHEDULE_DATA = {}
@@ -47,10 +54,15 @@ for group, text in LINKS.items():
 
 # print(SCHEDULE_DATA)
 # print(dates)
-for i,J in SCHEDULE_DATA.items(): 
-    for k in J:
-        print(k) 
+# for i,J in SCHEDULE_DATA.items(): 
+#     for k in J:
+#         print(k) 
 
-print( SCHEDULE_DATA.items())
+# print( SCHEDULE_DATA.items())
 
+with open('schedule.json', 'w') as file:
+    json.dump(SCHEDULE_DATA, file, ensure_ascii=False)
 
+with open('schedule.json', 'r') as file:
+    a = json.load(file)
+    print(a)
