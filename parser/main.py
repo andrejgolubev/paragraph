@@ -1,42 +1,49 @@
 import requests
 from bs4 import BeautifulSoup
 
+
 def garb_remove(string:str): 
     return ' '.join(string.split())
 
-# st_accept = "text/html" # говорим веб-серверу, 
-#                         # что хотим получить html
-# # имитируем подключение через браузер Mozilla на macOS
 
-# st_useragent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_3_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15"
-# # формируем хеш заголовков
-# headers = {
-#    "Accept": st_accept,
-#    "User-Agent": st_useragent
-# }
+HEADERS = {
+   "Accept": 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+   "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 YaBrowser/25.10.0.0 Safari/537.36'
+}
 
-text = requests.get('https://rasp.rsreu.ru/schedule-frame/group?faculty=0&group=1633&date=').text
-soup = BeautifulSoup(text, 'lxml')
+url5413 = requests.get('https://rasp.rsreu.ru/schedule-frame/group?faculty=0&group=1633&date=').text
+url5423 = requests.get('https://rasp.rsreu.ru/schedule-frame/group?faculty=4&group=1638&date=2025-11-03').text
 
-table = soup.find('table') 
-lessons = [] #type-1 лек. type-2 лаба  type-3 упр
-if table: 
-    span_list = [span.text.strip() for span in table.find_all('span')]
-    # lessons = [les for les in span_list if '.' in les] # НЕ УДАЛЯТЬ, ПОКА НЕ НУЖЕН
-    # dates = [date for date in span_list if any(s.isdigit() for s in date)]
-    for digit in '123':
-        div_list = table.find_all('td', class_=f'schedule-cell schedule-lesson-type-{digit}')
-        for td in div_list:
-            td = garb_remove(td.text.strip())
-            lessons.append(td)
-    dates = [date.text for date in table.find_all('th')]
-# lesson_type = []
+LINKS = {
+    '5413': url5413,
+    '5423': url5423,
+}
 
-# for span in span_list: 
-#     lesson_type.append(span.text)
+SCHEDULE_DATA = {}
 
-for i in lessons: 
-    print(i)
+#общее для всех (дни недели)
+table_public = BeautifulSoup(LINKS['5413'], 'lxml').find('table')
+if table_public: 
+    dates = [garb_remove(date.text) for date in table_public.find_all('th')]
+
+#индивидуально
+for group, text in LINKS.items():
+    soup = BeautifulSoup(text, 'lxml')
+
+    table = soup.find('table') 
+    lessons = [] #type-1 лек. type-2 лаба  type-3 упр
+    if table: 
+        span_list = [span.text.strip() for span in table.find_all('span')]
+        for digit in '123':
+            div_list = table.find_all('td', class_=f'schedule-cell schedule-lesson-type-{digit}')
+            for td in div_list:
+                td = garb_remove(td.text.strip())
+                lessons.append(td)
+        lessons = {group: lessons}
+        SCHEDULE_DATA |= lessons
+
+
+print(SCHEDULE_DATA)
 
 print(dates)
 
