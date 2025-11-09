@@ -9,7 +9,7 @@ from sqlalchemy import select
 
 from db.models import User as UserModel
 from settings import SECRET_KEY, ALGORITHM
-from db.db import get_db
+from db.database import get_db
 
 
 # Создаём контекст для хеширования с использованием bcrypt

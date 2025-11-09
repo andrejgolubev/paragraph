@@ -1,148 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>прогинж | журнал</title>
+    <link rel="stylesheet" href="../static/sass/styles.css" />
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>прогинж | журнал </title>
-  <link rel="stylesheet" href="../static/sass/styles.css">
-  <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
-</head>
+  <body>
+    <div class="main">
+      <header class="header">
+        <nav class="nav">
+          <ul class="nav_list">
+            <li class="nav_item">
+              <img
+                class="nav_logo"
+                src="../static/static/logoAndText.svg"
+                alt="Logo"
+              />
+            </li>
+            <div class="links">
+              <li class="nav_item"><a href="">журнал</a></li>
+              <li class="nav_item"><a href="">рейтинг</a></li>
+              <li class="nav_item"><a href="">новости</a></li>
+              <img
+                src="../static/static/lightDarkSwitch.svg"
+                alt="Toggle"
+                class="toggle"
+              />
+              <img
+                src="../static/static/ProfileIcon.svg"
+                alt="Profile"
+                class="profile-icon nav_item"
+              />
+            </div>
+          </ul>
+        </nav>
+      </header>
 
-<body>
-  <div class="main">
-    <header class="header">
-      <nav class="nav">
-        <ul class="nav_list">
-          <li class="nav_item"><img class="nav_logo" src="../static/static/logoAndText.svg" alt="Logo"></li>
-          <div class="links">
-            <li class="nav_item"><a href="">журнал</a></li>
-            <li class="nav_item"><a href="">рейтинг</a></li>
-            <li class="nav_item"><a href="">{{ message }}</a></li>
-            <img src="../static/static/lightDarkSwitch.svg" alt="Toggle" class="toggle">
-            <img src="../static/static/ProfileIcon.svg" alt="Profile" class="profile-icon nav_item">
+      <div class="main-content">
+        <div class="options">
+          <div class="group">
+            <div class="custom-select">
+              <select>
+                <option value="" disabled selected>номер группы</option>
+                <option value="">5413</option>
+                <option value="">5423</option>
+                <option value="">543</option>
+              </select>
+            </div>
           </div>
-        </ul>
-      </nav>
-    </header>
+          <div class="week">
+            <div class="custom-select">
+              <select>
+                <option value="" disabled selected>дата / неделя</option>
+                {# {% for date in  %}
 
-
-    <div class="main-content">
-      <div class="options">
-        <div class="group">
-          <div class="custom-select">
-            <select>
-              <option value="" disabled selected>номер группы</option>
-              <option value="">5413</option>
-              <option value="">5423</option>
-              <option value="">543</option>
-            </select>
+                {% endfor %} #}
+              </select>
+            </div>
+          </div>
+          <div class="corpuses">
+            <p>C - Центральный корпус⠀⠀⠀⠀B - Бизнес-инкубатор</p>
+            <p>L - Лабораторный корпус ⠀⠀⠀F - Первый корпус</p>
           </div>
         </div>
-        <div class="week">
-          <div class="custom-select">
-            <select>
-              <option value="" disabled selected> дата / неделя</option>
-              <option value="">XX.XX.25 - XX.XX.25</option>
-              <option value="">XX.XX.25 - XX.XX.25</option>
-              <option value="">XX.XX.25 - XX.XX.25</option>
-            </select>
+
+        <div class="tip">
+          <img src="../static/static/chel.svg" alt="" />
+          <div class="tip_text">
+            <p>выберите вашу группу и неделю, на которую</p>
+            <p>хотите посмотреть расписание :)</p>
           </div>
         </div>
-        <div class="corpuses">
-          <p>C - Центральный корпус⠀⠀⠀⠀B - Бизнес-инкубатор</p>
-          <p>L - Лабораторный корпус ⠀⠀⠀F - Первый корпус </p>
-        </div>
+
+        <table class="table">
+          <thead>
+            <tr class="table_row_high">
+              <th>время</th>
+              <th>
+                <p>x ноября,</p>
+                <p>понедельник</p>
+              </th>
+              <th>
+                <p>x ноября,</p>
+                <p>вторник</p>
+              </th>
+              <th>
+                <p>x ноября,</p>
+                <p>среда</p>
+              </th>
+              <th>
+                <p>x ноября,</p>
+                <p>четверг</p>
+              </th>
+              <th>
+                <p>x ноября,</p>
+                <p>пятница</p>
+              </th>
+              <th>
+                <p>x ноября,</p>
+                <p>суббота</p>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <p>08:10</p>
+                <p>09:45</p>
+              </td>
+              <td>Domenic</td>
+              <td>88,110</td>
+              <td>
+                <p>dcodedcodedcodedcodedc</p>
+                <p>dcodedcodedcodedcodedc</p>
+                <p>dcodedcodedcodedcodedc</p>
+                <p>dcodedcodedcodedcodedc</p>
+              </td>
+              <td>asdoih</td>
+              <td>asdoih</td>
+              <td>asdoih</td>
+            </tr>
+            <tr>
+              <td>
+                <p>09:55</p>
+                <p>11:30</p>
+              </td>
+              <td>Domenic</td>
+              <td>88,110</td>
+              <td>dcode</td>
+              <td>asdoih</td>
+              <td>asdoih</td>
+              <td>asdoih</td>
+            </tr>
+            <tr>
+              <td>
+                <p>11:40</p>
+                <p>13:15</p>
+              </td>
+              <td>Domenic</td>
+              <td>88,110</td>
+              <td>dcode</td>
+              <td>asdoih</td>
+              <td>asdoih</td>
+              <td>asdoih</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-
-      <div class="tip">
-        <img src="../static/static/chel.svg" alt="">
-        <div class="tip_text">
-          <p>выберите вашу группу и неделю, на которую </p>
-          <p>хотите посмотреть расписание :)</p>
-        </div>
-      </div>
-
-      <table class="table">
-        <thead>
-          <tr class="table_row_high">
-            <th>время</th>
-            <th>
-              <p>x ноября,</p>
-              <p>понедельник</p>
-            </th>
-            <th>
-              <p>x ноября,</p>
-              <p>вторник</p>
-            </th>
-            <th>
-              <p>x ноября,</p>
-              <p>среда</p>
-            </th>
-            <th>
-              <p>x ноября,</p>
-              <p>четверг</p>
-            </th>
-            <th>
-              <p>x ноября,</p>
-              <p>пятница</p>
-            </th>
-            <th>
-              <p>x ноября,</p>
-              <p>суббота</p>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <p>08:10</p>
-              <p>09:45</p>
-            </td>
-            <td>Domenic</td>
-            <td>88,110</td>
-            <td>
-              <p>dcodedcodedcodedcodedc</p>
-              <p>dcodedcodedcodedcodedc</p>
-              <p>dcodedcodedcodedcodedc</p>
-              <p>dcodedcodedcodedcodedc</p>
-            </td>
-            <td>asdoih</td>
-            <td>asdoih</td>
-            <td>asdoih</td>
-          </tr>
-          <tr>
-            <td>
-              <p>09:55</p>
-              <p>11:30</p>
-            </td>
-            <td>Domenic</td>
-            <td>88,110</td>
-            <td>dcode</td>
-            <td>asdoih</td>
-            <td>asdoih</td>
-            <td>asdoih</td>
-          </tr>
-          <tr>
-            <td>
-              <p>11:40</p>
-              <p>13:15</p>
-            </td>
-            <td>Domenic</td>
-            <td>88,110</td>
-            <td>dcode</td>
-            <td>asdoih</td>
-            <td>asdoih</td>
-            <td>asdoih</td>
-          </tr>
-        </tbody>
-      </table>
-
     </div>
-  </div>
 
-  <script src="../static/js/script.js"></script>
-  <script src="../static/js/xhr.js"></script>
-</body>
-
+    <script src="../static/js/script.js"></script>
+    <script src="../static/js/xhr.js"></script>
+  </body>
 </html>

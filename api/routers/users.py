@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.routing import APIRouter
-from db.db import get_db
+from db.database import get_db
 from db.models import User
 from ..schemes import UserResponse, UserCreate, UserCreateForRoot
 from sqlalchemy import select

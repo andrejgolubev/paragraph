@@ -1,8 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
-import json
+from selenium import webdriver
 
-def garb_remove(string:str): 
+driver = webdriver.Ie()
+
+
+def garb_remove(string: str): 
     return ' '.join(string.split())
 
 
@@ -31,7 +34,7 @@ SCHEDULE_DATA = {}
 
 #общее для всех (дни недели)
 table_public = BeautifulSoup(LINKS['5413z'], 'lxml').find('table')
-if table_public: DATES = [garb_remove(date.text) for date in table_public.find_all('th')]
+if table_public: WEEK_DAYS = [garb_remove(date.text) for date in table_public.find_all('th')][1:]
 
 #индивидуально
 for group, text in LINKS.items():
@@ -50,11 +53,20 @@ for group, text in LINKS.items():
         lessons = {group: lessons}
         SCHEDULE_DATA |= lessons
 
-
-with open('schedule.json', 'w') as file:
-    json.dump(SCHEDULE_DATA, file)
+print(WEEK_DAYS)
 
 
-with open('schedule.json', 'r') as file:
-    a = json.load(file)
-    print(a)
+
+
+
+
+
+
+
+# with open('schedule.json', 'w') as file:
+#     json.dump(SCHEDULE_DATA, file)
+
+
+# with open('schedule.json', 'r') as file:
+#     a = json.load(file)
+#     print(a)

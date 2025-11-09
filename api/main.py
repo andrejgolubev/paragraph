@@ -4,6 +4,7 @@ from api.auth import oauth2_scheme
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from parser.parser import SCHEDULE_DATA
 
 app = FastAPI(title="PROGINZH")
 
@@ -23,5 +24,7 @@ app.include_router(
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
     return templates.TemplateResponse(
-        name="index.html", request=request,  context={"message": "Hello, World!"}
+        name="index.html", request=request, context={
+            "SCHEDULE": SCHEDULE_DATA,
+        }
     )
