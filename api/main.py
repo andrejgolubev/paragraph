@@ -8,8 +8,8 @@ from fastapi.templating import Jinja2Templates
 app = FastAPI(title="PROGINZH")
 
 # монтируем CSS, js, png etc
-app.mount("/static", StaticFiles(directory="../static"), name="static")
-templates = Jinja2Templates(directory="../templates")
+app.mount("/static", StaticFiles(directory="./static"), name="static")
+templates = Jinja2Templates(directory="templates")
 # create the instance for the routes
 
 app.include_router(
