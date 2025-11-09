@@ -1,67 +1,29 @@
-from fastapi import Depends, HTTPException, status
-from fastapi.routing import APIRouter
+from fastapi import Depends, HTTPException, status, APIRouter
 from db.database import get_db
-from db.models import User
-from ..schemes import UserResponse, UserCreate, UserCreateForRoot
+from db.models import User, Group
+from db.schemes import UserCreate, UserResponse
 from sqlalchemy import select
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from api.auth import create_access_token, create_refresh_token, verify_password, hash_password
 import jwt 
-import settings
+import bcrypt
 
-user_router = APIRouter()
+user_router = APIRouter(prefix='/users', tags=['users'])
 
-#-------------------------------------------------------------CRUD OPERATIONS-------------------------------------------------------------
-@user_router.post('/', response_model=UserResponse)
-async def create_user(user_input: UserCreateForRoot, db= Depends(get_db)): 
-    """
-    Регистрирует нового пользователя с ролью.
-    """
-    user_result = await db.scalars(select(User).where(User.email == user_input.email))
-    if user_result.first():
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="Введённый email уже существует.")
-    
-    db_user = User(
-        email = user_input.email,
-        hashed_password = hash_password(user_input.password),
-        role = user_input.role, 
-        nickname = user_input.nickname, 
-        name = user_input.name, 
-        surname = user_input.surname, 
-    ) 
-    db.add(db_user) 
+
+@user_router.post('/register/')
+async def register(user:UserCreate, db: AsyncSession = Depends(get_db)): 
+    db_user = User(**user.model_dump())
+    db.add(db_user)
     await db.commit()
-    await db.refresh(db_user) 
+    await db.refresh(db_user) # Для получения id и is_active из базы
 
-    return UserCreate(**user_input.model_dump())
-
-
-
-@user_router.get('/{user_email}', response_model=UserResponse)
-async def get_user_by_email(user_email: str, db= Depends(get_db)): 
-   
-    user_search = await db.scalars(select(User).where(User.email == user_email)) 
-    user = user_search.first() 
-    if not user: 
-        raise HTTPException(status_code=404, detail=f'User not found')
-    
-    return user 
+    return db_user
 
 
-@user_router.delete('/{user_email}', response_model=UserResponse)
-async def delete_user_by_email(user_email: str, db= Depends(get_db)): 
-   
-    user_search = await db.scalars(select(User).where(User.email == user_email)) 
-    user = user_search.first() 
-    if not user: 
-        raise HTTPException(status_code=404, detail=f'User not found')
-    
-    await db.delete(user)
-    await db.commit()
-    
-    return f'Пользователь с почтой {user_email} был удалён.' 
+
+
 
 
 #-------------------------------------------------------------AUTH OPERATIONS-------------------------------------------------------------

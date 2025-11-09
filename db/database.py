@@ -5,8 +5,9 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sess
 from sqlalchemy.orm import DeclarativeBase
 from dotenv import load_dotenv
 
-
-
+load_dotenv()
+SECRET_KEY = os.getenv('SECRET_KEY')
+DATABASE_URL = 'postgresql+asyncpg://pg:root@127.0.0.1:5433/pg'
 
 engine = create_async_engine(DATABASE_URL, future=True, echo=True)
 

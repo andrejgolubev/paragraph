@@ -6,11 +6,10 @@ import jwt
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-
+import bcrypt
 from db.models import User as UserModel
 from settings import SECRET_KEY, ALGORITHM
 from db.database import get_db
-
 
 # Создаём контекст для хеширования с использованием bcrypt
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -26,16 +25,20 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/token", auto_error=False)
 
 
 def hash_password(password: str) -> str:
-    
+
     '''Преобразует пароль в хеш с использованием bcrypt.'''
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed.decode('utf-8')
+
     
-    return pwd_context.hash(password)
-
-
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Проверяет, соответствует ли введённый пароль сохранённому хешу."""
 
     return pwd_context.verify(plain_password, hashed_password)
+
+
+
 
 def create_refresh_token(data: dict):          # New
     """

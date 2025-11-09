@@ -15,4 +15,4 @@ def get_dates():
     now = now.strftime('%A, %d %B %Y')
     print(now) 
 
-get_date()
+# get_date()

@@ -1,9 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-from selenium import webdriver
-
-driver = webdriver.Ie()
-
 
 def garb_remove(string: str): 
     return ' '.join(string.split())
