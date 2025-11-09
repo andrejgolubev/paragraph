@@ -22,7 +22,7 @@ LINKS = {
     '543z':url543z,
     '543c': url543c,
     '5413z': url5413z,
-    '5423z': url5423z,
+    '5423c': url5423z,
     '5423z': url5423z,
     '5423c': url5423c,
 }
@@ -31,8 +31,7 @@ SCHEDULE_DATA = {}
 
 #общее для всех (дни недели)
 table_public = BeautifulSoup(LINKS['5413z'], 'lxml').find('table')
-if table_public: 
-    dates = [garb_remove(date.text) for date in table_public.find_all('th')]
+if table_public: DATES = [garb_remove(date.text) for date in table_public.find_all('th')]
 
 #индивидуально
 for group, text in LINKS.items():
@@ -52,16 +51,9 @@ for group, text in LINKS.items():
         SCHEDULE_DATA |= lessons
 
 
-# print(SCHEDULE_DATA)
-# print(dates)
-# for i,J in SCHEDULE_DATA.items(): 
-#     for k in J:
-#         print(k) 
-
-# print( SCHEDULE_DATA.items())
-
 with open('schedule.json', 'w') as file:
-    json.dump(SCHEDULE_DATA, file, ensure_ascii=False)
+    json.dump(SCHEDULE_DATA, file)
+
 
 with open('schedule.json', 'r') as file:
     a = json.load(file)

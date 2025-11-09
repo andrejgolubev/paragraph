@@ -1,0 +1,305 @@
+/* Reset and base styles  */
+* {
+  padding: 0px;
+  margin: 0px;
+  border: none;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Links */
+a, a:link, a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+/* Common */
+aside, nav, footer, header, section, main {
+  display: block;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+ul, ul li {
+  list-style: none;
+}
+
+img {
+  vertical-align: top;
+}
+
+img, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+address {
+  font-style: normal;
+}
+
+/* Form */
+input, textarea, button, select {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background-color: transparent;
+}
+
+input::-ms-clear {
+  display: none;
+}
+
+button, input[type=submit] {
+  display: inline-block;
+  box-shadow: none;
+  background-color: transparent;
+  background: none;
+  cursor: pointer;
+}
+
+input:focus, input:active,
+button:focus, button:active {
+  outline: none;
+}
+
+button::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+
+label {
+  cursor: pointer;
+}
+
+legend {
+  display: block;
+}
+
+input[type=file] {
+  max-width: 100%;
+}
+
+@font-face {
+  font-family: "Unbounded";
+  src: url("../static/static/fonts/Unbounded-VariableFont_wght.ttf");
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/Manrope-VariableFont_wght.ttf");
+}
+.custom-select {
+  position: relative;
+}
+.custom-select select {
+  appearance: none;
+  width: 100%;
+  font-size: 16px;
+  font-family: "Manrope", serif;
+  padding: 0.675em 7.5em 0.675em 1.5em;
+  border: 2px rgb(207, 222, 227) dashed;
+  border-radius: 0.5rem;
+  color: #292833;
+  cursor: pointer;
+}
+.custom-select::before, .custom-select::after {
+  --size: 0.3rem;
+  content: "";
+  position: absolute;
+  right: 1rem;
+  pointer-events: none;
+}
+.custom-select::before {
+  border-left: var(--size) solid transparent;
+  border-right: var(--size) solid transparent;
+  border-bottom: var(--size) solid rgb(135, 178, 208);
+  top: 40%;
+}
+.custom-select::after {
+  border-left: var(--size) solid transparent;
+  border-right: var(--size) solid transparent;
+  border-top: var(--size) solid rgb(135, 178, 208);
+  top: 55%;
+}
+.custom-select {
+  /* Styles when a valid option is selected (other than placeholder) */
+}
+.custom-select.select-valid select {
+  background-color: rgb(135, 178, 208);
+  border-color: rgb(135, 178, 208);
+}
+
+.header {
+  width: auto;
+  margin-inline: 10px;
+}
+
+.nav {
+  width: auto;
+  height: 70px;
+  margin-left: auto;
+}
+.nav_logo {
+  padding-top: 7px;
+  width: 100%;
+  max-width: 175px;
+  padding-right: auto;
+}
+.nav_item {
+  display: inline-block;
+  padding-inline: 15px;
+  padding-top: 1rem;
+  font-family: "Manrope", serif;
+  font-weight: 500;
+  font-size: 24px;
+  letter-spacing: 0.08em;
+  color: #292833;
+}
+.nav a {
+  color: #292833;
+}
+
+.nav_list {
+  width: auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.selected {
+  font-weight: 700;
+}
+
+.links .nav_item:not(.nav_logo) a,
+.links .toggle,
+.links .profile-icon {
+  transition: all 0.3s ease 0s;
+}
+.links .nav_item:not(.nav_logo) a:hover {
+  color: rgb(180, 211, 220);
+}
+.links .nav_item:not(.nav_logo) .toggle:hover {
+  stroke: rgb(237, 219, 85);
+}
+.links .profile-icon {
+  margin: -3px 0 0 0;
+}
+.links .toggle {
+  margin: 20px 0 0 0;
+}
+
+.main {
+  width: auto;
+  height: auto;
+  min-height: 1500px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(98, 170, 255, 0.8) 75%);
+}
+
+.main-content {
+  margin: 28px 0 0 25px;
+}
+.main-content .options {
+  display: flex;
+  gap: 30px;
+}
+.main-content .options .corpuses {
+  padding-left: -2px;
+}
+.main-content .options .corpuses p {
+  font-family: "Manrope", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: 0.06em;
+  color: rgba(29, 29, 33, 0.1);
+}
+.main-content .tip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("../static/tip-bg.png");
+  border: 2px rgb(207, 222, 227) dashed;
+  border-radius: 8px;
+  width: 572px;
+  height: 132px;
+  margin-top: 20px;
+}
+.main-content .tip_arrow {
+  position: relative;
+  margin-bottom: 30px;
+  margin-right: 30px;
+}
+.main-content .tip_text {
+  display: inline-block;
+  align-items: center;
+}
+.main-content .tip_text p {
+  font-family: "Manrope";
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 140%;
+  letter-spacing: 0.09em;
+  text-align: center;
+  color: rgba(41, 40, 51, 0.5);
+}
+.main-content .tip img {
+  user-select: none;
+}
+
+.table {
+  margin-top: 25px;
+  border-collapse: collapse;
+  width: 98.25%;
+  border: #bce7ff;
+  background-color: rgba(255, 255, 255, 0.5);
+  font-family: "Manrope", sans-serif;
+  box-shadow: 10px 10px 10px 10px rgba(2, 0, 0, 0.1);
+}
+.table thead {
+  height: 60px;
+}
+.table thead tr:not(.table) {
+  background-color: rgba(46, 110, 205, 0.2);
+  text-align: left;
+}
+.table thead th p:first-child {
+  font-weight: normal;
+  font-size: small;
+}
+.table th:first-child {
+  font-weight: 300;
+  font-size: smaller;
+}
+.table th,
+.table td {
+  padding: 12px 0;
+  padding-left: 10px;
+}
+.table th:first-child,
+.table td:first-child {
+  text-align: left;
+  font-weight: bold;
+}
+.table th:first-child p:last-child,
+.table td:first-child p:last-child {
+  font-size: 14px;
+  font-weight: normal;
+}
+.table tbody {
+  background-color: #ffffff;
+}
+.table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+.table tbody tr:last-of-type {
+  border-bottom: 2px solid rgba(46, 110, 205, 0.3);
+}
+
+/*# sourceMappingURL=styles.css.map */

@@ -1,0 +1,58 @@
+@font-face {
+  font-family: "Unbounded";
+  src: url("../styles/static/fonts/Unbounded-VariableFont_wght.ttf");
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/Manrope-VariableFont_wght.ttf");
+}
+.custom-select {
+  position: relative;
+}
+
+.custom-select select {
+  appearance: none;
+  width: 100%;
+  font-size: 16px;
+  font-family: "Manrope", serif;
+  padding: 0.675em 7.5em 0.675em 1.5em;
+  border: 2px rgb(207, 222, 227) dashed;
+  border-radius: 0.5rem;
+  color: #292833;
+  cursor: pointer;
+}
+
+.custom-select::before, .custom-select::after {
+  --size: 0.3rem;
+  content: "";
+  position: absolute;
+  right: 1rem;
+  pointer-events: none;
+}
+
+.custom-select::before {
+  border-left: var(--size) solid transparent;
+  border-right: var(--size) solid transparent;
+  border-bottom: var(--size) solid rgb(135, 178, 208);
+  top: 40%;
+}
+
+.custom-select::after {
+  border-left: var(--size) solid transparent;
+  border-right: var(--size) solid transparent;
+  border-top: var(--size) solid rgb(135, 178, 208);
+  top: 55%;
+}
+
+.custom-select {
+  /* Styles when a valid option is selected (other than placeholder) */
+}
+
+.custom-select.select-valid select {
+  background-color: rgb(135, 178, 208);
+  border-color: rgb(135, 178, 208);
+}
+
+
+
+/*# sourceMappingURL=dropdown.css.map */
