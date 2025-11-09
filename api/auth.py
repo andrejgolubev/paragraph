@@ -73,14 +73,14 @@ async def get_current_user(token: str = Depends(oauth2_scheme),
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])  #type: ignore
-        email: str = payload.get("sub")
+        name: str = payload.get("sub")
         
-        if not email:
+        if not name:
             raise credentials_exception
     except jwt.exceptions:
         raise credentials_exception
     result = await db.scalars(
-        select(UserModel).where(UserModel.email == email, UserModel.is_active == True))
+        select(UserModel).where(UserModel.name == name))
     user = result.first()
     if not user:
         raise credentials_exception

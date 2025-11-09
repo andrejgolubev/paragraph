@@ -26,8 +26,9 @@ class UserRegistration(BaseModel):
 class UserCreate(UserRegistration): 
     role: str = 'student'
     rating: float = Field(default=0.0, ge=0.0)
+    group_id: int | None = None
 
-
+    model_config = ConfigDict(from_attributes=True)
 
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -43,9 +44,16 @@ class GroupCreate(BaseModel):
     data_value: str
     group_number: str
 
+    model_config = ConfigDict(from_attributes=True)
 
 class GroupResponse(BaseModel):
     id: int
     users: list["UserResponse"]| None  = None
 
     model_config = ConfigDict(from_attributes=True)
+
+class SyncResponse(BaseModel):
+    status: str
+    message: str
+    parsed_count: int
+    saved_count: int

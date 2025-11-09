@@ -49,7 +49,7 @@ for group, text in LINKS.items():
         lessons = {group: lessons}
         SCHEDULE_DATA |= lessons
 
-print(WEEK_DAYS)
+# print(WEEK_DAYS)
 
 
 
