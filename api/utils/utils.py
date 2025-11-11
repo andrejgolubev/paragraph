@@ -475,3 +475,4 @@ groups = {
         "9833": "984",
     }
 
+groups_inverted = {key: value for value, key in groups.items()}

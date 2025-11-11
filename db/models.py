@@ -12,7 +12,7 @@ class User(Base):
     name: Mapped[str] = mc(nullable=False)
     hashed_password: Mapped[str] = mc(nullable=False) 
     role: Mapped[str] = mc(nullable=False, default='student')
-    rating: Mapped[float] = mc(nullable=False, default=0.0)
+    rating: Mapped[int] = mc(nullable=False, default=0)
 
     group: Mapped["Group"] = relationship(back_populates='users')
 
