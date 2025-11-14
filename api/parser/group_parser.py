@@ -35,12 +35,12 @@ def _parse_group(driver: webdriver.Chrome):
 def parse_groups():
     """parses all groups.
     group_number:data-value pairs"""
-    
+    driver = init()
     gr = _parse_group(driver=driver)
     return gr
 
 
-driver = init()
+
 
 
 

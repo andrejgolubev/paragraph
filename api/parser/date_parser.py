@@ -42,6 +42,9 @@ def parse_dates():
     """parses all dates.
     user_date:data_value"""
     
+    driver = init()
+    driver.get('https://rasp.rsreu.ru/schedule-frame/group?faculty=1&group=1640&date=')
+
     dates = _parse_date(driver=driver)
     return dates 
 
@@ -53,8 +56,6 @@ def get_date_by_data_value(data_value):
     return {key:value for value, key in parse_dates().items()}[data_value]
 
 
-driver = init()
-driver.get('https://rasp.rsreu.ru/schedule-frame/group?faculty=1&group=1640&date=')
 
 
 

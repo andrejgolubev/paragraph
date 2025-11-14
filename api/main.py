@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from api.routers.schedule import schedule_router
 from api.db.database import get_db
-from routers.schedule import load_groups_and_dates
+from api.routers.schedule import load_groups_and_dates
 from api.parser.group_parser import parse_groups
 from api.parser.date_parser import parse_dates
 

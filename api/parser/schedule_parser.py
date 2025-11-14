@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from group_parser import parse_groups
 
+
 def garb_remove(string: str): 
     return ' '.join(string.split())
 
@@ -15,10 +16,7 @@ def get_number_by_data_value(data_value):
 
 
 def parse_by_url(url: str): 
-    try:
-        response = requests.get(url)
-    except Exception:
-        raise Exception('Не валидный URL') 
+    response = requests.get(url)
     _gr_find = url.find('group=') + 6
     data_value = ''.join([ch for ch in url[_gr_find: _gr_find + 6] if ch.isdigit()])
     group_number = get_number_by_data_value(data_value)

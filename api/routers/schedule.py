@@ -40,12 +40,16 @@ async def load_groups_and_dates(groups: dict, dates: dict, db: AsyncSession = De
         if not existing_group.first():
             db_group = Group(group_number=group_number, data_value=group_data_value)
             db.add(db_group)
+
+            await db.commit()
+            await db.refresh(db_group)
             
             # Создаем связи со всеми датами
             for date_data_value, db_date in dates_map.items():
                 association = GroupDateAssociation(
                     group_id=db_group.id,
-                    dates_id=db_date.id
+                    dates_id=db_date.id,
+                    homework=None
                 )
                 db.add(association)
     
