@@ -1,21 +1,24 @@
 import requests
 from bs4 import BeautifulSoup
-from group_parser import GROUPS, GROUPS_INVERTED
+from group_parser import parse_groups
 
 def garb_remove(string: str): 
     return ' '.join(string.split())
 
 
 def get_datavalue_by_number(number: str): 
-    return GROUPS[number]
+    return parse_groups()[number]
 
 
 def get_number_by_data_value(data_value): 
-    return GROUPS_INVERTED[data_value]
+    return {key:value for value, key in parse_groups().items()}[data_value]
 
 
 def parse_by_url(url: str): 
-    response = requests.get(url)
+    try:
+        response = requests.get(url)
+    except Exception:
+        raise Exception('Не валидный URL') 
     _gr_find = url.find('group=') + 6
     data_value = ''.join([ch for ch in url[_gr_find: _gr_find + 6] if ch.isdigit()])
     group_number = get_number_by_data_value(data_value)

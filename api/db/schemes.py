@@ -52,8 +52,14 @@ class GroupResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-class SyncResponse(BaseModel):
-    status: str
-    message: str
-    parsed_count: int
-    saved_count: int
+
+class DateCreate(BaseModel): 
+    date: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+class DateResponse(BaseModel): 
+    id: int 
+    date: str 
+
+    model_config = ConfigDict(from_attributes=True)

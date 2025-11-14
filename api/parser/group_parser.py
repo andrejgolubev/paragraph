@@ -2,7 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
+from api.parser.parser_conf import init
+
 
 def _parse_group(driver: webdriver.Chrome): 
     """ПАРСИТ ВСЕ актуальные ГРУППЫ из выпадающего меню """
@@ -31,23 +32,18 @@ def _parse_group(driver: webdriver.Chrome):
     return groups_dict
 
 
-driver=webdriver.Chrome()
-driver.get('https://rasp.rsreu.ru') 
-    
-
-
 def parse_groups():
     """parses all groups.
-    group_number:data-value"""
+    group_number:data-value pairs"""
     
     gr = _parse_group(driver=driver)
     return gr
 
 
-GROUPS = parse_groups() #group_number:data-value pairs
-GROUPS_INVERTED = {key: value for value, key in GROUPS.items()} #data-value:group_number pairs
+driver = init()
+
 
 
 if __name__ == '__main__': 
-    print(f'{GROUPS = }',f'{GROUPS_INVERTED = }', sep='\n\n\n')
+    print(f'{parse_groups = }')
 

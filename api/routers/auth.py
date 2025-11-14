@@ -7,9 +7,9 @@ from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 import bcrypt
-from db.models import User as UserModel
+from api.db.models import User as UserModel
 from settings import SECRET_KEY, ALGORITHM
-from db.database import get_db
+from api.db.database import get_db
 
 # Создаём контекст для хеширования с использованием bcrypt
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

@@ -1,11 +1,11 @@
 from fastapi import Depends, HTTPException, status, APIRouter
-from db.database import get_db
-from db.models import User, Group
-from db.schemes import UserCreate, UserResponse
+from api.db.database import get_db
+from api.db.models import User, Group
+from api.db.schemes import UserCreate, UserResponse
 from sqlalchemy import select
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
-from api.auth import create_access_token, create_refresh_token, verify_password, hash_password
+from api.routers.auth import create_access_token, create_refresh_token, verify_password, hash_password
 import jwt 
 import bcrypt
 
