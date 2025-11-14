@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
-DATABASE_URL = 'postgresql+asyncpg://pg:root@127.0.0.1:5433/pg'
+DATABASE_URL = 'postgresql+asyncpg://postgres:root@127.0.0.1:5433/postgres'
 
 engine = create_async_engine(DATABASE_URL, future=True, echo=True)
 

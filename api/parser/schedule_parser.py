@@ -6,7 +6,6 @@ def garb_remove(string: str):
     return ' '.join(string.split())
 
 
-
 def get_datavalue_by_number(number: str): 
     return GROUPS[number]
 
@@ -37,8 +36,8 @@ def parse_by_url(url: str):
     return lessons
 
 def convert_date(date: str): 
-    """date подаётся в формате в таком, в котором юзер ее вводит на фронтенде для последующей конвертации 
-    в пригодную для вставки в ссылку и парсинга сайта ргрту. т.е. (10.11.2025 - 17.11.2025) -> 2025-11-10  """
+    """date подаётся в формате в таком, в котором юзер ее выбирает из списка на фронтенде для последующей конвертации 
+    в пригодную для вставки в ссылку и парсинга сайта ргрту. т.е. (10.11.2025, числ.) -> 2025-11-10  """
     return '-'.join(reversed(date[:10].split('.')))
 
 if __name__ == '__main__':

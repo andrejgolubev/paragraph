@@ -21,10 +21,6 @@ app.include_router(
 )
 
 
-
-
-
-
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
     return templates.TemplateResponse(
@@ -32,6 +28,10 @@ async def read_root(request: Request):
             
         }
     )
+
+
+@app.get(path='/schedule/{group_number}', )
+
 
 
 
