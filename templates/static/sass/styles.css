@@ -97,22 +97,20 @@ input[type=file] {
   font-family: "Manrope";
   src: url("../fonts/Manrope-VariableFont_wght.ttf");
 }
-.custom-select {
-  position: relative;
-}
-
 .custom-select select {
   appearance: none;
   width: 100%;
   font-size: 16px;
   font-family: "Manrope", serif;
-  padding: 0.675em 7.5em 0.675em 1.5em;
+  padding: 0.675em 6.5em 0.675em 1.5em;
   border: 2px rgb(207, 222, 227) dashed;
   border-radius: 0.5rem;
   color: #292833;
   cursor: pointer;
 }
-
+.custom-select:focus {
+  background-color: white;
+}
 .custom-select::before, .custom-select::after {
   --size: 0.3rem;
   content: "";
@@ -120,25 +118,21 @@ input[type=file] {
   right: 1rem;
   pointer-events: none;
 }
-
 .custom-select::before {
   border-left: var(--size) solid transparent;
   border-right: var(--size) solid transparent;
   border-bottom: var(--size) solid rgb(135, 178, 208);
   top: 40%;
 }
-
 .custom-select::after {
   border-left: var(--size) solid transparent;
   border-right: var(--size) solid transparent;
   border-top: var(--size) solid rgb(135, 178, 208);
   top: 55%;
 }
-
 .custom-select {
   /* Styles when a valid option is selected (other than placeholder) */
 }
-
 .custom-select.select-valid select {
   background-color: rgb(135, 178, 208);
   border-color: rgb(135, 178, 208);
@@ -154,14 +148,12 @@ input[type=file] {
   height: 70px;
   margin-left: auto;
 }
-
 .nav_logo {
   padding-top: 7px;
   width: 100%;
   max-width: 175px;
   padding-right: auto;
 }
-
 .nav_item {
   display: inline-block;
   padding-inline: 15px;
@@ -172,7 +164,6 @@ input[type=file] {
   letter-spacing: 0.08em;
   color: #292833;
 }
-
 .nav a {
   color: #292833;
 }
@@ -192,19 +183,15 @@ input[type=file] {
 .links .profile-icon {
   transition: all 0.3s ease 0s;
 }
-
 .links .nav_item:not(.nav_logo) a:hover {
   color: rgb(180, 211, 220);
 }
-
 .links .nav_item:not(.nav_logo) .toggle:hover {
   stroke: rgb(237, 219, 85);
 }
-
 .links .profile-icon {
   margin: -3px 0 0 0;
 }
-
 .links .toggle {
   margin: 20px 0 0 0;
 }
@@ -219,16 +206,13 @@ input[type=file] {
 .main-content {
   margin: 28px 0 0 25px;
 }
-
 .main-content .options {
   display: flex;
   gap: 30px;
 }
-
 .main-content .options .corpuses {
   padding-left: -2px;
 }
-
 .main-content .options .corpuses p {
   font-family: "Manrope", sans-serif;
   font-weight: 400;
@@ -236,7 +220,6 @@ input[type=file] {
   letter-spacing: 0.06em;
   color: rgba(29, 29, 33, 0.1);
 }
-
 .main-content .tip {
   display: inline-flex;
   align-items: center;
@@ -248,18 +231,15 @@ input[type=file] {
   height: 132px;
   margin-top: 20px;
 }
-
 .main-content .tip_arrow {
   position: relative;
   margin-bottom: 30px;
   margin-right: 30px;
 }
-
 .main-content .tip_text {
   display: inline-block;
   align-items: center;
 }
-
 .main-content .tip_text p {
   font-family: "Manrope";
   font-weight: 500;
@@ -269,7 +249,6 @@ input[type=file] {
   text-align: center;
   color: rgba(41, 40, 51, 0.5);
 }
-
 .main-content .tip img {
   user-select: none;
 }
@@ -283,56 +262,44 @@ input[type=file] {
   font-family: "Manrope", sans-serif;
   box-shadow: 10px 10px 10px 10px rgba(2, 0, 0, 0.1);
 }
-
 .table thead {
   height: 60px;
 }
-
 .table thead tr:not(.table) {
   background-color: rgba(46, 110, 205, 0.2);
   text-align: left;
 }
-
 .table thead th p:first-child {
   font-weight: normal;
   font-size: small;
 }
-
 .table th:first-child {
   font-weight: 300;
   font-size: smaller;
 }
-
 .table th,
 .table td {
   padding: 12px 0;
   padding-left: 10px;
 }
-
 .table th:first-child,
 .table td:first-child {
   text-align: left;
   font-weight: bold;
 }
-
 .table th:first-child p:last-child,
 .table td:first-child p:last-child {
   font-size: 14px;
   font-weight: normal;
 }
-
 .table tbody {
   background-color: #ffffff;
 }
-
 .table tbody tr {
   border-bottom: 1px solid #dddddd;
 }
-
 .table tbody tr:last-of-type {
   border-bottom: 2px solid rgba(46, 110, 205, 0.3);
 }
-
-
 
 /*# sourceMappingURL=styles.css.map */

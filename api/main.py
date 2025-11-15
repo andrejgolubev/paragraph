@@ -4,6 +4,7 @@ from api.routers.users import user_router
 from api.parser.group_parser import parse_groups
 from api.parser.date_parser import parse_dates
 from api.parser.utils import convert_date
+from api.services.data_service import data_service
 
 from fastapi import FastAPI, Depends, Request, HTTPException, status, Header
 from fastapi.responses import HTMLResponse
@@ -20,7 +21,7 @@ import os
 
 app = FastAPI(title="PROGINZH",)
 
-app.mount("/static", StaticFiles(directory="./static"), name="static") # монтируем CSS, js, png etc
+app.mount("/static", StaticFiles(directory="templates/static"), name="static") # монтируем CSS, js, png etc
 templates = Jinja2Templates(directory="templates")
 
 
@@ -35,23 +36,16 @@ app.include_router(
 @app.get("/", response_class=HTMLResponse)
 async def index_page(request: Request, db: AsyncSession = Depends(get_db)):
     """Шаблонизатор для приветственной страницы"""
+    groups = await data_service.get_all_groups(db)
+    dates = await data_service.get_all_dates(db)
 
     return templates.TemplateResponse(
         name="index.html", request=request, context={
-            'groups': await get_all_groups(db), 
-            'dates': await get_all_dates(db),
+            'groups': groups, 
+            'dates': dates,
         }
     )
 
-
-async def get_all_dates(db: AsyncSession): 
-    dates = await db.scalars(select(Date))
-    return dates.all()
-
-
-async def get_all_groups(db: AsyncSession): 
-    groups = await db.scalars(select(Group))
-    return groups.all()
 
 
 # Получаем ключ из переменных окружения

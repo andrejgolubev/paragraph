@@ -24,9 +24,9 @@
               <li class="nav_item"><a href="">рейтинг</a></li>
               <li class="nav_item"><a href="">новости</a></li>
               <img
+                class="toggle"
                 src="../static/static/lightDarkSwitch.svg"
                 alt="Toggle"
-                class="toggle"
               />
               <img
                 src="../static/static/ProfileIcon.svg"
@@ -42,18 +42,17 @@
         <div class="options">
           <div class="group">
             <div class="custom-select">
-              <select>
+              <select id="group-select">
                 <option value="" disabled selected>номер группы</option>
                 {% for group in groups %}
                 <option value="{{group.data_value}}">{{group.group_number}}</option>
                 {% endfor %}
-                <option value=""></option>
               </select>
             </div>
           </div>
           <div class="week">
             <div class="custom-select">
-              <select>
+              <select id="date-select">
                 <option value="" disabled selected>дата / неделя</option>
                 {% for date in dates%}
                 <option value="{{date.data_value}}">{{date.date}}</option>

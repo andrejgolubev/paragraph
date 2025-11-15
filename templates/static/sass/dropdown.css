@@ -6,9 +6,6 @@
   font-family: "Manrope";
   src: url("../fonts/Manrope-VariableFont_wght.ttf");
 }
-.custom-select {
-  position: relative;
-}
 .custom-select select {
   appearance: none;
   width: 100%;
@@ -19,6 +16,9 @@
   border-radius: 0.5rem;
   color: #292833;
   cursor: pointer;
+}
+.custom-select:focus {
+  background-color: white;
 }
 .custom-select::before, .custom-select::after {
   --size: 0.3rem;

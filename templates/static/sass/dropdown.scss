@@ -1,7 +1,7 @@
 @use './fonts.scss';
 
+ 
 .custom-select {
-  position: relative;
 
   select {
     appearance: none;
@@ -12,9 +12,16 @@
     border: 2px rgb(207, 222, 227) dashed;
     border-radius: 0.5rem;
     color: #292833;
-    cursor: pointer;  
-   
+    cursor: pointer;
+    
+
   }
+
+  &:focus {
+    background-color: white;
+  }
+
+  
 
   &::before,
   &::after {
@@ -44,4 +51,8 @@
     background-color: rgb(135, 178, 208);
     border-color: rgb(135, 178, 208);
   }
+
+
+
+
 }
