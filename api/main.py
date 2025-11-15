@@ -1,6 +1,6 @@
 from api.db.database import get_db
 from api.db.refresh_db import load_groups_and_dates
-from api.routers.users import user_router
+from api.routers import users, schedule
 from api.parser.group_parser import parse_groups
 from api.parser.date_parser import parse_dates
 from api.parser.utils import convert_date
@@ -26,27 +26,42 @@ templates = Jinja2Templates(directory="templates")
 
 
 app.include_router(
-    user_router,
+    users.user_router,
     prefix="/user",
     tags=["users"],
     dependencies=[Depends(oauth2_scheme)],
 )
+app.include_router(schedule.schedule_router)
 
+HOMEPAGE_ON = False 
+# этот параметр передавать в контекстном словаре каждого эндпоинта
+# (в view каждом кроме index_page() ставить False внутри view)
 
-@app.get("/", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse, name='index')
 async def index_page(request: Request, db: AsyncSession = Depends(get_db)):
     """Шаблонизатор для приветственной страницы"""
+    HOMEPAGE_ON = True
     groups = await data_service.get_all_groups(db)
     dates = await data_service.get_all_dates(db)
-
-    return templates.TemplateResponse(
+    return templates.TemplateResponse( 
         name="index.html", request=request, context={
+            'HOMEPAGE_ON': HOMEPAGE_ON, # этот параметр передавать в контекстном словаре каждого эндпоинта
             'groups': groups, 
             'dates': dates,
         }
     )
 
+@app.get("/schedule/", response_class=HTMLResponse, name='schedule')
+async def schedule_page(request: Request, db: AsyncSession = Depends(get_db)):
+    """Шаблонизатор для страницы с расписанием"""
+    HOMEPAGE_ON = False
+    
+    return templates.TemplateResponse( 
+        name="schedule.html", request=request, context={
+            'HOMEPAGE_ON': HOMEPAGE_ON, # этот параметр передавать в контекстном словаре каждого эндпоинта
 
+        }
+    )
 
 # Получаем ключ из переменных окружения
 API_KEY = os.getenv("ADMIN_API_KEY", 'secret-key')

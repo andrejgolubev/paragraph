@@ -4,20 +4,45 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %} {% endblock title %}</title>
-    {# <link rel="stylesheet" href="../static/sass/styles.css" /> #}
-    <link href="{{ url_for('static', path='../static/sass/styles.css') }}" rel="stylesheet">
+    <link
+      href="{{ url_for('static', path='../static/sass/styles.css') }}"
+      rel="stylesheet"
+    />
   </head>
 
+  <header class="header">
+    <nav class="nav">
+      <ul class="nav_list">
+        <li class="nav_item">
+          <a href="{{url_for('index')}}">
+            <img
+              class="nav_logo"
+              src="../static/static/logoAndText.svg"
+              alt="Logo"
+            />
+          </a>
+        </li>
+        <div class="links">
+          <li class="nav_item"><a href="">журнал</a></li>
+          <li class="nav_item"><a href="">рейтинг</a></li>
+          <li class="nav_item"><a href="">новости</a></li>
+          <img
+            class="toggle"
+            src="../static/static/lightDarkSwitch.svg"
+            alt="Toggle"
+          />
+          <img
+            src="../static/static/ProfileIcon.svg"
+            alt="Profile"
+            class="profile-icon nav_item"
+          />
+        </div>
+      </ul>
+    </nav>
+  </header>
   <body>
-    {% block body %} 
+    {% block body %} {% endblock body %}
 
-    {% block header %} 
-    {% endblock header %}
-
-    {% block tip %}
-    {% endblock tip %} 
-
-    {% endblock body %}
     <script src="../static/js/script.js"></script>
     <script src="../static/js/xhr.js"></script>
   </body>

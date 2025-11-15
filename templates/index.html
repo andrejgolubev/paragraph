@@ -5,82 +5,41 @@
 {% endblock title %}
 
 
-  <body>
+<body>
 {% block body %}
-{% block header %}
-    <div class="main">
-      <header class="header">
-        <nav class="nav">
-          <ul class="nav_list">
-            <li class="nav_item">
-              <img
-                class="nav_logo"
-                src="../static/static/logoAndText.svg"
-                alt="Logo"
-              />
-            </li>
-            <div class="links">
-              <li class="nav_item"><a href="">журнал</a></li>
-              <li class="nav_item"><a href="">рейтинг</a></li>
-              <li class="nav_item"><a href="">новости</a></li>
-              <img
-                class="toggle"
-                src="../static/static/lightDarkSwitch.svg"
-                alt="Toggle"
-              />
-              <img
-                src="../static/static/ProfileIcon.svg"
-                alt="Profile"
-                class="profile-icon nav_item"
-              />
-            </div>
-          </ul>
-        </nav>
-      </header>
-
-      <div class="main-content">
-        <div class="options">
-          <div class="group">
-            <div class="custom-select">
-              <select id="group-select">
-                <option value="" disabled selected>номер группы</option>
-                {% for group in groups %}
-                <option value="{{group.data_value}}">{{group.group_number}}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </div>
-          <div class="week">
-            <div class="custom-select">
-              <select id="date-select">
-                <option value="" disabled selected>дата / неделя</option>
-                {% for date in dates%}
-                <option value="{{date.data_value}}">{{date.date}}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </div>
-          <div class="corpuses">
-            <p>C - Центральный корпус⠀⠀⠀⠀B - Бизнес-инкубатор</p>
-            <p>L - Лабораторный корпус ⠀⠀⠀F - Первый корпус</p>
-          </div>
+  <div class="main-content">
+    <div class="options">
+      <div class="group">
+        <div class="custom-select">
+          <select>
+            <option value="" disabled selected>номер группы</option>
+            {% for group in groups %}
+            <a href="{{url_for('index')}}"></a><option value="{{group.data_value}}">{{group.group_number}}</option></a>
+            {% endfor %}
+          </select>
         </div>
-        {% endblock header %}
-
-        {% block tip %}
-        <div class="tip">
-          <img src="../static/static/chel.svg" alt="" />
-          <div class="tip_text">
-            <p>выберите вашу группу и неделю, на которую</p>
-            <p>хотите посмотреть расписание :)</p>
-          </div>
-        </div>
-        {% endblock tip %}
-        
-        {% include "table.html" %}
-
       </div>
+      <div class="week">
+        <div class="custom-select">
+          <select>
+            <option value="" disabled selected>дата / неделя</option>
+            {% for date in dates%}
+            <option value="{{date.data_value}}">{{date.date}}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="corpuses">
+        <p>C - Центральный корпус⠀⠀⠀⠀B - Бизнес-инкубатор</p>
+        <p>L - Лабораторный корпус ⠀⠀⠀F - Первый корпус</p>
+      </div>
+    </div>
+    {% if HOMEPAGE_ON %}
+    {% include "includes/tip.html" %}
+    {% endif %}
+  </div>
+
 
 {% endblock body %}
-  </body>
+</body>
 </html>

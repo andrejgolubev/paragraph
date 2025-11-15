@@ -74,13 +74,11 @@
   }
 }
 
-.main {
+body {
   width: auto;
   height: auto;
-  min-height: 1500px;
-  // background-image: url('../static/bg-light.png');
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(98, 170, 255, 0.8) 75%);
-  ;
+  min-height: 1200px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 8%, rgba(98, 170, 255, 0.8) 75%);
 }
 
 .main-content {

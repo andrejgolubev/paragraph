@@ -134,7 +134,6 @@ input[type=file] {
   /* Styles when a valid option is selected (other than placeholder) */
 }
 .custom-select.select-valid select {
-  background-color: rgb(135, 178, 208);
   border-color: rgb(135, 178, 208);
 }
 
@@ -196,11 +195,11 @@ input[type=file] {
   margin: 20px 0 0 0;
 }
 
-.main {
+body {
   width: auto;
   height: auto;
-  min-height: 1500px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(98, 170, 255, 0.8) 75%);
+  min-height: 1200px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 8%, rgba(98, 170, 255, 0.8) 75%);
 }
 
 .main-content {
