@@ -26,7 +26,7 @@ def _parse_group(driver: webdriver.Chrome):
         data_value = option.get_attribute("data-value")
         group_number = option.text.strip()
         
-        if data_value and group_number:
+        if data_value!='0' and group_number:
             groups_dict[group_number] = data_value 
 
     return groups_dict

@@ -23,7 +23,7 @@ async def load_groups_and_dates(groups: dict, dates: dict, db: AsyncSession):
     
     await db.commit()
     
-    # Затем создаем группы и связи
+    # Затем создаем группы, а затем их связываем с датами 
     for group_number, group_data_value in groups.items():
         # Проверяем существует ли группа
         existing_group = await db.scalars(

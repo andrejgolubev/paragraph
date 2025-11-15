@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Unbounded";
-  src: url("../styles/static/fonts/Unbounded-VariableFont_wght.ttf");
+  src: url("../static/static/fonts/Unbounded-VariableFont_wght.ttf");
 }
 @font-face {
   font-family: "Manrope";
@@ -14,7 +14,7 @@
   width: 100%;
   font-size: 16px;
   font-family: "Manrope", serif;
-  padding: 0.675em 7.5em 0.675em 1.5em;
+  padding: 0.675em 6.5em 0.675em 1.5em;
   border: 2px rgb(207, 222, 227) dashed;
   border-radius: 0.5rem;
   color: #292833;

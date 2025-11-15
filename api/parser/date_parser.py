@@ -32,7 +32,7 @@ def _parse_date(driver: webdriver.Chrome):
         if ' (текущая)' in user_date: 
             user_date = user_date.replace(' (текущая)', '')
 
-        if data_value and user_date:
+        if data_value!='0' and user_date:
             dates_dict[user_date] = data_value 
 
     return dates_dict

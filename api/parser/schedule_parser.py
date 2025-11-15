@@ -36,10 +36,6 @@ def parse_by_url(url: str):
         lessons = [(group_number, date), lessons]
     return lessons
 
-def convert_date(date: str): 
-    """date подаётся в формате в таком, в котором юзер ее выбирает из списка на фронтенде для последующей конвертации 
-    в пригодную для вставки в ссылку и парсинга сайта ргрту. т.е. (10.11.2025, числ.) -> 2025-11-10  """
-    return '-'.join(reversed(date[:10].split('.')))
 
 if __name__ == '__main__':
     parsed = parse_by_url('https://rasp.rsreu.ru/schedule-frame/group?faculty=4&group=878&date=2025-11-10')

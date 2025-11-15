@@ -1,14 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>прогинж | журнал</title>
-    <link rel="stylesheet" href="../static/sass/styles.css" />
-    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet" />
-  </head>
+{% extends "base.html" %}
+
+{% block title %}
+прогинж | журнал
+{% endblock title %}
+
 
   <body>
+{% block body %}
+{% block header %}
     <div class="main">
       <header class="header">
         <nav class="nav">
@@ -45,9 +44,10 @@
             <div class="custom-select">
               <select>
                 <option value="" disabled selected>номер группы</option>
-                <option value="">5413</option>
-                <option value="">5423</option>
-                <option value="">543</option>
+                {% for group in groups %}
+                <option value="{{group.data_value}}">{{group.group_number}}</option>
+                {% endfor %}
+                <option value=""></option>
               </select>
             </div>
           </div>
@@ -55,8 +55,9 @@
             <div class="custom-select">
               <select>
                 <option value="" disabled selected>дата / неделя</option>
-                {# {% for date in  %}
-                {% endfor %} #}
+                {% for date in dates%}
+                <option value="{{date.data_value}}">{{date.date}}</option>
+                {% endfor %}
               </select>
             </div>
           </div>
@@ -65,7 +66,9 @@
             <p>L - Лабораторный корпус ⠀⠀⠀F - Первый корпус</p>
           </div>
         </div>
+        {% endblock header %}
 
+        {% block tip %}
         <div class="tip">
           <img src="../static/static/chel.svg" alt="" />
           <div class="tip_text">
@@ -73,85 +76,12 @@
             <p>хотите посмотреть расписание :)</p>
           </div>
         </div>
+        {% endblock tip %}
+        
+        {% include "table.html" %}
 
-        <table class="table">
-          <thead>
-            <tr class="table_row_high">
-              <th>время</th>
-              <th>
-                <p>x ноября,</p>
-                <p>понедельник</p>
-              </th>
-              <th>
-                <p>x ноября,</p>
-                <p>вторник</p>
-              </th>
-              <th>
-                <p>x ноября,</p>
-                <p>среда</p>
-              </th>
-              <th>
-                <p>x ноября,</p>
-                <p>четверг</p>
-              </th>
-              <th>
-                <p>x ноября,</p>
-                <p>пятница</p>
-              </th>
-              <th>
-                <p>x ноября,</p>
-                <p>суббота</p>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <p>08:10</p>
-                <p>09:45</p>
-              </td>
-              <td>Domenic</td>
-              <td>88,110</td>
-              <td>
-                <p>dcodedcodedcodedcodedc</p>
-                <p>dcodedcodedcodedcodedc</p>
-                <p>dcodedcodedcodedcodedc</p>
-                <p>dcodedcodedcodedcodedc</p>
-              </td>
-              <td>asdoih</td>
-              <td>asdoih</td>
-              <td>asdoih</td>
-            </tr>
-            <tr>
-              <td>
-                <p>09:55</p>
-                <p>11:30</p>
-              </td>
-              <td>Domenic</td>
-              <td>88,110</td>
-              <td>dcode</td>
-              <td>asdoih</td>
-              <td>asdoih</td>
-              <td>asdoih</td>
-            </tr>
-            <tr>
-              <td>
-                <p>11:40</p>
-                <p>13:15</p>
-              </td>
-              <td>Domenic</td>
-              <td>88,110</td>
-              <td>dcode</td>
-              <td>asdoih</td>
-              <td>asdoih</td>
-              <td>asdoih</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
-    </div>
 
-    <script src="../static/js/script.js"></script>
-    <script src="../static/js/xhr.js"></script>
+{% endblock body %}
   </body>
 </html>
