@@ -6,7 +6,8 @@ from sqlalchemy import (
     UniqueConstraint,
 )
 from api.db.database import Base
-
+from datetime import datetime
+from sqlalchemy import func
 
 class User(Base):
     __tablename__ = "users"
@@ -19,8 +20,8 @@ class User(Base):
 
     group_id: Mapped[int] = mc(ForeignKey("groups.id"))
 
-    # group: Mapped["Group"] = relationship(back_populates="users")
-    # homeworks: Mapped[list["Homework"]] = relationship(back_populates="user")
+    group: Mapped["Group"] = relationship(back_populates="users")
+
 
 
 """MANY TO MANY RELATION - GROUPS <-> parse_dates"""
@@ -39,6 +40,7 @@ class GroupDateAssociation(Base):
     id: Mapped[int] = mc(primary_key=True)
     group_id: Mapped[int] = mc(ForeignKey("groups.id"), nullable=False)
     dates_id: Mapped[str] = mc(ForeignKey("dates.id"), nullable=False)
+    created_at: Mapped[datetime] = mc(server_default=func.now())
     homework: Mapped[str] = mc(nullable=True)
 
 
@@ -49,9 +51,9 @@ class Group(Base):
     group_number: Mapped[str] = mc(String(100), nullable=False, index=True)
     data_value: Mapped[str] = mc(String(50), nullable=False)
 
-    # users: Mapped[list["User"]] = relationship(
-    #     back_populates="group"
-    # )  # one to many rel with users
+    users: Mapped[list["User"]] = relationship(
+        back_populates="group"
+    )  # one to many rel with users
 
     dates: Mapped[list["Date"]] = relationship(
         secondary="group_date_association", back_populates="groups"
@@ -73,10 +75,3 @@ class Date(Base):
 """MANY TO MANY RELATION - GROUPS <-> parse_dates"""
 
 
-# class Homework(Base):
-#     __tablename__ = "homeworks"
-
-#     id: Mapped[int] = mc(Integer, primary_key=True, index=True)
-#     text: Mapped[str] = mc(String(150), nullable=True, default="не указано")
-
-#     user: Mapped["User"] = relationship(back_populates="homework")

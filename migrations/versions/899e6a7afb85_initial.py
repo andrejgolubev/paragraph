@@ -1,8 +1,8 @@
-"""empty message
+"""initial
 
-Revision ID: ca716b54fea7
-Revises: aad991e322d2
-Create Date: 2025-11-14 18:38:29.578753
+Revision ID: 899e6a7afb85
+Revises: 
+Create Date: 2025-11-14 21:07:50.550653
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'ca716b54fea7'
-down_revision: Union[str, Sequence[str], None] = 'aad991e322d2'
+revision: str = '899e6a7afb85'
+down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -30,8 +30,8 @@ def upgrade() -> None:
     op.create_index(op.f('ix_dates_id'), 'dates', ['id'], unique=False)
     op.create_table('groups',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('data_value', sa.String(length=50), nullable=False),
     sa.Column('group_number', sa.String(length=100), nullable=False),
+    sa.Column('data_value', sa.String(length=50), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_groups_group_number'), 'groups', ['group_number'], unique=False)
@@ -40,6 +40,7 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('group_id', sa.Integer(), nullable=False),
     sa.Column('dates_id', sa.Integer(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.Column('homework', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['dates_id'], ['dates.id'], ),
     sa.ForeignKeyConstraint(['group_id'], ['groups.id'], ),

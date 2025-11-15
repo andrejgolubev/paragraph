@@ -1,18 +1,10 @@
-from fastapi import FastAPI, Depends, Request, APIRouter
-from api.routers.users import user_router
-from api.routers.auth import oauth2_scheme
 from sqlalchemy.ext.asyncio import AsyncSession
 from api.db.database import get_db
 from sqlalchemy import select
 from api.db.models import Group, Date, GroupDateAssociation 
-from api.db.schemes import GroupCreate, GroupResponse
-
-schedule_router = APIRouter(tags=['schedule'], prefix='/schedule')
 
 
-
-@schedule_router.post('/')
-async def load_groups_and_dates(groups: dict, dates: dict, db: AsyncSession = Depends(get_db)): 
+async def load_groups_and_dates(groups: dict, dates: dict, db: AsyncSession): 
     dates_map = {} # data_value: date объект 
 
     for date_text, date_data_value in dates.items():
@@ -55,9 +47,4 @@ async def load_groups_and_dates(groups: dict, dates: dict, db: AsyncSession = De
     
     await db.commit()
 
-
-
-
-
-@schedule_router.post('/')
-async def leave_homework(text, group_number: int, date: str, db = Depends(get_db)): ...
+    
