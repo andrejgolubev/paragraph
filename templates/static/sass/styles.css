@@ -97,19 +97,19 @@ input[type=file] {
   font-family: "Manrope";
   src: url("../fonts/Manrope-VariableFont_wght.ttf");
 }
+.custom-select {
+  position: relative;
+}
 .custom-select select {
   appearance: none;
   width: 100%;
   font-size: 16px;
   font-family: "Manrope", serif;
-  padding: 0.675em 6.5em 0.675em 1.5em;
+  padding: 0.675em 3.8em 0.675em 1.5em;
   border: 2px rgb(207, 222, 227) dashed;
   border-radius: 0.5rem;
   color: #292833;
   cursor: pointer;
-}
-.custom-select:focus {
-  background-color: white;
 }
 .custom-select::before, .custom-select::after {
   --size: 0.3rem;

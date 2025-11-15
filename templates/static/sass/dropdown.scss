@@ -1,27 +1,20 @@
 @use './fonts.scss';
 
- 
 .custom-select {
+  position: relative;
 
   select {
     appearance: none;
     width: 100%;
     font-size: 16px;
     font-family: 'Manrope', serif;
-    padding: 0.675em 6.5em 0.675em 1.5em;
+    padding: 0.675em 3.8em 0.675em 1.5em;
     border: 2px rgb(207, 222, 227) dashed;
     border-radius: 0.5rem;
     color: #292833;
-    cursor: pointer;
-    
-
+    cursor: pointer;  
+   
   }
-
-  &:focus {
-    background-color: white;
-  }
-
-  
 
   &::before,
   &::after {
@@ -51,8 +44,4 @@
     background-color: rgb(135, 178, 208);
     border-color: rgb(135, 178, 208);
   }
-
-
-
-
-}
+} 
