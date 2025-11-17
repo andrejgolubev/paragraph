@@ -108,7 +108,7 @@ input[type=file] {
   padding: 0.675em 3.8em 0.675em 1.5em;
   border: 2px rgb(207, 222, 227) dashed;
   border-radius: 0.5rem;
-  color: #292833;
+  color: rgba(34, 34, 42, 0.5882352941);
   cursor: pointer;
 }
 .custom-select::before, .custom-select::after {
@@ -118,23 +118,103 @@ input[type=file] {
   right: 1rem;
   pointer-events: none;
 }
-.custom-select::before {
-  border-left: var(--size) solid transparent;
-  border-right: var(--size) solid transparent;
-  border-bottom: var(--size) solid rgb(135, 178, 208);
-  top: 40%;
-}
 .custom-select::after {
   border-left: var(--size) solid transparent;
   border-right: var(--size) solid transparent;
   border-top: var(--size) solid rgb(135, 178, 208);
-  top: 55%;
+  top: 50%;
 }
 .custom-select {
   /* Styles when a valid option is selected (other than placeholder) */
 }
 .custom-select.select-valid select {
   border-color: rgb(135, 178, 208);
+}
+
+#week-select {
+  padding-bottom: 12.3px;
+}
+
+.search-block {
+  position: relative;
+}
+.search-block__body {
+  position: relative;
+}
+.search-block__wrap-input {
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  border: 2px rgb(207, 222, 227) dashed;
+  background-color: #fff;
+  overflow: auto;
+}
+.search-block__input {
+  width: 100%;
+  font-size: 16px;
+  font: inherit;
+  font-family: "Manrope", serif;
+  font-style: normal;
+  color: inherit;
+  border-radius: 0;
+  appearance: none;
+  padding: 0.675em 3.8em 0.675em 1.5em;
+  outline: none;
+  border: none;
+}
+.search-block__products {
+  opacity: 0;
+  visibility: hidden;
+  max-height: 230px;
+  border-radius: 0.5rem;
+  position: absolute;
+  top: 100%;
+  margin-top: 5px;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border: rgb(207, 222, 227) 2px dotted;
+  list-style: none;
+  overflow: auto;
+  z-index: 1000;
+}
+.search-block__products li {
+  font-family: "Manrope", sans-serif;
+  padding: 10px;
+  transition: all 0.2s ease 0s;
+  cursor: pointer;
+}
+.search-block__products li:hover {
+  background-color: rgba(104, 165, 206, 0.218);
+}
+.search-block__products li {
+  text-decoration: none;
+  color: rgb(242, 240, 240);
+}
+.search-block__products a {
+  all: unset;
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  font-family: "Manrope", sans-serif;
+  color: #1a1b1c;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+.search-block__products::-webkit-scrollbar {
+  background-color: rgba(140, 190, 246, 0.275);
+  height: 7px;
+  width: 7px;
+  border-radius: 10px;
+}
+.search-block__products::-webkit-scrollbar-thumb {
+  background-color: rgba(140, 190, 246, 0.286);
+  border-radius: 10px;
+}
+.search-block__body.active-search .search-block__products {
+  opacity: 1;
+  visibility: visible;
 }
 
 .header {

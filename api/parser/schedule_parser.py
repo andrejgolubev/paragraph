@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from group_parser import parse_groups
+from api.parser.group_parser import parse_groups
 import asyncio
 
 def garb_remove(string: str): 

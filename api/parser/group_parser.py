@@ -42,5 +42,5 @@ def parse_groups():
 
 
 if __name__ == '__main__': 
-    print(f'{parse_groups = }')
+    print(f'{parse_groups() = }')
 

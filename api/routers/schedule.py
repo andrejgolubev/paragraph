@@ -1,4 +1,5 @@
-from fastapi import Request, HTTPException, APIRouter, Depends
+from fastapi import Request, Response, HTTPException, APIRouter, Depends
+from fastapi.responses import JSONResponse
 from api.db.database import get_db
 from api.parser.schedule_parser import parse_schedule_from_url  # твой существующий парсер
 import asyncio
@@ -32,3 +33,30 @@ async def get_schedule(
         return schedule_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error parsing schedule: {str(e)}")
+
+from datetime import datetime, timedelta
+
+
+@router.post("/select-group")
+async def select_group(
+    group_data_value: str,
+    response: Response,
+    db: AsyncSession = Depends(get_db)
+):
+    # Сохраняем в cookie на 30 дней
+    response.set_cookie(
+        key="selected_group",
+        value=group_data_value,
+        max_age=30*24*60*60,  # 30 дней
+        httponly=True,
+        secure=True  # для HTTPS
+    )
+    
+    # Можно также сохранить в БД если нужно
+    return {"status": "success", "message": "Group selected"} 
+
+from api.services.data_service import data_service
+
+@router.get('/get-all-groups', response_class=JSONResponse)
+async def get_all_groups(db: AsyncSession = Depends(get_db)): 
+    return await data_service.get_all_groups(db)

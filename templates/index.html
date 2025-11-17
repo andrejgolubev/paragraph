@@ -11,17 +11,19 @@
     <div class="options">
       <div class="group">
         <div class="custom-select">
-          <select>
-            <option value="" disabled selected>номер группы</option>
-            {% for group in groups %}
-            <a href="{{url_for('index')}}"></a><option value="{{group.data_value}}">{{group.group_number}}</option></a>
-            {% endfor %}
-          </select>
+          <div class="search-block">
+            <div class="search-block__body">
+              <div class="search-block__wrap-input">
+                <input type="text" id="search-input" placeholder="номер группы" class="search-block__input" />
+              </div>
+              <ul class="search-block__products" id="products"></ul> {# idk #}
+            </div>
+          </div>
         </div>
       </div>
       <div class="week">
         <div class="custom-select">
-          <select>
+          <select id="week-select">
             <option value="" disabled selected>дата / неделя</option>
             {% for date in dates%}
             <option value="{{date.data_value}}">{{date.date}}</option>
