@@ -37,15 +37,13 @@
 
 .search-block,
 .select-block {
+
   ul{
     transition: all 0.1s ease 0.1s;
   }
 
-  &:hover{
-    border-color:rgb(217, 223, 228)
-  }
-
   &__body.active-search &__wrap-input {
+    transition: all 0.1s cubic-bezier(0.3, 0.8, 0.3, 2.3) 0.1s;
     border-color: rgb(104, 165, 206); // Подсветка при активном состоянии
   }
 
@@ -146,3 +144,7 @@
 }
 
 //STYLES FOR DATES SELECTION
+
+#select-input{
+  cursor: pointer;
+}

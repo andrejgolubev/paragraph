@@ -38,14 +38,11 @@
 .select-block ul {
   transition: all 0.1s ease 0.1s;
 }
-.search-block:hover,
-.select-block:hover {
-  border-color: rgb(217, 223, 228);
-}
 .search-block__body.active-search .search-block__wrap-input,
 .search-block__body.active-search .select-block__wrap-input,
 .select-block__body.active-search .search-block__wrap-input,
 .select-block__body.active-search .select-block__wrap-input {
+  transition: all 0.1s cubic-bezier(0.3, 0.8, 0.3, 2.3) 0.1s;
   border-color: rgb(104, 165, 206);
 }
 .search-block,
@@ -142,6 +139,10 @@
 .select-block__body.active-search .select-block__products {
   opacity: 1;
   visibility: visible;
+}
+
+#select-input {
+  cursor: pointer;
 }
 
 /*# sourceMappingURL=dropdown.css.map */

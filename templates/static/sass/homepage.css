@@ -1,0 +1,36 @@
+.tip {
+  opacity: 1;
+  transition: opacity 0.4s cubic-bezier(0.1, -0.6, 0.2, 0);
+}
+.tip:not(.tip-active) {
+  opacity: 0;
+}
+.tip.tip-active {
+  opacity: 1;
+}
+.tip__inner {
+  transition: transform 0.3s cubic-bezier(0.3, 0.8, 0.3, 2.3) 0s;
+}
+.tip__inner:hover {
+  transform: translateY(1px);
+}
+
+.toggle,
+.toggle-bg {
+  display: inline-block;
+  position: relative;
+  bottom: 2px;
+}
+
+#toggle-sun {
+  position: absolute;
+  right: 99px;
+  top: 21px;
+  transition: all 0.3s ease 0s;
+}
+
+#toggle-sun:hover {
+  transform: translate3d(5px, 0, 20px) rotateY(3deg) perspective(500px);
+}
+
+/*# sourceMappingURL=homepage.css.map */
