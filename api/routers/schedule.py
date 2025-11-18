@@ -60,3 +60,15 @@ from api.services.data_service import data_service
 @router.get('/get-all-groups', response_class=JSONResponse)
 async def get_all_groups(db: AsyncSession = Depends(get_db)): 
     return await data_service.get_all_groups(db)
+
+
+@router.get('/get-all-dates', response_class=JSONResponse)
+async def get_all_dates(db: AsyncSession = Depends(get_db)): 
+    dates = await data_service.get_all_dates(db) 
+    return [
+        {
+            "date": date.date,
+            'data_value': date.data_value,
+        }
+        for date in dates
+    ]

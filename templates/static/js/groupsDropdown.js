@@ -3,8 +3,7 @@ async function loadGroups() {
     const response = await fetch(
       "http://127.0.0.1:8000/schedule/get-all-groups"
     );
-    const groups = await response.json();
-    return groups;
+    return response.json();
   } catch (error) {
     console.error("Error loading groups:", error);
     return [];
@@ -17,9 +16,7 @@ const searchBody = document.querySelector(".search-block__body");
 
 const groups = await loadGroups(); // 100: {group_number: '5876М', id: 101, data_value: '1401'}
 
-groups.forEach((element) => {
-  console.log(element); // выводит все номера групп
-});
+
 
 searchInput.addEventListener("input", () => {
   const input = searchInput.value;
@@ -42,9 +39,17 @@ searchInput.addEventListener("input", () => {
     groupsList.appendChild(li);
   });
 
-  if (input !== "" && filteredGroups.length > 0){
-    searchBody.classList.add('active-search') 
-  }else{
-    searchBody.classList.remove('active-search')
+  if (input !== "" && filteredGroups.length > 0) {
+    searchBody.classList.add("active-search");
+  } else {
+    searchBody.classList.remove("active-search");
+  }
+});
+
+document.addEventListener("click", (event) => {
+  if (
+    !searchInput.contains(event.target) &&
+    !groupsList.contains(event.target)
+  ) { searchBody.classList.remove('active-search');
   }
 });

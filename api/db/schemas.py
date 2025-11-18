@@ -53,13 +53,15 @@ class GroupResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class DateCreate(BaseModel): 
     date: str
 
-    model_config = ConfigDict(from_attributes=True)
 
-class DateResponse(BaseModel): 
-    id: int 
-    date: str 
+class OnlyDateResponse(BaseModel): 
+    id: int
+    group_number: str
+    data_value: str
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        from_attributes = True
+    
+

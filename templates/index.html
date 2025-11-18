@@ -23,12 +23,14 @@
       </div>
       <div class="week">
         <div class="custom-select">
-          <select id="week-select">
-            <option value="" disabled selected>дата / неделя</option>
-            {% for date in dates%}
-            <option value="{{date.data_value}}">{{date.date}}</option>
-            {% endfor %}
-          </select>
+          <div class="select-block">
+            <div class="select-block__body">
+              <div class="select-block__wrap-input">
+                <input readonly type="text" id="select-input" placeholder="дата/неделя" class="search-block__input" />
+              </div>
+              <ul class="select-block__products" id="dates"></ul>
+            </div>
+          </div>
         </div>
       </div>
       <div class="corpuses">

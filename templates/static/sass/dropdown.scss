@@ -31,21 +31,24 @@
     border-top: var(--size) solid rgb(135, 178, 208);
     top: 50%;
   }
-
-  /* Styles when a valid option is selected (other than placeholder) */
-  &.select-valid select {
-    border-color: rgb(135, 178, 208);
-  }
-}
-
-#week-select {
-  padding-bottom: 12.3px;
 }
 
 //STYLES FOR AUTOCOMPLETE DROPDOWN 
 
-.search-block {
-  // flex: 1 1 400px;
+.search-block,
+.select-block {
+  ul{
+    transition: all 0.1s ease 0.1s;
+  }
+
+  &:hover{
+    border-color:rgb(217, 223, 228)
+  }
+
+  &__body.active-search &__wrap-input {
+    border-color: rgb(104, 165, 206); // Подсветка при активном состоянии
+  }
+
   position: relative;
 
   &__body {
@@ -78,7 +81,7 @@
   &__products {
     opacity: 0;
     visibility: hidden;
-    max-height: 230px;
+    max-height: 400px;
     border-radius: 0.5rem;
     position: absolute;
     top: 100%; //чтобы был под инпутом
@@ -95,8 +98,9 @@
       font-family: 'Manrope', sans-serif;
       padding: 10px;
       transition: all 0.2s ease 0s; // СПОРНО 
-      
+
       cursor: pointer;
+
       &:hover {
         background-color: rgba(104, 165, 206, 0.218);
       }
@@ -113,22 +117,23 @@
       cursor: pointer;
       font-family: 'Manrope', sans-serif;
       color: #1a1b1c;
-      
+
       // Восстанавливаем нужные свойства
       font-size: 16px;
       box-sizing: border-box;
     }
   }
 
-  
+
   &__products::-webkit-scrollbar {
     background-color: rgba(140, 190, 246, 0.275);
     height: 7px;
     width: 7px;
     border-radius: 10px;
   }
-  
-  &__products::-webkit-scrollbar-thumb { // для стилизации ползунка
+
+  &__products::-webkit-scrollbar-thumb {
+    // для стилизации ползунка
     background-color: rgba(140, 190, 246, 0.286);
     border-radius: 10px;
   }
@@ -138,6 +143,6 @@
     visibility: visible;
   }
 
-
-
 }
+
+//STYLES FOR DATES SELECTION
