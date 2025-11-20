@@ -1,6 +1,7 @@
-import {loadSchedule} from './loadSchedule.js'
+import { loadSchedule } from "./loadSchedule.js";
+import { setSelectedGroup } from "./datesDropdown.js";
 
-let selectedGroupDataValue = null
+let selectedGroupDataValue = null;
 
 async function loadGroups() {
   try {
@@ -13,7 +14,6 @@ async function loadGroups() {
     return [];
   }
 }
-
 
 // Функция для выбора группы и сразу загрузки расписания
 async function selectGroup(groupDataValue, groupNumber) {
@@ -34,23 +34,19 @@ async function selectGroup(groupDataValue, groupNumber) {
 
     if (response.ok) {
       selectedGroupDataValue = groupDataValue;
+      setSelectedGroup(groupDataValue); // cообщаем datesDropdown о выборе
       console.log("Group selected successfully");
 
       // СРАЗУ загружаем расписание для текущей даты
       await loadSchedule(groupDataValue);
 
       // Показываем блок выбора даты (опционально)
-      document.getElementById("select-input").placeholder =
-        "дата/неделя"; // спорно, нужна ли эта строка вообще
+      document.getElementById("select-input").placeholder = "дата/неделя"; // спорно, нужна ли эта строка вообще
     }
   } catch (error) {
     console.error("Error selecting group:", error);
   }
 }
-
-
-
-
 
 const searchInput = document.getElementById("search-input");
 const groupsList = document.getElementById("products");
@@ -81,8 +77,6 @@ searchInput.addEventListener("input", () => {
       await selectGroup(group.data_value, group.group_number);
 
       searchInput.value = group.group_number;
-      // issue may be down here
-      selectGroup(group.data_value, group.group_number);
 
       searchBody.classList.remove("active-search");
     });

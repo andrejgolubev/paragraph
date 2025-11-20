@@ -36,24 +36,24 @@ async def get_schedule(
         raise HTTPException(status_code=500, detail=f"Error parsing schedule: {str(e)}")
 
 
+from api.db.schemas import GroupSelection
 
 @router.post("/select-group")
 async def select_group(
-    group_data_value: str,
+    group_data: GroupSelection,
     response: Response,
     db: AsyncSession = Depends(get_db)
 ):
     # Сохраняем в cookie на 30 дней
     response.set_cookie(
         key="selected_group",
-        value=group_data_value,
+        value=group_data.group_data_value,
         max_age=30*24*60*60,  # 30 дней
         httponly=True,
         secure=True  # для HTTPS
     )
     
-    # Можно также сохранить в БД если нужно
-    return {"status": "success", "selected_group": group_data_value} 
+    return {"status": "success", "selected_group": group_data.group_data_value} 
 
 from api.services.data_service import data_service
 

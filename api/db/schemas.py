@@ -65,3 +65,5 @@ class OnlyDateResponse(BaseModel):
         from_attributes = True
     
 
+class GroupSelection(BaseModel):
+    group_data_value: str

@@ -1,10 +1,14 @@
 import {loadSchedule} from './loadSchedule.js'
 
-let selectedGroupDataValue = null
+// ф. для установки выбранной группы (будет вызываться из groupsDropdown)
+export function setSelectedGroup(dataValue) {
+  let selectedGroupDataValue = dataValue;
+}
 
 const selectInput = document.getElementById("select-input");
 const datesList = document.getElementById("dates");
 const selectBody = document.querySelector(".select-block__body");
+
 
 
 async function loadDates() {
@@ -53,7 +57,7 @@ selectInput.addEventListener("click", (event) => {
   if (!selectedGroupDataValue) {}
 
   event.stopPropagation();
-  event.target.toggle("active-search");
+  selectBody.classList.toggle("active-search");
 });
 
 
