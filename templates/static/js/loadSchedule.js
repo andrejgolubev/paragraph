@@ -1,77 +1,128 @@
-// // Функция для выбора группы
-// async function selectGroup(groupDataValue) {
-//     try {
-//         const response = await fetch('/schedule/select-group', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({ group_data_value: groupDataValue })
-//         });
-        
-//         if (response.ok) {
-//             // После успешного сохранения группы, загружаем расписание
-//             await loadSchedule(groupDataValue);
-//         }
-//     } catch (error) {
-//         console.error('Error selecting group:', error);
-//     }
-// }
 
-// // Функция для загрузки расписания
-// async function loadSchedule(groupDataValue, dateDataValue = null) {
-//     try {
-//         const params = new URLSearchParams({
-//             group_data_value: groupDataValue
-//         });
-        
-//         if (dateDataValue) {
-//             params.append('date_data_value', dateDataValue);
-//         }
-        
-//         const response = await fetch(`/schedule/get-schedule?${params}`);
-//         const scheduleData = await response.json();
-        
-//         // Отображаем расписание на странице
-//         displaySchedule(scheduleData);
-//     } catch (error) {
-//         console.error('Error loading schedule:', error);
-//     }
-// }
+export async function loadSchedule(groupDataValue, dateDataValue = null) {
+  try {
+    let url = `http://127.0.0.1:8000/schedule/get-schedule?group_data_value=${groupDataValue}`;
 
-// // Функция для отображения расписания
-// function displaySchedule(scheduleData) {
-//     const scheduleContainer = document.getElementById('schedule-container');
-//     // Здесь твоя логика отображения расписания
-//     scheduleContainer.innerHTML = JSON.stringify(scheduleData, null, 2);
-// }
+    if (dateDataValue) {
+      url += `&date_data_value=${dateDataValue}`;
+    }
 
-// // При загрузке страницы проверяем сохраненную группу
-// document.addEventListener('DOMContentLoaded', function() {
-//     // Можно также попробовать загрузить расписание если есть cookie
-//     // или ждать пока пользователь выберет группу
-// });
+    const response = await fetch(url);
+    const scheduleData = await response.json();
 
-// // Функция для загрузки расписания по выбранным значениям
-// async function loadScheduleFromSelected() {
-//     const groupSelect = document.getElementById('group-select');
-//     const dateSelect = document.getElementById('date-select');
-    
-//     if (groupSelect.value && dateSelect.value) {
-//         await loadSchedule(groupSelect.value, dateSelect.value);
-//     }
-// }
+    displaySchedule(scheduleData);
+  } catch (error) {
+    console.error("Error loading schedule:", error);
+  }
+}
 
-// // При загрузке страницы пытаемся загрузить расписание если есть сохраненная группа
-// document.addEventListener('DOMContentLoaded', async function() {
-//     // Можно попробовать получить группу из cookie через API
-//     try {
-//         const response = await fetch('/schedule/get-schedule');
-//         if (response.ok) {
-//             const scheduleData = await response.json();
-//             displaySchedule(scheduleData);
-//         }
-//     } catch (error) {
-//         // Если нет сохраненной группы - ничего не делаем
-//     }
-// });
+
+
+
+
+
+
+function displaySchedule(scheduleData) {
+  const scheduleContainer = document.getElementById("schedule-container");
+
+  // Проверяем структуру данных
+  console.log("Schedule data structure:", scheduleData);
+
+  if (scheduleData.error) {
+    scheduleContainer.innerHTML = `<p class="error">Ошибка: ${scheduleData.error}</p>`;
+    return;
+  }
+
+  // Извлекаем расписание
+  //   const schedule = scheduleData.schedule_data || scheduleData;
+  const schedule = scheduleData;
+
+  let html = `
+    <div class="schedule-header">
+      <h3>📅 Расписание</h3>
+      ${
+        scheduleData.group_data_value
+          ? `<p>Группа: ${scheduleData.group_data_value}</p>`
+          : ""
+      }
+      ${
+        scheduleData.date_data_value
+          ? `<p>Дата: ${scheduleData.date_data_value}</p>`
+          : "<p>Текущая неделя</p>"
+      }
+    </div>
+  `;
+
+  if (!schedule.days || !schedule.schedule) {
+    scheduleContainer.innerHTML =
+      html + `<p class="error">Нет данных расписания</p>`;
+    return;
+  }
+
+  html += `
+    <table class="table">
+      <thead>
+        <tr class="table_row_high">
+          <th>время</th>
+  `;
+
+  // Заголовки дней
+  schedule.days.forEach((day) => {
+    html += `
+      <th>
+        <p>${day.date}</p>
+        <p>${day.day}</p>
+      </th>
+    `;
+  });
+
+  html += `
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  // Строки с расписанием
+  schedule.schedule.forEach((timeSlot) => {
+    html += `
+      <tr>
+        <td>
+          <p>${timeSlot.time_start}</p>
+          <p>${timeSlot.time_end}</p>
+        </td>
+    `;
+
+    // Занятия для каждого дня
+    timeSlot.lessons.forEach((dayLessons) => {
+      html += `<td>`;
+
+      if (dayLessons.length > 0) {
+        dayLessons.forEach((lesson) => {
+          html += `
+            <div class="lesson-item">
+              ${
+                lesson.type
+                  ? `<span class="lesson-type">${lesson.type}</span>`
+                  : ""
+              }
+              <div class="lesson-text">${lesson.text || ""}</div>
+            </div>
+          `;
+        });
+      } else {
+        html += `<div class="lesson-empty">—</div>`;
+      }
+
+      html += `</td>`;
+    });
+
+    html += `</tr>`;
+  });
+
+  html += `
+      </tbody>
+    </table>
+  `;
+
+  scheduleContainer.innerHTML = html;
+}

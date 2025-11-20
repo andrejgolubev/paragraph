@@ -30,11 +30,11 @@ async def get_schedule(
     try:
         # Парсим расписание
         schedule_data = await parse_schedule_from_url(url)
+        print("SCHEDULE DATA STRUCTURE:", schedule_data)  # ← добавь эту строку
         return schedule_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error parsing schedule: {str(e)}")
 
-from datetime import datetime, timedelta
 
 
 @router.post("/select-group")
@@ -53,7 +53,7 @@ async def select_group(
     )
     
     # Можно также сохранить в БД если нужно
-    return {"status": "success", "message": "Group selected"} 
+    return {"status": "success", "selected_group": group_data_value} 
 
 from api.services.data_service import data_service
 

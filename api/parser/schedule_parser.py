@@ -18,35 +18,91 @@ def get_number_by_data_value(data_value):
 
 def parse_schedule(url: str): 
     response = requests.get(url)
-    # _gr_find = url.find('group=') + 6
-    # data_value = ''.join([ch for ch in url[_gr_find: _gr_find + 6] if ch.isdigit()])
-    # group_number = get_number_by_data_value(data_value)
-    # _dt_find = url.find('date=') + 5 
-    # date = url[_dt_find:]
     soup = BeautifulSoup(response.text, 'lxml')
-    table = soup.find('table') 
+    table = soup.find('table')
+    
+    if not table:
+        return {"error": "Table not found"}
+    
+    result = {
+        "days": [],  # заголовки дней
+        "schedule": []  # расписание по времени
+    }
+    
+    # header_row - строка, где лежат даты и названия дней недели
+    header_row = table.find('tr', class_='table-row-height-large')
+    if header_row:
+        day_headers = header_row.find_all('th')[1:]  # пропускаем первый th "Время"
+        for th in day_headers:
+            span = th.find('span')
+            date_text = span.get_text(strip=True) if span else ""
+            day_text = th.get_text().replace(date_text, '').strip()
+            result["days"].append({
+                "date": date_text,
+                "day": day_text
+            })
+    
+    # парсим время
+    time_rows = table.find_all('tr')[1:]  # пропускаем заголовок
+    
+    for row in time_rows:
+        # пропускаем пустые строки
+        if not row.find('td'):
+            continue
+        
+        time_cell = row.find('td')
+        if time_cell:
+            time_divs = time_cell.find_all('div')
+            time_start = time_divs[0].get_text(strip=True) 
+            time_end = time_divs[1].get_text(strip=True) 
+        
+        time_slot = {
+            "time_start": time_start,
+            "time_end": time_end,
+            "lessons": []
+        }
+        
+         # берем 6 ячеек с занятиями (пн-сб)
+        lesson_cells = row.find_all('td')[1:7] 
+        
+        for cell in lesson_cells: 
+            lessons_in_cell = []
+            
+            lesson_divs = cell.find_all('div', recursive=False)
 
-    lessons = [] 
-    if table: 
-        div_list = table.find_all('td')
-        for td in div_list:
-            td = garb_remove(td.text.strip())
-            if ':' not in td:
-                lessons.append(td)
 
-        # lessons = [(group_number, date), lessons]
-    return lessons
+            for div in lesson_divs:
+                lesson_data = {}
+                
+                type_badge = div.find('span') # тип занятия (Лек., Лаб., Упр.)
+                if type_badge:
+                    lesson_data["type"] = garb_remove(type_badge.get_text(strip=True))
+                
 
+                lesson_text = div.get_text()
+                if type_badge: # после строки ниже в lesson_text будет лежать всё кроме type_badge
+                    lesson_text = lesson_text.replace(type_badge.get_text(), '').strip()
+
+                #очищаем от пробелов                
+                lesson_data["text"] = garb_remove(lesson_text)
+                
+                if lesson_data:  # добавляем только если есть данные
+                    lessons_in_cell.append(lesson_data)
+
+
+            time_slot["lessons"].append(lessons_in_cell)
+        
+        result["schedule"].append(time_slot)
+    
+    return result
 
 
 async def parse_schedule_from_url(url: str):
     """Для синхронных парсеров используем thread pool"""
+    # вся эта инструкция нужна тк parse_schedule - синхронный парсер
     loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(None, parse_schedule, url)  # parse_schedule - твой синхронный парсер
-
+    return await loop.run_in_executor(None, parse_schedule, url)  
 
 
 if __name__ == '__main__':
     parsed = parse_schedule('https://rasp.rsreu.ru/schedule-frame/group?faculty=4&group=878&date=2025-11-10')
-    converted = parsed[0][1] 
-    print(parsed, converted)
