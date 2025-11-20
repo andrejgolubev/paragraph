@@ -1,4 +1,46 @@
+@use './variables.scss' as *;
+
+
+
+.schedule-container {
+  &.loading {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  
+  &.loaded {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+}
+
+//анимация полявления 
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+
+
+//стили таблицы
+
 .table {
+
+  tbody tr {
+    opacity: 0;
+    transform: translateX(-30px);
+    animation: slideIn 0.4s ease forwards;
+
+    @for $i from 1 through 15 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.07}s;
+      }
+    }
+  }
+
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
@@ -13,8 +55,8 @@
   td {
     padding: 10px;
     vertical-align: top;
-    min-width: 80px;
-  } 
+    min-width: 100px;
+  }
 
 }
 
@@ -24,30 +66,32 @@
   padding: 8px;
   border-radius: 4px;
 
-  &.lesson-type{
+  &.lesson-type {
     color: #dddddd;
   }
 
   &#lec {
-    border-left: 3px solid #21852d;
+    border-left: 3px solid $lec;
   }
+
   .lecture {
-    background: #21852d;
+    background: $lec;
   }
 
   &#upr {
-    border-left: 3px solid #1c3da1;
+    border-left: 3px solid $upr;
   }
+
   .practice {
-    background: #1c3da1;
+    background: $upr;
   }
 
   &#lab {
-    border-left: 3px solid #821ca1;
+    border-left: 3px solid $lab;
   }
 
   .lab {
-    border-left: 3px solid #821ca1;
+    border-left: 3px solid $lab;
   }
 
 }
@@ -56,8 +100,9 @@
 // И СИНТАКСИС SCSS НЕ ЮЗАЕТСЯ В ПОЛНОЙ МЕРЕ
 //----
 .lesson-type.lab {
-  background: #821ca1; 
+  background: $lab;
 }
+
 //-----
 
 
@@ -112,10 +157,9 @@
 
 
 
-
-
 .lesson-type.default {
-  background: #6c757d; /* серый по умолчанию */
+  background: #6c757d;
+  /* серый по умолчанию */
 }
 
 .lesson-text {

@@ -1,4 +1,70 @@
 @charset "UTF-8";
+.schedule-container.loading {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.schedule-container.loaded {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.table tbody tr {
+  opacity: 0;
+  transform: translateX(-30px);
+  animation: slideIn 0.4s ease forwards;
+}
+.table tbody tr:nth-child(1) {
+  animation-delay: 0.07s;
+}
+.table tbody tr:nth-child(2) {
+  animation-delay: 0.14s;
+}
+.table tbody tr:nth-child(3) {
+  animation-delay: 0.21s;
+}
+.table tbody tr:nth-child(4) {
+  animation-delay: 0.28s;
+}
+.table tbody tr:nth-child(5) {
+  animation-delay: 0.35s;
+}
+.table tbody tr:nth-child(6) {
+  animation-delay: 0.42s;
+}
+.table tbody tr:nth-child(7) {
+  animation-delay: 0.49s;
+}
+.table tbody tr:nth-child(8) {
+  animation-delay: 0.56s;
+}
+.table tbody tr:nth-child(9) {
+  animation-delay: 0.63s;
+}
+.table tbody tr:nth-child(10) {
+  animation-delay: 0.7s;
+}
+.table tbody tr:nth-child(11) {
+  animation-delay: 0.77s;
+}
+.table tbody tr:nth-child(12) {
+  animation-delay: 0.84s;
+}
+.table tbody tr:nth-child(13) {
+  animation-delay: 0.91s;
+}
+.table tbody tr:nth-child(14) {
+  animation-delay: 0.98s;
+}
+.table tbody tr:nth-child(15) {
+  animation-delay: 1.05s;
+}
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -13,7 +79,7 @@
 .table td {
   padding: 10px;
   vertical-align: top;
-  min-width: 80px;
+  min-width: 100px;
 }
 
 .lesson-item {
@@ -25,26 +91,26 @@
   color: #dddddd;
 }
 .lesson-item#lec {
-  border-left: 3px solid #21852d;
+  border-left: 3px solid rgba(33, 133, 45, 0.5254901961);
 }
 .lesson-item .lecture {
-  background: #21852d;
+  background: rgba(33, 133, 45, 0.5254901961);
 }
 .lesson-item#upr {
-  border-left: 3px solid #1c3da1;
+  border-left: 3px solid rgba(28, 75, 161, 0.5137254902);
 }
 .lesson-item .practice {
-  background: #1c3da1;
+  background: rgba(28, 75, 161, 0.5137254902);
 }
 .lesson-item#lab {
-  border-left: 3px solid #821ca1;
+  border-left: 3px solid rgba(161, 28, 139, 0.5058823529);
 }
 .lesson-item .lab {
-  border-left: 3px solid #821ca1;
+  border-left: 3px solid rgba(161, 28, 139, 0.5058823529);
 }
 
 .lesson-type.lab {
-  background: #821ca1;
+  background: rgba(161, 28, 139, 0.5058823529);
 }
 
 .lesson-item:last-child {
@@ -96,7 +162,8 @@
 }
 
 .lesson-type.default {
-  background: #6c757d; /* серый по умолчанию */
+  background: #6c757d;
+  /* серый по умолчанию */
 }
 
 .lesson-text {

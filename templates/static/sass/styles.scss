@@ -3,7 +3,7 @@
 @use './dropdown.scss';
 @use './homepage.scss';
 @use './table.scss';
-@use './variables.css';
+@use './variables.scss';
 
 .header {
   width: auto;
@@ -61,9 +61,7 @@
       color: rgb(180, 211, 220);
     }
 
-    .toggle:hover {
-      stroke: rgb(237, 219, 85);
-    }
+    
   }
 
 

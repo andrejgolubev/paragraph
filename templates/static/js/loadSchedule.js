@@ -16,7 +16,10 @@ export async function loadSchedule(groupDataValue, dateDataValue = null) {
 }
 
 function displaySchedule(scheduleData) {
-  const scheduleContainer = document.getElementById("schedule-container");
+  const scheduleContainer = 
+  document.getElementById("schedule-container");
+
+  scheduleContainer.className = 'schedule-container loading';
 
   let html = `
     <div class="schedule-header">
@@ -116,6 +119,10 @@ function displaySchedule(scheduleData) {
   `;
 
   scheduleContainer.innerHTML = html;
+
+  setTimeout(() => {
+    scheduleContainer.className = 'schedule-container loaded';
+  }, 100);
 }
 
 // Вспомогательные функции для стилизации
