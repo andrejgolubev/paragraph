@@ -1,13 +1,17 @@
 import {loadSchedule} from './loadSchedule.js'
 
 // ф. для установки выбранной группы (будет вызываться из groupsDropdown)
+let selectedGroupDataValue = null;
+
 export function setSelectedGroup(dataValue) {
-  let selectedGroupDataValue = dataValue;
+  selectedGroupDataValue = dataValue;
+  console.log("Group set in datesDropdown:", dataValue);
 }
 
 const selectInput = document.getElementById("select-input");
 const datesList = document.getElementById("dates");
 const selectBody = document.querySelector(".select-block__body");
+
 
 
 
@@ -29,6 +33,11 @@ async function selectDate(dateDataValue, dateText) {
     selectBody.classList.remove("active-search"); 
     // Загружаем расписание
     await loadSchedule(selectedGroupDataValue, dateDataValue);
+  } else {
+
+    console.error("No group selected in selectDate!");
+    alert("Сначала выберите группу");
+    return;
   }
 }
 
@@ -44,7 +53,7 @@ dates.slice(-10).forEach((date) => {
   link.href = "#"; 
 
   // Обработчик выбора даты
-  link.addEventListener("click", async (event) => {
+  li.addEventListener("click", async (event) => {
     event.preventDefault(); 
     await selectDate(date.data_value, date.date)
   });
@@ -54,7 +63,11 @@ dates.slice(-10).forEach((date) => {
 });
 
 selectInput.addEventListener("click", (event) => {
-  if (!selectedGroupDataValue) {}
+  if (!selectedGroupDataValue) {
+    alert("Сначала выберите группу");
+    event.stopPropagation();
+    return;
+  }
 
   event.stopPropagation();
   selectBody.classList.toggle("active-search");
@@ -67,5 +80,5 @@ document.addEventListener("click", (event) => {
   }
 });
 
-
-
+// ✅ ДОБАВЬ ОТЛАДОЧНЫЙ ВЫВОД
+console.log("datesDropdown.js loaded, selectedGroupDataValue:", selectedGroupDataValue);

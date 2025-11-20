@@ -1,0 +1,125 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  transition: all 0.3s ease 0s;
+
+  th {
+    padding: 15px 10px;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  td {
+    padding: 10px;
+    vertical-align: top;
+    min-width: 80px;
+  } 
+
+}
+
+
+.lesson-item {
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 4px;
+
+  &.lesson-type{
+    color: #dddddd;
+  }
+
+  &#lec {
+    border-left: 3px solid #21852d;
+  }
+  .lecture {
+    background: #21852d;
+  }
+
+  &#upr {
+    border-left: 3px solid #1c3da1;
+  }
+  .practice {
+    background: #1c3da1;
+  }
+
+  &#lab {
+    border-left: 3px solid #821ca1;
+  }
+
+  .lab {
+    border-left: 3px solid #821ca1;
+  }
+
+}
+
+//НЕ ТРОГАТЬ СЕЛЕКТОР С МЕСТА, ТАК НАДО, ХОТЬ 
+// И СИНТАКСИС SCSS НЕ ЮЗАЕТСЯ В ПОЛНОЙ МЕРЕ
+//----
+.lesson-type.lab {
+  background: #821ca1; 
+}
+//-----
+
+
+
+.lesson-item:last-child {
+  margin-bottom: 0;
+}
+
+.lesson-type {
+  color: #ece8e8;
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.8em;
+  margin-bottom: 5px;
+}
+
+.lesson-text {
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+
+.lesson-teacher,
+.lesson-classroom {
+  font-size: 0.9em;
+}
+
+.lesson-empty {
+  text-align: center;
+  font-style: italic;
+}
+
+.schedule-header {
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.schedule-header h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.lesson-type {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.8em;
+  margin-bottom: 5px;
+  color: white;
+}
+
+
+
+
+
+.lesson-type.default {
+  background: #6c757d; /* серый по умолчанию */
+}
+
+.lesson-text {
+  font-weight: 500;
+  margin-bottom: 3px;
+  line-height: 1.4;
+}

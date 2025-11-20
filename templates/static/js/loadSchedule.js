@@ -6,12 +6,8 @@ export async function loadSchedule(groupDataValue, dateDataValue = null) {
       url += `&date_data_value=${dateDataValue}`;
     }
 
-    console.log("Loading schedule from:", url); // ← добавь
-
     const response = await fetch(url);
     const scheduleData = await response.json();
-
-    console.log("Schedule data received:", scheduleData); // ← добавь
 
     displaySchedule(scheduleData);
   } catch (error) {
@@ -22,11 +18,8 @@ export async function loadSchedule(groupDataValue, dateDataValue = null) {
 function displaySchedule(scheduleData) {
   const scheduleContainer = document.getElementById("schedule-container");
 
-  console.log("Schedule container found:", scheduleContainer); // ← добавь
-
   let html = `
     <div class="schedule-header">
-      <h3>📅 Расписание</h3>
       ${
         scheduleData.group_data_value
           ? `<p>Группа: ${scheduleData.group_data_value}</p>`
@@ -35,7 +28,7 @@ function displaySchedule(scheduleData) {
       ${
         scheduleData.date_data_value
           ? `<p>Дата: ${scheduleData.date_data_value}</p>`
-          : "<p>Текущая неделя</p>"
+          : ""
       }
     </div>
   `;
@@ -86,8 +79,16 @@ function displaySchedule(scheduleData) {
 
       if (dayLessons.length > 0) {
         dayLessons.forEach((lesson) => {
+          let lessonId = 'default'
+          if (lesson.type === 'Лек.'){ 
+            lessonId = 'lec' 
+          } else if (lesson.type === 'Упр.'){
+            lessonId = 'upr'
+          } else if (lesson.type === 'Лаб.'){
+            lessonId = 'lab'
+          }
           html += `
-            <div class="lesson-item">
+            <div class="lesson-item" id="${lessonId}">
               ${
                 lesson.type
                   ? `<span class="lesson-type ${getLessonTypeClass(
@@ -95,12 +96,12 @@ function displaySchedule(scheduleData) {
                     )}">${lesson.type}</span>`
                   : ""
               }
-              <div class="lesson-text">${formatLessonText(lesson.text)}</div>
+              <div class="lesson-text">${lesson.text}</div>
             </div>
           `;
         });
       } else {
-        html += `<div class="lesson-empty">—</div>`;
+        html += `<div class="lesson-empty"> </div>`;
       }
 
       html += `</td>`;

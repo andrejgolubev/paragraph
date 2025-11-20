@@ -70,7 +70,7 @@ searchInput.addEventListener("input", () => {
     link.href = `#`;
 
     // Обработчик выбора group
-    link.addEventListener("click", async (event) => {
+    li.addEventListener("click", async (event) => {
       event.preventDefault();
 
       //СРАЗУ выбираем группу и загружаем расписание

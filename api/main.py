@@ -46,8 +46,8 @@ async def index_page(request: Request, db: AsyncSession = Depends(get_db)):
     return templates.TemplateResponse( 
         name="index.html", request=request, context={
             'HOMEPAGE_ON': HOMEPAGE_ON, # этот параметр передавать в контекстном словаре каждого эндпоинта
-            'groups': groups, 
-            'dates': dates,
+            # 'groups': groups, 
+            # 'dates': dates,
         }
     )
 
