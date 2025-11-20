@@ -84,7 +84,7 @@ def parse_schedule(url: str):
                     lesson_text = lesson_text.replace(type_badge.get_text(), '').strip()
 
                 #очищаем от пробелов                
-                lesson_data["text"] = garb_remove(lesson_text)
+                lesson_data["text"] = ', '.join(garb_remove(lesson_text).split(','))
                 
                 if lesson_data:  # добавляем только если есть данные
                     lessons_in_cell.append(lesson_data)
