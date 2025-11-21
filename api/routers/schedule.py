@@ -15,22 +15,27 @@ async def get_schedule(
     date_data_value: str | None = None,
     db: AsyncSession = Depends(get_db)
 ):
-    # Если параметры не переданы, пытаемся взять из cookie
-    if not group_data_value:
-        group_data_value = request.cookies.get("selected_group")
-    if not date_data_value:
-        date_data_value = request.cookies.get("selected_date")
+
+
     
-    if not group_data_value:
-        raise HTTPException(status_code=400, detail="Group not selected")
+    final_group = group_data_value or request.cookies.get("selected_group")
+    final_date = date_data_value or request.cookies.get("selected_date")
     
+    if not final_group:
+        return {"error": "Group not selected"}
+
     # Формируем URL
-    url = f'https://rasp.rsreu.ru/schedule-frame/group?faculty=1&group={group_data_value}&date={date_data_value or ""}'
-    
+    url = f'https://rasp.rsreu.ru/schedule-frame/group?faculty=1&group={final_group}&date={final_date or ""}'    
+
     try:
         # Парсим расписание
         schedule_data = await parse_schedule_from_url(url)
-        print("SCHEDULE DATA STRUCTURE:", schedule_data)  # ← добавь эту строку
+        print("SCHEDULE DATA STRUCTURE:", schedule_data)  
+        # return {
+        #     "group_data_value": final_group,
+        #     "date_data_value": final_date,
+        #     "schedule_data": schedule_data
+        # }
         return schedule_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error parsing schedule: {str(e)}")
