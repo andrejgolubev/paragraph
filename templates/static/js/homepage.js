@@ -8,6 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
       tipElem.classList.add("tip-active");
       
       // Проверяем стили после добавления класса
-    }, 1000);
+    }, 400);
   }
 });

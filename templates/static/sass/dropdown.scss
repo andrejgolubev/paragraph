@@ -7,6 +7,24 @@ input#search-input {
 } 
 
 
+.error-message {
+  transition: all 0.3s ease 0s;
+  text-align: center;
+  width: 578px;
+  font-family: 'Manrope', sans-serif;
+  background: #fff5f5;
+  border: 2px dotted #fed7d7;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  color: #ac3d3d;
+  
+}
+
+
+
+
+
 .custom-select {
   position: relative;
 

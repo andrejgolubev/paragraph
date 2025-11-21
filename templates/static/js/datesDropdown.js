@@ -64,7 +64,7 @@ dates.slice(-10).forEach((date) => {
 
 selectInput.addEventListener("click", (event) => {
   if (!selectedGroupDataValue) {
-    alert("Сначала выберите группу");
+    alert("для начала выберите группу");
     event.stopPropagation();
     return;
   }

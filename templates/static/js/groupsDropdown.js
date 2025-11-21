@@ -37,16 +37,12 @@ function handleEnterKey(event) {
 // ✅ СООБЩЕНИЕ ЕСЛИ ГРУППА НЕ НАЙДЕНА
 function showGroupNotFoundMessage(groupNumber) {
   const scheduleContainer = document.getElementById("schedule-container");
+  const tipElem = document.querySelector(".tip"); 
+  tipElem.classList.remove('tip-active')
   scheduleContainer.innerHTML = `
     <div class="error-message">
-      <h3>❌ Группа не найдена</h3>
-      <p>Группа "<strong>${groupNumber}</strong>" не найдена в списке.</p>
-      <p>Попробуйте:</p>
-      <ul>
-        <li>Проверить правильность написания</li>
-        <li>Выбрать группу из выпадающего списка</li>
-        <li>Убедиться что группа существует</li>
-      </ul>
+      <p>по запросу "<strong>${groupNumber}</strong>" информацией пока не располагаю :(</p>
+      <p>убедитесь в правильности написания и повторите попытку</p>
     </div>
   `;
 }
@@ -152,3 +148,5 @@ document.addEventListener("click", (event) => {
     searchBody.classList.remove("active-search");
   }
 });
+
+
