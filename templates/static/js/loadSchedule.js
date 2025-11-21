@@ -1,3 +1,5 @@
+
+
 export async function loadSchedule(groupDataValue, dateDataValue = null) {
   try {
     let url = `http://127.0.0.1:8000/schedule/get-schedule?group_data_value=${groupDataValue}`;
@@ -5,6 +7,7 @@ export async function loadSchedule(groupDataValue, dateDataValue = null) {
     if (dateDataValue) {
       url += `&date_data_value=${dateDataValue}`;
     }
+    
 
     const response = await fetch(url);
     const scheduleData = await response.json();
@@ -16,9 +19,9 @@ export async function loadSchedule(groupDataValue, dateDataValue = null) {
 }
 
 function displaySchedule(scheduleData) {
+  const tipElem = document.querySelector('.tip')
   const scheduleContainer = 
   document.getElementById("schedule-container");
-
   scheduleContainer.className = 'schedule-container loading';
 
   let html = `
@@ -119,7 +122,7 @@ function displaySchedule(scheduleData) {
   `;
 
   scheduleContainer.innerHTML = html;
-
+  tipElem.classList.remove('tip-active')
   setTimeout(() => {
     scheduleContainer.className = 'schedule-container loaded';
   }, 100);

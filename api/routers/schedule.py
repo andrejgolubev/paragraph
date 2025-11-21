@@ -30,12 +30,7 @@ async def get_schedule(
     try:
         # Парсим расписание
         schedule_data = await parse_schedule_from_url(url)
-        print("SCHEDULE DATA STRUCTURE:", schedule_data)  
-        # return {
-        #     "group_data_value": final_group,
-        #     "date_data_value": final_date,
-        #     "schedule_data": schedule_data
-        # }
+        
         return schedule_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error parsing schedule: {str(e)}")

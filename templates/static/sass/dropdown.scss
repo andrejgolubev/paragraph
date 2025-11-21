@@ -1,5 +1,12 @@
 @use './fonts.scss';
 
+
+input#select-input, 
+input#search-input {
+  background-color: #f4f9fecd;
+} 
+
+
 .custom-select {
   position: relative;
 
@@ -37,6 +44,7 @@
 
 .search-block,
 .select-block {
+
 
   ul{
     transition: all 0.1s ease 0.1s;

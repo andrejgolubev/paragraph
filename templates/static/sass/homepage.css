@@ -4,6 +4,7 @@
 }
 .tip:not(.tip-active) {
   opacity: 0;
+  position: absolute;
 }
 .tip.tip-active {
   opacity: 1;

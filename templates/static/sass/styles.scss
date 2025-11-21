@@ -75,7 +75,7 @@ body {
   width: auto;
   height: auto;
   min-height: 1750px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 8%, rgba(98, 170, 255, 0.8) 75%);
+  background: linear-gradient(180deg, rgba(244, 247, 252, 0.8) 8%, rgba(98, 170, 255, 0.8) 75%);
 }
 
 .main-content {
@@ -106,7 +106,7 @@ body {
     background-image: url('../static/tip-bg.png');
     border: 2px rgb(207, 222, 227) dashed;
     border-radius: 8px;
-    width: 572px;
+    width: 578px;
     height: 132px;
     margin-top: 20px;
 
@@ -168,8 +168,7 @@ body {
   }
 
   th:first-child {
-    font-weight: 300;
-    font-size: smaller;
+    font-size: 16px;
   }
 
   th,

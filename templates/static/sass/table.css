@@ -73,7 +73,7 @@
 }
 .table th {
   padding: 15px 10px;
-  text-align: center;
+  text-align: left;
   font-weight: 600;
 }
 .table td {

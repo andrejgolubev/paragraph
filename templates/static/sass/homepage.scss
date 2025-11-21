@@ -5,6 +5,7 @@
   // Через микро-задержку скрываем
   &:not(.tip-active) {
     opacity: 0;
+    position: absolute;
   }
 
   &.tip-active {
@@ -38,3 +39,4 @@
 #toggle-sun:hover {
   transform: translate3d(5px, 0, 20px) rotateY(3deg) perspective(500px);
 }
+

@@ -6,6 +6,11 @@
   font-family: "Manrope";
   src: url("../fonts/Manrope-VariableFont_wght.ttf");
 }
+input#select-input,
+input#search-input {
+  background-color: rgba(244, 249, 254, 0.8039215686);
+}
+
 .custom-select {
   position: relative;
 }

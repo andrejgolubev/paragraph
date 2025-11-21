@@ -3,6 +3,54 @@ import { setSelectedGroup } from "./datesDropdown.js";
 
 let selectedGroupDataValue = null;
 
+// ✅ ФУНКЦИЯ ДЛЯ ПОИСКА ГРУППЫ ПО НОМЕРУ
+function findGroupByNumber(groupNumber) {
+  return groups.find(group => 
+    group.group_number.toLowerCase() === groupNumber.toLowerCase().trim()
+  );
+}
+
+// ✅ ОБРАБОТЧИК НАЖАТИЯ ENTER
+function handleEnterKey(event) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    
+    const inputValue = searchInput.value.trim();
+    if (!inputValue) return;
+    
+    // Ищем группу по введенному номеру
+    const foundGroup = findGroupByNumber(inputValue);
+    
+    if (foundGroup) {
+      // Если группа найдена - выбираем ее
+      selectGroup(foundGroup.data_value, foundGroup.group_number);
+    } else {
+      // ✅ ЕСЛИ ГРУППА НЕ НАЙДЕНА - ПОКАЗЫВАЕМ СООБЩЕНИЕ
+      showGroupNotFoundMessage(inputValue);
+    }
+    
+    // Закрываем выпадающий список
+    searchBody.classList.remove("active-search");
+  }
+}
+
+// ✅ СООБЩЕНИЕ ЕСЛИ ГРУППА НЕ НАЙДЕНА
+function showGroupNotFoundMessage(groupNumber) {
+  const scheduleContainer = document.getElementById("schedule-container");
+  scheduleContainer.innerHTML = `
+    <div class="error-message">
+      <h3>❌ Группа не найдена</h3>
+      <p>Группа "<strong>${groupNumber}</strong>" не найдена в списке.</p>
+      <p>Попробуйте:</p>
+      <ul>
+        <li>Проверить правильность написания</li>
+        <li>Выбрать группу из выпадающего списка</li>
+        <li>Убедиться что группа существует</li>
+      </ul>
+    </div>
+  `;
+}
+
 async function loadGroups() {
   try {
     const response = await fetch(
@@ -54,9 +102,13 @@ const searchBody = document.querySelector(".search-block__body");
 
 const groups = await loadGroups(); // 100: {group_number: '5876М', id: 101, data_value: '1401'}
 
+//обработчик при клике по enter
+searchInput.addEventListener("keydown", handleEnterKey);
+
 searchInput.addEventListener("input", () => {
   const input = searchInput.value;
   groupsList.innerHTML = "";
+
 
   const filteredGroups = groups.filter((group) =>
     group.group_number.includes(input)
