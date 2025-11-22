@@ -1,4 +1,14 @@
 
+function escapeHtml(unsafe) {
+  // для XSS protection
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 
 export async function loadSchedule(groupDataValue, dateDataValue = null) {
   try {
@@ -24,29 +34,8 @@ function displaySchedule(scheduleData) {
   document.getElementById("schedule-container");
   scheduleContainer.className = 'schedule-container loading';
 
+
   let html = `
-    <div class="schedule-header">
-      ${
-        scheduleData.group_data_value
-          ? `<p>Группа: ${scheduleData.group_data_value}</p>`
-          : ""
-      }
-      ${
-        scheduleData.date_data_value
-          ? `<p>Дата: ${scheduleData.date_data_value}</p>`
-          : ""
-      }
-    </div>
-  `;
-
-  // Проверяем что данные есть
-  if (!scheduleData.days || !scheduleData.schedule) {
-    scheduleContainer.innerHTML =
-      html + `<p class="error">Нет данных расписания</p>`;
-    return;
-  }
-
-  html += `
     <table class="table">
       <thead>
         <tr class="table_row_high">
@@ -102,7 +91,7 @@ function displaySchedule(scheduleData) {
                     )}">${lesson.type}</span>`
                   : ""
               }
-              <div class="lesson-text">${lesson.text}</div>
+              <div class="lesson-text">${escapeHtml(lesson.text)}</div>
             </div>
           `;
         });
@@ -138,7 +127,4 @@ function getLessonTypeClass(type) {
   return typeMap[type] || "default";
 }
 
-function formatLessonText(text) {
-  // Добавляем переносы строк для лучшего отображения
-  return text.replace(/,/g, ",<br>");
-}
+

@@ -20,6 +20,11 @@
     width: 100%;
     max-width: 175px;
     padding-right: auto;
+    transition: all 0.3s ease 0s;
+
+    @media (max-width: 1200px) {
+      margin-left: -16px;
+    }
   }
 
   &_item {
@@ -31,11 +36,30 @@
     font-size: 24px;
     letter-spacing: 0.08em;
     color: #292833;
-  }
 
-  a {
-    color: #292833;
+    a {
+      color: #292833;
+
+      @media (max-width: 1200px) {
+        font-size: 20px;
+      }
+
+      @media (max-width: 1100px) {
+        font-size: 18px;
+        position: relative;
+        bottom: 1px;
+      }
+    }
   }
+  
+  img {
+    @media (max-width: 1200px) {
+      scale: 0.85;
+    }
+  
+  }
+  
+  
 }
 
 .nav_list {
@@ -68,6 +92,12 @@
 
   .toggle {
     margin: 20px 0 0 0;
+    @media (max-width: 1200px) {
+      margin-left: 8px;
+    }
+    @media (max-width: 1100px) {
+      margin-left: 6px;
+    }
   }
 }
 
@@ -81,19 +111,36 @@ body {
 .main-content {
   margin: 28px 0 0 25px;
 
+  // .options, 
+  // .tip{
+  //   @media (max-width: 1200px){
+  //     width: 80%;
+  //   }
+  // }
+
   .options {
+
+
     display: flex;
     gap: 30px;
+
+
 
     .corpuses {
       padding-left: -2px;
 
       p {
+
         font-family: 'Manrope', sans-serif;
         font-weight: 400;
-        font-size: 16px;
+        // font-size: 16px;
         letter-spacing: 0.06em;
         color: rgba(29, 29, 33, 0.10);
+        transition: all 0.7s ease 0s;
+
+        @media (max-width: 1200px) {
+          font-size: 12px;
+        }
       }
     }
   }
@@ -132,73 +179,10 @@ body {
         color: rgba(41, 40, 51, 0.5);
       }
     }
-    img{
+
+    img {
       user-select: none;
     }
   }
 
 }
-
-
-.table {
-
-  margin-top: 25px;
-  border-collapse: collapse;
-  width: 98.25%;
-  border: #bce7ff;
-  background-color: rgba(255, 255, 255, 0.5);
-  font-family: 'Manrope', sans-serif;
-  box-shadow: 10px 10px 10px 10px rgba(2, 0, 0, 0.1);
-
-  thead {
-    height: 60px;
-
-    tr:not(.table) {
-      background-color: rgba(46, 110, 205, 0.2);
-      text-align: left;
-
-    }
-
-    th {
-      p:first-child {
-        font-weight: normal;
-        font-size: small;
-      }
-    }
-  }
-
-  th:first-child {
-    font-size: 16px;
-  }
-
-  th,
-  td {
-    padding: 12px 0;
-    padding-left: 10px;
-    &:first-child{
-      text-align: left;
-      font-weight: bold;
-      p:last-child{
-        font-size: 14px;
-        font-weight: normal;
-      }
-    }
-    
-  }
-
-  tbody {
-    background-color: #ffffff;
-
-    tr {
-      border-bottom: 1px solid #dddddd;
-    }
-
-    tr:last-of-type {
-      border-bottom: 2px solid rgba(46, 110, 205, 0.3);
-
-    }
-  }
-
-
-}
-
