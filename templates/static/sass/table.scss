@@ -61,7 +61,7 @@
       }
     }
 
-    p{
+    p {
       transition: all 0.3s ease 0s;
       font-size: 16px;
 
@@ -134,6 +134,39 @@
     padding: 10px;
     vertical-align: top;
     min-width: 40px;
+
+    @media (max-width:1100px) {
+      font-size: 10px;
+    }
+  }
+
+  .active-day {
+    p:first-child::after {
+      content: " (сегодня)";
+    }
+  }
+
+  .homework {
+    display: inline-flex;
+    cursor: pointer;
+
+    img {
+      opacity: 0.5;
+      left: 2px;
+      top: 1px;
+      position: relative;
+
+      @media (min-width: 1100px) {
+        scale: 1.5;
+      }
+
+      @media (max-width: 1100px) {
+        top: 3px;
+        left: 1px;
+      }
+
+    }
+
   }
 
 }

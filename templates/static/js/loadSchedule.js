@@ -1,4 +1,3 @@
-
 function escapeHtml(unsafe) {
   // для XSS protection
   return unsafe
@@ -9,7 +8,6 @@ function escapeHtml(unsafe) {
     .replace(/'/g, "&#039;");
 }
 
-
 export async function loadSchedule(groupDataValue, dateDataValue = null) {
   try {
     let url = `http://127.0.0.1:8000/schedule/get-schedule?group_data_value=${groupDataValue}`;
@@ -17,7 +15,6 @@ export async function loadSchedule(groupDataValue, dateDataValue = null) {
     if (dateDataValue) {
       url += `&date_data_value=${dateDataValue}`;
     }
-    
 
     const response = await fetch(url);
     const scheduleData = await response.json();
@@ -29,11 +26,9 @@ export async function loadSchedule(groupDataValue, dateDataValue = null) {
 }
 
 function displaySchedule(scheduleData) {
-  const tipElem = document.querySelector('.tip')
-  const scheduleContainer = 
-  document.getElementById("schedule-container");
-  scheduleContainer.className = 'schedule-container loading';
-
+  const tipElem = document.querySelector(".tip");
+  const scheduleContainer = document.getElementById("schedule-container");
+  scheduleContainer.className = "schedule-container loading";
 
   let html = `
     <table class="table">
@@ -47,7 +42,7 @@ function displaySchedule(scheduleData) {
     html += `
       <th>
         <p>${day.date}</p>
-        <p>${day.day}</p>
+        <p id="week-day">${day.day}</p>
       </th>
     `;
   });
@@ -74,13 +69,13 @@ function displaySchedule(scheduleData) {
 
       if (dayLessons.length > 0) {
         dayLessons.forEach((lesson) => {
-          let lessonId = 'default'
-          if (lesson.type === 'Лек.'){ 
-            lessonId = 'lec' 
-          } else if (lesson.type === 'Упр.'){
-            lessonId = 'upr'
-          } else if (lesson.type === 'Лаб.'){
-            lessonId = 'lab'
+          let lessonId = "default";
+          if (lesson.type === "Лек.") {
+            lessonId = "lec";
+          } else if (lesson.type === "Упр.") {
+            lessonId = "upr";
+          } else if (lesson.type === "Лаб.") {
+            lessonId = "lab";
           }
           html += `
             <div class="lesson-item" id="${lessonId}">
@@ -91,6 +86,7 @@ function displaySchedule(scheduleData) {
                     )}">${lesson.type}</span>`
                   : ""
               }
+              <div class="homework"> <img src="./static/static/paperclip.svg"> </div>
               <div class="lesson-text">${escapeHtml(lesson.text)}</div>
             </div>
           `;
@@ -111,10 +107,31 @@ function displaySchedule(scheduleData) {
   `;
 
   scheduleContainer.innerHTML = html;
-  tipElem.classList.remove('tip-active')
-  setTimeout(() => {
-    scheduleContainer.className = 'schedule-container loaded';
-  }, 100);
+  tipElem.classList.remove("tip-active");
+
+  // определяем какая дата текущая
+  const weekDaysMap = {
+    'Понедельник': 1,
+    'Вторник': 2,
+    'Среда': 3,
+    'Четверг': 4,
+    'Пятница': 5,
+    'Суббота': 6,
+  }
+
+  const dateObj = new Date();
+  const currentWeekDay = dateObj.getDay();
+  
+  const weekDays = document.querySelectorAll('#week-day') //nodelist 
+
+  weekDays.forEach( (day) => {
+    if (weekDaysMap[day.textContent] === currentWeekDay){
+      day.parentElement.classList.add('active-day') 
+    }
+  })
+
+
+  scheduleContainer.className = "schedule-container loaded";
 }
 
 // Вспомогательные функции для стилизации
@@ -126,5 +143,4 @@ function getLessonTypeClass(type) {
   };
   return typeMap[type] || "default";
 }
-
 

@@ -147,6 +147,35 @@
   vertical-align: top;
   min-width: 40px;
 }
+@media (max-width: 1100px) {
+  .table td {
+    font-size: 10px;
+  }
+}
+.table .active-day p:first-child::after {
+  content: " (сегодня)";
+}
+.table .homework {
+  display: inline-flex;
+  cursor: pointer;
+}
+.table .homework img {
+  opacity: 0.5;
+  left: 2px;
+  top: 1px;
+  position: relative;
+}
+@media (min-width: 1100px) {
+  .table .homework img {
+    scale: 1.5;
+  }
+}
+@media (max-width: 1100px) {
+  .table .homework img {
+    top: 3px;
+    left: 1px;
+  }
+}
 
 .lesson-item {
   margin-bottom: 10px;
