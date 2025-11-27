@@ -1,0 +1,119 @@
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Manrope", serif;
+  border: none;
+  border-radius: 8px;
+  padding: 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow: hidden;
+  animation: modalAppear 0.3s ease-out;
+}
+.modal::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(1px);
+  animation: backdropFadeIn 0.3s ease-out;
+}
+.modal form {
+  padding: 20px;
+  min-width: 400px;
+}
+.modal form h3 {
+  text-align: center;
+  margin-top: 0;
+  color: #333;
+}
+.modal form textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  resize: vertical;
+  font-family: inherit;
+}
+.modal form .modal-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+.modal form .modal-buttons button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.modal form .modal-buttons button.btn-cancel {
+  background: #f0f0f0;
+  transition: all 0.3s ease 0s;
+}
+.modal form .modal-buttons button.btn-cancel:hover {
+  background: #e0e0e0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(50, 52, 54, 0.3);
+}
+.modal form .modal-buttons button.btn-save {
+  background: rgba(98, 170, 255, 0.8) 75%;
+  transition: all 0.3s ease 0s;
+  color: white;
+}
+.modal form .modal-buttons button.btn-save:hover {
+  background: rgba(98, 170, 255, 0.8) 75%;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+.modal form .modal-buttons button.btn-save:active {
+  transform: translateY(0);
+}
+
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes backdropFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.homework {
+  cursor: pointer;
+  display: inline-flex;
+  transition: background-color 0.2s;
+}
+.homework:hover {
+  background: rgba(0, 123, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+  .modal {
+    width: 95%;
+    max-width: none;
+    margin: 20px;
+  }
+  .modal form {
+    padding: 20px;
+  }
+  .modal form h3 {
+    font-size: 1.3rem;
+  }
+  .modal form .modal-buttons {
+    flex-direction: column-reverse;
+  }
+  .modal form .modal-buttons button {
+    width: 100%;
+  }
+}
+
+/*# sourceMappingURL=dialog.css.map */

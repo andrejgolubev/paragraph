@@ -1,6 +1,6 @@
 from api.db.database import get_db
 from api.db.refresh_db import load_groups_and_dates
-from api.routers import users, schedule
+from api.routers import users, schedule, homework
 from api.parser.group_parser import parse_groups
 from api.parser.date_parser import parse_dates
 from api.parser.utils import convert_date
@@ -17,6 +17,7 @@ from sqlalchemy.orm import selectinload
 from api.db.models import Group, Date, GroupDateAssociation
 import os
 
+
 # from utils.utils import get_all_dates
 
 app = FastAPI(title="PROGINZH",)
@@ -32,6 +33,9 @@ app.include_router(
     dependencies=[Depends(oauth2_scheme)],
 )
 app.include_router(schedule.schedule_router)
+app.include_router(homework.homework_router)
+
+
 
 HOMEPAGE_ON = False 
 # этот параметр передавать в контекстном словаре каждого эндпоинта
@@ -72,7 +76,6 @@ async def verify_admin_api_key(api_key: str = Header(alias="API-Key")):
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Invalid API Key"
         )
-
 
 
 

@@ -6,7 +6,7 @@
 
 
 <body>
-{% block body %}
+  {% block body %}
   <div class="main-content">
     <div class="options">
       <div class="group">
@@ -38,12 +38,33 @@
         <p>L - Лабораторный корпус ⠀⠀⠀F - Первый корпус</p>
       </div>
     </div>
-    {% include "includes/tip.html" %}
+    <div class="tip">
+      <div class="tip__inner">
+        <img src="../static/static/chel.svg" alt="Tip" />
+        <div class="tip_text">
+          <p>выберите вашу группу и неделю, на которую</p>
+          <p>хотите посмотреть расписание :)</p>
+        </div>
+      </div>
+    </div>
+
+    <dialog data-modal class="modal">
+      <form id="homework-form">
+        <h3>домашнее задание</h3>
+        <textarea name="text-input" id="text-input" placeholder="введите домашнее задание..." rows="6"></textarea>
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel">отмена</button>
+          <button type="submit" class="btn-save">сохранить</button>
+        </div>
+      </form>
+    </dialog>
+
     <div id="schedule-container">
-      
+
     </div>
 
 
-{% endblock body %}
+    {% endblock body %}
 </body>
+
 </html>

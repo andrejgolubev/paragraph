@@ -1,9 +1,10 @@
 @use './normalize.scss';
+@use './variables.scss';
 @use './fonts.scss';
 @use './dropdown.scss';
 @use './homepage.scss';
 @use './table.scss';
-@use './variables.scss';
+@use './dialog.scss';
 
 .header {
   width: auto;
@@ -172,7 +173,7 @@ body {
 
         font-family: 'Manrope';
         font-weight: 500;
-        font-size: 16px;
+        font-size: 16px; 
         line-height: 140%;
         letter-spacing: 0.09em;
         text-align: center;

@@ -1,3 +1,44 @@
+// В начале loadSchedule.js
+import { openHomeworkModal, initHomeworkModal } from './dialog.js';
+
+// ✅ Убедись что модальное окно инициализировано
+document.addEventListener('DOMContentLoaded', () => {
+  initHomeworkModal();
+});
+
+
+function addHomeworkHandlers(groupDataValue, dateDataValue) {
+  const homeworkButtons = document.querySelectorAll('.homework'); 
+  
+  console.log(`Found ${homeworkButtons.length} homework buttons`);
+  
+  homeworkButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const dayIndex = this.getAttribute('data-day');
+      const timeSlotIndex = this.getAttribute('data-time');
+      const lessonIndex = this.getAttribute('data-lesson');
+
+      const lessonText = button.parentElement.querySelector('.lesson-text').textContent.split(', ')[0]
+      let formHeader = document.querySelector('#homework-form h3')
+      formHeader.innerHTML = `<strong>${lessonText}</strong> <p>(${getCurrentWeekDate(dayIndex)})</p>`
+
+      console.log('Homework button clicked:', { dayIndex, timeSlotIndex, lessonIndex });
+      
+      const lessonInfo = {
+        groupDataValue: groupDataValue,
+        dateDataValue: dateDataValue || getCurrentWeekDate(dayIndex),
+        dayIndex: parseInt(dayIndex),
+        timeSlotIndex: parseInt(timeSlotIndex),
+        lessonIndex: parseInt(lessonIndex)
+      };
+      
+      openHomeworkModal(lessonInfo);
+    });
+  });
+}
+
+
+
 function escapeHtml(unsafe) {
   // для XSS protection
   return unsafe
@@ -77,6 +118,8 @@ function displaySchedule(scheduleData) {
           } else if (lesson.type === "Лаб.") {
             lessonId = "lab";
           }
+          let lessonName = lesson.text.split(', ')[0]
+          // console.log('lessonName:', lessonName)
           html += `
             <div class="lesson-item" id="${lessonId}">
               ${
@@ -87,7 +130,7 @@ function displaySchedule(scheduleData) {
                   : ""
               }
               <div class="homework"> <img src="./static/static/paperclip.svg"> </div>
-              <div class="lesson-text">${escapeHtml(lesson.text)}</div>
+              <div class="lesson-text"> <strong>${lessonName}</strong> ${escapeHtml(lesson.text).replace(lessonName, '')}</div>
             </div>
           `;
         });
@@ -100,7 +143,7 @@ function displaySchedule(scheduleData) {
 
     html += `</tr>`;
   });
-
+  
   html += `
       </tbody>
     </table>
@@ -108,6 +151,8 @@ function displaySchedule(scheduleData) {
 
   scheduleContainer.innerHTML = html;
   tipElem.classList.remove("tip-active");
+
+  addHomeworkHandlers(scheduleData.group_data_value, scheduleData.date_data_value);
 
   // определяем какая дата текущая
   const weekDaysMap = {
@@ -129,9 +174,11 @@ function displaySchedule(scheduleData) {
       day.parentElement.classList.add('active-day') 
     }
   })
+  
 
-
-  scheduleContainer.className = "schedule-container loaded";
+  setTimeout(() => {
+    scheduleContainer.className = "schedule-container loaded";
+  }, 100);
 }
 
 // Вспомогательные функции для стилизации
@@ -144,3 +191,16 @@ function getLessonTypeClass(type) {
   return typeMap[type] || "default";
 }
 
+
+
+
+function getCurrentWeekDate(dayIndex) {
+  const today = new Date();
+  const currentDay = today.getDay();
+  const diff = dayIndex - (currentDay === 0 ? 6 : currentDay - 1); // Приводим к 0-5 (пн-сб)
+  
+  const targetDate = new Date(today);
+  targetDate.setDate(today.getDate() + diff);
+  
+  return targetDate.toISOString().split('T')[0]; // Формат YYYY-MM-DD
+}

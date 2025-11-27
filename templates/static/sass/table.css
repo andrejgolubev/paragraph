@@ -69,6 +69,16 @@
 .table th:first-child {
   font-size: 16px;
 }
+@media (max-width: 1200px) {
+  .table th:first-child {
+    font-size: 14px;
+  }
+}
+@media (max-width: 1100px) {
+  .table th:first-child {
+    font-size: 12px;
+  }
+}
 .table th,
 .table td {
   padding: 12px 0;
@@ -84,6 +94,12 @@
 .table td:first-child p:last-child {
   font-size: 14px;
   font-weight: normal;
+}
+@media (max-width: 1100px) {
+  .table th:first-child p:last-child,
+  .table td:first-child p:last-child {
+    font-size: 12px;
+  }
 }
 .table tbody {
   background-color: #ffffff;
@@ -143,9 +159,15 @@
   border-bottom: 2px solid rgba(46, 110, 205, 0.3);
 }
 .table td {
+  font-size: 14px;
   padding: 10px;
   vertical-align: top;
   min-width: 40px;
+}
+@media (max-width: 1200px) {
+  .table td {
+    font-size: 12px;
+  }
 }
 @media (max-width: 1100px) {
   .table td {
@@ -153,6 +175,7 @@
   }
 }
 .table .active-day p:first-child::after {
+  color: rgba(19, 32, 89, 0.7490196078);
   content: " (сегодня)";
 }
 .table .homework {
