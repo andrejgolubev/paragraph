@@ -11,7 +11,7 @@ homework_router = APIRouter(tags=['Homework'], prefix='/homework')
 router = homework_router 
 
 
-@router.post("/save")
+@router.post("/save-homework")
 async def save_homework(
     homework_data: dict,
     request: Request,
@@ -68,7 +68,8 @@ async def save_homework(
         await db.rollback()
         raise HTTPException(status_code=500, detail=f"Error saving homework: {str(e)}")
 
-@router.get("/get")
+
+@router.get("/get-homework")
 async def get_homework(
     group_data_value: str,
     date_data_value: str,

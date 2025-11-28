@@ -25,9 +25,9 @@ function openHomeworkModal(lessonInfo) {
   currentLessonInfo = lessonInfo;
 
   // Сбрасываем поле ввода перед открытием
-  // if (textInput) {
-  //   textInput.value = "";
-  // }
+  if (textInput) {
+    textInput.value = "";
+  }
 
   // Загружаем существующее ДЗ если есть
   loadExistingHomework(lessonInfo);

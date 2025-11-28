@@ -42,18 +42,20 @@ function addHomeworkHandlers(groupDataValue, dateDataValue) {
 
   homeworkButtons.forEach((hmwButton) => {
     hmwButton.addEventListener("click", function () {
-      const lessonText = hmwButton.parentElement
-        .querySelector(".lesson-text")
-        .textContent.split(", ")[0];
+      const lessonElement = hmwButton.parentElement
+      const lessonName = lessonElement
+        .querySelector(".lesson-text strong").textContent
+        ;
       
-      const lessonIndex = hmwButton.parentElement.parentElement.getAttribute("data-index");
-      const lessonDay = hmwButton.parentElement.parentElement.getAttribute("data-date"); //24 ноября , достается из колонки
-      const lessonName = escapeHtml(lessonText.split(", ")[0]);
+      const lessonText = lessonElement.querySelector('.lesson-text').textContent.replace(lessonName, '').split(',').join(', ')
+      const lessonIndex = lessonElement.parentElement.getAttribute("data-index");
+      const lessonDay = lessonElement.parentElement.getAttribute("data-date"); //x ноября , достается из колонки
 
       let formHeader = document.querySelector("#homework-form h3");
-      formHeader.innerHTML = `<strong>${lessonName}</strong>
+      formHeader.innerHTML = `<p><strong>${lessonName}</strong>, ${lessonDay}</p> 
       
-       <p>(${convertDate(getDateValueFromDisplay(lessonDay))})</p>`;
+      <p>${lessonText}</p>`
+      
 
       console.log("Homework button clicked:", { lessonIndex });
       console.log(formHeader.innerHTML);
@@ -67,7 +69,7 @@ function addHomeworkHandlers(groupDataValue, dateDataValue) {
       console.log("Homework for:", {
         date: dateDataValue,
         group: groupDataValue,
-        lesson: lessonText.substring(0, 50),
+        lesson: lessonText,
       });
 
       openHomeworkModal(lessonInfo);
@@ -186,9 +188,16 @@ function displaySchedule(scheduleData) {
               
           `;
           let toAdd = ''
-          lessonText.split(',').forEach((text) => {
-            toAdd += `<p>${text}</p>`
-          })
+          const parts = lessonText.split(',').filter(part => part.trim() !== '');
+
+          parts.forEach((part, index) => {
+            const trimmed = part.trim();
+            if (index === parts.length - 1) {
+              toAdd += `<p>${trimmed}</p>`;
+            } else {
+              toAdd += `<p>${trimmed},</p>`;
+            }
+          });
           
           
           html += ` 
