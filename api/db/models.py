@@ -40,8 +40,10 @@ class GroupDateAssociation(Base):
     id: Mapped[int] = mc(primary_key=True)
     group_id: Mapped[int] = mc(ForeignKey("groups.id"), nullable=False)
     dates_id: Mapped[str] = mc(ForeignKey("dates.id"), nullable=False)
-    created_at: Mapped[datetime] = mc(server_default=func.now())
+    lesson: Mapped[int] = mc(nullable=True)
+
     homework: Mapped[str] = mc(nullable=True)
+    created_at: Mapped[datetime] = mc(server_default=func.now())
 
 
 class Group(Base):

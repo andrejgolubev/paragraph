@@ -11,54 +11,56 @@ homework_router = APIRouter(tags=['Homework'], prefix='/homework')
 router = homework_router 
 
 
-@router.post("/save-homework")
+
+@router.post("/save")
 async def save_homework(
-    homework_data: dict,
+    group_data_value: str,
+    date_data_value: str,
+    lesson_index: int,
+    homework: str,
     request: Request,
     db: AsyncSession = Depends(get_db)
 ):
     try:
-        group_data_value = homework_data.get("group_data_value")
-        date_data_value = homework_data.get("date_data_value")
-        homework_text = homework_data.get("homework")
-        
+
         # Находим группу
-        group_result = await db.execute(
+        group_result = await db.scalars(
             select(Group).where(Group.data_value == group_data_value)
         )
-        group = group_result.scalar_one_or_none()
+        group = group_result.first()
         
         if not group:
             raise HTTPException(status_code=404, detail="Group not found")
         
         # Находим дату
-        date_result = await db.execute(
+        date_result = await db.scalars(
             select(Date).where(Date.data_value == date_data_value)
         )
-        date = date_result.scalar_one_or_none()
+        date = date_result.first()
         
         if not date:
             raise HTTPException(status_code=404, detail="Date not found")
         
         # Находим или создаем связь
-        association_result = await db.execute(
+        association_result = await db.scalars(
             select(GroupDateAssociation).where(
                 GroupDateAssociation.group_id == group.id,
                 GroupDateAssociation.dates_id == date.id
             )
         )
-        association = association_result.scalar_one_or_none()
+        association = association_result.first()
         
         if not association:
             association = GroupDateAssociation(
                 group_id=group.id,
                 dates_id=date.id,
-                # lesson_index еще тут
-                homework=homework_text
+                lesson = lesson_index,
+                homework=homework
             )
             db.add(association)
         else:
-            association.homework = homework_text or ""
+            association.homework = homework or ""
+            association.lesson = lesson_index
         
         await db.commit()
         
@@ -69,35 +71,37 @@ async def save_homework(
         raise HTTPException(status_code=500, detail=f"Error saving homework: {str(e)}")
 
 
-@router.get("/get-homework")
+@router.get("/get")
 async def get_homework(
     group_data_value: str,
     date_data_value: str,
+    lesson_index: int,
     request: Request,
     db: AsyncSession = Depends(get_db)
 ):
     try:
         # Аналогичная логика поиска связи и возврата homework
-        group_result = await db.execute(
+        group_result = await db.scalars(
             select(Group).where(Group.data_value == group_data_value)
         )
-        group = group_result.scalar_one_or_none()
+        group = group_result.first()
         
-        date_result = await db.execute(
+        date_result = await db.scalars(
             select(Date).where(Date.data_value == date_data_value)
         )
-        date = date_result.scalar_one_or_none()
+        date = date_result.first()
         
         if not group or not date:
             return {'failure': 'group or date not selected or not found'}
         
-        association_result = await db.execute(
+        association_result = await db.scalars(
             select(GroupDateAssociation).where(
                 GroupDateAssociation.group_id == group.id,
-                GroupDateAssociation.dates_id == date.id
+                GroupDateAssociation.dates_id == date.id, 
+                GroupDateAssociation.lesson == lesson_index,
             )
         )
-        association = association_result.scalar_one_or_none()
+        association = association_result.first()
         
         return {"homework": association.homework if association else ""}
         

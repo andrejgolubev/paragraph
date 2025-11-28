@@ -46,7 +46,7 @@ async function loadExistingHomework(lessonInfo) {
     }
 
     const response = await fetch(
-      `http://127.0.0.1:8000/homework/get?group_data_value=${lessonInfo.groupDataValue}&date_data_value=${lessonInfo.dateDataValue}&day_index=${lessonInfo.dayIndex}&time_slot_index=${lessonInfo.timeSlotIndex}&lesson_index=${lessonInfo.lessonIndex}`
+      `http://127.0.0.1:8000/homework/get?group_data_value=${lessonInfo.groupDataValue}&date_data_value=${lessonInfo.dateDataValue}&lesson_index=${lessonInfo.lessonIndex}`
     );
 
     if (response.ok) {

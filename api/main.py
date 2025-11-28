@@ -1,5 +1,6 @@
-from api.db.database import get_db
 from api.db.refresh_db import load_groups_and_dates
+
+from api.db.database import get_db
 from api.routers import users, schedule, homework
 from api.parser.group_parser import parse_groups
 from api.parser.date_parser import parse_dates
@@ -37,19 +38,15 @@ app.include_router(homework.homework_router)
 
 
 
-HOMEPAGE_ON = False 
-# этот параметр передавать в контекстном словаре каждого эндпоинта
-# (в view каждом кроме index_page() ставить False внутри view)
+
 
 @app.get("/", response_class=HTMLResponse, name='index')
 async def index_page(request: Request, db: AsyncSession = Depends(get_db)):
     """Шаблонизатор для приветственной страницы"""
-    HOMEPAGE_ON = True
     groups = await data_service.get_all_groups(db)
     dates = await data_service.get_all_dates(db)
     return templates.TemplateResponse( 
         name="index.html", request=request, context={
-            'HOMEPAGE_ON': HOMEPAGE_ON, # этот параметр передавать в контекстном словаре каждого эндпоинта
             # 'groups': groups, 
             # 'dates': dates,
         }
@@ -58,11 +55,9 @@ async def index_page(request: Request, db: AsyncSession = Depends(get_db)):
 @app.get("/schedule/", response_class=HTMLResponse, name='schedule')
 async def schedule_page(request: Request, db: AsyncSession = Depends(get_db)):
     """Шаблонизатор для страницы с расписанием"""
-    HOMEPAGE_ON = False
     
     return templates.TemplateResponse( 
         name="schedule.html", request=request, context={
-            'HOMEPAGE_ON': HOMEPAGE_ON, # этот параметр передавать в контекстном словаре каждого эндпоинта
 
         }
     )
@@ -79,9 +74,8 @@ async def verify_admin_api_key(api_key: str = Header(alias="API-Key")):
 
 
 
-
 @app.post("/initial", dependencies=[Depends(verify_admin_api_key)])
-async def load_initial_data(db: AsyncSession = Depends(get_db)):
+async def load_initial_groups_and_dates(db: AsyncSession = Depends(get_db)):
     """FOR SUPERUSER ONLY"""
     await load_groups_and_dates(groups=parse_groups(), dates=parse_dates(), db=db)
     return {"status": "Data loaded successfully"}
@@ -93,6 +87,7 @@ async def get_all_dates_related_to_group(group_number: str, db: AsyncSession = D
     """Принимает фактическуюгруппу. FOR SUPERUSER ONLY"""
     group = await db.scalars(select(Group).options(selectinload(Group.dates)).where(Group.group_number == group_number))
     group = group.first()
+    
     if not group: 
         raise HTTPException(status_code=404, detail='Group not found or doesn`t exist. Try again or parse relevant data.')
     

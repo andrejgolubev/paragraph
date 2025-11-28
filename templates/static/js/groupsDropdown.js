@@ -10,7 +10,7 @@ function findGroupByNumber(groupNumber) {
   );
 }
 
-// ✅ ОБРАБОТЧИК НАЖАТИЯ ENTER
+// ОБРАБОТЧИК НАЖАТИЯ ENTER
 function handleEnterKey(event) {
   if (event.key === 'Enter') {
     event.preventDefault();
@@ -25,7 +25,7 @@ function handleEnterKey(event) {
       // Если группа найдена - выбираем ее
       selectGroup(foundGroup.data_value, foundGroup.group_number);
     } else {
-      // ✅ ЕСЛИ ГРУППА НЕ НАЙДЕНА - ПОКАЗЫВАЕМ СООБЩЕНИЕ
+      // ЕСЛИ ГРУППА НЕ НАЙДЕНА - ПОКАЗЫВАЕМ СООБЩЕНИЕ
       showGroupNotFoundMessage(inputValue);
     }
     
@@ -34,7 +34,7 @@ function handleEnterKey(event) {
   }
 }
 
-// ✅ СООБЩЕНИЕ ЕСЛИ ГРУППА НЕ НАЙДЕНА
+// СООБЩЕНИЕ ЕСЛИ ГРУППА НЕ НАЙДЕНА
 function showGroupNotFoundMessage(groupNumber) {
   const scheduleContainer = document.getElementById("schedule-container");
   const tipElem = document.querySelector(".tip"); 
@@ -59,6 +59,8 @@ async function loadGroups() {
   }
 }
 
+const optionsDiv = document.querySelector('.options')
+
 // Функция для выбора группы и сразу загрузки расписания
 async function selectGroup(groupDataValue, groupNumber) {
   try {
@@ -72,6 +74,7 @@ async function selectGroup(groupDataValue, groupNumber) {
         },
         body: JSON.stringify({
           group_data_value: groupDataValue,
+          
         }),
       }
     );
@@ -79,13 +82,12 @@ async function selectGroup(groupDataValue, groupNumber) {
     if (response.ok) {
       selectedGroupDataValue = groupDataValue;
       setSelectedGroup(groupDataValue); // cообщаем datesDropdown о выборе
-      console.log("Group selected successfully");
-
+      optionsDiv.setAttribute('group-data-value', groupDataValue)
       // СРАЗУ загружаем расписание для текущей даты
       await loadSchedule(groupDataValue);
 
       // Показываем блок выбора даты (опционально)
-      document.getElementById("select-input").placeholder = "дата/неделя"; // спорно, нужна ли эта строка вообще
+      // document.getElementById("select-input").placeholder = "дата/неделя"; // спорно, нужна ли эта строка вообще
     }
   } catch (error) {
     console.error("Error selecting group:", error);
@@ -116,6 +118,8 @@ searchInput.addEventListener("input", () => {
 
     link.textContent = group.group_number;
     link.href = `#`;
+
+    
 
     // Обработчик выбора group
     li.addEventListener("click", async (event) => {

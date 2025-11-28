@@ -108,12 +108,12 @@ function displaySchedule(scheduleData) {
   const tipElem = document.querySelector(".tip");
   const scheduleContainer = document.getElementById("schedule-container");
   scheduleContainer.className = "schedule-container loading";
-
+  
   let html = `
-    <table class="table">
-      <thead>
-        <tr class="table_row_high">
-          <th>время</th>
+  <table class="table">
+    <thead>
+      <tr class="table_row_high">
+        <th>время</th>
   `;
 
   const datesArr = [];
@@ -129,7 +129,14 @@ function displaySchedule(scheduleData) {
     datesArr.push(day.date);
   });
 
-  console.log(datesArr);
+
+  //проставлляем в schedule-container необходимые для загрузки домашки в БД св-ва
+  const dateDataValue = getDateValueFromDisplay(datesArr[0])
+  const groupDataValue = document.querySelector('.options').getAttribute('group-data-value')
+
+  scheduleContainer.setAttribute('date-data-value', dateDataValue)
+  scheduleContainer.setAttribute('group-data-value', groupDataValue)
+
   html += `
         </tr>
       </thead>
@@ -145,13 +152,11 @@ function displaySchedule(scheduleData) {
           <p>${timeSlot.time_end}</p>
         </td>
     `;
-
+    // const displayDataValue =  datesArr[0]
     // Занятия для каждого дня (пн-сб)
-
     timeSlot.lessons.forEach((dayLessons) => {
-      html += `<td data-date="${
-        datesArr[(lessonIndex - 1) % 6]
-      }" data-index="${lessonIndex}">`;
+      let dataDate = datesArr[(lessonIndex - 1) % 6]
+      html += `<td data-date="${dataDate}" data-index="${lessonIndex}">`;
       lessonIndex++;
       if (dayLessons.length > 0) {
         dayLessons.forEach((lesson) => {
