@@ -22,7 +22,6 @@ async def save_homework(
     db: AsyncSession = Depends(get_db)
 ):
     try:
-
         # Находим группу
         group_result = await db.scalars(
             select(Group).where(Group.data_value == group_data_value)
@@ -44,7 +43,7 @@ async def save_homework(
         # Находим или создаем связь
         association_result = await db.scalars(
             select(GroupDateAssociation).where(
-                GroupDateAssociation.group_id == group.id,
+                GroupDateAssociation.group_id == int(group.id),
                 GroupDateAssociation.dates_id == date.id
             )
         )

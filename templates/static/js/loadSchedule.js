@@ -1,6 +1,8 @@
 // В начале loadSchedule.js
 import { openHomeworkModal, initHomeworkModal } from "./dialog.js";
 
+const scheduleContainer = document.getElementById("schedule-container");
+
 // ✅ Убедись что модальное окно инициализировано
 document.addEventListener("DOMContentLoaded", () => {
   initHomeworkModal();
@@ -51,26 +53,24 @@ function addHomeworkHandlers(groupDataValue, dateDataValue) {
       const lessonIndex = lessonElement.parentElement.getAttribute("data-index");
       const lessonDay = lessonElement.parentElement.getAttribute("data-date"); //x ноября , достается из колонки
 
-      let formHeader = document.querySelector("#homework-form h3");
-      formHeader.innerHTML = `<p><strong>${lessonName}</strong>, ${lessonDay}</p> 
       
-      <p>${lessonText}</p>`
+      let formHeader = document.querySelector("#homework-form h3");
+      formHeader.innerHTML = `<p><strong>${lessonName}</strong>, ${lessonDay}</p> <p>${lessonText}</p>`
       
 
-      console.log("Homework button clicked:", { lessonIndex });
-      console.log(formHeader.innerHTML);
+      //реализация связи с эндпоинтом
+      const groupDataValue = scheduleContainer.getAttribute('group-data-value')
+      const dateDataValue = scheduleContainer.getAttribute('date-data-value')
+
+      console.log("Homework button clicked. lessonInfo:", { groupDataValue, dateDataValue, lessonIndex });
 
       const lessonInfo = {
         groupDataValue: groupDataValue,
-        dateDataValue: dateDataValue, // ✅ КОНКРЕТНАЯ ДАТА КОЛОНКИ
+        dateDataValue: dateDataValue, 
         lessonIndex: parseInt(lessonIndex),
       };
 
-      console.log("Homework for:", {
-        date: dateDataValue,
-        group: groupDataValue,
-        lesson: lessonText,
-      });
+      
 
       openHomeworkModal(lessonInfo);
     });
@@ -106,7 +106,6 @@ export async function loadSchedule(groupDataValue, dateDataValue = null) {
 
 function displaySchedule(scheduleData) {
   const tipElem = document.querySelector(".tip");
-  const scheduleContainer = document.getElementById("schedule-container");
   scheduleContainer.className = "schedule-container loading";
   
   let html = `

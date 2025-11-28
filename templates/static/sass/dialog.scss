@@ -1,11 +1,75 @@
 @use './variables.scss' as *;
 
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Стили для inline-уведомлений внутри формы
+
+
+
+.notification {
+  opacity: 0;
+  font-size: 12px;
+  padding: 11px 16px;
+  border-radius: 12px;
+  color: white;
+  font-family: 'Manrope', serif;
+  font-weight: 300;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateX(100px);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  // min-width: 280px;
+  text-align: center;
+  border: 2px dotted rgba(255, 255, 255, 0.2);
+
+  pointer-events: none; // Чтобы не мешало кликам
+
+  &.active {
+    opacity: 0.8;
+    transform: translateX(0);
+  }
+
+  &.success {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    border-left: 4px solid #2E7D32;
+  }
+
+  &.error {
+    background: linear-gradient(135deg, #f44336, #e53935);
+    border-left: 4px solid #c62828;
+  }
+}
+
 .modal {
+  @media (max-width: 1200px) {
+    width: 80%;
+    height: 80%;
+  }
+
+  .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  h3 {
+    margin-bottom: 16px;
+  }
+
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-family: 'Manrope', serif;
+  font-family: 'Manrope',
+  serif;
   border: none;
   border-radius: 8px;
   padding: 0;
@@ -21,9 +85,9 @@
   // ✅ АНИМАЦИЯ ПОЯВЛЕНИЯ
   animation: modalAppear 0.3s ease-out;
 
-  
 
-   &::backdrop {
+
+  &::backdrop {
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(1px);
     animation: backdropFadeIn 0.3s ease-out;
@@ -97,6 +161,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -107,6 +172,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -118,6 +184,7 @@
   cursor: pointer;
   display: inline-flex;
   transition: background-color 0.2s;
+
   &:hover {
     background: rgba(0, 123, 255, 0.1);
   }
@@ -131,17 +198,17 @@
     width: 95%;
     max-width: none;
     margin: 20px;
-    
+
     form {
       padding: 20px;
-      
+
       h3 {
         font-size: 1.3rem;
       }
-      
+
       .modal-buttons {
         flex-direction: column-reverse;
-        
+
         button {
           width: 100%;
         }

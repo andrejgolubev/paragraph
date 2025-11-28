@@ -84,6 +84,7 @@ async function selectGroup(groupDataValue, groupNumber) {
       setSelectedGroup(groupDataValue); // cообщаем datesDropdown о выборе
       optionsDiv.setAttribute('group-data-value', groupDataValue)
       // СРАЗУ загружаем расписание для текущей даты
+      
       await loadSchedule(groupDataValue);
 
       // Показываем блок выбора даты (опционально)

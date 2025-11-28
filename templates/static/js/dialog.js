@@ -22,12 +22,9 @@ function openHomeworkModal(lessonInfo) {
     return;
   }
 
-  currentLessonInfo = lessonInfo;
-
+  currentLessonInfo = lessonInfo
   // Сбрасываем поле ввода перед открытием
-  if (textInput) {
-    textInput.value = "";
-  }
+  textInput.value = ""
 
   // Загружаем существующее ДЗ если есть
   loadExistingHomework(lessonInfo);
@@ -35,7 +32,8 @@ function openHomeworkModal(lessonInfo) {
   modalElement.showModal();
 }
 
-// ✅ Функция для загрузки существующего ДЗ
+
+// Функция для загрузки существующего ДЗ
 async function loadExistingHomework(lessonInfo) {
   try {
     const { textInput } = getModalElements();
@@ -49,8 +47,11 @@ async function loadExistingHomework(lessonInfo) {
       `http://127.0.0.1:8000/homework/get?group_data_value=${lessonInfo.groupDataValue}&date_data_value=${lessonInfo.dateDataValue}&lesson_index=${lessonInfo.lessonIndex}`
     );
 
+    
+
     if (response.ok) {
       const homeworkData = await response.json();
+      console.log('homeworkData:', homeworkData)
       textInput.value = homeworkData.homework || "";
     }
   } catch (error) {
@@ -58,48 +59,50 @@ async function loadExistingHomework(lessonInfo) {
   }
 }
 
-// ✅ Обработчик отправки формы
-function handleHomeworkSubmit(event) {
-  event.preventDefault();
 
-  if (!currentLessonInfo) return;
-
-  const { textInput } = getModalElements();
-
-  if (!textInput) {
-    console.error("Text input not found!");
-    return;
-  }
-
-  const homeworkText = textInput.value.trim();
-  saveHomework(currentLessonInfo, homeworkText);
-}
-
-// ✅ Функция сохранения ДЗ
+// Функция сохранения ДЗ
 async function saveHomework(lessonInfo, homeworkText) {
+  if (!homeworkText) {
+    showNotification('д/з не может быть пустым :(')
+    return 
+  }
+  if (homeworkText.length < 5){
+    showNotification('д/з не может быть таким коротким.')
+    return 
+  }
+  console.log('saveHomework. lessonInfo:', lessonInfo)
+  const {groupDataValue, dateDataValue, lessonIndex} = lessonInfo
   try {
-    const response = await fetch("http://127.0.0.1:8000/homework/save", {
+    const response = await fetch(
+       `http://127.0.0.1:8000/homework/save?group_data_value=${groupDataValue}&date_data_value=${dateDataValue}&lesson_index=${lessonIndex}&homework=${homeworkText}`, 
+       {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        group_data_value: lessonInfo.groupDataValue,
-        date_data_value: lessonInfo.dateDataValue,
-        day_index: lessonInfo.dayIndex,
+        group_data_value: groupDataValue,
+        date_data_value: dateDataValue,
+        lesson_index: lessonIndex,
         homework: homeworkText,
       }),
     });
-
+    
     if (response.ok) {
-      console.log("Homework saved successfully");
-      const { modalElement } = getModalElements();
+      showNotification("Домашнее задание сохранено", "success");
 
+      const { modalElement } = getModalElements();
+      
       if (modalElement) {
         modalElement.close();
       }
-
-      showNotification("Домашнее задание сохранено", "success");
+      
+    }
+    else {
+      const errorData = await response.json();
+      showNotification(`${errorData.detail || "произошла неизвестная ошибка"}`, "error");
+      // Или показываем ошибку в форме:
+      // showFormError(errorData.detail || "Ошибка сохранения");
     }
   } catch (error) {
     console.error("Error saving homework:", error);
@@ -107,23 +110,40 @@ async function saveHomework(lessonInfo, homeworkText) {
   }
 }
 
-// ✅ Обработчик отмены
+// Обработчик отправки формы
+function handleHomeworkSubmit(event) {
+  event.preventDefault();
+
+  if (!currentLessonInfo) return;
+
+  const { textInput } = getModalElements();
+  if (!textInput) {
+    console.error("Text input not found!");
+    return;
+  }
+
+  const homeworkText = textInput.value.trim();
+  console.log('homework submit debugging. currentLessonInfo: ', currentLessonInfo, 'homeworkText', homeworkText)
+  saveHomework(currentLessonInfo, homeworkText);
+}
+
+// Обработчик отмены
 function handleCancel() {
   const { modalElement } = getModalElements();
-
+  
   if (modalElement) {
     modalElement.close();
   }
 }
 
-// ✅ Инициализация после загрузки DOM
+// Инициализация после загрузки DOM
 function initHomeworkModal() {
   const { modalElement } = getModalElements();
   const homeworkForm = document.getElementById("homework-form");
   const cancelButton = document.querySelector(".btn-cancel");
   
-
-
+  
+  
   if (!modalElement) {
     console.error("Modal element not found during initialization!");
     return;
@@ -157,23 +177,19 @@ function initHomeworkModal() {
 // ✅ Функция для показа уведомлений
 function showNotification(message, type = "info") {
   // Можно заменить на более красивую реализацию
-  const notification = document.createElement("div");
-  notification.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 12px 20px;
-    border-radius: 6px;
-    color: white;
-    z-index: 1000;
-    background: ${type === "success" ? "#28a745" : "#dc3545"};
-  `;
+  const notification = document.querySelector('.notification')
+  notification.className = `notification ${type}`;
   notification.textContent = message;
-
-  document.body.appendChild(notification);
+  
+  notification.style.cssText = `
+  background: ${type === "success" ? "#28a745" : "#dc3545"};
+  `;
+  
+  notification.classList.add('active')
+  notification.classList.add(type)
 
   setTimeout(() => {
-    document.body.removeChild(notification);
+    notification.classList.remove('active');
   }, 3000);
 }
 
