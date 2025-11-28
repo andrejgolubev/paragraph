@@ -626,6 +626,9 @@ input#search-input {
   border-left: 4px solid #c62828;
 }
 
+.modal {
+  max-height: 300px;
+}
 @media (max-width: 1200px) {
   .modal {
     width: 80%;
@@ -633,6 +636,7 @@ input#search-input {
   }
 }
 .modal .modal-buttons {
+  height: fit-content;
   display: flex;
   justify-content: space-between;
 }
@@ -652,7 +656,7 @@ input#search-input {
   width: 90%;
   max-width: 500px;
   max-height: 80vh;
-  overflow: hidden;
+  overflow: auto;
   animation: modalAppear 0.3s ease-out;
 }
 .modal::backdrop {
@@ -697,6 +701,9 @@ input#search-input {
   background: #e0e0e0;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(50, 52, 54, 0.3);
+}
+.modal form .modal-buttons button.btn-cancel:active {
+  transform: translateY(0);
 }
 .modal form .modal-buttons button.btn-save {
   background: rgba(98, 170, 255, 0.8) 75%;

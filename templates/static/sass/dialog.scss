@@ -50,12 +50,15 @@
 }
 
 .modal {
+  max-height: 300px;
+
   @media (max-width: 1200px) {
     width: 80%;
     height: 80%;
   }
 
   .modal-buttons {
+    height: fit-content;
     display: flex;
     justify-content: space-between;
   }
@@ -68,8 +71,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-family: 'Manrope',
-  serif;
+  font-family: 'Manrope', serif;
   border: none;
   border-radius: 8px;
   padding: 0;
@@ -80,11 +82,10 @@
   max-height: 80vh;
 
   // ✅ ПРОКРУТКА ЕСЛИ КОНТЕНТА МНОГО
-  overflow: hidden;
+  overflow: auto;
 
   // ✅ АНИМАЦИЯ ПОЯВЛЕНИЯ
   animation: modalAppear 0.3s ease-out;
-
 
 
   &::backdrop {
@@ -133,6 +134,10 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(50, 52, 54, 0.3);
           }
+
+          &:active {
+            transform: translateY(0); 
+          }
         }
 
         &.btn-save {
@@ -147,7 +152,7 @@
           }
 
           &:active {
-            transform: translateY(0); //сомнительно
+            transform: translateY(0); 
           }
         }
       }
