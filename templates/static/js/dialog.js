@@ -87,8 +87,6 @@ async function saveHomework(lessonInfo, homeworkText) {
         group_data_value: lessonInfo.groupDataValue,
         date_data_value: lessonInfo.dateDataValue,
         day_index: lessonInfo.dayIndex,
-        time_slot_index: lessonInfo.timeSlotIndex,
-        lesson_index: lessonInfo.lessonIndex,
         homework: homeworkText,
       }),
     });
@@ -123,7 +121,6 @@ function initHomeworkModal() {
   const { modalElement } = getModalElements();
   const homeworkForm = document.getElementById("homework-form");
   const cancelButton = document.querySelector(".btn-cancel");
-
   
 
 

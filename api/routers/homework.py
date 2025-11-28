@@ -20,9 +20,6 @@ async def save_homework(
     try:
         group_data_value = homework_data.get("group_data_value")
         date_data_value = homework_data.get("date_data_value")
-        day_index = homework_data.get("day_index")
-        time_slot_index = homework_data.get("time_slot_index")
-        lesson_index = homework_data.get("lesson_index")
         homework_text = homework_data.get("homework")
         
         # Находим группу
@@ -56,6 +53,7 @@ async def save_homework(
             association = GroupDateAssociation(
                 group_id=group.id,
                 dates_id=date.id,
+                # lesson_index еще тут
                 homework=homework_text
             )
             db.add(association)
