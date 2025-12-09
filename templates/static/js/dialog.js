@@ -47,7 +47,7 @@ async function saveHomework(lessonInfo, homeworkText) {
     showNotification('д/з не может быть таким коротким.')
     return 
   }
-  console.log('saveHomework. lessonInfo:', lessonInfo)
+  console.log('saveHomework. lessonInfo: ', lessonInfo)
   const {groupDataValue, dateDataValue, lessonIndex} = lessonInfo
   try {
     const response = await fetch(

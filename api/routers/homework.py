@@ -21,7 +21,9 @@ async def save_homework(
     request: Request,
     db: AsyncSession = Depends(get_db)
 ):
+    print('---------------------------' , lesson_index, homework, date_data_value, group_data_value)
     try:
+
         # Находим группу
         group_result = await db.scalars(
             select(Group).where(Group.data_value == group_data_value)
@@ -44,7 +46,8 @@ async def save_homework(
         association_result = await db.scalars(
             select(GroupDateAssociation).where(
                 GroupDateAssociation.group_id == int(group.id),
-                GroupDateAssociation.dates_id == date.id
+                GroupDateAssociation.dates_id == date.id,
+                GroupDateAssociation.lesson == lesson_index,
             )
         )
         association = association_result.first()
@@ -59,7 +62,6 @@ async def save_homework(
             db.add(association)
         else:
             association.homework = homework or ""
-            association.lesson = lesson_index
         
         await db.commit()
         
