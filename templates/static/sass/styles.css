@@ -207,7 +207,7 @@ input#search-input {
 .select-block__products li {
   font-family: "Manrope", sans-serif;
   padding: 10px;
-  transition: all 0.2s ease 0s;
+  transition: all 0.3s ease 0s;
   cursor: pointer;
 }
 .search-block__products li:hover,
@@ -738,7 +738,7 @@ input#search-input {
 .homework {
   cursor: pointer;
   display: inline-flex;
-  transition: background-color 0.2s;
+  transition: background-color 0.3s;
 }
 .homework:hover {
   background: rgba(0, 123, 255, 0.1);

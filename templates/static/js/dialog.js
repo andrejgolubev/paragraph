@@ -16,7 +16,7 @@ function getModalElements() {
 // Функция для открытия модального окна
 function openHomeworkModal(lessonInfo) {
   const { modalElement, textInput } = getModalElements();
-
+  
   if (!modalElement) {
     console.error("Modal element not found!");
     return;
@@ -24,40 +24,17 @@ function openHomeworkModal(lessonInfo) {
 
   currentLessonInfo = lessonInfo
   // Сбрасываем поле ввода перед открытием
-  textInput.value = ""
+  if (textInput){
+    textInput.value = ""
+  }
 
   // Загружаем существующее ДЗ если есть
-  loadExistingHomework(lessonInfo);
+  displayHomework(currentLessonInfo);
 
   modalElement.showModal();
 }
 
 
-// Функция для загрузки существующего ДЗ
-async function loadExistingHomework(lessonInfo) {
-  try {
-    const { textInput } = getModalElements();
-
-    if (!textInput) {
-      console.error("Text input not found!");
-      return;
-    }
-
-    const response = await fetch(
-      `http://127.0.0.1:8000/homework/get?group_data_value=${lessonInfo.groupDataValue}&date_data_value=${lessonInfo.dateDataValue}&lesson_index=${lessonInfo.lessonIndex}`
-    );
-
-    
-
-    if (response.ok) {
-      const homeworkData = await response.json();
-      console.log('homeworkData:', homeworkData)
-      textInput.value = homeworkData.homework || "";
-    }
-  } catch (error) {
-    console.error("Error loading homework:", error);
-  }
-}
 
 
 // Функция сохранения ДЗ
@@ -109,6 +86,20 @@ async function saveHomework(lessonInfo, homeworkText) {
     showNotification("Ошибка сохранения", "error");
   }
 }
+
+async function displayHomework(lessonInfo) {
+  const {groupDataValue, dateDataValue, lessonIndex} = lessonInfo
+  const response = await fetch(`http://127.0.0.1:8000/homework/get?group_data_value=${groupDataValue}&date_data_value=${dateDataValue}&lesson_index=${lessonIndex}`)
+  const hmwText = await response.json()
+  console.log(hmwText)
+
+  const { modalElement, textInput } = getModalElements();
+
+  textInput['value'] = hmwText.homework
+}
+
+// await displayHomework('1633', '2025-11-03', '2')
+
 
 // Обработчик отправки формы
 function handleHomeworkSubmit(event) {

@@ -115,7 +115,7 @@ input#search-input {
 .select-block__products li {
   font-family: "Manrope", sans-serif;
   padding: 10px;
-  transition: all 0.2s ease 0s;
+  transition: all 0.3s ease 0s;
   cursor: pointer;
 }
 .search-block__products li:hover,
