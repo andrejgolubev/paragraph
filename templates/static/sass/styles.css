@@ -599,6 +599,7 @@ input#search-input {
   }
 }
 .notification {
+  position: absolute;
   opacity: 0;
   font-size: 14px;
   padding: 0px 15px;
@@ -633,6 +634,7 @@ input#search-input {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 .notification.error {
+  position: relative;
   background: linear-gradient(135deg, #f44336, #e53935);
   border-left: 4px solid #c62828;
 }
