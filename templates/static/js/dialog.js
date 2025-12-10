@@ -1,3 +1,8 @@
+import {convertDate} from './loadSchedule.js';
+
+
+
+
 let currentLessonInfo = null;
 let modalElement = null;
 let textInput = null;
@@ -40,11 +45,12 @@ function openHomeworkModal(lessonInfo) {
 // Функция сохранения ДЗ
 async function saveHomework(lessonInfo, homeworkText) {
   if (!homeworkText) {
-    showNotification('д/з не может быть пустым :(')
+    showNotification('д/з не может быть пустым :(', "error", true)
     return 
   }
   if (homeworkText.length < 5){
-    showNotification('д/з не может быть таким коротким.')
+    showNotification('д/з не может быть таким коротким.', "error", true)
+
     return 
   }
   console.log('saveHomework. lessonInfo: ', lessonInfo)
@@ -66,7 +72,7 @@ async function saveHomework(lessonInfo, homeworkText) {
     });
     
     if (response.ok) {
-      showNotification("Домашнее задание сохранено", "success");
+      showNotification("Домашнее задание сохранено", "success", false);
 
       const { modalElement } = getModalElements();
       
@@ -90,12 +96,26 @@ async function saveHomework(lessonInfo, homeworkText) {
 async function displayHomework(lessonInfo) {
   const {groupDataValue, dateDataValue, lessonIndex} = lessonInfo
   const response = await fetch(`http://127.0.0.1:8000/homework/get?group_data_value=${groupDataValue}&date_data_value=${dateDataValue}&lesson_index=${lessonIndex}`)
-  const hmwText = await response.json()
-  console.log(hmwText)
+  const updatedAt = document.querySelector('.updated-at')
+  try {
+    const hmwResponse = await response.json()
+    console.log(hmwResponse)
+  
+    const { modalElement, textInput } = getModalElements();
+  
+    textInput['value'] = hmwResponse.homework
+    let hmwUpdated = hmwResponse.updated.split('T')
+    let hmwDate = convertDate(hmwUpdated[0]) 
+    let hmwTime = hmwUpdated[1].slice(0,5)
 
-  const { modalElement, textInput } = getModalElements();
+    updatedAt.textContent = 'последнее изменение: ' + hmwDate + ', ' + hmwTime
+  }
+  catch {
+    updatedAt.textContent = ' '
+  }
 
-  textInput['value'] = hmwText.homework
+  console.log('response:', response)
+  
 }
 
 // await displayHomework('1633', '2025-11-03', '2')
@@ -165,10 +185,17 @@ function initHomeworkModal() {
   console.log("Homework modal initialized successfully");
 }
 
-// ✅ Функция для показа уведомлений
-function showNotification(message, type = "info") {
-  // Можно заменить на более красивую реализацию
-  const notification = document.querySelector('.notification')
+// Функция для показа уведомлений
+function showNotification(message, type = "info", inner = false) {
+  const notifList = document.querySelectorAll('.notification')
+  // const {modalElement} = getModalElements()
+  
+  const notification = inner ? notifList[0] : notifList[1]
+
+  console.log('notification:', notification);
+  
+  
+  // const notification = document.querySelector('.notification')
   notification.className = `notification ${type}`;
   notification.textContent = message;
   
@@ -176,6 +203,7 @@ function showNotification(message, type = "info") {
   background: ${type === "success" ? "#28a745" : "#dc3545"};
   `;
   
+
   notification.classList.add('active')
   notification.classList.add(type)
 

@@ -18,8 +18,8 @@
 
 .notification {
   opacity: 0;
-  font-size: 12px;
-  padding: 11px 16px;
+  font-size: 14px;
+  padding: 0px 15px;
   border-radius: 12px;
   color: white;
   font-family: 'Manrope', serif;
@@ -31,7 +31,11 @@
   text-align: center;
   border: 2px dotted rgba(255, 255, 255, 0.2);
 
+  display: inline-flex;
+  align-items: center;
+
   pointer-events: none; // Чтобы не мешало кликам
+
 
   &.active {
     opacity: 0.8;
@@ -41,6 +45,19 @@
   &.success {
     background: linear-gradient(135deg, #4CAF50, #45a049);
     border-left: 4px solid #2E7D32;
+
+    position: fixed; 
+    z-index: 1000;
+
+    padding: 16px 24px; 
+    bottom: 20px; 
+    right: 20px; 
+    top: auto; 
+    left: auto; 
+
+    // Дополнительные стили для красивого вида
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
   &.error {
@@ -51,6 +68,11 @@
 
 .modal {
   max-height: 300px;
+
+  .updated-at {
+    font-size: small;
+    font-weight: 400;
+  }
 
   @media (max-width: 1200px) {
     width: 80%;
@@ -71,7 +93,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-family: 'Manrope', serif;
+  font-family: 'Manrope',
+  serif;
   border: none;
   border-radius: 8px;
   padding: 0;
@@ -136,7 +159,7 @@
           }
 
           &:active {
-            transform: translateY(0); 
+            transform: translateY(0);
           }
         }
 
@@ -152,7 +175,7 @@
           }
 
           &:active {
-            transform: translateY(0); 
+            transform: translateY(0);
           }
         }
       }
@@ -203,6 +226,8 @@
     width: 95%;
     max-width: none;
     margin: 20px;
+
+
 
     form {
       padding: 20px;

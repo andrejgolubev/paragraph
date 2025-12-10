@@ -43,7 +43,8 @@ class GroupDateAssociation(Base):
     lesson: Mapped[int] = mc(nullable=True)
 
     homework: Mapped[str] = mc(nullable=True)
-    created_at: Mapped[datetime] = mc(server_default=func.now())
+
+    updated: Mapped[datetime] = mc(nullable=True)
 
 
 class Group(Base):

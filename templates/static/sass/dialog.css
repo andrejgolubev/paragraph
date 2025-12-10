@@ -10,8 +10,8 @@
 }
 .notification {
   opacity: 0;
-  font-size: 12px;
-  padding: 11px 16px;
+  font-size: 14px;
+  padding: 0px 15px;
   border-radius: 12px;
   color: white;
   font-family: "Manrope", serif;
@@ -21,6 +21,8 @@
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   text-align: center;
   border: 2px dotted rgba(255, 255, 255, 0.2);
+  display: inline-flex;
+  align-items: center;
   pointer-events: none;
 }
 .notification.active {
@@ -30,6 +32,15 @@
 .notification.success {
   background: linear-gradient(135deg, #4CAF50, #45a049);
   border-left: 4px solid #2E7D32;
+  position: fixed;
+  z-index: 1000;
+  padding: 16px 24px;
+  bottom: 20px;
+  right: 20px;
+  top: auto;
+  left: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 .notification.error {
   background: linear-gradient(135deg, #f44336, #e53935);
@@ -38,6 +49,10 @@
 
 .modal {
   max-height: 300px;
+}
+.modal .updated-at {
+  font-size: small;
+  font-weight: 400;
 }
 @media (max-width: 1200px) {
   .modal {

@@ -33,7 +33,7 @@ function getDateValueFromDisplay(dateDisplay) {
   return `${year}-${monthNumber}-${day.padStart(2, "0")}`;
 }
 
-const convertDate = (date) => {
+export const convertDate = (date) => {
   return date.split("-").reverse().join(".");
 };
 
@@ -121,7 +121,7 @@ function displaySchedule(scheduleData) {
   scheduleData.days.forEach((day) => {
     html += `
       <th>
-        <p>${day.date}</p>
+        <p id="week-date">${day.date}</p>
         <p id="week-day">${day.day}</p>
       </th>
     `;
@@ -245,14 +245,25 @@ function displaySchedule(scheduleData) {
 
   const dateObj = new Date();
   const currentWeekDay = dateObj.getDay();
+  const currentDate = dateObj.getDate()
+
+  console.log('currentDate:' , currentDate)
 
   const weekDays = document.querySelectorAll("#week-day"); //nodelist
+  const weekDates = document.querySelectorAll("#week-date");
+    
 
   weekDays.forEach((day) => {
     if (weekDaysMap[day.textContent] === currentWeekDay) {
       day.parentElement.classList.add("active-day");
     }
   });
+
+  weekDates.forEach((date) => {
+    if (!(parseInt(date.textContent) === currentDate)) {
+      date.parentElement.classList.remove("active-day");
+    }
+  }) 
 
   setTimeout(() => {
     scheduleContainer.className = "schedule-container loaded";
