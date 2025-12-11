@@ -2,6 +2,7 @@ import { loadSchedule } from "./loadSchedule.js";
 import { setSelectedGroup } from "./datesDropdown.js";
 
 let selectedGroupDataValue = null;
+const groupInput = document.getElementById('select-input')
 
 // ФУНКЦИЯ ДЛЯ ПОИСКА ГРУППЫ ПО НОМЕРУ
 function findGroupByNumber(groupNumber) {
@@ -15,7 +16,7 @@ function findGroupByNumber(groupNumber) {
 function handleEnterKey(event) {
   if (event.key === "Enter") {
     event.preventDefault();
-
+    groupInput.value = ''
     const inputValue = searchInput.value.trim();
     if (!inputValue) return;
 
@@ -127,16 +128,18 @@ searchInput.addEventListener("input", () => {
     link.textContent = group.group_number;
     link.href = `#`;
 
+
     // Обработчик выбора group
     li.addEventListener("click", async (event) => {
       event.preventDefault();
-
       //СРАЗУ выбираем группу и загружаем расписание
       await selectGroup(group.data_value, group.group_number);
-
+      
       searchInput.value = group.group_number;
-
+      
       searchBody.classList.remove("active-search");
+
+      groupInput.value = ''
     });
 
     li.appendChild(link);
