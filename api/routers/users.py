@@ -114,12 +114,12 @@ async def login(
 async def get_user_role(username: str, db: AsyncSession = Depends(get_db)):
     """получает роль : студент или админ"""
     user = await db.scalars(select(User).where(User.name == username))
-    if not user:
+    user_first = user.first()
+    if not user_first:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="username doesn`t exist"
         )
-    
-    role = user.first().role  # type:ignore
+    role = user_first.role  # type:ignore
     group = 'unknown'
 
     if "admin" in role:

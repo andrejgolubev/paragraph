@@ -1,13 +1,11 @@
-import {loadSchedule} from './loadSchedule.js'
+import { loadSchedule } from "./loadSchedule.js";
 
-document.addEventListener('DOMContentLoaded', function() {
-  const tipElem = document.querySelector(".tip");
+const tipElem = document.querySelector(".tip");
 
-  if (tipElem) {
-    setTimeout(() => {
-      tipElem.classList.add("tip-active");
-      
-      // Проверяем стили после добавления класса
-    }, 400);
-  }
-});
+if (tipElem) {
+  setTimeout(() => {
+    tipElem.classList.add("tip-active");
+    console.log("tipElem :>> ", tipElem);
+    // Проверяем стили после добавления класса
+  }, 400);
+}

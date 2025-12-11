@@ -3,48 +3,57 @@ import { setSelectedGroup } from "./datesDropdown.js";
 
 let selectedGroupDataValue = null;
 
-// ✅ ФУНКЦИЯ ДЛЯ ПОИСКА ГРУППЫ ПО НОМЕРУ
+// ФУНКЦИЯ ДЛЯ ПОИСКА ГРУППЫ ПО НОМЕРУ
 function findGroupByNumber(groupNumber) {
-  return groups.find(group => 
-    group.group_number.toLowerCase() === groupNumber.toLowerCase().trim()
+  return groups.find(
+    (group) =>
+      group.group_number.toLowerCase() === groupNumber.toLowerCase().trim()
   );
 }
 
 // ОБРАБОТЧИК НАЖАТИЯ ENTER
 function handleEnterKey(event) {
-  if (event.key === 'Enter') {
+  if (event.key === "Enter") {
     event.preventDefault();
-    
+
     const inputValue = searchInput.value.trim();
     if (!inputValue) return;
-    
+
     // Ищем группу по введенному номеру
     const foundGroup = findGroupByNumber(inputValue);
-    
+
     if (foundGroup) {
       // Если группа найдена - выбираем ее
       selectGroup(foundGroup.data_value, foundGroup.group_number);
     } else {
       // ЕСЛИ ГРУППА НЕ НАЙДЕНА - ПОКАЗЫВАЕМ СООБЩЕНИЕ
-      showGroupNotFoundMessage(inputValue);
+      homepageError(inputValue);
     }
-    
+
     // Закрываем выпадающий список
     searchBody.classList.remove("active-search");
   }
 }
 
-// СООБЩЕНИЕ ЕСЛИ ГРУППА НЕ НАЙДЕНА
-function showGroupNotFoundMessage(groupNumber) {
+// СООБЩЕНИЕ ЕСЛИ ПО ЗАПРОСУ НИЧЕГО НЕ НАЙДЕНО (для групп и дат)
+export function homepageError(inputValue, detail = 'убедитесь в правильности написания и повторите попытку') {
   const scheduleContainer = document.getElementById("schedule-container");
-  const tipElem = document.querySelector(".tip"); 
-  tipElem.classList.remove('tip-active')
+  const tipElem = document.querySelector(".tip");
+  tipElem.classList.remove("tip-active");
+  
   scheduleContainer.innerHTML = `
     <div class="error-message">
-      <p>по запросу "<strong>${groupNumber}</strong>" информацией пока не располагаю :(</p>
-      <p>убедитесь в правильности написания и повторите попытку</p>
+      <p>по запросу "<strong>${inputValue}</strong>" информацией пока не располагаю :( </p>
+      <p>${detail}</p>
     </div>
   `;
+
+  setTimeout(() => {
+    tipElem.classList.add("tip-active");
+    scheduleContainer.innerHTML = ''
+    // Проверяем стили после добавления класса
+  }, 3000);
+
 }
 
 async function loadGroups() {
@@ -59,7 +68,7 @@ async function loadGroups() {
   }
 }
 
-const optionsDiv = document.querySelector('.options')
+const optionsDiv = document.querySelector(".options");
 
 // Функция для выбора группы и сразу загрузки расписания
 async function selectGroup(groupDataValue, groupNumber) {
@@ -74,7 +83,6 @@ async function selectGroup(groupDataValue, groupNumber) {
         },
         body: JSON.stringify({
           group_data_value: groupDataValue,
-          
         }),
       }
     );
@@ -82,9 +90,9 @@ async function selectGroup(groupDataValue, groupNumber) {
     if (response.ok) {
       selectedGroupDataValue = groupDataValue;
       setSelectedGroup(groupDataValue); // cообщаем datesDropdown о выборе
-      optionsDiv.setAttribute('group-data-value', groupDataValue)
+      optionsDiv.setAttribute("group-data-value", groupDataValue);
       // СРАЗУ загружаем расписание для текущей даты
-      
+
       await loadSchedule(groupDataValue);
 
       // Показываем блок выбора даты (опционально)
@@ -108,7 +116,6 @@ searchInput.addEventListener("input", () => {
   const input = searchInput.value;
   groupsList.innerHTML = "";
 
-
   const filteredGroups = groups.filter((group) =>
     group.group_number.includes(input)
   );
@@ -119,8 +126,6 @@ searchInput.addEventListener("input", () => {
 
     link.textContent = group.group_number;
     link.href = `#`;
-
-    
 
     // Обработчик выбора group
     li.addEventListener("click", async (event) => {
@@ -153,5 +158,3 @@ document.addEventListener("click", (event) => {
     searchBody.classList.remove("active-search");
   }
 });
-
-

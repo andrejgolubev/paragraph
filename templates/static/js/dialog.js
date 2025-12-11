@@ -2,7 +2,6 @@ import {convertDate} from './loadSchedule.js';
 
 
 
-
 let currentLessonInfo = null;
 let modalElement = null;
 let textInput = null;
@@ -18,6 +17,18 @@ function getModalElements() {
   return { modalElement, textInput };
 }
 
+async function getUserRole(username) {
+  const request = await fetch(`/user/get-role?username=${username}`)
+  const reqJson = await request.json()
+  const {role, group} = reqJson
+
+
+  console.log('role :>> ', role);
+  console.log('group :>> ', group);
+}
+
+
+
 // Функция для открытия модального окна
 function openHomeworkModal(lessonInfo) {
   const { modalElement, textInput } = getModalElements();
@@ -32,7 +43,10 @@ function openHomeworkModal(lessonInfo) {
   if (textInput){
     textInput.value = ""
   }
-
+  textInput.addEventListener('click', (event) => {
+    event.preventDefault()
+    event.target.removeAttribute('readonly')
+  })
   // Загружаем существующее ДЗ если есть
   displayHomework(currentLessonInfo);
 
@@ -50,9 +64,9 @@ async function saveHomework(lessonInfo, homeworkText) {
   }
   if (homeworkText.length < 5){
     showNotification('д/з не может быть таким коротким.', "error", true)
-
     return 
   }
+
   console.log('saveHomework. lessonInfo: ', lessonInfo)
   const {groupDataValue, dateDataValue, lessonIndex} = lessonInfo
   try {
@@ -134,7 +148,7 @@ function handleHomeworkSubmit(event) {
   }
 
   const homeworkText = textInput.value.trim();
-  console.log('homework submit debugging. currentLessonInfo: ', currentLessonInfo, 'homeworkText', homeworkText)
+
   saveHomework(currentLessonInfo, homeworkText);
 }
 
