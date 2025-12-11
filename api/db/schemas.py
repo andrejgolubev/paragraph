@@ -4,14 +4,9 @@ from pydantic import BaseModel, EmailStr, Field, field_validator, ConfigDict
 from typing import Optional
 
 
-
-
-
-
 class UserRegistration(BaseModel):
     name: str = Field(min_length=3, max_length=40)
     password: str = Field(min_length=8, max_length=40)
-    group: str
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -24,9 +19,9 @@ class UserRegistration(BaseModel):
         
 
 class UserCreate(UserRegistration): 
+    group_id: int | None = None
     role: str = 'student'
     rating: float = Field(default=0.0, ge=0.0)
-    group_id: int | None = None
 
     model_config = ConfigDict(from_attributes=True)
 

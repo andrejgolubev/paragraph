@@ -14,11 +14,13 @@ class User(Base):
 
     id: Mapped[int] = mc(primary_key=True, index=True)
     name: Mapped[str] = mc(nullable=False)
-    hashed_password: Mapped[str] = mc(nullable=False)
+    password: Mapped[str] = mc(nullable=False)
     role: Mapped[str] = mc(nullable=False, default="student")
     rating: Mapped[int] = mc(nullable=False, default=0)
 
-    group_id: Mapped[int] = mc(ForeignKey("groups.id"))
+
+
+    group_id: Mapped[int] = mc(ForeignKey("groups.id"), nullable=True)
 
     group: Mapped["Group"] = relationship(back_populates="users")
 

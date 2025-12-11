@@ -12,7 +12,7 @@ REAL_DATABASE_URL = env.str(
 
 
 load_dotenv() 
-SECRET_KEY = os.getenv('SECRET_KEY')
+if os.getenv('SECRET_KEY'): SECRET_KEY = os.getenv('SECRET_KEY')
 ALGORITHM = "HS256"
 
 

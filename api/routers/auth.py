@@ -1,18 +1,16 @@
 import jwt.exceptions
-from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta, timezone
 import jwt
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Header
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 import bcrypt
 from api.db.models import User as UserModel
 from settings import SECRET_KEY, ALGORITHM
 from api.db.database import get_db
-
+import os
 # Создаём контекст для хеширования с использованием bcrypt
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 REFRESH_TOKEN_EXPIRE_DAYS = 7 
@@ -23,19 +21,29 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/token", auto_error=False)
 # Показывает куда отправлять запрос для получения токена
 # Автоматически добавляет security scheme в OpenAPI спецификацию
 
+# Получаем ключ из переменных окружения
+API_KEY = os.getenv("ADMIN_API_KEY", 'secret-key')
+
+async def verify_admin_api_key(api_key: str = Header(alias="API-Key")):
+    if api_key != API_KEY:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Invalid API Key"
+        )
+
 
 def hash_password(password: str) -> str:
 
     '''Преобразует пароль в хеш с использованием bcrypt.'''
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
-    return hashed.decode('utf-8')
+    return hashed.decode(encoding='utf-8')
 
     
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Проверяет, соответствует ли введённый пароль сохранённому хешу."""
 
-    return pwd_context.verify(plain_password, hashed_password)
+    return bcrypt.checkpw(password=plain_password.encode(), hashed_password=hashed_password.encode())
 
 
 
