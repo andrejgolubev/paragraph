@@ -17,7 +17,7 @@
 
 
 .notification {
-  position:absolute;
+  position: absolute;
   right: 4px;
   opacity: 0;
   font-size: 14px;
@@ -47,14 +47,14 @@
     background: linear-gradient(135deg, #4CAF50, #45a049);
     border-left: 4px solid #2E7D32;
 
-    position: fixed; 
+    position: fixed;
     z-index: 1000;
 
-    padding: 16px 24px; 
-    bottom: 20px; 
-    right: 36px; 
-    top: auto; 
-    left: auto; 
+    padding: 16px 24px;
+    bottom: 20px;
+    right: 36px;
+    top: auto;
+    left: auto;
 
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -89,12 +89,13 @@
   h3 {
     margin-bottom: 16px;
   }
-  
+
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-family: 'Manrope', serif;
+  font-family: 'Manrope',
+  serif;
   border: none;
   border-radius: 8px;
   padding: 0;
@@ -106,7 +107,7 @@
 
   // ПРОКРУТКА ЕСЛИ КОНТЕНТА МНОГО
   overflow: auto;
-  overflow-x: hidden !important; 
+  overflow-x: hidden !important;
 
   // АНИМАЦИЯ ПОЯВЛЕНИЯ
   animation: modalAppear 0.3s ease-out;
@@ -135,6 +136,12 @@
       border-radius: 6px;
       resize: vertical;
       font-family: inherit;
+
+      &:focus {
+        outline: 1px solid;
+        border: 4px dotted rgba(255, 255, 255, 0.2);
+        /* или любой другой цвет */
+      }
     }
 
     .modal-buttons {
@@ -212,10 +219,11 @@
 .homework {
   cursor: pointer;
   display: inline-flex;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease 0s;
+  margin-left: 2px;
 
   &:hover {
-    background: rgba(0, 123, 255, 0.1);
+    scale: 1.1;
   }
 
 }

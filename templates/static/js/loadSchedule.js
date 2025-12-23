@@ -37,7 +37,7 @@ export const convertDate = (date) => {
   return date.split("-").reverse().join(".");
 };
 
-function addHomeworkHandlers(groupDataValue, dateDataValue) {
+function addHomeworkHandlers() {
   const homeworkButtons = document.querySelectorAll(".homework");
 
   console.log(`Found ${homeworkButtons.length} homework buttons`);

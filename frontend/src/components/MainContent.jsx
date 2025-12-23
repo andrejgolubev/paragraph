@@ -55,7 +55,7 @@ const MainContent = () => {
         </div>
       </div>
       
-      <HomeworkModal />
+      
       {/* notification outer*/}
       <ScheduleContainer groupDataValue={1633} />
       {/* ... */}

@@ -2,7 +2,9 @@ import { useState, useEffect, useCallback } from "react"
 import HomeworkModal from "./HomeworkModal" // Предполагаем, что модалка уже переписана на React
 import paperclip from "../images/paperclip.svg"
 
-const ScheduleContainer = ({ groupDataValue, initialDateDataValue = null }) => {
+let lessonInfoGlobal = {}
+
+const ScheduleContainer = ({ groupDataValue, initialDateDataValue = "" }) => {
   const [scheduleData, setScheduleData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -65,11 +67,25 @@ const ScheduleContainer = ({ groupDataValue, initialDateDataValue = null }) => {
   }, [loadSchedule])
 
   // Обработчик клика по домашке
-  const handleHomeworkClick = (lessonInfo) => {
+  const handleHomeworkClick = (event) => {
+    console.log('event :>> ', event);
+    const { groupDataValue, dateDataValue, lessonIndex, lessonDay, lessonName } = event
+
+    const lessonInfo = {
+      groupDataValue,
+      dateDataValue,
+      lessonIndex: parseInt(lessonIndex),
+      lessonDay, 
+      lessonName
+    }
+
     setSelectedLesson(lessonInfo)
     setShowDialog(true)
-  }
 
+    lessonInfoGlobal = { ...lessonInfo }
+    
+    // console.log('lessonInfoGlobal :>> ', lessonInfoGlobal)
+  }
 
   // Функция для подсветки текущего дня
   const getDayClass = (dayName, dateText) => {
@@ -205,12 +221,9 @@ const ScheduleContainer = ({ groupDataValue, initialDateDataValue = null }) => {
                               className="homework"
                               onClick={() => handleHomeworkClick(lessonInfo)}
                               style={{ cursor: "pointer" }}
-                              title="Домашнее задание"
+                              title="добавить д/з"
                             >
-                              <img
-                                src={paperclip}
-                                alt="Homework"
-                              />
+                              <img src={paperclip} alt="Homework" />
                             </div>
                             <div className="lesson-text">
                               {formatLessonText(lesson)}
@@ -264,7 +277,7 @@ const ScheduleContainer = ({ groupDataValue, initialDateDataValue = null }) => {
       {/* Модальное окно домашнего задания */}
       {showDialog && selectedLesson && (
         <HomeworkModal
-          lessonInfo={selectedLesson}
+          lessonInfo={lessonInfoGlobal}
           showDialog={showDialog}
           setShowDialog={setShowDialog}
           onClose={() => {

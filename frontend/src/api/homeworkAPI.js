@@ -25,7 +25,6 @@ const homeworkAPI = {
       })
   },
 
-
   loadDates: async function loadDates() {
     return fetch("http://127.0.0.1:8000/schedule/get-all-dates")
       .then((response) => response.json())
@@ -33,6 +32,19 @@ const homeworkAPI = {
         console.log("Error loading dates:", err)
         return []
       })
+  },
+
+  loadHomeworkData: async function loadHomeworkData({
+    groupDataValue,
+    dateDataValue,
+    lessonIndex,
+  }) {
+    return fetch(`http://127.0.0.1:8000/homework/get`, {
+      method: "GET",
+      body: { groupDataValue, dateDataValue, lessonIndex },
+    })
+      .then((resp) => resp.json())
+      .catch((e) => console.log(e))
   },
 }
 
