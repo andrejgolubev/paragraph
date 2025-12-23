@@ -20,8 +20,10 @@ from sqlalchemy.orm import selectinload
 from api.db.models import Group, Date, GroupDateAssociation
 import os
 
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
-# from utils.utils import get_all_dates
+
 
 app = FastAPI(title="PROGINZH",)
 
@@ -42,27 +44,29 @@ app.include_router(homework.homework_router)
 
 
 
-@app.get("/", response_class=HTMLResponse, name='index')
-async def index_page(request: Request, db: AsyncSession = Depends(get_db)):
-    """Шаблонизатор для приветственной страницы"""
-    groups = await data_service.get_all_groups(db)
-    dates = await data_service.get_all_dates(db)
-    return templates.TemplateResponse( 
-        name="index.html", request=request, context={
-            # 'groups': groups, 
-            # 'dates': dates,
-        }
-    )
+# @app.get("/", response_class=HTMLResponse, name='index')
+# async def index_page(request: Request, db: AsyncSession = Depends(get_db)):
+#     """Шаблонизатор для приветственной страницы"""
+#     groups = await data_service.get_all_groups(db)
+#     dates = await data_service.get_all_dates(db)
+#     return templates.TemplateResponse( 
+#         name="index.html", request=request, context={
+#             # 'groups': groups, 
+#             # 'dates': dates,
+#         }
+#     )
 
-@app.get("/schedule/", response_class=HTMLResponse, name='schedule')
-async def schedule_page(request: Request, db: AsyncSession = Depends(get_db)):
-    """Шаблонизатор для страницы с расписанием"""
-    
-    return templates.TemplateResponse( 
-        name="schedule.html", request=request, context={
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
-        }
-    )
+# Монтируем статические файлы
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Главная страница - отдаем базовый HTML
+@app.get("/", response_class=HTMLResponse)
+async def index():
+    return FileResponse("templates/index.html")
+
 
 
 

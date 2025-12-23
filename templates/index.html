@@ -1,12 +1,37 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="ru">
 
-{% block title %}
-прогинж | журнал
-{% endblock title %}
-
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>прогинж | журнал</title>
+  <link href="./static/sass/styles.css" rel="stylesheet" />
+</head>
 
 <body>
-  {% block body %}
+  <header class="header">
+    <nav class="nav">
+      <ul class="nav_list">
+        <li class="nav_item">
+          <a href="#">
+            <img class="nav_logo" src="../static/static/logoAndText.svg" alt="Logo" />
+          </a>
+        </li>
+        <div class="links">
+          <li class="nav_item"><a href="#">журнал</a></li>
+          <li class="nav_item"><a href="#">новости</a></li>
+          <li class="nav_item"><a href="#">о проекте</a></li>
+
+          <div class="toggle">
+            <img id="toggle-bg" src="../static/static/toggle-bg.svg" alt="Toggle" />
+          </div>
+          <img id="toggle-sun" src="../static/static/toggle-sun.svg" alt="Toggle" />
+          <img src="../static/static/ProfileIcon.svg" alt="Profile" class="profile-icon nav_item" />
+        </div>
+      </ul>
+    </nav>
+  </header>
+
   <div class="main-content">
     <div class="options">
       <div class="group">
@@ -16,7 +41,7 @@
               <div class="search-block__wrap-input">
                 <input type="text" id="search-input" placeholder="номер группы" class="search-block__input" />
               </div>
-              <ul class="search-block__products" id="products"></ul> 
+              <ul class="search-block__products" id="products"></ul>
             </div>
           </div>
         </div>
@@ -48,11 +73,12 @@
       </div>
     </div>
 
-    
+
     <dialog data-modal class="modal">
       <form id="homework-form" method="post">
         <h3>домашнее задание</h3>
-        <textarea name="text-input" id="text-input" placeholder="введите домашнее задание..." rows="6" readonly></textarea>
+        <textarea name="text-input" id="text-input" placeholder="введите домашнее задание..." rows="6"
+          readonly></textarea>
         <p class="updated-at"></p>
         <div class="modal-buttons">
           <button type="button" class="btn-cancel">отмена</button>
@@ -62,7 +88,7 @@
         </div>
       </form>
     </dialog>
-    
+
     <div class="notification outer">
     </div>
 
@@ -71,8 +97,12 @@
 
     </div>
 
-
-    {% endblock body %}
+    <script src="../static/js/homepage.js" type="module"></script>
+    <script src="../static/js/loadSchedule.js" type="module"></script>
+    <script src="../static/js/groupsDropdown.js" type="module"></script>
+    <script src="../static/js/datesDropdown.js" type="module"></script>
+    <script src="../static/js/dialog.js" type="module"></script>
+    <script src="../static/js/authorization.js" type="module"></script>
 </body>
 
 </html>
