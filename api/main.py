@@ -8,7 +8,6 @@ from api.parser.utils import convert_date
 from api.services.data_service import data_service
 
 
-
 from fastapi import FastAPI, Depends, Request, HTTPException, status, Header
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -22,13 +21,22 @@ import os
 
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI(title="PROGINZH",)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8000", "http://localhost:5173" ],  # фронтенд
+    allow_credentials=True,
+    allow_methods=["*"],  # Разрешить все методы
+    allow_headers=["*"],  # Разрешить все заголовки
+)
+
+
 app.mount("/static", StaticFiles(directory="templates/static"), name="static") # монтируем CSS, js, png etc
-templates = Jinja2Templates(directory="templates")
+# templates = Jinja2Templates(directory="templates")
 
 
 app.include_router(
@@ -41,26 +49,6 @@ app.include_router(schedule.schedule_router)
 app.include_router(homework.homework_router)
 
 
-
-
-
-# @app.get("/", response_class=HTMLResponse, name='index')
-# async def index_page(request: Request, db: AsyncSession = Depends(get_db)):
-#     """Шаблонизатор для приветственной страницы"""
-#     groups = await data_service.get_all_groups(db)
-#     dates = await data_service.get_all_dates(db)
-#     return templates.TemplateResponse( 
-#         name="index.html", request=request, context={
-#             # 'groups': groups, 
-#             # 'dates': dates,
-#         }
-#     )
-
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-
-# Монтируем статические файлы
-app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Главная страница - отдаем базовый HTML
 @app.get("/", response_class=HTMLResponse)

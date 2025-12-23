@@ -17,17 +17,6 @@ function getModalElements() {
   return { modalElement, textInput };
 }
 
-async function getUserRole(username) {
-  const request = await fetch(`/user/get-role?username=${username}`)
-  const reqJson = await request.json()
-  const {role, group} = reqJson
-
-
-  console.log('role :>> ', role);
-  console.log('group :>> ', group);
-}
-
-
 
 // Функция для открытия модального окна
 function openHomeworkModal(lessonInfo) {
@@ -97,12 +86,10 @@ async function saveHomework(lessonInfo, homeworkText) {
     }
     else {
       const errorData = await response.json();
-      showNotification(`${errorData.detail || "произошла неизвестная ошибка"}`, "error");
-      // Или показываем ошибку в форме:
-      // showFormError(errorData.detail || "Ошибка сохранения");
+      showNotification(`${errorData.detail || "произошла неизвестная ошибка"}`, "error", true);
     }
   } catch (error) {
-    console.error("Error saving homework:", error);
+    console.error("Error saving homework:", error, true);
     showNotification("Ошибка сохранения", "error");
   }
 }
@@ -162,6 +149,7 @@ function handleCancel() {
 }
 
 // Инициализация после загрузки DOM
+// NO NEED TO BE REFACTORED
 function initHomeworkModal() {
   const { modalElement } = getModalElements();
   const homeworkForm = document.getElementById("homework-form");
@@ -199,17 +187,17 @@ function initHomeworkModal() {
   console.log("Homework modal initialized successfully");
 }
 
-// Функция для показа уведомлений
+
+// Функция для показа уведомлений 
+//DONE
 function showNotification(message, type = "info", inner = false) {
   const notifList = document.querySelectorAll('.notification')
-  // const {modalElement} = getModalElements()
   
   const notification = inner ? notifList[0] : notifList[1]
 
   console.log('notification:', notification);
   
   
-  // const notification = document.querySelector('.notification')
   notification.className = `notification ${type}`;
   notification.textContent = message;
   

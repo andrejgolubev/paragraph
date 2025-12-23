@@ -23,29 +23,30 @@
 }
 
 
+
+
 .toggle,
 .toggle-bg {
   display: inline-block;
   position: relative;
-  // right: 4px;
 }
 
 .toggle { 
   position: relative;
+  top: 1px;
   padding-bottom: 10px;
-  height: 120%;
+  padding-inline: 8px; 
 }
 
 #toggle-sun { 
   position: absolute;
   top: -4px;
-  right: 15px;
+  right: 23px;
   transition: all 0.3s ease 0s;
 }
 
 #toggle-sun:hover {
   transform: translate3d(5px, 0, 20px) rotateY(3deg) perspective(500px);
 }
-
 
 

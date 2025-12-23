@@ -291,13 +291,3 @@ function getCurrentWeekDate(dayIndex) {
   return targetDate.toISOString().split("T")[0]; // Формат YYYY-MM-DD
 }
 
-
-
-
-// let lessonName = escapeHtml(lesson.text.split(", ")[0]);
-// let lessonText = escapeHtml(lesson.text).replace(
-//   lessonName + ", " ? lessonName.includes(", ") : lessonName,
-//   ""
-// );
-// console.log("lessonName:", lessonName);
-// console.log("lessonText:", lessonText);

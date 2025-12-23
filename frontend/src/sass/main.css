@@ -117,7 +117,7 @@ input[type=file] {
 
 @font-face {
   font-family: "Unbounded";
-  src: url("../static/static/fonts/Unbounded-VariableFont_wght.ttf");
+  src: url("../fonts/Unbounded-VariableFont_wght.ttf");
 }
 @font-face {
   font-family: "Manrope";
@@ -302,13 +302,19 @@ input#search-input {
 .toggle-bg {
   display: inline-block;
   position: relative;
-  bottom: 2px;
+}
+
+.toggle {
+  position: relative;
+  top: 1px;
+  padding-bottom: 10px;
+  padding-inline: 8px;
 }
 
 #toggle-sun {
   position: absolute;
-  right: 99px;
-  top: 21px;
+  top: -4px;
+  right: 23px;
   transition: all 0.3s ease 0s;
 }
 
@@ -401,7 +407,7 @@ input#search-input {
   padding: 12px 0;
   padding-left: 10px;
   min-width: 90px;
-  max-width: 90px;
+  max-width: 200px;
 }
 .table th:first-child,
 .table td:first-child {
@@ -809,6 +815,7 @@ input#search-input {
   }
 }
 .header {
+  font-family: Manrope, serif;
   width: auto;
   margin-inline: 10px;
 }
@@ -835,7 +842,6 @@ input#search-input {
   padding-inline: 15px;
   padding-top: 1rem;
   font-family: "Manrope", serif;
-  font-weight: 500;
   font-size: 24px;
   letter-spacing: 0.08em;
   color: #292833;
@@ -958,4 +964,4 @@ body {
   user-select: none;
 }
 
-/*# sourceMappingURL=styles.css.map */
+/*# sourceMappingURL=main.css.map */
