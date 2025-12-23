@@ -10,7 +10,7 @@ def _parse_date(driver: webdriver.Chrome):
     """ПАРСИТ ВСЕ актуальные ДАТЫ из выпадающего меню """
 
     wait = WebDriverWait(driver, 1)
-    css_selector = '.column[style*="width: 152px"] .select-wrap' 
+    css_selector = '.column[style*="width: 220px"] .select-wrap' 
 
     option_box = driver.find_element(By.CSS_SELECTOR, css_selector)
     option_box.click()    
