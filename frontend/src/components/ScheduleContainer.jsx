@@ -1,0 +1,287 @@
+import { useState, useEffect, useCallback } from "react"
+import HomeworkModal from "./HomeworkModal" // Предполагаем, что модалка уже переписана на React
+import paperclip from "../images/paperclip.svg"
+
+const ScheduleContainer = ({ groupDataValue, initialDateDataValue = null }) => {
+  const [scheduleData, setScheduleData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [selectedLesson, setSelectedLesson] = useState(null)
+  const [showDialog, setShowDialog] = useState(false)
+
+  // Преобразование даты
+  const getDateValueFromDisplay = (dateDisplay) => {
+    const months = {
+      января: "01",
+      февраля: "02",
+      марта: "03",
+      апреля: "04",
+      мая: "05",
+      июня: "06",
+      июля: "07",
+      августа: "08",
+      сентября: "09",
+      октября: "10",
+      ноября: "11",
+      декабря: "12",
+    }
+
+    const [day, month] = dateDisplay.split(" ")
+    const year = new Date().getFullYear()
+    const monthNumber = months[month]
+
+    return `${year}-${monthNumber}-${day.padStart(2, "0")}`
+  }
+
+  // Загрузка расписания
+  const loadSchedule = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError(null)
+
+      let url = `http://127.0.0.1:8000/schedule/get-schedule?group_data_value=${groupDataValue}`
+      if (initialDateDataValue) {
+        url += `&date_data_value=${initialDateDataValue}`
+      }
+
+      const response = await fetch(url)
+      if (!response.ok) {
+        throw new Error(`HTTP error. ${response}`)
+      }
+
+      const data = await response.json()
+      setScheduleData(data)
+    } catch (err) {
+      console.error("Error loading schedule:", err)
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }, [groupDataValue, initialDateDataValue])
+
+  // Загружаем расписание при монтировании
+  useEffect(() => {
+    loadSchedule()
+  }, [loadSchedule])
+
+  // Обработчик клика по домашке
+  const handleHomeworkClick = (lessonInfo) => {
+    setSelectedLesson(lessonInfo)
+    setShowDialog(true)
+  }
+
+
+  // Функция для подсветки текущего дня
+  const getDayClass = (dayName, dateText) => {
+    const weekDaysMap = {
+      Понедельник: 1,
+      Вторник: 2,
+      Среда: 3,
+      Четверг: 4,
+      Пятница: 5,
+      Суббота: 6,
+    }
+
+    const currentDate = new Date()
+    const currentWeekDay = currentDate.getDay()
+    const currentDayOfMonth = currentDate.getDate()
+
+    // В JavaScript getDay() возвращает 0 для воскресенья, 1 для понедельника и т.д.
+    const adjustedWeekDay = currentWeekDay === 0 ? 7 : currentWeekDay
+
+    const isCurrentWeekday = weekDaysMap[dayName] === adjustedWeekDay
+    const isCurrentDate = parseInt(dateText) === currentDayOfMonth
+
+    return isCurrentWeekday && isCurrentDate ? "active-day" : ""
+  }
+
+  // Получение класса для типа занятия
+  const getLessonTypeClass = (type) => {
+    const typeMap = {
+      "Лек.": "lecture",
+      "Лаб.": "lab",
+      "Упр.": "practice",
+    }
+    return typeMap[type] || "default"
+  }
+
+  // Форматирование текста занятия
+  const formatLessonText = (lesson) => {
+    const lessonName = lesson.text.split(", ")[0]
+    const lessonRest = lesson.text.replace(
+      lesson.text.includes(", ") ? lessonName + ", " : lessonName,
+      ""
+    )
+
+    const parts = lessonRest.split(",").filter((part) => part.trim() !== "")
+
+    return (
+      <>
+        <strong>{lessonName}</strong>
+        {parts.map((part, index) => (
+          <p key={index}>
+            {part.trim()}
+            {index < parts.length - 1 ? "," : ""}
+          </p>
+        ))}
+      </>
+    )
+  }
+
+  // Рендер расписания
+  const renderSchedule = () => {
+    if (!scheduleData) return null
+
+    const datesArr = scheduleData.days.map((day) => day.date)
+    let lessonIndex = 1
+
+    return (
+      <table className="table" id="schedule-container">
+        <thead>
+          <tr className="table_row_high">
+            <th>время</th>
+            {scheduleData.days.map((day, index) => (
+              <th key={index} className={getDayClass(day.day, day.date)}>
+                <p id="week-date">{day.date}</p>
+                <p id="week-day">{day.day}</p>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {scheduleData.schedule.map((timeSlot, timeIndex) => (
+            <tr key={timeIndex}>
+              <td>
+                <p>{timeSlot.time_start}</p>
+                <p>{timeSlot.time_end}</p>
+              </td>
+              {timeSlot.lessons.map((dayLessons, dayIndex) => {
+                const dataDate = datesArr[dayIndex]
+                const currentLessonIndex = lessonIndex++
+
+                return (
+                  <td
+                    key={`${timeIndex}-${dayIndex}`}
+                    data-date={dataDate}
+                    data-index={currentLessonIndex}
+                  >
+                    {dayLessons.length > 0 ? (
+                      dayLessons.map((lesson, lessonIndex) => {
+                        const lessonId =
+                          lesson.type === "Лек."
+                            ? "lec"
+                            : lesson.type === "Упр."
+                            ? "upr"
+                            : lesson.type === "Лаб."
+                            ? "lab"
+                            : "default"
+
+                        const lessonInfo = {
+                          groupDataValue: groupDataValue,
+                          dateDataValue: getDateValueFromDisplay(
+                            datesArr[dayIndex]
+                          ),
+                          lessonIndex: currentLessonIndex,
+                          lessonName: lesson.text.split(", ")[0],
+                          lessonDay: dataDate,
+                        }
+
+                        return (
+                          <div
+                            key={lessonIndex}
+                            className="lesson-item"
+                            id={lessonId}
+                          >
+                            {lesson.type && (
+                              <span
+                                className={`lesson-type ${getLessonTypeClass(
+                                  lesson.type
+                                )}`}
+                              >
+                                {lesson.type}
+                              </span>
+                            )}
+                            <div
+                              className="homework"
+                              onClick={() => handleHomeworkClick(lessonInfo)}
+                              style={{ cursor: "pointer" }}
+                              title="Домашнее задание"
+                            >
+                              <img
+                                src={paperclip}
+                                alt="Homework"
+                              />
+                            </div>
+                            <div className="lesson-text">
+                              {formatLessonText(lesson)}
+                            </div>
+                          </div>
+                        )
+                      })
+                    ) : (
+                      <div className="lesson-empty"></div>
+                    )}
+                  </td>
+                )
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
+
+  // Состояния загрузки и ошибки
+  if (loading) {
+    return (
+      <div className="schedule-container loading">
+        <div className="tip tip-active">Загрузка расписания...</div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="schedule-container error">
+        <div className="tip tip-active">Ошибка: {error}</div>
+        <button onClick={loadSchedule}>Повторить попытку</button>
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <div
+        className={`schedule-container ${scheduleData ? "loaded" : "loading"}`}
+        group-data-value={groupDataValue}
+        date-data-value={getDateValueFromDisplay(
+          scheduleData?.days?.[0]?.date || ""
+        )}
+      >
+        {renderSchedule()}
+      </div>
+
+      {/* Модальное окно домашнего задания */}
+      {showDialog && selectedLesson && (
+        <HomeworkModal
+          lessonInfo={selectedLesson}
+          showDialog={showDialog}
+          setShowDialog={setShowDialog}
+          onClose={() => {
+            setShowDialog(false)
+            setSelectedLesson(null)
+          }}
+        />
+      )}
+    </>
+  )
+}
+
+export default ScheduleContainer
+
+// Вспомогательный компонент для отображения подсказки
+const Tip = ({ active, children }) => (
+  <div className={`tip ${active ? "tip-active" : ""}`}>{children}</div>
+)
+
+export { Tip }

@@ -151,7 +151,6 @@ function displaySchedule(scheduleData) {
           <p>${timeSlot.time_end}</p>
         </td>
     `;
-    // const displayDataValue =  datesArr[0]
     // Занятия для каждого дня (пн-сб)
     timeSlot.lessons.forEach((dayLessons) => {
       let dataDate = datesArr[(lessonIndex - 1) % 6]
@@ -167,8 +166,8 @@ function displaySchedule(scheduleData) {
           } else if (lesson.type === "Лаб.") {
             lessonId = "lab";
           }
-          let lessonName = escapeHtml(lesson.text.split(", ")[0]);
-          let lessonText = escapeHtml(lesson.text).replace(
+          let lessonName = lesson.text.split(", ")[0]
+          let lessonText = lesson.text.replace(
              lesson.text.includes(", ") ? lessonName + ", " : lessonName,
             ""
           );

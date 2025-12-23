@@ -923,7 +923,7 @@ body {
   font-family: "Manrope", sans-serif;
   font-weight: 400;
   letter-spacing: 0.06em;
-  color: rgba(29, 29, 33, 0.1);
+  color: rgba(29, 29, 33, 0.15);
   transition: all 0.7s ease 0s;
 }
 @media (max-width: 1200px) {

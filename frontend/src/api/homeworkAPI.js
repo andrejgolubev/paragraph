@@ -1,5 +1,4 @@
-const BASE_URL = 'http://127.0.0.1:8000'
-
+const BASE_URL = "http://127.0.0.1:8000"
 
 const homeworkAPI = {
   saveHomework: (groupDataValue, dateDataValue, lessonIndex, homeworkText) => {
@@ -15,5 +14,26 @@ const homeworkAPI = {
         homework: homeworkText,
       }),
     })
-  }
+  },
+
+  loadGroups: async function loadGroups() {
+    return fetch("http://127.0.0.1:8000/schedule/get-all-groups")
+      .then((response) => response.json())
+      .catch((err) => {
+        console.log("Error loading dates:", err)
+        return []
+      })
+  },
+
+
+  loadDates: async function loadDates() {
+    return fetch("http://127.0.0.1:8000/schedule/get-all-dates")
+      .then((response) => response.json())
+      .catch((err) => {
+        console.log("Error loading dates:", err)
+        return []
+      })
+  },
 }
+
+export default homeworkAPI

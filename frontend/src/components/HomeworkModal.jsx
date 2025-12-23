@@ -1,55 +1,58 @@
 import { useEffect, useRef, useState } from "react"
-import NotificationInner from './notifications/NotificationInner'
+import NotificationInner from "./notifications/NotificationInner"
 
-const HomeworkModal = () => {
-  
-  const isAdmin = true // ПОТОМ ПОМЕНЯТЬ 
+const HomeworkModal = (props) => {
+  // с lessonInfo обязательно достать информацию и разместить в модалке
+  const { lessonInfo, showDialog, setShowDialog } = props
+  const isAdmin = true // ПОТОМ ПОМЕНЯТЬ
 
   const [readOnly, setReadOnly] = useState(true)
-  const textareaRef = useRef(null)
+  const textareaRef = useRef("")
+  const dialogRef = useRef(null)
 
-  //НАЧАЛАСЬ ФУНКЦИЯ И USESTATE ИСП. ДЛЯ СКРЕПОЧЕК
-  const [showDialog, setShowDialog] = useState(false)
+  const dialog = dialogRef.current
 
-  const onClickOpenHomeworkModal = (lessonInfo) => {
-    // будем потом в lessonInfo в FASTAPI передавать роль юзера, чтобы readonly убирался опицонально
+  if (dialog && showDialog) {
+    dialog.showModal() // Используем нативный метод
+  }
 
-    // Загружаем существующее ДЗ если есть
-    displayHomework(lessonInfo)
-
-    setShowDialog(true)
-  } 
-  //КОНЧИЛАСЬ ФУНКЦИЯ И USESTATE ИСП. ДЛЯ СКРЕПОЧЕК
-
-
-  useEffect( () => {
+  useEffect(() => {
     if (isAdmin) {
       setReadOnly(false)
     }
-  }, []) 
+  }, [])
 
   const handleTextInputClick = (event) => {
     event.target.focus()
   }
 
   const onInput = (event) => {
-    const value = event.target.value.trim() 
+    const value = event.target.value.trim()
   }
-
 
   const handleHomeworkSubmit = (event) => {
     event.preventDefault()
-    const homeworkText = textInput.value.trim()
-    
   }
 
-  const handleCancel = (event) => { 
+  const handleCancel = (event) => {
     event.preventDefault()
-    setShowDialog((prev) => !prev) 
-  } 
+    dialog.close()
+  }
+
+  const handleClickOutside = (e) => {
+    if (dialog && e.target === dialog) {
+      dialog.close()
+    }
+  }
 
   return (
-    <dialog data-modal className="modal" open={!showDialog}>
+    <dialog
+      data-modal
+      className="modal"
+      ref={dialogRef}
+      onClick={handleClickOutside}
+      // open={showDialog}
+    >
       <form id="homework-form" method="post" onSubmit={handleHomeworkSubmit}>
         <h3>домашнее задание</h3>
         <textarea
@@ -60,7 +63,7 @@ const HomeworkModal = () => {
           id="text-input"
           placeholder="введите домашнее задание..."
           rows={6}
-          readOnly = {readOnly} 
+          readOnly={readOnly}
           defaultValue={""}
         />
         <p className="updated-at" />
@@ -77,5 +80,4 @@ const HomeworkModal = () => {
     </dialog>
   )
 }
-
 export default HomeworkModal

@@ -1,4 +1,5 @@
 import HomeworkModal from "./HomeworkModal"
+import ScheduleContainer from './ScheduleContainer'
 
 const MainContent = () => {
   return (
@@ -56,6 +57,7 @@ const MainContent = () => {
       
       <HomeworkModal />
       {/* notification outer*/}
+      <ScheduleContainer groupDataValue={1633} />
       {/* ... */}
 
     </div>
