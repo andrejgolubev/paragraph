@@ -14,36 +14,33 @@ const Dropdown = (props) => {
   const [activeSearch, setActiveSearch] = useState(false)
 
   const dropdownRef = useRef(null)
-  const inputRef = useRef('')  
-
+  const inputRef = useRef("")
 
   useClickOutside(dropdownRef, () => {
     setActiveSearch(false)
   })
 
-
   const { groupDataValue, setGroupDataValue, dateDataValue, setDateDataValue } =
     useContext(Context)
 
-
-  // будет только для "group" ну и для других, где пользователь сам вводит текст 
-  useEffect( () => {
+  // будет только для "group" ну и для других, где пользователь сам вводит текст
+  useEffect(() => {
     setFilteredData(
       data.filter((elem) => {
         const element = elem[elemKey]
 
-        return element && element.toLowerCase().trim().includes(inputText.trim().toLowerCase())
+        return (
+          element &&
+          element.toLowerCase().trim().includes(inputText.trim().toLowerCase())
+        )
       })
     )
   }, [inputText])
 
-
   const handleClick = () => {
     if (name === "group") {
       loadGroups()
-      
-    }
-    else if (name === "week") {
+    } else if (name === "week") {
       loadDates()
       setActiveSearch(true)
     }
@@ -54,8 +51,8 @@ const Dropdown = (props) => {
 
   const loadGroups = async () => {
     const responseData = await homeworkAPI.loadGroups()
-    setData(responseData) 
-    // просто setData, т.к. по группам осуществляется ПОИСК и они будут фильтроваться по мере ввода текста, т.е. data -> filteredData 
+    setData(responseData)
+    // просто setData, т.к. по группам осуществляется ПОИСК и они будут фильтроваться по мере ввода текста, т.е. data -> filteredData
     setElemKey("group_number")
   }
 
@@ -94,24 +91,22 @@ const Dropdown = (props) => {
             {activeSearch && (
               <ul className={func + "-block__elements"}>
                 {filteredData.map((elem) => (
-                  <li key={elem.id}>
-                    <a
-                      href="#"
-                      onClick={() => {
-                        inputRef.current.value = elem[elemKey] 
-                        if (name === "group") {
-                          setGroupDataValue(elem['data_value'])
-                        }
-                        else if (name === "week") {
-                          setDateDataValue(elem['data_value'])
-                        }
-                        setTimeout(() => {
-                          setActiveSearch(false)
-                        }, 600)
-                      }}
-                    >
-                      {elem[elemKey]}
-                    </a>
+                  <li
+                    key={elem.id}
+                    onClick={() => {
+                      setActiveSearch(false)
+                      inputRef.current.value = elem[elemKey]
+                      if (name === "group") {
+                        setGroupDataValue(elem["data_value"])
+                      } else if (name === "week") {
+                        setDateDataValue(elem["data_value"])
+                      }
+                      // setTimeout(() => {
+                      //   setActiveSearch(false)
+                      // }, 600)
+                    }}
+                  >
+                    <a href="#">{elem[elemKey]}</a>
                   </li>
                 ))}
               </ul>

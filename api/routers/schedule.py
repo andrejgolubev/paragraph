@@ -2,11 +2,18 @@ from fastapi import Request, Response, HTTPException, APIRouter, Depends
 from fastapi.responses import JSONResponse
 from api.db.database import get_db
 from api.parser.schedule_parser import parse_schedule_from_url  # твой существующий парсер
-import asyncio
 from sqlalchemy.ext.asyncio import AsyncSession
-schedule_router = APIRouter(tags=['Schedule'], prefix='/schedule')
+from api.parser.schedule_parser import FastScheduleParser
+from api.db.schemas import GroupSelection
+from api.services.data_service import data_service
+from datetime import datetime
+import time
 
+schedule_router = APIRouter(tags=['Schedule'], prefix='/schedule')
 router = schedule_router
+
+fast_parser = FastScheduleParser()
+
 
 @router.get("/get-schedule")
 async def get_schedule(
@@ -15,28 +22,21 @@ async def get_schedule(
     date_data_value: str | None = None,
     db: AsyncSession = Depends(get_db)
 ):
-
-
+    st = time.time() 
     
-    final_group = group_data_value or request.cookies.get("selected_group")
-    final_date = date_data_value or request.cookies.get("selected_date")
-    
-    if not final_group:
-        return {"error": "Group not selected"}
-
-    # Формируем URL
-    url = f'https://rasp.rsreu.ru/schedule-frame/group?faculty=1&group={final_group}&date={final_date or ""}'    
+    url = f'https://rasp.rsreu.ru/schedule-frame/group?faculty=1&group={group_data_value}&date={date_data_value or ""}'    
 
     try:
-        # Парсим расписание
-        schedule_data = await parse_schedule_from_url(url)
-        
+        # парсим расписание (ничего не указываем в function если хотим обычный парсинг)
+        schedule_data = await parse_schedule_from_url(url, function=fast_parser.parse) 
+        if schedule_data: end = time.time() 
+        print(end - st)
         return schedule_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error parsing schedule: {str(e)}")
 
 
-from api.db.schemas import GroupSelection
+
 
 @router.post("/select-group")
 async def select_group(
@@ -55,7 +55,7 @@ async def select_group(
     
     return {"status": "success", "selected_group": group_data.group_data_value} 
 
-from api.services.data_service import data_service
+
 
 @router.get('/get-all-groups', response_class=JSONResponse)
 async def get_all_groups(db: AsyncSession = Depends(get_db)): 
