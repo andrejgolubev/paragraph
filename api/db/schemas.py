@@ -1,7 +1,14 @@
 # BLOCK WITH API MODELS #
-from fastapi import HTTPException
+from fastapi import HTTPException , Body
 from pydantic import BaseModel, EmailStr, Field, field_validator, ConfigDict
 from typing import Optional
+
+
+class HomeworkRequest(BaseModel):
+    group_data_value: str
+    date_data_value: str
+    lesson_index: int
+    homework: str
 
 
 class UserRegistration(BaseModel):

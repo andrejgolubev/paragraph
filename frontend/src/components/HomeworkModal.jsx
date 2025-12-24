@@ -5,9 +5,9 @@ import homeworkAPI from "../api/homeworkAPI"
 const HomeworkModal = ({ showDialog, lessonInfo }) => {
   // с lessonInfo обязательно достать информацию и разместить в модалке
   const isAdmin = true // ПОТОМ ПОМЕНЯТЬ
+  const [inputValue, setInputValue] = useState('')
 
   if (lessonInfo) {
-    console.log("lessonInfo from HomeworkModal :>> ", lessonInfo)
     const {
       groupDataValue,
       dateDataValue,
@@ -16,7 +16,6 @@ const HomeworkModal = ({ showDialog, lessonInfo }) => {
       lessonName,
     } = lessonInfo
 
-    console.log("lessonName :>> ", lessonName)
     const [readOnly, setReadOnly] = useState(true)
     const textareaRef = useRef("")
     const dialogRef = useRef(null)
@@ -34,26 +33,31 @@ const HomeworkModal = ({ showDialog, lessonInfo }) => {
     }, [])
 
     const handleTextInputClick = (event) => {
-      // event.preventDefault()
+      event.preventDefault()
       event.target.focus()
     }
 
     const onInput = (event) => {
-      const value = event.target.value.trim()
+      setInputValue(event.target.value.trim())
     }
 
     const handleHomeworkSubmit = (event) => {
       event.preventDefault()
+      const homeworkText = inputValue
+      console.log('СОхраняем дз: ', groupDataValue, dateDataValue, lessonIndex, homeworkText );
+      homeworkAPI.saveHomework(groupDataValue, dateDataValue, lessonIndex, homeworkText)
     }
 
     const handleCancel = (event) => {
       event.preventDefault()
+      textareaRef.current.value = ''
       dialog.close()
     }
 
     const handleClickOutside = (e) => {
       if (dialog && e.target === dialog) {
         dialog.close()
+        textareaRef.current.value = ''
       }
     }
 
@@ -63,7 +67,6 @@ const HomeworkModal = ({ showDialog, lessonInfo }) => {
         className="modal"
         ref={dialogRef}
         onClick={handleClickOutside}
-        // open={showDialog}
       >
         <form id="homework-form" method="post" onSubmit={handleHomeworkSubmit}>
           <h3><strong>{lessonName}</strong>, {lessonDay}</h3>

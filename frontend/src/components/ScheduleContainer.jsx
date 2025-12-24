@@ -11,7 +11,6 @@ const ScheduleContainer = ({ groupDataValue, initialDateDataValue = "" }) => {
   const [selectedLesson, setSelectedLesson] = useState(null)
   const [showDialog, setShowDialog] = useState(false)
 
-  // Преобразование даты
   const getDateValueFromDisplay = (dateDisplay) => {
     const months = {
       января: "01",
@@ -34,6 +33,14 @@ const ScheduleContainer = ({ groupDataValue, initialDateDataValue = "" }) => {
 
     return `${year}-${monthNumber}-${day.padStart(2, "0")}`
   }
+
+  const scheduleDateDataValue = getDateValueFromDisplay(
+    scheduleData?.days?.[0]?.date || ""
+  ) // ДЛЯ ИСПОЛЬЗОВАНИЯ как dateDataValue для сохранения конкретной домашки, т.к. домашка прикрепляется к неделе, 
+    // а не к конкретной дате т.е. 2025-12-22, 2025-12-29, 2026-01-05 и т.д.
+
+
+
 
   // Загрузка расписания
   const loadSchedule = useCallback(async () => {
@@ -61,30 +68,36 @@ const ScheduleContainer = ({ groupDataValue, initialDateDataValue = "" }) => {
     }
   }, [groupDataValue, initialDateDataValue])
 
-  // Загружаем расписание при монтировании
+  // загружаем расписание при монтировании расписания
   useEffect(() => {
     loadSchedule()
   }, [loadSchedule])
 
   // Обработчик клика по домашке
   const handleHomeworkClick = (event) => {
-    console.log('event :>> ', event);
-    const { groupDataValue, dateDataValue, lessonIndex, lessonDay, lessonName } = event
+    // console.log("event :>> ", event)
+    const {
+      groupDataValue,
+      dateDataValue,
+      lessonIndex,
+      lessonDay,
+      lessonName,
+    } = event
 
     const lessonInfo = {
       groupDataValue,
       dateDataValue,
       lessonIndex: parseInt(lessonIndex),
-      lessonDay, 
-      lessonName
+      lessonDay,
+      lessonName,
     }
 
     setSelectedLesson(lessonInfo)
     setShowDialog(true)
 
-    lessonInfoGlobal = { ...lessonInfo }
-    
-    // console.log('lessonInfoGlobal :>> ', lessonInfoGlobal)
+    lessonInfoGlobal = { ...lessonInfo, dateDataValue:scheduleDateDataValue }
+
+    console.log('lessonInfoGlobal :>> ', lessonInfoGlobal)
   }
 
   // Функция для подсветки текущего дня
@@ -261,15 +274,13 @@ const ScheduleContainer = ({ groupDataValue, initialDateDataValue = "" }) => {
       </div>
     )
   }
-
+  
   return (
     <>
       <div
         className={`schedule-container ${scheduleData ? "loaded" : "loading"}`}
         group-data-value={groupDataValue}
-        date-data-value={getDateValueFromDisplay(
-          scheduleData?.days?.[0]?.date || ""
-        )}
+        date-data-value={scheduleDateDataValue}
       >
         {renderSchedule()}
       </div>

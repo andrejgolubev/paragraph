@@ -1,24 +1,27 @@
-from fastapi import APIRouter, Depends, Request, HTTPException
+from fastapi import APIRouter, Depends, Request, HTTPException, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from api.db.database import get_db
 from api.db.models import Group, Date, GroupDateAssociation
 from typing import Optional
 from datetime import datetime
-
+from api.db.schemas import HomeworkRequest
+    
 homework_router = APIRouter(tags=["Homework"], prefix="/homework")
 router = homework_router
 
 
+
 @router.post("/save")
 async def save_homework(
-    group_data_value: str,
-    date_data_value: str,
-    lesson_index: int,
-    homework: str,
     request: Request,
+    homework_request: HomeworkRequest = Body(),
     db: AsyncSession = Depends(get_db),
 ):
+    group_data_value = homework_request.group_data_value
+    date_data_value = homework_request.date_data_value
+    lesson_index = homework_request.lesson_index
+    homework = homework_request.homework
     try:
         # Находим группу
         group_result = await db.scalars(
