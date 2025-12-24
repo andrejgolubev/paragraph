@@ -142,7 +142,13 @@
         border: 4px dotted rgba(255, 255, 255, 0.2);
         /* или любой другой цвет */
       }
+
+      &[class="dark"]::placeholder {
+        color: #0f0d0d;
+        opacity: 1;
+      }
     }
+
 
     .modal-buttons {
       display: flex;

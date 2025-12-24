@@ -3,6 +3,7 @@ import HomeworkModal from "./HomeworkModal" // Предполагаем, что 
 import paperclip from "../images/paperclip.svg"
 import { useContext } from "react"
 import { Context } from "../context/Provider"
+import homeworkAPI from "../api/homeworkAPI"
 
 let lessonInfoGlobal = {}
 
@@ -13,6 +14,8 @@ const ScheduleContainer = () => {
   const [error, setError] = useState(null)
   const [selectedLesson, setSelectedLesson] = useState(null)
   const [showDialog, setShowDialog] = useState(false)
+  const [homeworkText, setHomeworkText] = useState('')
+  const [homeworkUpdated, setHomeworkUpdated] = useState('')
 
   useEffect(() => {
     console.log("ScheduleContainer - текущие значения:", {
@@ -85,7 +88,6 @@ const ScheduleContainer = () => {
 
   // Обработчик клика по домашке
   const handleHomeworkClick = (event) => {
-    // console.log("event :>> ", event)
     const {
       groupDataValue,
       dateDataValue,
@@ -93,6 +95,14 @@ const ScheduleContainer = () => {
       lessonDay,
       lessonName,
     } = event
+
+    const homeworkData = homeworkAPI.loadHomeworkData(groupDataValue, scheduleDateDataValue, lessonIndex)
+    .then( resp => {
+      const {homework, updated} = resp
+      setHomeworkText(homework)
+      setHomeworkUpdated(updated)
+    })
+    
 
     const lessonInfo = {
       groupDataValue,
@@ -296,11 +306,11 @@ const ScheduleContainer = () => {
       </div>
 
       {/* Модальное окно домашнего задания */}
-      {showDialog && selectedLesson && (
+      {(
         <HomeworkModal
           lessonInfo={lessonInfoGlobal}
-          showDialog={showDialog}
-          setShowDialog={setShowDialog}
+          homeworkText={homeworkText}
+          homeworkUpdated={homeworkUpdated}
           onClose={() => {
             setShowDialog(false)
             setSelectedLesson(null)

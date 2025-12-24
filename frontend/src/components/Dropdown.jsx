@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react"
 import homeworkAPI from "../api/homeworkAPI"
 import { Context } from "../context/Provider"
 import { useRef } from "react"
-import { useInsertionEffect } from "react"
+import { useClickOutside } from "../hooks/useClickOutside"
 
 const Dropdown = (props) => {
   const { name, func, placeholder, readOnly, setTipActive } = props
@@ -13,18 +13,26 @@ const Dropdown = (props) => {
   const [elemKey, setElemKey] = useState("")
   const [activeSearch, setActiveSearch] = useState(false)
 
+  const dropdownRef = useRef(null)
+  const inputRef = useRef('')  
+
+
+  useClickOutside(dropdownRef, () => {
+    setActiveSearch(false)
+  })
+
 
   const { groupDataValue, setGroupDataValue, dateDataValue, setDateDataValue } =
     useContext(Context)
 
-  const inputRef = useRef('')  
 
   // будет только для "group" ну и для других, где пользователь сам вводит текст 
   useEffect( () => {
     setFilteredData(
       data.filter((elem) => {
         const element = elem[elemKey]
-        return element && element.includes(inputText)
+
+        return element && element.toLowerCase().includes(inputText.toLowerCase())
       })
     )
   }, [inputText])
@@ -46,13 +54,15 @@ const Dropdown = (props) => {
 
   const loadGroups = async () => {
     const responseData = await homeworkAPI.loadGroups()
-    setData(responseData)
+    setData(responseData) 
+    // просто setData, т.к. по группам осуществляется ПОИСК и они будут фильтроваться по мере ввода текста, т.е. data -> filteredData 
     setElemKey("group_number")
   }
 
   const loadDates = async () => {
     const responseData = await homeworkAPI.loadDates()
     setFilteredData(responseData)
+    // сразу setFilteredData т.к. фильтрация не требуется, выбор даты осуществляткся руками
     setElemKey("date")
   }
 
@@ -62,7 +72,7 @@ const Dropdown = (props) => {
   }
 
   return (
-    <div className={name} onClick={handleClick}>
+    <div className={name} onClick={handleClick} ref={dropdownRef}>
       <div className="custom-dropdown">
         <div className={func + "-block"}>
           <div

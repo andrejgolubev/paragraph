@@ -1,19 +1,12 @@
 const BASE_URL = "http://127.0.0.1:8000"
+const headers = {"Content-Type": "application/json"}
+
 
 const homeworkAPI = {
   saveHomework: (groupDataValue, dateDataValue, lessonIndex, homeworkText) => {
-    console.log(
-      "homeworkAPI :>> ",
-      groupDataValue,
-      dateDataValue,
-      lessonIndex,
-      homeworkText
-    )
     return fetch(`${BASE_URL}/homework/save`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify({
         group_data_value: String(groupDataValue),
         date_data_value: dateDataValue,
@@ -21,6 +14,26 @@ const homeworkAPI = {
         homework: homeworkText,
       }),
     })
+  },
+
+  loadHomeworkData: async function loadHomeworkData(
+    groupDataValue,
+    dateDataValue,
+    lessonIndex,
+  ) {
+
+    const params = new URLSearchParams({
+      group_data_value: String(groupDataValue),
+      date_data_value: dateDataValue,
+      lesson_index: lessonIndex,
+    })
+
+    // console.log('http://127.0.0.1:8000/homework/get?${params.toString() :>> ', `http://127.0.0.1:8000/homework/get?${params.toString()}`)
+    return fetch(`http://127.0.0.1:8000/homework/get?${params.toString()}`, {
+      method: "GET",
+    })
+      .then((resp) => resp.json())
+      .catch((e) => console.error(e))
   },
 
   loadGroups: async function loadGroups() {
@@ -40,21 +53,6 @@ const homeworkAPI = {
         return []
       })
   },
-
-  loadHomeworkData: async function loadHomeworkData({
-    groupDataValue,
-    dateDataValue,
-    lessonIndex,
-  }) {
-    return fetch(`http://127.0.0.1:8000/homework/get`, {
-      method: "GET",
-      body: { groupDataValue, dateDataValue, lessonIndex },
-    })
-      .then((resp) => resp.json())
-      .catch((e) => console.log(e))
-  },
-
-  
 }
 
 export default homeworkAPI
