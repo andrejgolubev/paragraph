@@ -3,7 +3,7 @@ import NotificationInner from "./notifications/NotificationInner"
 import homeworkAPI from "../api/homeworkAPI"
 
 const HomeworkModal = ({
-  showDialog,
+  setShowDialog,
   lessonInfo,
   homeworkText,
   homeworkUpdated,
@@ -64,18 +64,21 @@ const HomeworkModal = ({
         lessonIndex,
         homeworkText
       )
-      dialog.close()
+      dialog.close() // нативное закрытие (обязательно!!)
+      setShowDialog(false) // просто убираем компонент из ScheduleContainer
     }
 
     const handleCancel = (event) => {
       event.preventDefault()
       textareaRef.current.value = ""
-      dialog.close()
+      dialog.close()  
+      setShowDialog(false) 
     }
 
     const handleClickOutside = (e) => {
       if (dialog && e.target === dialog) {
-        dialog.close()
+        dialog.close() 
+        setShowDialog(false) 
         textareaRef.current.value = ""
       }
     }

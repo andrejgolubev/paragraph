@@ -311,10 +311,7 @@ const ScheduleContainer = () => {
           lessonInfo={lessonInfoGlobal}
           homeworkText={homeworkText}
           homeworkUpdated={homeworkUpdated}
-          onClose={() => {
-            setShowDialog(false)
-            setSelectedLesson(null)
-          }}
+          setShowDialog={setShowDialog}
         />
       )}
     </>
