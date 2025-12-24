@@ -4,6 +4,7 @@ import Dropdown from "./Dropdown"
 import Tip from "./Tip"
 import { useState, useEffect, useContext } from "react"
 import { Context } from "../context/Provider"
+import { Mosaic } from "react-loading-indicators"
 
 const MainContent = () => {
   const [tipActive, setTipActive] = useState(false)
@@ -19,6 +20,7 @@ const MainContent = () => {
   return (
     <div className="main-content">
       <div className="options">
+        {/* <Mosaic color="#DEEEFF" size="large" text="загрузка..." textColor="#888" /> */}
         <Dropdown
           name={"group"}
           func={"search"}

@@ -4,6 +4,7 @@ import paperclip from "../images/paperclip.svg"
 import { useContext } from "react"
 import { Context } from "../context/Provider"
 import homeworkAPI from "../api/homeworkAPI"
+import { Mosaic } from "react-loading-indicators"
 
 let lessonInfoGlobal = {}
 
@@ -14,13 +15,13 @@ const ScheduleContainer = () => {
   const [error, setError] = useState(null)
   const [selectedLesson, setSelectedLesson] = useState(null)
   const [showDialog, setShowDialog] = useState(false)
-  const [homeworkText, setHomeworkText] = useState('')
-  const [homeworkUpdated, setHomeworkUpdated] = useState('')
+  const [homeworkText, setHomeworkText] = useState("")
+  const [homeworkUpdated, setHomeworkUpdated] = useState("")
 
   useEffect(() => {
     console.log("ScheduleContainer - текущие значения:", {
       groupDataValue,
-      dateDataValue
+      dateDataValue,
     })
   }, [groupDataValue, dateDataValue])
 
@@ -49,14 +50,12 @@ const ScheduleContainer = () => {
 
   const scheduleDateDataValue = getDateValueFromDisplay(
     scheduleData?.days?.[0]?.date || ""
-  ) // ДЛЯ ИСПОЛЬЗОВАНИЯ как dateDataValue для сохранения конкретной домашки, т.к. домашка прикрепляется к неделе, 
-    // а не к конкретной дате т.е. 2025-12-22, 2025-12-29, 2026-01-05 и т.д.
-
-
-
+  ) // ДЛЯ ИСПОЛЬЗОВАНИЯ как dateDataValue для сохранения конкретной домашки, т.к. домашка прикрепляется к неделе,
+  // а не к конкретной дате т.е. 2025-12-22, 2025-12-29, 2026-01-05 и т.д.
 
   // Загрузка расписания
   const loadSchedule = useCallback(async () => {
+    console.log('ПО ВАШЕМУ ЗАПРОСУ :>> ');
     try {
       setLoading(true)
       setError(null)
@@ -96,13 +95,13 @@ const ScheduleContainer = () => {
       lessonName,
     } = lessInfo
 
-    const homeworkData = homeworkAPI.loadHomeworkData(groupDataValue, scheduleDateDataValue, lessonIndex)
-    .then( resp => {
-      const {homework, updated} = resp
-      setHomeworkText(homework)
-      setHomeworkUpdated(updated)
-    })
-    
+    const homeworkData = homeworkAPI
+      .loadHomeworkData(groupDataValue, scheduleDateDataValue, lessonIndex)
+      .then((resp) => {
+        const { homework, updated } = resp
+        setHomeworkText(homework)
+        setHomeworkUpdated(updated)
+      })
 
     const lessonInfo = {
       groupDataValue,
@@ -115,9 +114,9 @@ const ScheduleContainer = () => {
     setSelectedLesson(lessonInfo)
     setShowDialog(true)
 
-    lessonInfoGlobal = { ...lessonInfo, dateDataValue:scheduleDateDataValue }
+    lessonInfoGlobal = { ...lessonInfo, dateDataValue: scheduleDateDataValue }
 
-    console.log('lessonInfoGlobal :>> ', lessonInfoGlobal)
+    console.log("lessonInfoGlobal :>> ", lessonInfoGlobal)
   }
 
   // Функция для подсветки текущего дня
@@ -280,33 +279,46 @@ const ScheduleContainer = () => {
   // Состояния загрузки и ошибки
   if (loading) {
     return (
-      <div className="schedule-container loading">
-        <div className="tip active">Загрузка расписания...</div>
-      </div>
+      <>
+        <div className="schedule-container loading"></div>
+        <div className="loading-indicator">
+          <Mosaic
+            color="#FFF"
+            size="large"
+            text="загрузка..."
+            textColor="#CBCBDE"
+          />
+        </div>
+      </>
     )
   }
 
   if (error) {
-    return (
+    return ( 
+      // нормальный интерфейс ошибки сюда
       <div className="schedule-container error">
-        <div className="tip active">Ошибка: {error}</div>
-        <button onClick={loadSchedule}>Повторить попытку</button>
+        <div className="tip active">
+          <button 
+          style={{background: '#FFFFFF', padding: '4px', border: '2px rgb(207, 222, 227) dashed', position: 'absolute', 'border-radius': '8px'}} 
+          onClick={loadSchedule}>
+            <p>{error}</p>
+            <p>ой! нажмите сюда, я постараюсь всё исправить</p>
+          </button>
+        </div>
       </div>
     )
   }
-  
+
   return (
     <>
       <div
         className={`schedule-container ${scheduleData ? "loaded" : "loading"}`}
-        group-data-value={groupDataValue}
-        date-data-value={scheduleDateDataValue}
       >
         {renderSchedule()}
       </div>
 
       {/* Модальное окно домашнего задания */}
-      {( showDialog &&
+      {showDialog && (
         <HomeworkModal
           lessonInfo={lessonInfoGlobal}
           homeworkText={homeworkText}
@@ -319,5 +331,3 @@ const ScheduleContainer = () => {
 }
 
 export default ScheduleContainer
-
-

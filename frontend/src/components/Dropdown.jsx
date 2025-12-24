@@ -16,6 +16,7 @@ const Dropdown = (props) => {
   const dropdownRef = useRef(null)
   const inputRef = useRef("")
 
+
   useClickOutside(dropdownRef, () => {
     setActiveSearch(false)
   })
@@ -68,6 +69,7 @@ const Dropdown = (props) => {
     setActiveSearch(true)
   }
 
+
   return (
     <div className={name} onClick={handleClick} ref={dropdownRef}>
       <div className="custom-dropdown">
@@ -93,17 +95,16 @@ const Dropdown = (props) => {
                 {filteredData.map((elem) => (
                   <li
                     key={elem.id}
-                    onClick={() => {
-                      setActiveSearch(false)
+                    onClick={(e) => {
+                      e.stopPropagation()
                       inputRef.current.value = elem[elemKey]
+                      setActiveSearch(false)
                       if (name === "group") {
                         setGroupDataValue(elem["data_value"])
                       } else if (name === "week") {
                         setDateDataValue(elem["data_value"])
                       }
-                      // setTimeout(() => {
-                      //   setActiveSearch(false)
-                      // }, 600)
+
                     }}
                   >
                     <a href="#">{elem[elemKey]}</a>

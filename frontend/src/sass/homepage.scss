@@ -50,3 +50,11 @@
 }
 
 
+.loading-indicator{ 
+  transition: all 0.1s ease 0s;
+  position: absolute;
+  top: 47%;
+  left: 46.5%;
+  scale: 2;
+
+}
