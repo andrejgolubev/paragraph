@@ -45,7 +45,7 @@ const HomeworkModal = ({
     }
 
     const onInput = (event) => {
-      setInputValue(event.target.value.trim())
+      setInputValue(event.target.value)
     }
 
     const handleHomeworkSubmit = (event) => {
@@ -80,6 +80,19 @@ const HomeworkModal = ({
       }
     }
 
+    //простой хук для решения проблемы из-за которой текст в поле ввода домашки не стирался
+    useEffect(() => {
+      if (homeworkText) {
+        setInputValue(homeworkText)
+        setTimeout(() => {
+          homeworkText = ''
+        }, 300)
+      } else {
+        setInputValue('')
+      }
+      
+    }, [homeworkText])
+
     return (
       <dialog
         data-modal
@@ -92,10 +105,8 @@ const HomeworkModal = ({
             <strong>{lessonName}</strong>, {lessonDay}
           </h3>
           <textarea 
-          // className={homeworkText? 'dark' : ''}
             ref={textareaRef}
-            // defaultValue={homeworkText}
-            value={inputValue? inputValue: homeworkText}
+            value={inputValue}
             onClick={handleTextInputClick}
             onInput={onInput}
             name="text-input"

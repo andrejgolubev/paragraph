@@ -32,7 +32,7 @@ const Dropdown = (props) => {
       data.filter((elem) => {
         const element = elem[elemKey]
 
-        return element && element.toLowerCase().includes(inputText.toLowerCase())
+        return element && element.toLowerCase().trim().includes(inputText.trim().toLowerCase())
       })
     )
   }, [inputText])

@@ -87,14 +87,14 @@ const ScheduleContainer = () => {
   }, [loadSchedule])
 
   // Обработчик клика по домашке
-  const handleHomeworkClick = (event) => {
+  const handleHomeworkClick = (lessInfo) => {
     const {
       groupDataValue,
       dateDataValue,
       lessonIndex,
       lessonDay,
       lessonName,
-    } = event
+    } = lessInfo
 
     const homeworkData = homeworkAPI.loadHomeworkData(groupDataValue, scheduleDateDataValue, lessonIndex)
     .then( resp => {
@@ -306,7 +306,7 @@ const ScheduleContainer = () => {
       </div>
 
       {/* Модальное окно домашнего задания */}
-      {(
+      {( showDialog &&
         <HomeworkModal
           lessonInfo={lessonInfoGlobal}
           homeworkText={homeworkText}
