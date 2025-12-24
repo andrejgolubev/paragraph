@@ -1,12 +1,18 @@
 /* Reset and base styles  */
 
 * {
-  .no-scrollbar::-webkit-scrollbar { display: none; };
-  scrollbar-width: none;
   padding: 0px;
   margin: 0px;
   border: none;
+  scrollbar-width: none;
 }
+
+.select-block__product, 
+.search-block__elements {
+  scrollbar-width: auto;
+}
+
+
 
 *,
 *::before,

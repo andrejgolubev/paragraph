@@ -5,6 +5,11 @@ let selectedGroupDataValue = null;
 const groupInput = document.getElementById('select-input')
 
 
+const searchInput = document.getElementById("search-input");
+const groupsList = document.getElementById("products");
+const searchBody = document.querySelector(".search-block__body");
+
+const groups = await loadGroups(); // 100: {group_number: '5876М', id: 101, data_value: '1401'}
 
 //обработчик при клике по enter
 searchInput.addEventListener("keydown", handleEnterKey);
@@ -45,7 +50,7 @@ function handleEnterKey(event) {
 export function homepageError(inputValue, detail = 'убедитесь в правильности написания и повторите попытку') {
   const scheduleContainer = document.getElementById("schedule-container");
   const tipElem = document.querySelector(".tip");
-  tipElem.classList.remove("tip-active");
+  tipElem.classList.remove("active");
   
   scheduleContainer.innerHTML = `
     <div class="error-message">
@@ -55,7 +60,7 @@ export function homepageError(inputValue, detail = 'убедитесь в пра
   `;
 
   setTimeout(() => {
-    tipElem.classList.add("tip-active");
+    tipElem.classList.add("active");
     scheduleContainer.innerHTML = ''
     // Проверяем стили после добавления класса
   }, 3000);
@@ -105,19 +110,12 @@ async function selectGroup(groupDataValue, groupNumber) {
 
       await loadSchedule(groupDataValue);
 
-      // Показываем блок выбора даты (опционально)
-      // document.getElementById("select-input").placeholder = "дата/неделя"; // спорно, нужна ли эта строка вообще
     }
   } catch (error) {
     console.error("Error selecting group:", error);
   }
 }
 
-const searchInput = document.getElementById("search-input");
-const groupsList = document.getElementById("products");
-const searchBody = document.querySelector(".search-block__body");
-
-const groups = await loadGroups(); // 100: {group_number: '5876М', id: 101, data_value: '1401'}
 
 
 searchInput.addEventListener("input", () => {

@@ -13,7 +13,6 @@ from api.routers.auth import (
     verify_admin_api_key,
 )
 import jwt
-import bcrypt
 import settings
 
 user_router = APIRouter()

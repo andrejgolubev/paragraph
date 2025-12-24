@@ -1,6 +1,6 @@
 # BLOCK WITH API MODELS #
-from fastapi import HTTPException , Body
-from pydantic import BaseModel, EmailStr, Field, field_validator, ConfigDict
+from fastapi import HTTPException
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 from typing import Optional
 
 

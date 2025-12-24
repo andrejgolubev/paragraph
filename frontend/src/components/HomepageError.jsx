@@ -10,10 +10,10 @@ const HomepageError = (props) => {
 
   const scheduleContainer = document.getElementById("schedule-container")
   const tipElem = document.querySelector(".tip")
-  tipElem.classList.remove("tip-active")
+  tipElem.classList.remove("active")
 
   setTimeout(() => {
-    tipElem.classList.add("tip-active")
+    tipElem.classList.add("active")
     scheduleContainer.innerHTML = ""
     // Проверяем стили после добавления класса
   }, 3000)

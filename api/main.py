@@ -7,7 +7,6 @@ from api.parser.date_parser import parse_dates
 from api.parser.utils import convert_date
 from api.services.data_service import data_service
 
-
 from fastapi import FastAPI, Depends, Request, HTTPException, status, Header
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles

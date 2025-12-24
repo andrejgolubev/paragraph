@@ -1,7 +1,6 @@
 import {convertDate} from './loadSchedule.js';
 
 
-
 let currentLessonInfo = null;
 let modalElement = null;
 let textInput = null;

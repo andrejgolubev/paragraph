@@ -1,9 +1,8 @@
-from sqlalchemy.orm import mapped_column as mc, Mapped, DeclarativeBase, relationship
+from sqlalchemy.orm import mapped_column as mc, Mapped, relationship
 from sqlalchemy import (
     ForeignKey,
     String,
     Integer,
-    UniqueConstraint,
 )
 from api.db.database import Base
 from datetime import datetime

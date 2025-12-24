@@ -225,7 +225,7 @@ function displaySchedule(scheduleData) {
   `;
 
   scheduleContainer.innerHTML = html;
-  tipElem.classList.remove("tip-active");
+  tipElem.classList.remove("active");
 
   addHomeworkHandlers(
     scheduleData.group_data_value,

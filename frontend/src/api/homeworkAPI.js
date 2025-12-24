@@ -2,14 +2,20 @@ const BASE_URL = "http://127.0.0.1:8000"
 
 const homeworkAPI = {
   saveHomework: (groupDataValue, dateDataValue, lessonIndex, homeworkText) => {
-    console.log('homeworkAPI :>> ',  groupDataValue, dateDataValue, lessonIndex, homeworkText);
+    console.log(
+      "homeworkAPI :>> ",
+      groupDataValue,
+      dateDataValue,
+      lessonIndex,
+      homeworkText
+    )
     return fetch(`${BASE_URL}/homework/save`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        group_data_value: String(groupDataValue), 
+        group_data_value: String(groupDataValue),
         date_data_value: dateDataValue,
         lesson_index: lessonIndex,
         homework: homeworkText,
@@ -46,6 +52,18 @@ const homeworkAPI = {
     })
       .then((resp) => resp.json())
       .catch((e) => console.log(e))
+  },
+
+  loadDates: async function loadDates() {
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:8000/schedule/get-all-dates"
+      )
+      return response.json()
+    } catch (error) {
+      console.error("Error loading dates:", error)
+      return []
+    }
   },
 }
 

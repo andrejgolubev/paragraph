@@ -261,7 +261,7 @@ const ScheduleContainer = ({ groupDataValue, initialDateDataValue = "" }) => {
   if (loading) {
     return (
       <div className="schedule-container loading">
-        <div className="tip tip-active">Загрузка расписания...</div>
+        <div className="tip active">Загрузка расписания...</div>
       </div>
     )
   }
@@ -269,7 +269,7 @@ const ScheduleContainer = ({ groupDataValue, initialDateDataValue = "" }) => {
   if (error) {
     return (
       <div className="schedule-container error">
-        <div className="tip tip-active">Ошибка: {error}</div>
+        <div className="tip active">Ошибка: {error}</div>
         <button onClick={loadSchedule}>Повторить попытку</button>
       </div>
     )
@@ -303,9 +303,4 @@ const ScheduleContainer = ({ groupDataValue, initialDateDataValue = "" }) => {
 
 export default ScheduleContainer
 
-// Вспомогательный компонент для отображения подсказки
-const Tip = ({ active, children }) => (
-  <div className={`tip ${active ? "tip-active" : ""}`}>{children}</div>
-)
 
-export { Tip }

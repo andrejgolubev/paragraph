@@ -1,65 +1,48 @@
 import HomeworkModal from "./HomeworkModal"
-import ScheduleContainer from './ScheduleContainer'
+import ScheduleContainer from "./ScheduleContainer"
+import Dropdown from "./Dropdown"
+import Tip from "./Tip"
+import { useState, useEffect } from "react"
 
 const MainContent = () => {
+  const [tipActive, setTipActive] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTipActive(true)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [])
+
+  
+
   return (
     <div className="main-content">
       <div className="options">
-        <div className="group">
-          <div className="custom-select">
-            <div className="search-block">
-              <div className="search-block__body">
-                <div className="search-block__wrap-input">
-                  <input
-                    type="text"
-                    id="search-input"
-                    placeholder="номер группы"
-                    className="search-block__input"
-                  />
-                </div>
-                <ul className="search-block__products" id="products" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="week">
-          <div className="custom-select">
-            <div className="select-block">
-              <div className="select-block__body">
-                <div className="select-block__wrap-input">
-                  <input
-                    readOnly
-                    type="text"
-                    id="select-input"
-                    placeholder="дата/неделя"
-                    className="search-block__input"
-                  />
-                </div>
-                <ul className="select-block__products" id="dates" />
-              </div>
-            </div>
-          </div>
-        </div>
+        <Dropdown
+          name={"group"}
+          func={"search"}
+          placeholder={"номер группы"}
+          readOnly={false}
+          setTipActive={setTipActive}
+          />
+        <Dropdown
+          name={"week"}
+          func={"select"}
+          placeholder={"дата/неделя"}
+          readOnly={true}
+          setTipActive={setTipActive}
+          />
         <div className="corpuses">
           <p>C - Центральный корпус⠀⠀⠀⠀B - Бизнес-инкубатор</p>
           <p>L - Лабораторный корпус ⠀⠀⠀F - Первый корпус</p>
         </div>
       </div>
-      <div className="tip">
-        <div className="tip__inner">
-          <img src="../static/static/chel.svg" alt="Tip" />
-          <div className="tip_text">
-            <p>выберите вашу группу и неделю, на которую</p>
-            <p>хотите посмотреть расписание :)</p>
-          </div>
-        </div>
-      </div>
-      
-      
-      {/* notification outer*/}
-      <ScheduleContainer groupDataValue={1633} />
-      {/* ... */}
+      <Tip active={tipActive} />
 
+      {/* <ScheduleContainer groupDataValue={1633} /> */}
+      {/* notification outer */}
+      {/* ... */}
     </div>
   )
 }

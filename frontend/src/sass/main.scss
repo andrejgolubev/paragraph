@@ -145,7 +145,7 @@ body {
     align-items: center;
     justify-content: center;
     // background: rgba(255, 255, 255, 0.8);
-    background-image: url('../static/tip-bg.png');
+    background-image: url('../images/tip-bg.png');
     border: 2px rgb(207, 222, 227) dashed;
     border-radius: 8px;
     width: 578px;
@@ -154,7 +154,6 @@ body {
 
     &_arrow {
       position: relative;
-      // right: 725px;
       margin-bottom: 30px;
       margin-right: 30px;
     }
@@ -165,11 +164,11 @@ body {
 
       p {
 
-        font-family: 'Manrope';
+        font-family: 'Manrope', serif;
         font-weight: 500;
         font-size: 16px; 
         line-height: 140%;
-        letter-spacing: 0.09em;
+        letter-spacing: 0.1em;
         text-align: center;
         color: rgba(41, 40, 51, 0.5);
       }

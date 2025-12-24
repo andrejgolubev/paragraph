@@ -1,14 +1,14 @@
 .tip {
-  opacity: 1; // сначала видимый
   transition: opacity 0.4s cubic-bezier(0.1, -0.6, 0.2, 0);
+  opacity: 1;
 
   // Через микро-задержку скрываем
-  &:not(.tip-active) {
+  &:not(.active) {
     opacity: 0;
     position: absolute;
   }
 
-  &.tip-active {
+  &.active {
     opacity: 1;
   }
 

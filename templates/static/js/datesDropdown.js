@@ -1,27 +1,26 @@
-import { loadSchedule } from "./loadSchedule.js";
-import { homepageError } from "./groupsDropdown.js";
+import { loadSchedule } from "./loadSchedule.js"
+import { homepageError } from "./groupsDropdown.js"
+
+let selectedGroupDataValue = null
 
 // ф. для установки выбранной группы (будет вызываться из groupsDropdown)
-let selectedGroupDataValue = null;
-
 export function setSelectedGroup(dataValue) {
-  selectedGroupDataValue = dataValue;
-  console.log("Group set in datesDropdown:", dataValue);
+  selectedGroupDataValue = dataValue
+  console.log("Group set in datesDropdown:", dataValue)
 }
 
-const selectInput = document.getElementById("select-input");
-const datesList = document.getElementById("dates");
-const selectBody = document.querySelector(".select-block__body");
+const selectInput = document.getElementById("select-input")
+const datesList = document.getElementById("dates")
+const selectBody = document.querySelector(".select-block__body")
 
+//ВЫНЕСЕНА В API
 async function loadDates() {
   try {
-    const response = await fetch(
-      "http://127.0.0.1:8000/schedule/get-all-dates"
-    );
-    return response.json();
+    const response = await fetch("http://127.0.0.1:8000/schedule/get-all-dates")
+    return response.json()
   } catch (error) {
-    console.error("Error loading dates:", error);
-    return [];
+    console.error("Error loading dates:", error)
+    return []
   }
 }
 
@@ -29,69 +28,63 @@ async function loadDates() {
 async function selectDate(dateDataValue, dateText) {
   if (selectedGroupDataValue) {
     // Обновляем поле ввода даты и закрываем список дат
-    selectInput.value = dateText;
-    selectBody.classList.remove("active-search");
+    selectInput.value = dateText
+    selectBody.classList.remove("active-search")
     // Загружаем расписание
-    await loadSchedule(selectedGroupDataValue, dateDataValue);
+    await loadSchedule(selectedGroupDataValue, dateDataValue)
   } else {
-    console.error("No group selected in selectDate!");
+    console.error("No group selected in selectDate!")
 
-    return;
+    return
   }
 }
 
-const dates = await loadDates();
+const dates = await loadDates()
 
 dates.slice(-10).forEach((date) => {
-  const li = document.createElement("li");
-  const link = document.createElement("a");
+  const li = document.createElement("li")
+  const link = document.createElement("a")
 
-  link.textContent = date.date;
-  link.href = "#";
+  link.textContent = date.date
+  link.href = "#"
 
   // Обработчик выбора даты
   li.addEventListener("click", async (event) => {
-    event.preventDefault();
-    await selectDate(date.data_value, date.date);
-  });
+    event.preventDefault()
+    await selectDate(date.data_value, date.date)
+  })
 
-  li.appendChild(link);
-  datesList.appendChild(li);
-});
+  li.appendChild(link)
+  datesList.appendChild(li)
+})
 
 selectInput.addEventListener("click", (event) => {
   if (!selectedGroupDataValue) {
-    const scheduleContainer = document.getElementById("schedule-container");
-    const tipElem = document.querySelector(".tip");
-    tipElem.classList.remove("tip-active");
+    const scheduleContainer = document.getElementById("schedule-container")
+    const tipElem = document.querySelector(".tip")
+    tipElem.classList.remove("active")
 
     scheduleContainer.innerHTML = `
     <div class="error-message">
       <p>это конечно можно, но давай всё-таки будем делать всё по порядку?</p>
     </div>
-  `;
+  `
 
     setTimeout(() => {
-      tipElem.classList.add("tip-active");
-      scheduleContainer.innerHTML = "";
+      tipElem.classList.add("active")
+      scheduleContainer.innerHTML = ""
       // Проверяем стили после добавления класса
-    }, 3000);
-    event.stopPropagation();
-    return;
+    }, 3000)
+    event.stopPropagation()
+    return
   }
 
-  event.stopPropagation();
-  selectBody.classList.toggle("active-search");
-});
+  event.stopPropagation()
+  selectBody.classList.toggle("active-search")
+})
 
 document.addEventListener("click", (event) => {
   if (!selectBody.contains(event.target)) {
-    selectBody.classList.remove("active-search");
+    selectBody.classList.remove("active-search")
   }
-});
-
-// ✅ ДОБАВЬ ОТЛАДОЧНЫЙ ВЫВОД
-console.log(
-  "datesDropdown.js loaded, selectedGroupDataValue:",
-  selectedGroupDataValue
-);
+})
