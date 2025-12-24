@@ -1,15 +1,25 @@
 import { useState, useEffect, useCallback } from "react"
 import HomeworkModal from "./HomeworkModal" // Предполагаем, что модалка уже переписана на React
 import paperclip from "../images/paperclip.svg"
+import { useContext } from "react"
+import { Context } from "../context/Provider"
 
 let lessonInfoGlobal = {}
 
-const ScheduleContainer = ({ groupDataValue, initialDateDataValue = "" }) => {
+const ScheduleContainer = () => {
+  const { groupDataValue, dateDataValue } = useContext(Context)
   const [scheduleData, setScheduleData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [selectedLesson, setSelectedLesson] = useState(null)
   const [showDialog, setShowDialog] = useState(false)
+
+  useEffect(() => {
+    console.log("ScheduleContainer - текущие значения:", {
+      groupDataValue,
+      dateDataValue
+    })
+  }, [groupDataValue, dateDataValue])
 
   const getDateValueFromDisplay = (dateDisplay) => {
     const months = {
@@ -49,8 +59,8 @@ const ScheduleContainer = ({ groupDataValue, initialDateDataValue = "" }) => {
       setError(null)
 
       let url = `http://127.0.0.1:8000/schedule/get-schedule?group_data_value=${groupDataValue}`
-      if (initialDateDataValue) {
-        url += `&date_data_value=${initialDateDataValue}`
+      if (dateDataValue) {
+        url += `&date_data_value=${dateDataValue}`
       }
 
       const response = await fetch(url)
@@ -66,7 +76,7 @@ const ScheduleContainer = ({ groupDataValue, initialDateDataValue = "" }) => {
     } finally {
       setLoading(false)
     }
-  }, [groupDataValue, initialDateDataValue])
+  }, [groupDataValue, dateDataValue])
 
   // загружаем расписание при монтировании расписания
   useEffect(() => {

@@ -54,17 +54,7 @@ const homeworkAPI = {
       .catch((e) => console.log(e))
   },
 
-  loadDates: async function loadDates() {
-    try {
-      const response = await fetch(
-        "http://127.0.0.1:8000/schedule/get-all-dates"
-      )
-      return response.json()
-    } catch (error) {
-      console.error("Error loading dates:", error)
-      return []
-    }
-  },
+  
 }
 
 export default homeworkAPI

@@ -61,7 +61,8 @@ input#search-input {
 //STYLES FOR AUTOCOMPLETE DROPDOWN 
 
 .search-block,
-.select-block {
+.select-block, 
+.custom-dropdown {
   
 
   ul{
@@ -166,6 +167,7 @@ input#search-input {
     opacity: 1;
     visibility: visible;
   }
+
 
 }
 

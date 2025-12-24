@@ -2,10 +2,12 @@ import HomeworkModal from "./HomeworkModal"
 import ScheduleContainer from "./ScheduleContainer"
 import Dropdown from "./Dropdown"
 import Tip from "./Tip"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
+import { Context } from "../context/Provider"
 
 const MainContent = () => {
   const [tipActive, setTipActive] = useState(false)
+  const {groupDataValue, dateDataValue} = useContext(Context)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -13,8 +15,6 @@ const MainContent = () => {
     }, 500)
     return () => clearTimeout(timer)
   }, [])
-
-  
 
   return (
     <div className="main-content">
@@ -25,14 +25,14 @@ const MainContent = () => {
           placeholder={"номер группы"}
           readOnly={false}
           setTipActive={setTipActive}
-          />
+        />
         <Dropdown
           name={"week"}
           func={"select"}
           placeholder={"дата/неделя"}
           readOnly={true}
           setTipActive={setTipActive}
-          />
+        />
         <div className="corpuses">
           <p>C - Центральный корпус⠀⠀⠀⠀B - Бизнес-инкубатор</p>
           <p>L - Лабораторный корпус ⠀⠀⠀F - Первый корпус</p>
@@ -40,7 +40,13 @@ const MainContent = () => {
       </div>
       <Tip active={tipActive} />
 
-      {/* <ScheduleContainer groupDataValue={1633} /> */}
+      {groupDataValue && (
+        <ScheduleContainer
+          groupDataValue={groupDataValue}
+          dateDataValue={dateDataValue}
+        />
+      )}
+
       {/* notification outer */}
       {/* ... */}
     </div>

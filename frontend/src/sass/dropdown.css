@@ -53,26 +53,35 @@ input#search-input {
 }
 
 .search-block ul,
-.select-block ul {
+.select-block ul,
+.custom-dropdown ul {
   transition: all 0.1s ease 0.1s;
 }
 .search-block__body.active-search .search-block__wrap-input,
 .search-block__body.active-search .select-block__wrap-input,
+.search-block__body.active-search .custom-dropdown__wrap-input,
 .select-block__body.active-search .search-block__wrap-input,
-.select-block__body.active-search .select-block__wrap-input {
+.select-block__body.active-search .select-block__wrap-input,
+.select-block__body.active-search .custom-dropdown__wrap-input,
+.custom-dropdown__body.active-search .search-block__wrap-input,
+.custom-dropdown__body.active-search .select-block__wrap-input,
+.custom-dropdown__body.active-search .custom-dropdown__wrap-input {
   transition: all 0.1s cubic-bezier(0.3, 0.8, 0.3, 2.3) 0.1s;
   border-color: rgb(104, 165, 206);
 }
 .search-block,
-.select-block {
+.select-block,
+.custom-dropdown {
   position: relative;
 }
 .search-block__body,
-.select-block__body {
+.select-block__body,
+.custom-dropdown__body {
   position: relative;
 }
 .search-block__wrap-input,
-.select-block__wrap-input {
+.select-block__wrap-input,
+.custom-dropdown__wrap-input {
   border-radius: 0.5rem;
   display: flex;
   align-items: center;
@@ -81,7 +90,8 @@ input#search-input {
   overflow: auto;
 }
 .search-block__input,
-.select-block__input {
+.select-block__input,
+.custom-dropdown__input {
   width: 100%;
   font-size: 16px;
   font: inherit;
@@ -95,7 +105,8 @@ input#search-input {
   border: none;
 }
 .search-block__elements,
-.select-block__elements {
+.select-block__elements,
+.custom-dropdown__elements {
   opacity: 0;
   visibility: hidden;
   max-height: 400px;
@@ -112,23 +123,27 @@ input#search-input {
   z-index: 1000;
 }
 .search-block__elements li,
-.select-block__elements li {
+.select-block__elements li,
+.custom-dropdown__elements li {
   font-family: "Manrope", sans-serif;
   padding: 10px;
   transition: all 0.3s ease 0s;
   cursor: pointer;
 }
 .search-block__elements li:hover,
-.select-block__elements li:hover {
+.select-block__elements li:hover,
+.custom-dropdown__elements li:hover {
   background-color: rgba(104, 165, 206, 0.218);
 }
 .search-block__elements li,
-.select-block__elements li {
+.select-block__elements li,
+.custom-dropdown__elements li {
   text-decoration: none;
   color: rgb(242, 240, 240);
 }
 .search-block__elements a,
-.select-block__elements a {
+.select-block__elements a,
+.custom-dropdown__elements a {
   all: unset;
   display: block;
   width: 100%;
@@ -140,21 +155,28 @@ input#search-input {
   box-sizing: border-box;
 }
 .search-block__elements::-webkit-scrollbar,
-.select-block__elements::-webkit-scrollbar {
+.select-block__elements::-webkit-scrollbar,
+.custom-dropdown__elements::-webkit-scrollbar {
   background-color: rgba(140, 190, 246, 0.275);
   height: 7px;
   width: 7px;
   border-radius: 10px;
 }
 .search-block__elements::-webkit-scrollbar-thumb,
-.select-block__elements::-webkit-scrollbar-thumb {
+.select-block__elements::-webkit-scrollbar-thumb,
+.custom-dropdown__elements::-webkit-scrollbar-thumb {
   background-color: rgba(140, 190, 246, 0.286);
   border-radius: 10px;
 }
 .search-block__body.active-search .search-block__elements,
 .search-block__body.active-search .select-block__elements,
+.search-block__body.active-search .custom-dropdown__elements,
 .select-block__body.active-search .search-block__elements,
-.select-block__body.active-search .select-block__elements {
+.select-block__body.active-search .select-block__elements,
+.select-block__body.active-search .custom-dropdown__elements,
+.custom-dropdown__body.active-search .search-block__elements,
+.custom-dropdown__body.active-search .select-block__elements,
+.custom-dropdown__body.active-search .custom-dropdown__elements {
   opacity: 1;
   visibility: visible;
 }
