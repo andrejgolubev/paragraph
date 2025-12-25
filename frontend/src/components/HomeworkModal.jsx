@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react"
 import NotificationInner from "./notifications/NotificationInner"
 import homeworkAPI from "../api/homeworkAPI"
 import { Context } from "../context/Provider"
+import { convertDate } from "../utils/converters"
 
 const HomeworkModal = ({
   setShowDialog,
@@ -9,10 +10,10 @@ const HomeworkModal = ({
   homeworkText,
   homeworkUpdated,
 }) => {
-  
-  const [inputValue, setInputValue] = useState('')
+  const { homeworkSaved, setHomeworkSaved } = useContext(Context)
+  const [inputValue, setInputValue] = useState("")
   const [noTextSubmitError, setNoTextSubmitError] = useState(false)
-  const {homeworkSaved, setHomeworkSaved} = useContext(Context)
+  const [lastUpdate, setLastUpdate] = useState("")
 
   if (lessonInfo) {
     const {
@@ -22,20 +23,35 @@ const HomeworkModal = ({
       lessonDay,
       lessonName,
     } = lessonInfo
-    
+
     const [readOnly, setReadOnly] = useState(true)
     const textareaRef = useRef("")
     const dialogRef = useRef(null)
-    
-    
+
     const dialog = dialogRef.current
-    
-    if (dialog) {
-      dialog.showModal() // Используем нативный метод
-    }
+
+    // срабатывает тогда когда модалка появляется
+    useEffect(() => {
+      if (dialog) {
+        if (!homeworkUpdated) {
+          setLastUpdate("")
+        } else {
+
+          let hmwUpdated = homeworkUpdated.split("T")
+          let hmwDate = convertDate(hmwUpdated[0])
+          let hmwTime = hmwUpdated[1].slice(0, 5)
+  
+  
+          setLastUpdate("последнее изменение: " + hmwDate + ", " + hmwTime)
+          console.log("lastUpdate :>> ", lastUpdate)
+        }
+        
+        dialog.showModal() // используем нативный метод
+      }
+    }, [dialog, homeworkUpdated])
+
 
     const isAdmin = true // ПОТОМ ПОМЕНЯТЬ
-
     useEffect(() => {
       if (isAdmin) {
         setReadOnly(false)
@@ -57,38 +73,34 @@ const HomeworkModal = ({
         setNoTextSubmitError(true)
         return
       }
-      
 
       const homeworkText = inputValue
-      console.log(
-        "СОхраняем дз: ",
-        groupDataValue,
-        dateDataValue,
-        lessonIndex,
-        homeworkText
-      )
+
       homeworkAPI.saveHomework(
         groupDataValue,
         dateDataValue,
         lessonIndex,
         homeworkText
       )
+
       dialog.close() // нативное закрытие (обязательно!!)
       setShowDialog(false) // просто убираем компонент из ScheduleContainer
+      setLastUpdate('')
+
       setHomeworkSaved(true)
     }
 
     const handleCancel = (event) => {
       event.preventDefault()
       textareaRef.current.value = ""
-      dialog.close()  
-      setShowDialog(false) 
+      dialog.close()
+      setShowDialog(false)
     }
 
     const handleClickOutside = (e) => {
       if (dialog && e.target === dialog) {
-        dialog.close() 
-        setShowDialog(false) 
+        dialog.close()
+        setShowDialog(false)
         textareaRef.current.value = ""
       }
     }
@@ -98,13 +110,14 @@ const HomeworkModal = ({
       if (homeworkText) {
         setInputValue(homeworkText)
         setTimeout(() => {
-          homeworkText = ''
+          homeworkText = ""
         }, 300)
       } else {
-        setInputValue('')
+        setInputValue("")
       }
-      
     }, [homeworkText])
+
+
 
     return (
       <dialog
@@ -117,7 +130,7 @@ const HomeworkModal = ({
           <h3>
             <strong>{lessonName}</strong>, {lessonDay}
           </h3>
-          <textarea 
+          <textarea
             ref={textareaRef}
             value={inputValue}
             onClick={handleTextInputClick}
@@ -128,14 +141,14 @@ const HomeworkModal = ({
             rows={6}
             readOnly={readOnly}
           />
-          <p className="updated-at"></p>
+          <p className="updated-at">{homeworkText && lastUpdate}</p>
           <div className="modal-buttons">
             <button type="button" className="btn-cancel" onClick={handleCancel}>
               отмена
             </button>
-            <NotificationInner 
-              message={'д/з не может быть пустым'}
-              type={'error'}
+            <NotificationInner
+              message={"д/з не может быть пустым."}
+              type={"error"}
               noTextSubmitError={noTextSubmitError}
               setNoTextSubmitError={setNoTextSubmitError}
             />

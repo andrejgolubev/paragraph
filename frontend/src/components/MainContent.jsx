@@ -9,8 +9,7 @@ import NotificationOuter from "./notifications/NotificationOuter"
 
 const MainContent = () => {
   const [tipActive, setTipActive] = useState(false)
-  const {groupDataValue, dateDataValue} = useContext(Context)
-
+  const { groupDataValue, dateDataValue } = useContext(Context)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -19,12 +18,9 @@ const MainContent = () => {
     return () => clearTimeout(timer)
   }, [])
 
-
-
   return (
     <div className="main-content">
       <div className="options">
-        {/* <Mosaic color="#DEEEFF" size="large" text="загрузка..." textColor="#888" /> */}
         <Dropdown
           name={"group"}
           func={"search"}
@@ -46,24 +42,14 @@ const MainContent = () => {
       </div>
       <Tip active={tipActive} />
 
-      {
-      groupDataValue &&
-      // ?
-      (
+      {groupDataValue && (
         <ScheduleContainer
           groupDataValue={groupDataValue}
           dateDataValue={dateDataValue}
-        /> 
-      )
-      // :
-      // <>
-      //   <p>НЕТУ НИЧО</p>
-      // </>
-    }
+        />
+      )}
 
-    <NotificationOuter 
-    message={'домашнее задание сохранено'}
-    />
+      <NotificationOuter message={"домашнее задание сохранено."} />
       {/* ... */}
     </div>
   )

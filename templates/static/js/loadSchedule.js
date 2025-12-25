@@ -24,7 +24,7 @@ function getDateValueFromDisplay(dateDisplay) {
     ноября: "11",
     декабря: "12",
   };
-
+  
   console.log(dateDisplay);
   const [day, month] = dateDisplay.split(" ");
   const year = new Date().getFullYear(); // или из scheduleData если есть

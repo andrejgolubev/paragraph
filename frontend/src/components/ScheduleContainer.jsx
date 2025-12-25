@@ -17,6 +17,9 @@ const ScheduleContainer = () => {
   const [showDialog, setShowDialog] = useState(false)
   const [homeworkText, setHomeworkText] = useState("")
   const [homeworkUpdated, setHomeworkUpdated] = useState("")
+  const [year, setYear] = useState(new Date().getFullYear())
+
+  
 
   useEffect(() => {
     console.log("ScheduleContainer - текущие значения:", {
@@ -24,6 +27,12 @@ const ScheduleContainer = () => {
       dateDataValue,
     })
   }, [groupDataValue, dateDataValue])
+
+  useEffect( () => {
+    if (dateDataValue) {
+      setYear(dateDataValue.slice(0, 4))
+    }
+  }, [dateDataValue])
 
   const getDateValueFromDisplay = (dateDisplay) => {
     const months = {
@@ -42,15 +51,18 @@ const ScheduleContainer = () => {
     }
 
     const [day, month] = dateDisplay.split(" ")
-    const year = new Date().getFullYear()
     const monthNumber = months[month]
-
+    
+    
     return `${year}-${monthNumber}-${day.padStart(2, "0")}`
   }
 
   const scheduleDateDataValue = getDateValueFromDisplay(
     scheduleData?.days?.[0]?.date || ""
-  ) // ДЛЯ ИСПОЛЬЗОВАНИЯ как dateDataValue для сохранения конкретной домашки, т.к. домашка прикрепляется к неделе,
+  )
+  
+  
+  // ДЛЯ ИСПОЛЬЗОВАНИЯ как dateDataValue для сохранения конкретной домашки, т.к. домашка прикрепляется к неделе,
   // а не к конкретной дате т.е. 2025-12-22, 2025-12-29, 2026-01-05 и т.д.
 
   // Загрузка расписания
@@ -103,9 +115,12 @@ const ScheduleContainer = () => {
       .loadHomeworkData(groupDataValue, scheduleDateDataValue, lessonIndex)
       .then((resp) => {
         const { homework, updated } = resp
-        setHomeworkText(homework)
         setHomeworkUpdated(updated)
-      })
+        setHomeworkText(homework)
+      }).catch( () => {
+        setHomeworkUpdated('')
+      }
+      )
 
     const lessonInfo = {
       groupDataValue,
@@ -327,6 +342,7 @@ const ScheduleContainer = () => {
           lessonInfo={lessonInfoGlobal}
           homeworkText={homeworkText}
           homeworkUpdated={homeworkUpdated}
+          setHomeworkUpdated={setHomeworkUpdated}
           setShowDialog={setShowDialog}
         />
       )}
