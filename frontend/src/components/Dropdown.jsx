@@ -18,7 +18,7 @@ const Dropdown = (props) => {
   const dropdownRef = useRef(null)
   const inputRef = useRef("")
 
-  useClickOutside(dropdownRef, () => {
+  useClickOutside([dropdownRef], () => {
     setActiveSearch(false)
   })
 

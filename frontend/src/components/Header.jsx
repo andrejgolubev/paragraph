@@ -4,11 +4,18 @@ import toggleBg from "../images/toggle-bg.svg"
 import toggleSun from "../images/toggle-sun.svg"
 import profileIcon from "../images/ProfileIcon.svg"
 import { ProfileDropdown } from "./ProfileDropdown"
-import { useState } from "react"
+import { useState, useRef } from "react"
+import { useClickOutside } from "../hooks/useClickOutside"
 
 const Header = () => {
 
   const [displayProfile, setDisplayProfile] = useState(false)
+  const dropdownRef = useRef(null)
+  const profileRef = useRef(null)
+  
+  useClickOutside([dropdownRef, profileRef], () => {
+    setDisplayProfile(false)
+  })
 
   return (
     <header className="header">
@@ -35,13 +42,20 @@ const Header = () => {
                 <img id="toggle-sun" src={toggleSun} alt="Toggle sun" />
               </div>
               <img
+                ref={profileRef}
                 src={profileIcon}
-                onClick={ () => setDisplayProfile((prev) => !prev)}
+                onClick={ (e) => {
+                  e.preventDefault()
+                  setDisplayProfile((prev) => !prev)
+                }}
                 alt="Profile"
                 className="profile-icon nav_item"
               />
               {displayProfile && (
                 <ProfileDropdown
+                // username={'Андрей'}
+                // role={'Пользователь'}
+                dropdownRef={dropdownRef}
                 setDisplayProfile={setDisplayProfile}
                  />
               )}

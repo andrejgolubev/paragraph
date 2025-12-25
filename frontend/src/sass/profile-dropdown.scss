@@ -21,7 +21,20 @@
     height: 130px;
     border-radius: 8px;
     z-index: 1000;
-    background-color: #252A31;
+    // background-color: #252a31;
+    background-color: #292d32;
+
+    &__close{
+        position: absolute;
+        scale: 0.8;
+        top: 3px;
+        left: 200px;
+        transition: all 0.3s ease 0s;
+
+        &:hover{
+            scale: 0.9;
+        }
+    }
 
     &__inner {
         margin: 10px 0 0 12px;
@@ -36,7 +49,7 @@
         
         .small {
             font-size: small;
-            color: #4B4954;
+            color: #4B4954 !important;
         }
 
         .stroke{
@@ -46,6 +59,7 @@
         }
 
         .options-list {
+            font-size: 14px;
             position: relative;
             top: -2px;
             right: 4px;
@@ -71,4 +85,5 @@
 
         }
     }
+    
 }
