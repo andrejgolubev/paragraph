@@ -1,24 +1,22 @@
-import { useState } from "react"
+import { useState, useEffect, useContext } from "react"
+import { Context } from "../../context/Provider"
 
-const NotificationOuter = (props) => {
-  const { message, type } = props
-
-  const [notificationShown, setNotificationShown] = useState(false)
-
+const NotificationOuter = ({message, type='success'}) => {
+  const {homeworkSaved, setHomeworkSaved} = useContext(Context)
 
   useEffect(() => {
-    setNotificationShown(true)
+    console.log('homeworkSaved :>> ', homeworkSaved);
     const timer = setTimeout(() => {
-      setNotificationShown(false)
+      setHomeworkSaved(false)
     }, 3000)
 
-    return () => clearTimeout(timer) //отменяем ожидание если элемент notification outer больше не вмонтирован в разметку 
-  } , [])
+    return () => clearTimeout(timer) //отменяем ожидание если элемент notification inner больше не вмонтирован в разметку 
+  } , [homeworkSaved])
   
   return (
     <div
       className={`notification outer ${
-        notificationShown ? "active" : ""
+        homeworkSaved ? "active" : ""
       }  ${type}`}
     >
       {message}

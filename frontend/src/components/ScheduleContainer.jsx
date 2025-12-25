@@ -55,26 +55,30 @@ const ScheduleContainer = () => {
 
   // Загрузка расписания
   const loadSchedule = useCallback(async () => {
-    console.log('ПО ВАШЕМУ ЗАПРОСУ :>> ');
     try {
       setLoading(true)
-      setError(null)
-
+      
       let url = `http://127.0.0.1:8000/schedule/get-schedule?group_data_value=${groupDataValue}`
       if (dateDataValue) {
         url += `&date_data_value=${dateDataValue}`
       }
-
+      
       const response = await fetch(url)
       if (!response.ok) {
         throw new Error(`HTTP error. ${response}`)
       }
-
+      
       const data = await response.json()
+      
+      console.log('data (from schedulecont) :>> ', data);
+      
       setScheduleData(data)
+      
+      setError(null)
     } catch (err) {
       console.error("Error loading schedule:", err)
       setError(err.message)
+      console.log('error :>> ', error);
     } finally {
       setLoading(false)
     }
@@ -95,7 +99,7 @@ const ScheduleContainer = () => {
       lessonName,
     } = lessInfo
 
-    const homeworkData = homeworkAPI
+    homeworkAPI
       .loadHomeworkData(groupDataValue, scheduleDateDataValue, lessonIndex)
       .then((resp) => {
         const { homework, updated } = resp

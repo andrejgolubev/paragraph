@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import NotificationInner from "./notifications/NotificationInner"
 import homeworkAPI from "../api/homeworkAPI"
+import { Context } from "../context/Provider"
 
 const HomeworkModal = ({
   setShowDialog,
@@ -10,7 +11,9 @@ const HomeworkModal = ({
 }) => {
   
   const [inputValue, setInputValue] = useState('')
-  
+  const [noTextSubmitError, setNoTextSubmitError] = useState(false)
+  const {homeworkSaved, setHomeworkSaved} = useContext(Context)
+
   if (lessonInfo) {
     const {
       groupDataValue,
@@ -50,6 +53,12 @@ const HomeworkModal = ({
 
     const handleHomeworkSubmit = (event) => {
       event.preventDefault()
+      if (!inputValue) {
+        setNoTextSubmitError(true)
+        return
+      }
+      
+
       const homeworkText = inputValue
       console.log(
         "СОхраняем дз: ",
@@ -66,6 +75,7 @@ const HomeworkModal = ({
       )
       dialog.close() // нативное закрытие (обязательно!!)
       setShowDialog(false) // просто убираем компонент из ScheduleContainer
+      setHomeworkSaved(true)
     }
 
     const handleCancel = (event) => {
@@ -123,7 +133,12 @@ const HomeworkModal = ({
             <button type="button" className="btn-cancel" onClick={handleCancel}>
               отмена
             </button>
-            <NotificationInner />
+            <NotificationInner 
+              message={'д/з не может быть пустым'}
+              type={'error'}
+              noTextSubmitError={noTextSubmitError}
+              setNoTextSubmitError={setNoTextSubmitError}
+            />
             <button type="submit" className="btn-save">
               сохранить
             </button>

@@ -1,6 +1,5 @@
 const BASE_URL = "http://127.0.0.1:8000"
-const headers = {"Content-Type": "application/json"}
-
+const headers = { "Content-Type": "application/json" }
 
 const homeworkAPI = {
   saveHomework: (groupDataValue, dateDataValue, lessonIndex, homeworkText) => {
@@ -19,9 +18,8 @@ const homeworkAPI = {
   loadHomeworkData: async function loadHomeworkData(
     groupDataValue,
     dateDataValue,
-    lessonIndex,
+    lessonIndex
   ) {
-
     const params = new URLSearchParams({
       group_data_value: String(groupDataValue),
       date_data_value: dateDataValue,
@@ -52,6 +50,21 @@ const homeworkAPI = {
         console.log("Error loading dates:", err)
         return []
       })
+  },
+
+  convertToDataValue: async ({groupNumber = '', date = ''}) => {
+
+    const params = new URLSearchParams({
+      group_number: String(groupNumber),
+      date_data_value: date,
+    })
+
+    return fetch(`http://127.0.0.1:8000/homework/convert?${params.toString()}`, {
+      method: "GET",
+    })
+      .then((resp) => resp.json())
+      .catch((e) => console.error(e))
+
   },
 }
 

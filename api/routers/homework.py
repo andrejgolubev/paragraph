@@ -71,6 +71,31 @@ async def save_homework(
         raise HTTPException(status_code=500, detail=f"Error saving homework: {str(e)}")
 
 
+@router.get('/convert')
+async def translate_to_datavalue(
+    group_number: str | None = None,
+    date: str | None = None,
+    db: AsyncSession = Depends(get_db),
+): 
+    """ПЕРЕВОДИТ группы и даты в data_value-формат"""
+
+    group_result = await db.scalars(
+        select(Group).where(Group.group_number == group_number)
+    )
+    db_group = group_result.first()
+    
+    date_result = await db.scalars(
+        select(Date).where(Date.date == date)
+    )
+
+    db_date = date_result.first() 
+
+    if not db_group and not db_date: 
+        return {"failure": "group and date not selected or not found"}
+    
+    return {'date_data_value': db_date.data_value if db_date else "", 'group_data_value': db_group.data_value if db_group else ""}
+
+
 @router.get("/get")
 async def get_homework(
     group_data_value: str,

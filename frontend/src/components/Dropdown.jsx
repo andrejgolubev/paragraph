@@ -12,10 +12,11 @@ const Dropdown = (props) => {
   const [filteredData, setFilteredData] = useState([])
   const [elemKey, setElemKey] = useState("")
   const [activeSearch, setActiveSearch] = useState(false)
+  const [error, setError] = useState(false)
+
 
   const dropdownRef = useRef(null)
   const inputRef = useRef("")
-
 
   useClickOutside(dropdownRef, () => {
     setActiveSearch(false)
@@ -37,6 +38,28 @@ const Dropdown = (props) => {
       })
     )
   }, [inputText])
+
+  const handleEnterKey = (event, inputText) => {
+    if (event.key === 'Enter') {
+      if (name === "group") {
+        console.log('inputText :>> ', inputText);
+        homeworkAPI.convertToDataValue({groupNumber: inputText})
+        .then(resp => resp['group_data_value']).then(responseValue => {
+          if (responseValue) {
+            setGroupDataValue(responseValue) 
+          } else {
+            setGroupDataValue('')
+            setActiveSearch(false)
+            // ТУТ ЧТО ТО ТИПА setError({true, type: 'wrong-group'})
+
+          }
+        })
+        
+
+      }
+    }
+
+  }
 
   const handleClick = () => {
     if (name === "group") {
@@ -69,6 +92,17 @@ const Dropdown = (props) => {
     setActiveSearch(true)
   }
 
+  const handleSelect = (elem) => {
+    inputRef.current.value = elem[elemKey]
+    setActiveSearch(false)
+    if (name === "group") {
+      setGroupDataValue(elem["data_value"])
+    } else if (name === "week") {
+      setDateDataValue(elem["data_value"])
+    }
+  }
+
+  
 
   return (
     <div className={name} onClick={handleClick} ref={dropdownRef}>
@@ -88,6 +122,7 @@ const Dropdown = (props) => {
                 id={func + "-input"}
                 placeholder={placeholder}
                 className={func + "-block__input"}
+                onKeyDown={(event) => handleEnterKey(event, inputText)}
               />
             </div>
             {activeSearch && (
@@ -97,14 +132,7 @@ const Dropdown = (props) => {
                     key={elem.id}
                     onClick={(e) => {
                       e.stopPropagation()
-                      inputRef.current.value = elem[elemKey]
-                      setActiveSearch(false)
-                      if (name === "group") {
-                        setGroupDataValue(elem["data_value"])
-                      } else if (name === "week") {
-                        setDateDataValue(elem["data_value"])
-                      }
-
+                      handleSelect(elem)
                     }}
                   >
                     <a href="#">{elem[elemKey]}</a>

@@ -5,17 +5,21 @@ import Tip from "./Tip"
 import { useState, useEffect, useContext } from "react"
 import { Context } from "../context/Provider"
 import { Mosaic } from "react-loading-indicators"
+import NotificationOuter from "./notifications/NotificationOuter"
 
 const MainContent = () => {
   const [tipActive, setTipActive] = useState(false)
   const {groupDataValue, dateDataValue} = useContext(Context)
 
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setTipActive(true)
-    }, 500)
+    }, 100)
     return () => clearTimeout(timer)
   }, [])
+
+
 
   return (
     <div className="main-content">
@@ -42,14 +46,24 @@ const MainContent = () => {
       </div>
       <Tip active={tipActive} />
 
-      {groupDataValue && (
+      {
+      groupDataValue &&
+      // ?
+      (
         <ScheduleContainer
           groupDataValue={groupDataValue}
           dateDataValue={dateDataValue}
-        />
-      )}
+        /> 
+      )
+      // :
+      // <>
+      //   <p>НЕТУ НИЧО</p>
+      // </>
+    }
 
-      {/* notification outer */}
+    <NotificationOuter 
+    message={'домашнее задание сохранено'}
+    />
       {/* ... */}
     </div>
   )

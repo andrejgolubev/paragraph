@@ -1,24 +1,21 @@
 import { useState, useEffect } from "react"
 
 const NotificationInner = (props) => {
-  const { message, type } = props
-
-  const [notificationShown, setNotificationShown] = useState(false)
+  const { message, type, noTextSubmitError, setNoTextSubmitError } = props
 
 
   useEffect(() => {
-    setNotificationShown(true)
     const timer = setTimeout(() => {
-      setNotificationShown(false)
+      setNoTextSubmitError(false)
     }, 3000)
 
     return () => clearTimeout(timer) //отменяем ожидание если элемент notification inner больше не вмонтирован в разметку 
-  } , [])
+  } , [noTextSubmitError])
   
   return (
     <div
       className={`notification inner ${
-        notificationShown ? "active" : ""
+        noTextSubmitError ? "active" : ""
       }  ${type}`}
     >
       {message}

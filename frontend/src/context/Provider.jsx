@@ -5,6 +5,7 @@ export const Context = createContext({})
 export const Provider = ({ children }) => {
   const [groupDataValue, setGroupDataValue] = useState("")
   const [dateDataValue, setDateDataValue] = useState("")
+  const [homeworkSaved, setHomeworkSaved] = useState(false)
 
   return (
     <Context.Provider
@@ -13,6 +14,9 @@ export const Provider = ({ children }) => {
         setGroupDataValue,
         dateDataValue,
         setDateDataValue,
+        homeworkSaved, 
+        setHomeworkSaved,
+        
       }}
     >
       {children}
