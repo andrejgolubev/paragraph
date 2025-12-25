@@ -4,7 +4,6 @@ import Dropdown from "./Dropdown"
 import Tip from "./Tip"
 import { useState, useEffect, useContext } from "react"
 import { Context } from "../context/Provider"
-import { Mosaic } from "react-loading-indicators"
 import NotificationOuter from "./notifications/NotificationOuter"
 
 const MainContent = () => {
