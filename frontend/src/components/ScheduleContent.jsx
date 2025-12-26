@@ -1,4 +1,4 @@
-import ScheduleContainer from "./ScheduleContainer"
+import ScheduleContainer from "./ScheduleContainer" // раньше был MainContent
 import Dropdown from "./Dropdown"
 import Tip from "./Tip"
 import { useState, useEffect, useContext } from "react"

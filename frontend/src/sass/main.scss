@@ -6,6 +6,7 @@
 @use './table.scss';
 @use './dialog.scss';
 @use './profile-dropdown.scss';
+@use './help-page.scss';
 
 .header {
   font-family: Manrope, serif;
@@ -27,6 +28,7 @@
 
     @media (max-width: 1200px) {
       margin-left: -16px;
+      
     }
   }
 
@@ -36,7 +38,7 @@
     padding-inline: 15px;
     padding-top: 1rem;
     font-family: 'Manrope', serif;
-    font-size: 24px;
+    font-size: 20px;
     letter-spacing: 0.08em;
     color: #292833;
 
@@ -44,14 +46,10 @@
       color: #292833;
 
       @media (max-width: 1200px) {
-        font-size: 20px;
+        font-size: 16px;
+        margin-top:-5px;
       }
 
-      @media (max-width: 1100px) {
-        font-size: 18px;
-        position: relative;
-        bottom: 1px;
-      }
     }
   }
   
@@ -68,6 +66,7 @@
   width: auto;
   display: flex;
   justify-content: space-between;
+  
 }
 
 .selected {
@@ -75,12 +74,10 @@
 }
 
 .links {
+  margin-top: -1px;
+  width: 100%;
 
-  // .nav_item:not(.nav_logo) a,
-  // .toggle,
-  // .profile-icon {
-  //   transition: all 0.3s ease 0s;
-  // }
+  
 
   .nav_item:not(.nav_logo) {
     a:hover {
@@ -88,8 +85,27 @@
     }
   }
 
+  .nav_item:not(.profile-icon) {
+    margin-top: 3px;
+  }
+  
+  @media (max-width: 1200px){
+    margin-top: -3px;
+    
+      
+  }
+
   .profile-icon {
     margin: -3px 0 0 0;
+    transition: scale 0.3s ease;
+    
+    &:hover {
+      scale: 1.03;
+
+      @media (max-width:1200px) {
+        scale: 0.88
+      }
+    }
   }
 
   .toggle {
@@ -101,6 +117,11 @@
       margin-left: 6px;
     }
   }
+
+  a {
+    transition: color 0.3s ease 0s; 
+  }
+
 }
 
 body {
@@ -119,7 +140,6 @@ body {
 
     display: flex;
     gap: 30px;
-
 
 
     .corpuses {
@@ -181,3 +201,4 @@ body {
   }
 
 }
+

@@ -1,4 +1,5 @@
 import Header from "./components/Header"
+import Help from "./components/help-page/Help"
 import ScheduleContent from "./components/ScheduleContent"
 import { Provider } from "./context/Provider"
 import {Route, Routes} from 'react-router-dom'
@@ -11,8 +12,9 @@ function App() {
 
       <Routes>
         <Route path="/" element={<ScheduleContent />} />
+        <Route path='/help' element={<Help />} />
       </Routes>
-      
+
     </Provider>
   )
 }

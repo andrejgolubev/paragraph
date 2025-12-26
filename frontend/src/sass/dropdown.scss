@@ -64,9 +64,6 @@ input#search-input {
 .select-block, 
 .custom-dropdown {
   
-  @media (max-width: 1200px){
-    scale: 0.8
-  }
 
   ul{
     transition: all 0.1s ease 0.1s;

@@ -1,11 +1,12 @@
-import "../sass/main.scss" // все стили
-import logo from "../images/logoAndText.svg"
+
+import logo from "../images/logoAndText2.svg"
 import toggleBg from "../images/toggle-bg.svg"
 import toggleSun from "../images/toggle-sun.svg"
 import profileIcon from "../images/ProfileIcon.svg"
 import { ProfileDropdown } from "./ProfileDropdown"
 import { useState, useRef } from "react"
 import { useClickOutside } from "../hooks/useClickOutside"
+import { Link } from "react-router-dom"
 
 const Header = () => {
 
@@ -21,19 +22,25 @@ const Header = () => {
     <header className="header">
       <nav className="nav">
         <ul className="nav_list">
-          <li className="nav_item">
-            <a href="#">
-              <img className="nav_logo" src={logo} alt="Logo" />
-            </a>
-          </li>
+          <Link to='/'>
+            <li className="nav_item">
+              <a href="#">
+                <img className="nav_logo" src={logo} alt="Logo" />
+              </a>
+            </li>
+          </Link>
           <li>
             <div className="links">
-              <div className="nav_item">
-                <a href="#">журнал</a>
-              </div>
-              <div className="nav_item">
-                <a href="#">новости</a>
-              </div>
+              <Link to='/'>
+                <div className="nav_item">
+                  <a href="#">журнал</a>
+                </div>
+              </Link>
+              <Link to='/help'>
+                <div className="nav_item">
+                  <a href="#">новости</a>
+                </div>
+              </Link>
               <div className="nav_item">
                 <a href="#">о проекте</a>
               </div>
