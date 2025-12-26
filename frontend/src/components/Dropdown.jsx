@@ -5,7 +5,7 @@ import { useRef } from "react"
 import { useClickOutside } from "../hooks/useClickOutside"
 
 const Dropdown = (props) => {
-  const { name, func, placeholder, readOnly, setTipActive } = props
+  const { name, func, placeholder, readOnly} = props
 
   const [inputText, setInputText] = useState("")
   const [data, setData] = useState([])
@@ -70,7 +70,6 @@ const Dropdown = (props) => {
     }
     // можно ещё сюда какие угодно добавлять нэймы функция универсальная (почти :) )
 
-    setTipActive(false)
   }
 
   const loadGroups = async () => {

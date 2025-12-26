@@ -6,8 +6,15 @@ import { Context } from "../context/Provider"
 import NotificationOuter from "./notifications/NotificationOuter"
 
 const ScheduleContent = () => {
-  const [tipActive, setTipActive] = useState(false)
-  const { groupDataValue, dateDataValue } = useContext(Context)
+  const { groupDataValue, dateDataValue, tipActive, setTipActive } = useContext(Context)
+
+  useEffect( () => {
+      setTipActive(true)
+  }, [])
+
+  if (groupDataValue) {
+    setTipActive(false)
+  } 
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -24,14 +31,12 @@ const ScheduleContent = () => {
           func={"search"}
           placeholder={"номер группы"}
           readOnly={false}
-          setTipActive={setTipActive}
         />
         <Dropdown
           name={"week"}
           func={"select"}
           placeholder={"дата/неделя"}
           readOnly={true}
-          setTipActive={setTipActive}
         />
         <div className="corpuses">
           <p>C - Центральный корпус⠀⠀⠀⠀B - Бизнес-инкубатор</p>

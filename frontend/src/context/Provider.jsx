@@ -6,6 +6,7 @@ export const Provider = ({ children }) => {
   const [groupDataValue, setGroupDataValue] = useState("")
   const [dateDataValue, setDateDataValue] = useState("")
   const [homeworkSaved, setHomeworkSaved] = useState(false)
+  const [tipActive, setTipActive] = useState(false)
 
   return (
     <Context.Provider
@@ -16,6 +17,8 @@ export const Provider = ({ children }) => {
         setDateDataValue,
         homeworkSaved, 
         setHomeworkSaved,
+        tipActive, 
+        setTipActive,
         
       }}
     >

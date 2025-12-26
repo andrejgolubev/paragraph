@@ -4,16 +4,18 @@ import toggleBg from "../images/toggle-bg.svg"
 import toggleSun from "../images/toggle-sun.svg"
 import profileIcon from "../images/ProfileIcon.svg"
 import { ProfileDropdown } from "./ProfileDropdown"
-import { useState, useRef } from "react"
+import { useState, useRef, useContext } from "react"
 import { useClickOutside } from "../hooks/useClickOutside"
 import { Link } from "react-router-dom"
+import { Context } from "../context/Provider"
 
 const Header = () => {
 
   const [displayProfile, setDisplayProfile] = useState(false)
   const dropdownRef = useRef(null)
   const profileRef = useRef(null)
-  
+  const {setTipActive, groupDataValue} = useContext(Context)
+
   useClickOutside([dropdownRef, profileRef], () => {
     setDisplayProfile(false)
   })
@@ -31,19 +33,21 @@ const Header = () => {
           </Link>
           <li>
             <div className="links">
-              <Link to='/'>
+              <Link to='/' onClick={() => {
+                
+              }}>
                 <div className="nav_item">
                   <a href="#">журнал</a>
                 </div>
               </Link>
-              <Link to='/help'>
-                <div className="nav_item">
+                <div className="nav_item" >
                   <a href="#">новости</a>
                 </div>
+              <Link to='/help'>
+                <div className="nav_item">
+                  <a href="#">о проекте</a>
+                </div>
               </Link>
-              <div className="nav_item">
-                <a href="#">о проекте</a>
-              </div>
               <div className="toggle">
                 <img id="toggle-bg" src={toggleBg} alt="Toggle background" />
                 <img id="toggle-sun" src={toggleSun} alt="Toggle sun" />
