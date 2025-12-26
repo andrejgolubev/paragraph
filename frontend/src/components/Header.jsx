@@ -53,8 +53,8 @@ const Header = () => {
               />
               {displayProfile && (
                 <ProfileDropdown
-                // username={'Андрей'}
-                // role={'Пользователь'}
+                username={'Андрей Голубев'}
+                role={'Администратор'}
                 dropdownRef={dropdownRef}
                 setDisplayProfile={setDisplayProfile}
                  />

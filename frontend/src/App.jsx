@@ -1,12 +1,18 @@
 import Header from "./components/Header"
-import MainContent from "./components/MainContent"
+import ScheduleContent from "./components/ScheduleContent"
 import { Provider } from "./context/Provider"
+import {Route, Routes} from 'react-router-dom'
+
 
 function App() {
   return (
     <Provider>
       <Header />
-      <MainContent />
+
+      <Routes>
+        <Route path="/" element={<ScheduleContent />} />
+      </Routes>
+      
     </Provider>
   )
 }

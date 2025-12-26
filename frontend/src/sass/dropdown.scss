@@ -64,6 +64,9 @@ input#search-input {
 .select-block, 
 .custom-dropdown {
   
+  @media (max-width: 1200px){
+    scale: 0.8
+  }
 
   ul{
     transition: all 0.1s ease 0.1s;
@@ -122,7 +125,7 @@ input#search-input {
     li {
       font-family: 'Manrope', sans-serif;
       padding: 10px;
-      transition: all 0.3s ease 0s; // СПОРНО 
+      transition: all 0.3s ease 0s; 
 
       cursor: pointer;
 

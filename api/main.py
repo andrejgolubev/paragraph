@@ -27,7 +27,11 @@ app = FastAPI(title="PROGINZH",)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8000", "http://localhost:5173" ],  # фронтенд
+    allow_origins=[
+        "http://localhost:8000", 
+        "http://localhost:5173", # фронтенд
+        # "https://*.loca.lt",  # Все subdomains
+        ],  
     allow_credentials=True,
     allow_methods=["*"],  # Разрешить все методы
     allow_headers=["*"],  # Разрешить все заголовки

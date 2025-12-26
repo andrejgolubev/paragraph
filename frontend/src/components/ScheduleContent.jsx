@@ -1,4 +1,3 @@
-import HomeworkModal from "./HomeworkModal"
 import ScheduleContainer from "./ScheduleContainer"
 import Dropdown from "./Dropdown"
 import Tip from "./Tip"
@@ -6,7 +5,7 @@ import { useState, useEffect, useContext } from "react"
 import { Context } from "../context/Provider"
 import NotificationOuter from "./notifications/NotificationOuter"
 
-const MainContent = () => {
+const ScheduleContent = () => {
   const [tipActive, setTipActive] = useState(false)
   const { groupDataValue, dateDataValue } = useContext(Context)
 
@@ -54,4 +53,4 @@ const MainContent = () => {
   )
 }
 
-export default MainContent
+export default ScheduleContent

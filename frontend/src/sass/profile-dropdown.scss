@@ -18,17 +18,16 @@
     top: 58px;
     right: 24px;
     width: 220px;
-    height: 130px;
+    height: 132px;
     border-radius: 8px;
     z-index: 1000;
-    // background-color: #252a31;
     background-color: #292d32;
 
     &__close{
         position: absolute;
         scale: 0.8;
-        top: 3px;
-        left: 200px;
+        top: 5px;
+        left: 198px;
         transition: all 0.3s ease 0s;
 
         &:hover{
@@ -70,8 +69,6 @@
                 align-items: center;
                 transition: all 0.3s ease 0s;
                 border-radius: 2px;
-
-                
             }
 
             &__elem:hover {
@@ -84,6 +81,12 @@
 
 
         }
+    }
+
+    @media (max-width: 1200px) {
+        scale: 0.8;
+        top: 40px;
+        right: -4px;
     }
     
 }

@@ -23,7 +23,7 @@
     width: 100%;
     max-width: 175px;
     padding-right: auto;
-    transition: all 0.3s ease 0s;
+    // transition: all 0.3s ease 0s;
 
     @media (max-width: 1200px) {
       margin-left: -16px;
@@ -76,11 +76,11 @@
 
 .links {
 
-  .nav_item:not(.nav_logo) a,
-  .toggle,
-  .profile-icon {
-    transition: all 0.3s ease 0s;
-  }
+  // .nav_item:not(.nav_logo) a,
+  // .toggle,
+  // .profile-icon {
+  //   transition: all 0.3s ease 0s;
+  // }
 
   .nav_item:not(.nav_logo) {
     a:hover {
@@ -132,7 +132,7 @@ body {
         // font-size: 16px;
         letter-spacing: 0.06em;
         color: rgba(29, 29, 33, 0.15);
-        transition: all 0.7s ease 0s;
+        // transition: all 0.7s ease 0s;
 
         @media (max-width: 1200px) {
           font-size: 12px;

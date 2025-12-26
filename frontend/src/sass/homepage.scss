@@ -42,7 +42,11 @@
   position: absolute;
   top: -4px;
   right: 23px;
-  transition: all 0.3s ease 0s;
+  
+  &:hover{ 
+    transition: all 0.3s ease 0s;
+  }
+
 }
 
 #toggle-sun:hover {

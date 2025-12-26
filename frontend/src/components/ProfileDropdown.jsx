@@ -89,7 +89,7 @@ export const ProfileDropdown = (props) => {
                 className="options-list__elem__img"
                 src={registerIcon}
               />
-              <a href="#">
+              <a href="#" style={{position: 'relative', top: '1px'}}>
                 <p>Регистрация</p>
               </a>
             </div>
