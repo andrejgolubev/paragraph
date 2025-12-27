@@ -6,9 +6,10 @@
   font-family: 'Manrope', serif;
   margin: 12px 0 0 0;
   width: auto;
+  padding-inline: 25px;
 
   list-style: none;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   line-height: 1.5;
   color: #292833e3;
 
@@ -16,28 +17,33 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border: 2px solid ;
+    border: 2px dashed rgba(56, 63, 69, 0.175);
     margin-bottom: 16px;
     border-radius: 8px;
+    padding: 4px;
   }
 
   &__header {
-    
     position: relative;
     padding: 8px 60px 8px 25px; 
+    font-weight: 500;
     border: 0; 
     border-radius: 8px;
-    font-size: 28px;
+    font-size: 20px;
     text-align: left;
     cursor: pointer;
+    @media (max-width: 1200px) {
+      font-size: 18px;
+    }
   }
 
   &__body{ 
-    padding: 30px 60px 20px 25px;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-    font-size: 20px;
+    padding: 10px 60px 20px 25px;
+    font-size: 16px;
     color: #272626;
+    @media (max-width: 1200px) {
+      font-size: 14px;
+    }
   }
 
   &__collapse { 
@@ -56,10 +62,13 @@
     top: 50%;
     right: 28px;
     width: 30px;
-    height: 17px;
     transform: translateY(-50%);
+    transition: transform 0.3s ease 0s;
+    @media (max-width: 1200px) {
+      scale: 0.8;
+    }
 
-    &__active {
+    &.active {
       transform: translateY(-50%) rotate(180deg);
     }
   }

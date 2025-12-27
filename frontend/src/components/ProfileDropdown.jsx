@@ -1,14 +1,16 @@
 import questionMark from "../images/question-mark.svg"
 import exitIcon from "../images/exit-icon.svg"
 import closeIcon from "../images/close-icon.svg"
-import loginIcon from '../images/login-icon.svg'
-import registerIcon from '../images/register-icon.svg'
+import loginIcon from "../images/login-icon.svg"
+import registerIcon from "../images/register-icon.svg"
 import { Link } from "react-router-dom"
 
 export const ProfileDropdown = (props) => {
   const { setDisplayProfile, dropdownRef, username, role } = props
 
-  const disappearOnClick = () => {setDisplayProfile(false)}
+  const disappearOnClick = () => {
+    setDisplayProfile(false)
+  }
 
   if (username && role) {
     return (
@@ -33,22 +35,16 @@ export const ProfileDropdown = (props) => {
             </svg>
           </div>
           <div className="options-list">
-            <Link to='/help'>
+            <Link to="/help">
               <div className="options-list__elem" onClick={disappearOnClick}>
-                <img
-                  className="options-list__elem__img"
-                  src={questionMark}
-                />
+                <img className="options-list__elem__img" src={questionMark} />
                 <a href="#">
                   <p>Помощь</p>
                 </a>
               </div>
             </Link>
             <div className="options-list__elem" onClick={disappearOnClick}>
-              <img
-                className="options-list__elem__img"
-                src={exitIcon}
-              />
+              <img className="options-list__elem__img" src={exitIcon} />
               <a href="#">
                 <p>Выход</p>
               </a>
@@ -68,7 +64,7 @@ export const ProfileDropdown = (props) => {
         <div className="profile-dropdown__inner">
           <p className="role small">*Вы не вошли в аккаунт*</p>
           <div className="stroke">
-            <svg 
+            <svg
               width="270"
               height="1"
               viewBox="0 0 270 1"
@@ -78,34 +74,25 @@ export const ProfileDropdown = (props) => {
               <path d="M0 0.5H258" stroke="#323342" />
             </svg>
           </div>
-          <div className="options-list" >
-            <div className="options-list__elem" style={{gap: '6px'}}>
-              <img
-                className="options-list__elem__img"
-                src={loginIcon}
-              />
-              <a href="#">
+          <div className="options-list">
+            <Link to="/sign-in">
+              <div className="options-list__elem" style={{ gap: "6px" }}>
+                <img className="options-list__elem__img" src={loginIcon} />
                 <p>Вход</p>
-              </a>
-            </div>
-            <div className="options-list__elem" style={{gap: '3px'}}>
-              <img
-                className="options-list__elem__img"
-                src={registerIcon}
-              />
-              <a href="#" style={{position: 'relative', top: '1px'}}>
-                <p>Регистрация</p>
-              </a>
-            </div>
-            <div className="options-list__elem">
-              <img
-                className="options-list__elem__img"
-                src={questionMark}
-              />
-              <a href="#">
+              </div>
+            </Link>
+            <Link to="/sign-up">
+              <div className="options-list__elem" style={{ gap: "3px" }}>
+                <img className="options-list__elem__img" src={registerIcon} />
+                <p style={{ position: "relative", top: "1px" }}>Регистрация</p>
+              </div>
+            </Link>
+            <Link to="/help">
+              <div className="options-list__elem">
+                <img className="options-list__elem__img" src={questionMark} />
                 <p>Помощь</p>
-              </a>
-            </div>
+              </div>
+            </Link>
           </div>
         </div>
       </div>

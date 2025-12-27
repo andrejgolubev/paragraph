@@ -256,7 +256,7 @@
 .lesson-text {
   font-weight: 500;
   margin-bottom: 3px;
-  // transition: all 0.3s ease 0s;
+  line-height: 1.4;
 
   @media (max-width: 1200px){
     font-size: 12px;
@@ -304,8 +304,3 @@
   /* серый по умолчанию */
 }
 
-.lesson-text {
-  font-weight: 500;
-  margin-bottom: 3px;
-  line-height: 1.4;
-}

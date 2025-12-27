@@ -12,7 +12,7 @@ export const AccordionItem = ({ faqItem, onClick, isOpen }) => {
         <img src={arrow} className={`accordion__arrow ${isOpen ? 'active' : ''}`}/>
       </button>
       <div
-        className={`accordion__collapse`}
+        className='accordion__collapse'
         style={
           isOpen ? { height: itemRef.current.scrollHeight } : { height: "0" }
         }

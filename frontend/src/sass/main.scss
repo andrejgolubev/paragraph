@@ -7,35 +7,32 @@
 @use './dialog.scss';
 @use './profile-dropdown.scss';
 @use './help-page.scss';
+@use './auth.scss';
 
 .header {
   font-family: Manrope, serif;
   width: auto;
-  margin-inline: 10px;
+  margin-inline: 25px;
 }
 
 .nav {
   width: auto;
   height: 70px;
   margin-left: auto;
+  
+
+
 
   &_logo {
     padding-top: 7px;
     width: 100%;
     max-width: 175px;
     padding-right: auto;
-    // transition: all 0.3s ease 0s;
-
-    @media (max-width: 1200px) {
-      margin-left: -16px;
-      
-    }
   }
 
 
   &_item {
     display: inline-block;
-    padding-inline: 15px;
     padding-top: 1rem;
     font-family: 'Manrope', serif;
     font-size: 20px;
@@ -55,7 +52,7 @@
   
   img {
     @media (max-width: 1200px) {
-      scale: 0.85;
+      // scale: 0.85;
     }
   
   }
@@ -66,6 +63,12 @@
   width: auto;
   display: flex;
   justify-content: space-between;
+
+  .nav_item {
+    &.bold {
+      font-weight: 600;
+    }
+  }
   
 }
 
@@ -74,6 +77,8 @@
 }
 
 .links {
+  display: flex;
+  gap: 20px;
   margin-top: -1px;
   width: 100%;
 
@@ -89,33 +94,23 @@
     margin-top: 3px;
   }
   
-  @media (max-width: 1200px){
-    margin-top: -3px;
-    
-      
-  }
+  
 
   .profile-icon {
-    margin: -3px 0 0 0;
+    margin: -5px 0 0 0;
     transition: scale 0.3s ease;
-    
     &:hover {
       scale: 1.03;
 
-      @media (max-width:1200px) {
-        scale: 0.88
-      }
+      // @media (max-width:1200px) {
+      //   scale: 0.88
+      // }
     }
   }
 
   .toggle {
-    margin: 20px 0 0 0;
-    @media (max-width: 1200px) {
-      margin-left: 8px;
-    }
-    @media (max-width: 1100px) {
-      margin-left: 6px;
-    }
+    margin: 24px 0 0 0;
+    
   }
 
   p {

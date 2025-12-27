@@ -4,17 +4,16 @@ import toggleBg from "../images/toggle-bg.svg"
 import toggleSun from "../images/toggle-sun.svg"
 import profileIcon from "../images/ProfileIcon.svg"
 import { ProfileDropdown } from "./ProfileDropdown"
-import { useState, useRef, useContext } from "react"
+import { useState, useRef } from "react"
 import { useClickOutside } from "../hooks/useClickOutside"
-import { Link } from "react-router-dom"
-import { Context } from "../context/Provider"
+import { Link, useLocation } from "react-router-dom"
 
 const Header = () => {
 
   const [displayProfile, setDisplayProfile] = useState(false)
   const dropdownRef = useRef(null)
   const profileRef = useRef(null)
-  const {setTipActive, groupDataValue} = useContext(Context)
+  const location = useLocation()
 
   useClickOutside([dropdownRef, profileRef], () => {
     setDisplayProfile(false)
@@ -34,15 +33,15 @@ const Header = () => {
           <li>
             <div className="links">
               <Link to='/'>
-                <div className="nav_item">
+                <div className={`nav_item ${location.pathname === '/' ? 'bold' : ''}`} >
                   <p>дневник</p>
                 </div>
               </Link>
-                <div className="nav_item" >
+                <div className={`nav_item ${location.pathname === '/news' ? 'bold' : ''}`} >
                   <p>новости</p>
                 </div>
               <Link to='/help'>
-                <div className="nav_item">
+                <div className={`nav_item ${location.pathname === '/help' ? 'bold' : ''}`}>
                   <p>о проекте</p>
                 </div>
               </Link>
@@ -62,8 +61,8 @@ const Header = () => {
               />
               {displayProfile && (
                 <ProfileDropdown
-                username={'Андрей Голубев'}
-                role={'Администратор'}
+                // username={'Андрей Голубев'}
+                // role={'Администратор'}
                 dropdownRef={dropdownRef}
                 setDisplayProfile={setDisplayProfile}
                  />
