@@ -12,8 +12,7 @@ const Dropdown = (props) => {
   const [filteredData, setFilteredData] = useState([])
   const [elemKey, setElemKey] = useState("")
   const [activeSearch, setActiveSearch] = useState(false)
-  const [error, setError] = useState(false)
-
+  // const [error, setError] = useState(false)
 
   const dropdownRef = useRef(null)
   const inputRef = useRef("")
@@ -31,6 +30,7 @@ const Dropdown = (props) => {
       data.filter((elem) => {
         const element = elem[elemKey]
 
+
         return (
           element &&
           element.toLowerCase().trim().includes(inputText.trim().toLowerCase())
@@ -39,12 +39,14 @@ const Dropdown = (props) => {
     )
   }, [inputText])
 
+
   const handleEnterKey = (event, inputText) => {
     if (event.key === 'Enter') {
       if (name === "group") {
         console.log('inputText :>> ', inputText);
         homeworkAPI.convertToDataValue({groupNumber: inputText})
         .then(resp => resp['group_data_value']).then(responseValue => {
+          console.log('responseValue :>> ', responseValue)
           if (responseValue) {
             setGroupDataValue(responseValue) 
           } else {

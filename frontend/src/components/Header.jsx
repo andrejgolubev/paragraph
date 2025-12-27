@@ -26,26 +26,24 @@ const Header = () => {
         <ul className="nav_list">
           <Link to='/'>
             <li className="nav_item">
-              <a href="#">
+              <p>
                 <img className="nav_logo" src={logo} alt="Logo" />
-              </a>
+              </p>
             </li>
           </Link>
           <li>
             <div className="links">
-              <Link to='/' onClick={() => {
-                
-              }}>
+              <Link to='/'>
                 <div className="nav_item">
-                  <a href="#">журнал</a>
+                  <p>дневник</p>
                 </div>
               </Link>
                 <div className="nav_item" >
-                  <a href="#">новости</a>
+                  <p>новости</p>
                 </div>
               <Link to='/help'>
                 <div className="nav_item">
-                  <a href="#">о проекте</a>
+                  <p>о проекте</p>
                 </div>
               </Link>
               <div className="toggle">

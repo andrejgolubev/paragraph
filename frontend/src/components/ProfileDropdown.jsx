@@ -3,10 +3,12 @@ import exitIcon from "../images/exit-icon.svg"
 import closeIcon from "../images/close-icon.svg"
 import loginIcon from '../images/login-icon.svg'
 import registerIcon from '../images/register-icon.svg'
-
+import { Link } from "react-router-dom"
 
 export const ProfileDropdown = (props) => {
   const { setDisplayProfile, dropdownRef, username, role } = props
+
+  const disappearOnClick = () => {setDisplayProfile(false)}
 
   if (username && role) {
     return (
@@ -14,7 +16,7 @@ export const ProfileDropdown = (props) => {
         <img
           className="profile-dropdown__close"
           src={closeIcon}
-          onClick={() => setDisplayProfile(false)}
+          onClick={disappearOnClick}
         ></img>
         <div className="profile-dropdown__inner">
           <p>{username}</p>
@@ -31,16 +33,18 @@ export const ProfileDropdown = (props) => {
             </svg>
           </div>
           <div className="options-list">
-            <div className="options-list__elem">
-              <img
-                className="options-list__elem__img"
-                src={questionMark}
-              />
-              <a href="#">
-                <p>Помощь</p>
-              </a>
-            </div>
-            <div className="options-list__elem">
+            <Link to='/help'>
+              <div className="options-list__elem" onClick={disappearOnClick}>
+                <img
+                  className="options-list__elem__img"
+                  src={questionMark}
+                />
+                <a href="#">
+                  <p>Помощь</p>
+                </a>
+              </div>
+            </Link>
+            <div className="options-list__elem" onClick={disappearOnClick}>
               <img
                 className="options-list__elem__img"
                 src={exitIcon}

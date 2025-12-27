@@ -80,7 +80,7 @@
   
 
   .nav_item:not(.nav_logo) {
-    a:hover {
+    p:hover {
       color: rgb(180, 211, 220);
     }
   }
@@ -118,8 +118,9 @@
     }
   }
 
-  a {
+  p {
     transition: color 0.3s ease 0s; 
+    cursor: pointer;
   }
 
 }

@@ -20,7 +20,6 @@ const ScheduleContainer = () => {
   const [year, setYear] = useState(new Date().getFullYear())
 
   
-
   useEffect(() => {
     console.log("ScheduleContainer - текущие значения:", {
       groupDataValue,

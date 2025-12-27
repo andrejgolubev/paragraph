@@ -10,7 +10,7 @@ function App() {
   return (
     <Provider>
       <Header />
-
+    
       <Routes>
         <Route path="/" element={<ScheduleContent />} />
         <Route path="/help" element={<Help />} />

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request, HTTPException, Body
+from fastapi import APIRouter, Depends, Request, HTTPException, Body, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from api.db.database import get_db
@@ -72,7 +72,7 @@ async def save_homework(
 
 
 @router.get('/convert')
-async def translate_to_datavalue(
+async def convert_to_datavalue(
     group_number: str | None = None,
     date: str | None = None,
     db: AsyncSession = Depends(get_db),
@@ -91,10 +91,36 @@ async def translate_to_datavalue(
     db_date = date_result.first() 
 
     if not db_group and not db_date: 
+        raise HTTPException(status_code=404, 
+        detail="at least group or date has to be selected (or they were just not found)")
+    
+    return {'date_data_value': db_date.data_value if db_date else "", 
+    'group_data_value': db_group.data_value if db_group else ""}
+
+
+@router.get('/convert-back')
+async def convert_from_datavalue(
+    group_number: str | None = None,
+    date: str | None = None,
+    db: AsyncSession = Depends(get_db),
+): 
+    """ПЕРЕВОДИТ группы и даты из data_value-формата"""
+
+    group_result = await db.scalars(
+        select(Group).where(Group.group_number == group_number)
+    )
+    db_group = group_result.first()
+    
+    date_result = await db.scalars(
+        select(Date).where(Date.date == date)
+    )
+
+    db_date = date_result.first() 
+
+    if not db_group and not db_date: 
         return {"failure": "group and date not selected or not found"}
     
     return {'date_data_value': db_date.data_value if db_date else "", 'group_data_value': db_group.data_value if db_group else ""}
-
 
 @router.get("/get")
 async def get_homework(

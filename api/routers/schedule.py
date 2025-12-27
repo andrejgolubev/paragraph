@@ -1,9 +1,8 @@
 from fastapi import Request, Response, HTTPException, APIRouter, Depends
 from fastapi.responses import JSONResponse
 from api.db.database import get_db
-from api.parser.schedule_parser import parse_schedule_from_url  # твой существующий парсер
+from api.parser.schedule_parser import parse_schedule_from_url, parse_schedule  
 from sqlalchemy.ext.asyncio import AsyncSession
-from api.parser.schedule_parser import FastScheduleParser
 from api.db.schemas import GroupSelection
 from api.services.data_service import data_service
 from datetime import datetime
@@ -11,8 +10,6 @@ import time
 
 schedule_router = APIRouter(tags=['Schedule'], prefix='/schedule')
 router = schedule_router
-
-fast_parser = FastScheduleParser()
 
 
 @router.get("/get-schedule")
@@ -28,9 +25,10 @@ async def get_schedule(
 
     try:
         # парсим расписание (ничего не указываем в function если хотим обычный парсинг)
-        schedule_data = await parse_schedule_from_url(url, function=fast_parser.parse) 
-        if schedule_data: end = time.time() 
-        print(end - st)
+        schedule_data = await parse_schedule_from_url(url, function=parse_schedule) 
+        if schedule_data: 
+            end = time.time() 
+            print(end - st)
         return schedule_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error parsing schedule: {str(e)}")

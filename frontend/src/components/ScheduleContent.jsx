@@ -1,7 +1,7 @@
 import ScheduleContainer from "./ScheduleContainer" // раньше был MainContent
 import Dropdown from "./Dropdown"
 import Tip from "./Tip"
-import { useState, useEffect, useContext } from "react"
+import { useEffect, useContext } from "react"
 import { Context } from "../context/Provider"
 import NotificationOuter from "./notifications/NotificationOuter"
 
