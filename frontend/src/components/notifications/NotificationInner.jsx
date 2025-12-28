@@ -5,7 +5,7 @@ const NotificationInner = (props) => {
 
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const timer = setTimeout( async () => {
       setNoTextSubmitError(false)
     }, 3000)
 

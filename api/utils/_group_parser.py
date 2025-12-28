@@ -114,7 +114,6 @@ if __name__ == '__main__':
 
 
 def parse_all_groups():
-    """для использования в main.py"""
     try:
         print("🌐 Запускаем браузер...")
         driver = webdriver.Chrome()

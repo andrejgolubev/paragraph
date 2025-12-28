@@ -52,37 +52,43 @@ const homeworkAPI = {
       })
   },
 
-  convertToDataValue: async ({groupNumber = '', date = ''}) => {
-
-    console.log('groupNumber selected in convertToDataValue :>> ', groupNumber);
+  convertToDataValue: async ({ groupNumber = "", date = "" }) => {
+    console.log("groupNumber selected in convertToDataValue :>> ", groupNumber)
 
     const params = new URLSearchParams({
       group_number: String(groupNumber),
       date: date,
     })
     const url = `http://127.0.0.1:8000/homework/convert?${params.toString()}`
-    console.log('url :>> ', url);
+    console.log("url :>> ", url)
     return fetch(url, {
       method: "GET",
     })
       .then((resp) => resp.json())
       .catch((e) => console.error(e))
-
   },
 
-  convertFromDataValue : async ({groupDataValue, dateDataValue}) => {
-
+  convertFromDataValue: async ({ groupDataValue, dateDataValue }) => {
     const params = new URLSearchParams({
       group_data_value: String(groupDataValue),
       date_data_value: dateDataValue,
     })
 
-    const resp = await fetch(`http://127.0.0.1:8000/homework/convert-back?${params.toString()}`, {
-      method: "GET",
-    })
-    const response =await resp.json()
+    const resp = await fetch(
+      `http://127.0.0.1:8000/homework/convert-back?${params.toString()}`,
+      {
+        method: "GET",
+      }
+    )
+    const response = await resp.json()
     return response
-  }
+  },
+
+  getAllGroups: async () => {
+    return fetch("http://127.0.0.1:8000/schedule/get-all-groups").then((resp) =>
+      resp.json()
+    ).catch(err => console.log(err))
+  },
 }
 
 export default homeworkAPI

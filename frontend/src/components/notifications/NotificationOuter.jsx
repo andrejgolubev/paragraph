@@ -6,7 +6,7 @@ const NotificationOuter = ({message, type='success'}) => {
 
   useEffect(() => {
     console.log('homeworkSaved :>> ', homeworkSaved);
-    const timer = setTimeout(() => {
+    const timer = setTimeout( async () => {
       setHomeworkSaved(false)
     }, 3000)
 

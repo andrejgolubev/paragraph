@@ -109,7 +109,7 @@ const HomeworkModal = ({
     useEffect(() => {
       if (homeworkText) {
         setInputValue(homeworkText)
-        setTimeout(() => {
+        setTimeout( async () => {
           homeworkText = ""
         }, 300)
       } else {

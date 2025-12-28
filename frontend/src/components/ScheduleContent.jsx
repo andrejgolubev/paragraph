@@ -17,7 +17,7 @@ const ScheduleContent = () => {
   } 
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const timer = setTimeout( async () => {
       setTipActive(true)
     }, 100)
     return () => clearTimeout(timer)

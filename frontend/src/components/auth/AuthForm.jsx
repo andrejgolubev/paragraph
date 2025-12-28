@@ -1,55 +1,196 @@
-import React from 'react'
+import React, { useRef, useCallback, useEffect } from "react"
+import { Link } from "react-router-dom"
+import { useForm } from "react-hook-form"
+import { DevTool } from "@hookform/devtools"
 
-import user_icon from '../../images/auth/person.png'
-import password_icon from '../../images/auth/password.png'
-import email_icon from '../../images/auth/email.png'
+import homeworkAPI from "../../api/homeworkAPI"
+import {latinToCyrillic} from '../../utils/converters.js'
 
+import user_icon from "../../images/auth/person.svg"
+import group_icon from "../../images/auth/group.svg"
+import password_icon from "../../images/auth/password.svg"
+import email_icon from "../../images/auth/email.svg"
 
-export const AuthForm = ({type}) => {
-  // будет переменная userAuthorized с СОСТОЯНИЕМ от которой будет зависеть type 
-  // так что такя реализация с let допустима 
-  let authType = '' 
-  let authTitle = ''
+export const AuthForm = ({ type }) => {
+  // будет переменная userAuthorized с СОСТОЯНИЕМ от которой будет зависеть type
+  // так что такя реализация с let допустима
+  let authType = ""
+  let authTitle = ""
 
-  if (type === 'sign-up') {
-    authType = 'Зарегестироваться' 
-    authTitle = 'Регистрация'
-  } else if (type === 'sign-in') {
-    authType = 'Войти' 
-    authTitle = 'Вход'
+  if (type === "sign-up") {
+    authType = "зарегистироваться"
+    authTitle = "регистрация"
+  } else if (type === "sign-in") {
+    authType = "войти"
+    authTitle = "добро пожаловать!"
   }
+
+  const form = useForm()
+  const { register, control, handleSubmit, formState  } = form
+  const { errors } = formState
   
+  const debounceTimerRef = useRef(null)
+
+  const onSubmit = (data) => {
+    console.log('form submitted\ndata:', data)
+  }
+
+  let groupAttempts = 0
+  const validateGroup = async (value) => {
+    // если поле пустое, валидация проходит (поле опционально)
+    if (!value || value.trim() === "") {
+      return true
+    }
+    
+    try {
+      const groups = await homeworkAPI.getAllGroups()
+      const groupExists = groups.some(
+        (elem) => {
+          const groupNumber = elem['group_number'] 
+          return (
+            groupNumber === value || 
+            groupNumber === latinToCyrillic(value))
+        }  
+
+      )
+      
+      if (!groupExists) {
+        groupAttempts++
+        return groupAttempts < 5
+          ? `группа не найдена, либо не существует.`
+          : "введите группу в точности, как на официальном сайте расписания."
+      }
+      
+      return true
+    } catch (error) {
+      console.error("Ошибка при проверке группы:", error)
+      return "ошибка при проверке группы"
+    }
+  }
+
+  const groupValidator = useCallback((value) => {
+    if (!value || value.trim() === "") {
+      return true
+    }
+
+    // очищаем предыдущий таймер
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current)
+    }
+
+    return new Promise((resolve) => {
+      debounceTimerRef.current = setTimeout(async () => {
+        try {
+          const result = await validateGroup(value)
+          resolve(result)
+        } catch (error) {
+          resolve("ошибка при проверке группы")
+        }
+      }, 300)
+    })
+  }, []) // пустые зависимости т.к. функция создается один раз
+
+  useEffect(() => {
+    return () => { // cleanup при размонтировании
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+      }
+    }
+  }, [])
+  
+  const requireText = 'это поле надо бы заполнить.'
 
   return (
-    <div className='container'>
-      <div className="container__header">
-        <div className="text">{authTitle}</div>
-        <div className="underline"></div>
-      </div>
-      <div className="container__inputs">
-        {type === 'sign-up' && (<div className="input">
-          <img src={user_icon} alt="user icon" />
-          <input type="text" placeholder='Имя'/>
-        </div>) }
-        <div className="input">
-          <img src={email_icon} alt="email icon" />
-          <input type="email" placeholder='Электронная почта'/>
+    <div className="auth">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        <div className="auth__header">
+          <div className="text">{authTitle}</div>
         </div>
-        <div className="input">
-          <img src={password_icon} alt="password icon" />
-          <input type="password" placeholder='Пароль' />
+        <div className="auth__inputs">
+          {type === "sign-up" && (
+            <>
+              <div className="input">
+                <img src={user_icon} alt="user icon" />
+                <input
+                  type="text"
+                  id="username"
+                  placeholder="имя"
+                  {...register("username", {
+                    required: requireText
+                  })}
+                />
+                <p className='auth__error'>{errors.username?.message}</p>
+              </div>
+              <div className="input">
+                <img src={group_icon} alt="user icon" />
+                <input
+                  type="text"
+                  id="group"
+                  placeholder="группа (опционально)"
+                  {...register("group", 
+                    {
+                      validate: {
+                        validateGroup: (value) => groupValidator(value)
+                      }
+                  }
+                )}
+                />
+                <p className='auth__error'>{errors.group?.message}</p>
+              </div>
+            </>
+          )}
+          <div className="input">
+            <img src={email_icon} alt="email icon" />
+            <input
+              type="email"
+              id="email"
+              placeholder="электронная почта"
+              {...register("email", {
+                required: requireText, 
+                pattern: {
+                  value: /^\S+@\S+\.\S+$/,
+                  message: "неправильный формат электронной почты."
+                }
+              })}
+              />
+              <p className='auth__error'>{errors.email?.message}</p>
+          </div>
+          <div className="input">
+            <img src={password_icon} alt="password icon" />
+            <input
+              type="password"
+              id="password"
+              placeholder="пароль"
+              {...register("password", {
+                required: requireText
+              }) }
+            />
+            <p className='auth__error'>{errors.password?.message}</p>
+          </div>
         </div>
-      </div>
-      
-      {type === 'sign-in' &&
-      (<div className="forgot-password">Забыли пароль?<span> Нажмите сюда</span></div>)}
-      <div className="container__submit">
-        <div className="container__submit__btn">
-          {authType}
+        {type === "sign-in" && (
+          <div className="forgot-password">
+            <span>забыли пароль?</span>
+          </div>
+        )}
+        <div className="auth__submit">
+          <button className="auth__submit__btn">{authType}</button>
         </div>
-      </div>
+        {type === "sign-in" ? (
+          <Link to="/sign-up">
+            <div>
+              нет аккаунта? <span>зарегистируйтесь</span>
+            </div>
+          </Link>
+        ) : (
+          <Link to="/sign-in">
+            <div>
+              уже есть аккаунт? <span>войдите</span>
+            </div>
+          </Link>
+        )}
+      </form>
+      <DevTool control={control} />
     </div>
   )
 }
-
-
