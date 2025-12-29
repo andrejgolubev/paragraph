@@ -26,7 +26,8 @@ export const AuthForm = ({ type }) => {
   }
 
   const form = useForm()
-  const { register, control, handleSubmit, formState  } = form
+
+  const { register, control, handleSubmit, formState } = form
   const { errors } = formState
   
   const debounceTimerRef = useRef(null)
@@ -68,8 +69,8 @@ export const AuthForm = ({ type }) => {
     }
   }
 
-  const groupValidator = useCallback((value) => {
-    if (!value || value.trim() === "") {
+  const groupValidator = (value) => {
+    if (!value.trim()) {
       return true
     }
 
@@ -88,7 +89,7 @@ export const AuthForm = ({ type }) => {
         }
       }, 300)
     })
-  }, []) // пустые зависимости т.к. функция создается один раз
+  } 
 
   useEffect(() => {
     return () => { // cleanup при размонтировании
@@ -150,7 +151,8 @@ export const AuthForm = ({ type }) => {
                 pattern: {
                   value: /^\S+@\S+\.\S+$/,
                   message: "неправильный формат электронной почты."
-                }
+                }, 
+                // validate : обязательно валидация !! 
               })}
               />
               <p className='auth__error'>{errors.email?.message}</p>

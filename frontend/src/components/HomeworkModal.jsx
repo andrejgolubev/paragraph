@@ -69,18 +69,18 @@ const HomeworkModal = ({
 
     const handleHomeworkSubmit = (event) => {
       event.preventDefault()
-      if (!inputValue) {
+      const homeworkTextClean = inputValue.trim()
+      if (!homeworkTextClean) {
         setNoTextSubmitError(true)
         return
       }
 
-      const homeworkText = inputValue
 
       homeworkAPI.saveHomework(
         groupDataValue,
         dateDataValue,
         lessonIndex,
-        homeworkText
+        homeworkTextClean
       )
 
       dialog.close() // нативное закрытие (обязательно!!)

@@ -14,7 +14,8 @@
     gap: 10px;
     margin: auto;
     background: white;
-    width: 520px; 
+    width: 520px;
+    
     padding-bottom: 30px;
     
     border-radius: 8px;
@@ -92,7 +93,7 @@
             color: $grey;
             background-color: #ebebeb;
             border-radius: 32px;
-            border: 2px solid $light-blue;
+            border: 2px solid rgb(232, 243, 255);
             font-size: 24px;
             font-weight: 700;
             cursor: pointer;
@@ -113,7 +114,6 @@
         width: 150px;
     }
 }
-
 
 
 
