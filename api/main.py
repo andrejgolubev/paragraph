@@ -1,11 +1,12 @@
 from api.db.refresh_db import load_groups_and_dates
 
 from api.db.database import get_db
-from api.routers import schedule, homework, users, auth
+from api.routers import schedule, homework, users
 from api.parser.group_parser import parse_groups
 from api.parser.date_parser import parse_dates
 from api.parser.utils import convert_date
 from api.services.data_service import data_service
+from api.auth.utils import verify_admin_api_key
 
 from fastapi import FastAPI, Depends, Request, HTTPException, status, Header
 from fastapi.responses import HTMLResponse
@@ -13,7 +14,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from api.routers.auth import oauth2_scheme
 from sqlalchemy.orm import selectinload
 from api.db.models import Group, Date, GroupDateAssociation
 import os
@@ -22,8 +22,9 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
+from api.auth.demo_jwt_auth import router as demo_user_router
 
-app = FastAPI(title="PROGINZH",)
+app = FastAPI(title="параграф")
 
 app.add_middleware(
     CORSMiddleware,
@@ -46,11 +47,11 @@ app.include_router(
     users.user_router,
     prefix="/user",
     tags=["users"],
-    # dependencies=[Depends(oauth2_scheme)],
 )
 app.include_router(schedule.schedule_router)
 app.include_router(homework.homework_router)
 
+app.include_router(demo_user_router)
 
 
 # Главная страница - отдаем базовый HTML
@@ -62,7 +63,7 @@ async def index():
 
 
 
-@app.post("/initial", dependencies=[Depends(auth.verify_admin_api_key)])
+@app.post("/initial", dependencies=[Depends(verify_admin_api_key)])
 async def load_initial_groups_and_dates(db: AsyncSession = Depends(get_db)):
     """FOR SUPERUSER ONLY"""
     await load_groups_and_dates(groups=parse_groups(), dates=parse_dates(), db=db)
@@ -70,7 +71,7 @@ async def load_initial_groups_and_dates(db: AsyncSession = Depends(get_db)):
 
 
 
-@app.get('/get-all-dates-related-to-group', dependencies=[Depends(auth.verify_admin_api_key)])
+@app.get('/get-all-dates-related-to-group', dependencies=[Depends(verify_admin_api_key)])
 async def get_all_dates_related_to_group(group_number: str, db: AsyncSession = Depends(get_db)):
     """Принимает фактическуюгруппу. FOR SUPERUSER ONLY"""
     group = await db.scalars(select(Group).options(selectinload(Group.dates)).where(Group.group_number == group_number))
@@ -88,7 +89,7 @@ async def get_all_dates_related_to_group(group_number: str, db: AsyncSession = D
     }   
 
     
-@app.get('/get-all-groups-related-to-date', dependencies=[Depends(auth.verify_admin_api_key)])
+@app.get('/get-all-groups-related-to-date', dependencies=[Depends(verify_admin_api_key)])
 async def get_all_groups_related_to_date(date_input: str, db: AsyncSession = Depends(get_db)):
     """Принимает дату в формате (xx.xx.xxxx) или (xxxx-xx-xx). FOR SUPERUSER ONLY. """
     if '.' in date_input: date_input = convert_date(date_input) 

@@ -1,9 +1,8 @@
 .env 
 .git
-docker-compose.yml
 .dockerignore
-settings.py
-alembic.ini 
 pytest.ini
 package-lock.json 
 package.json 
+certs/
+ideas/

@@ -5,6 +5,8 @@ import { useContext } from "react"
 import { Context } from "../context/Provider"
 import homeworkAPI from "../api/homeworkAPI"
 import { Mosaic } from "react-loading-indicators"
+import { getDateValueFromDisplay, getLessonTypeClass } from "../utils/converters"
+import NotificationOuter from "./notifications/NotificationOuter"
 
 let lessonInfoGlobal = {}
 
@@ -19,7 +21,7 @@ const ScheduleContainer = () => {
   const [homeworkUpdated, setHomeworkUpdated] = useState("")
   const [year, setYear] = useState(new Date().getFullYear())
 
-  
+  console.log('Перерисовка ScheduleCOnt')
   useEffect(() => {
     console.log("ScheduleContainer - текущие значения:", {
       groupDataValue,
@@ -33,31 +35,9 @@ const ScheduleContainer = () => {
     }
   }, [dateDataValue])
 
-  const getDateValueFromDisplay = (dateDisplay) => {
-    const months = {
-      января: "01",
-      февраля: "02",
-      марта: "03",
-      апреля: "04",
-      мая: "05",
-      июня: "06",
-      июля: "07",
-      августа: "08",
-      сентября: "09",
-      октября: "10",
-      ноября: "11",
-      декабря: "12",
-    }
-
-    const [day, month] = dateDisplay.split(" ")
-    const monthNumber = months[month]
-    
-    
-    return `${year}-${monthNumber}-${day.padStart(2, "0")}`
-  }
-
   const scheduleDateDataValue = getDateValueFromDisplay(
-    scheduleData?.days?.[0]?.date || ""
+    scheduleData?.days?.[0]?.date || "" , 
+    year
   )
   
   
@@ -161,15 +141,7 @@ const ScheduleContainer = () => {
     return isCurrentWeekday && isCurrentDate ? "active-day" : ""
   }
 
-  // Получение класса для типа занятия
-  const getLessonTypeClass = (type) => {
-    const typeMap = {
-      "Лек.": "lecture",
-      "Лаб.": "lab",
-      "Упр.": "practice",
-    }
-    return typeMap[type] || "default"
-  }
+  
 
   // Форматирование текста занятия
   const formatLessonText = (lesson) => {
@@ -313,14 +285,14 @@ const ScheduleContainer = () => {
 
   if (error) {
     return ( 
-      // нормальный интерфейс ошибки сюда
       <div className="schedule-container error">
         <div className="tip active">
           <button 
           style={{background: '#FFFFFF', padding: '4px', border: '2px rgb(207, 222, 227) dashed', position: 'absolute', 'border-radius': '8px'}} 
           onClick={loadSchedule}>
             <p>{error}</p>
-            <p>ой! нажмите сюда, я постараюсь всё исправить</p>
+            <p>произошла ошибка. нажмите сюда, </p>
+            <p>чтобы попробовать снова</p>
           </button>
         </div>
       </div>

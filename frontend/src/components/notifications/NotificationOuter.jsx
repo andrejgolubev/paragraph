@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react"
+import { useEffect, useContext } from "react"
 import { Context } from "../../context/Provider"
 
 const NotificationOuter = ({message, type='success'}) => {

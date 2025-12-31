@@ -1,46 +1,65 @@
-from fastapi import Depends, HTTPException, status, APIRouter, Query
 from api.db.database import get_db
-from api.db.models import User
-from api.db.schemas import UserResponse, UserRegistration
-from sqlalchemy import select
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from sqlalchemy.ext.asyncio import AsyncSession
-from api.routers.auth import (
-    create_access_token,
-    create_refresh_token,
-    verify_password,
-    hash_password,
-    verify_admin_api_key,
+from api.db.models import Group, User
+from api.db.schemas import UserResponse
+from api import settings
+from api.auth.utils import encode_jwt, hash_password, validate_password
+
+from fastapi import Depends, Form, HTTPException, status, APIRouter, Query
+from fastapi.security import (
+    HTTPBasicCredentials,
+    OAuth2PasswordBearer,
+    OAuth2PasswordRequestForm,
 )
+from api.auth.utils import verify_admin_api_key
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 import jwt
-import settings
 
 user_router = APIRouter()
-security = HTTPBasic()
 
 
 @user_router.post("/register/", response_model=UserResponse)
-async def register(user: UserRegistration, db: AsyncSession = Depends(get_db)):
-    """для регистрации пользователя саморучно. использует UserRegistration, наследующую от UserCreate.
-    не имеет функц. задавать role, rating."""
+async def register(
+    username: str = Form(),
+    email: str = Form(),
+    password: str = Form(),
+    group_number: str = Form(),
+    db: AsyncSession = Depends(get_db),
+):
+    """для регистрации пользователя саморучно"""
 
-    result = await db.scalars(select(User).where(User.name == user.name))
-    existing_user = result.first()
+    result = await db.scalars(select(User).where(User.email == email))
 
-    if existing_user:
+    if result.first():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Пользователь с таким именем уже существует.",
+            detail="пользователь с такой почтой уже существует.",
         )
 
-    user.password = hash_password(user.password)
+    group_result = await db.scalars(select(Group).where(Group.group_number == group_number))
+    
 
-    db_user = User(**user.model_dump())
+    db_user = User(
+        name=username,
+        email=email,
+        password=hash_password(password),
+        role='student',
+        active=True, 
+        group_id=group_result.first().id #будет None если группа не нашлась и в БД будет null 
+    )
+
     db.add(db_user)
     await db.commit()
     await db.refresh(db_user)
 
-    return db_user
+    return dict(
+        id=db_user.id,
+        name=db_user.name,
+        email=db_user.email,
+        role=db_user.role,
+        active=db_user.active,
+        group_id=db_user.group_id
+    )
 
 
 @user_router.post("/make-admin/", dependencies=[Depends(verify_admin_api_key)])
@@ -77,55 +96,40 @@ async def make_admin(
 
 @user_router.post("/login", name="login")
 async def login(
-    form_data: HTTPBasicCredentials = Depends(security),
+    email: str = Form(),
+    password: str = Form(),
     db: AsyncSession = Depends(get_db),
 ):
-    """
-    Аутентифицирует пользователя и возвращает access_token и refresh_token.
-    create_access_token и create_refresh_token создают JWT-токены
-    с одинаковым payload (sub, role, id), но разным временем истечения (exp)
-    """
-    result = await db.scalars(select(User).where(User.name == form_data.username))
-    user = result.first()
-    if not user or not verify_password(form_data.password, user.password):
+
+    result = await db.scalars(select(User).where(User.email == email))
+    if not (user:=result.first()) or not validate_password(password, user.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect nickname or password",
+            detail="неверный email или пароль",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    access_token = create_access_token(
-        data={"sub": user.name, "role": user.role, "id": user.id}
+    access_token = encode_jwt(
+        payload={"sub": user.email, "role": user.role, "username": user.name}
     )
-    refresh_token = create_refresh_token(
-        data={"sub": user.name, "role": user.role, "id": user.id}
-    )
+    
 
     return {
         "username": user.name,
         "access_token": access_token,
-        "refresh_token": refresh_token,
+        # "refresh_token": refresh_token,
         "token_type": "bearer",
     }
 
 
 @user_router.get("/get-role", name="role")
 async def get_user_role(username: str, db: AsyncSession = Depends(get_db)):
-    """получает роль : студент или админ"""
-    user = await db.scalars(select(User).where(User.name == username))
-    user_first = user.first()
-    if not user_first:
+    db_user = await db.scalars(select(User).where(User.name == username))
+    if not (user:= db_user.first()):
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="username doesn`t exist"
-        )
-    role = user_first.role  # type:ignore
-    group = 'unknown'
-
-    if "admin" in role:
-        group = role[role.index("admin") + 5 :]
-        role = "admin"
-
-    return {"role": role, "group": group}
+            status_code=status.HTTP_404_NOT_FOUND, detail="username doesn`t exist")
+    
+    return {"role": user.role}
 
 
 @user_router.post("/refresh-token")
@@ -143,18 +147,18 @@ async def refresh_token(refresh_token: str, db: AsyncSession = Depends(get_db)):
             refresh_token, settings.SECRET_KEY or "", algorithms=[settings.ALGORITHM]
         )
         # Автоматически проверяется exp! Если токен просрочен, здесь выбросится исключение.
-        name: str = payload.get("sub")
-        if not name:
+        email: str = payload.get("sub")
+        if not email:
             raise credentials_exception
     except jwt.exceptions:
         raise credentials_exception
-    result = await db.scalars(select(User).where(User.name == name))
+    result = await db.scalars(select(User).where(User.email == email))
     user = result.first()
     if not user:
         raise credentials_exception
-    access_token = create_access_token(
+    access_token = encode_jwt(
         data={
-            "sub": user.name,
+            "sub": user.email,
             "role": user.role,
             "id": user.id,
         }

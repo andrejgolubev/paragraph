@@ -1,3 +1,5 @@
+from signal import default_int_handler
+from urllib.parse import unquote
 from sqlalchemy.orm import mapped_column as mc, Mapped, relationship
 from sqlalchemy import (
     ForeignKey,
@@ -13,9 +15,11 @@ class User(Base):
 
     id: Mapped[int] = mc(primary_key=True, index=True)
     name: Mapped[str] = mc(nullable=False)
+    email: Mapped[str] = mc(nullable=False, unique=True)
     password: Mapped[str] = mc(nullable=False)
     role: Mapped[str] = mc(nullable=False, default="student")
-    rating: Mapped[int] = mc(nullable=False, default=0)
+    active: Mapped[bool] = mc(nullable=False, default=True)
+    
 
 
 
@@ -36,7 +40,8 @@ class GroupDateAssociation(Base):
         #     "dates_id",
         #     name="index_unique_group_date",
         # ),
-    )  # благодаря UniqueConstraint все комбинации group_id и dates_id будут УНИКАЛЬНЫМИ в ассоциативной таблице
+    )  # благодаря UniqueConstraint все комбинации group_id и dates_id будут УНИКАЛЬНЫМИ в ассоциативной таблице 
+    # (что для моего проекта оказалось неверным в итоге)
 
     id: Mapped[int] = mc(primary_key=True)
     group_id: Mapped[int] = mc(ForeignKey("groups.id"), nullable=False)

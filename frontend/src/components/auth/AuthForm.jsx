@@ -34,6 +34,7 @@ export const AuthForm = ({ type }) => {
 
   const onSubmit = (data) => {
     console.log('form submitted\ndata:', data)
+    
   }
 
   let groupAttempts = 0

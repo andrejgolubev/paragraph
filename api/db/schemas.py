@@ -1,6 +1,5 @@
-# BLOCK WITH API MODELS #
 from fastapi import HTTPException
-from pydantic import BaseModel, Field, field_validator, ConfigDict
+from pydantic import BaseModel, Field, EmailStr, field_validator, ConfigDict
 from typing import Optional
 
 
@@ -11,26 +10,11 @@ class HomeworkRequest(BaseModel):
     homework: str
 
 
-class UserRegistration(BaseModel):
-    name: str = Field(min_length=3, max_length=40)
-    password: str = Field(min_length=8, max_length=40)
+# class UserRegistration(BaseModel):
+#     email: EmailStr 
+#     password: str = Field(min_length=8, max_length=40)
+   
 
-    model_config = ConfigDict(from_attributes=True)
-
-    @field_validator("name")
-    def validate_name(cls, name: str):
-        if not name.replace(' ', '').isalnum():
-            raise HTTPException(detail="Name can only contain letters, numbers and spaces", status_code=400)
-        return name.strip()
-
-        
-
-class UserCreate(UserRegistration): 
-    group_id: int | None = None
-    role: str = 'student'
-    rating: float = Field(default=0.0, ge=0.0)
-
-    model_config = ConfigDict(from_attributes=True)
 
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -38,7 +22,6 @@ class UserResponse(BaseModel):
     id: int
     name: str
     role: str
-    rating: float
     group_id: int | None = None
     group: Optional["GroupResponse"] = None
 
@@ -69,3 +52,31 @@ class OnlyDateResponse(BaseModel):
 
 class GroupSelection(BaseModel):
     group_data_value: str
+
+
+# users 
+
+class UserSchema(BaseModel): 
+    name: str 
+    email: EmailStr
+    group_id: str | None = None
+    password: str 
+    active: bool = True
+
+    model_config = ConfigDict(from_attributes=True)
+
+    # @field_validator("username")
+    # def validate_name(cls, name: str):
+    #     if not name.replace(' ', '').isalnum():
+    #         raise HTTPException(detail="Name can only contain letters, numbers and spaces", status_code=400)
+    #     if len(name) > 50: 
+    #         raise HTTPException(detail='Name is too long', status_code=400)
+    #     if len(name) < 3: 
+    #         raise HTTPException(detail='Name is too short', status_code=400)
+        
+    #     return name.strip()
+
+
+class TokenInfo(BaseModel): 
+    access_token: str 
+    token_type: str
