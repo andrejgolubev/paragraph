@@ -65,30 +65,28 @@ async def register(
 
 @user_router.post("/make-admin/", dependencies=[Depends(verify_admin_api_key)])
 async def make_admin(
-    response: Response,
-    username: str = Query(alias="who to make an admin?"),
-    admin_type: str = Query(alias="For example: admin543, adminКрасноеЗнамя"),
+    email: str = Query(alias="почта того, кого сделать админом"),
+    groups_to_admin: str = Query(alias="Например: 543, 5413. Можно указать несколько через запятую."),
     db: AsyncSession = Depends(get_db),
 ):
     """делает админом :O   (или наоборот)"""
 
-    user = await db.scalars(select(User).where(User.name == username))
+    user = await db.scalars(select(User).where(User.email == email))
     user = user.first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="пользователя с таким именем не существует.",
+            detail="пользователя с такой почтой не существует.",
         )
 
-    user.role = admin_type
+    user.role = 'admin.' + '.'.join(groups_to_admin.split(','))
 
     db.add(user)
     await db.commit()
     await db.refresh(user)
 
     return {
-        "message": f"{user.name}`s role got updated.",
-        "username": user.name,
+        "message": f"{user.name}`s role is now {user.role}",
         "role": user.role,
     }
 

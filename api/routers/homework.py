@@ -6,10 +6,9 @@ from api.db.database import get_db
 from api.db.models import Group, Date, GroupDateAssociation
 from datetime import datetime
 from api.db.schemas import HomeworkRequest
-    
+
 homework_router = APIRouter(tags=["Homework"], prefix="/homework")
 router = homework_router
-
 
 
 @router.post("/save")
@@ -19,12 +18,24 @@ async def save_homework(
     homework_request: HomeworkRequest = Body(),
     db: AsyncSession = Depends(get_db),
 ):
-    
+
+    if not user:
+        raise HTTPException(status_code=401, detail="пожалуйста, войдите в аккаунт")
+
+    if "admin" not in (role := user["role"]):
+        raise HTTPException(status_code=403, detail="недостаточно прав")
+
     group_data_value = homework_request.group_data_value
     date_data_value = homework_request.date_data_value
     lesson_index = homework_request.lesson_index
     homework = homework_request.homework
-    print(user)
+
+    moderated_group_numbers = role.split(".")[1:]
+    moderated_group_datavalues = [await get_group_datavalue(group_number, db) for group_number in moderated_group_numbers]
+    if not any([group_dv for group_dv in moderated_group_datavalues if group_data_value == group_dv]): 
+        raise HTTPException(status_code=403, detail="недостаточно прав для управления д/з этой группы.")
+        
+
     try:
         group_result = await db.scalars(
             select(Group).where(Group.data_value == group_data_value)
@@ -56,7 +67,7 @@ async def save_homework(
                 dates_id=date.id,
                 lesson=lesson_index,
                 homework=homework,
-                updated=datetime.now()
+                updated=datetime.now(),
             )
             db.add(association)
         else:
@@ -64,81 +75,96 @@ async def save_homework(
             association.updated = datetime.now()
 
         public_cookies = {
-            'group_data_value': group_data_value, 
-            'date_data_value': date_data_value,
+            "group_data_value": group_data_value,
+            "date_data_value": date_data_value,
         }
 
         for key, value in public_cookies.items():
             response.set_cookie(
-            key=key, 
-            value=value, 
-            httponly=False, # тк JS может читать эти куки чтоб в соответствии с выбранной группой и датой пользователем сразу отображалась нужная таблица
-            secure=True, # для htpps 
-            samesite='strict', # защита от csrf 
-            # max_age=
-        )
-
-        
+                key=key,
+                value=value,
+                httponly=False,  # тк JS может читать эти куки чтоб в соответствии с выбранной группой и датой пользователем сразу отображалась нужная таблица
+                secure=True,  # для htpps
+                samesite="strict",  # защита от csrf
+                # max_age=
+            )
 
         await db.commit()
 
-        return {"status": "success", "message": "Homework saved"}
+        return {"status": "Homework saved", "user": user}
 
     except Exception as e:
         await db.rollback()
         raise HTTPException(status_code=500, detail=f"Error saving homework: {str(e)}")
 
 
-@router.get('/convert')
+async def get_group_datavalue(
+    group_number: str,
+    db: AsyncSession = Depends(get_db),
+):
+    group_result = await db.scalars(
+        select(Group).where(Group.group_number == group_number)
+    )
+    if not (group_number := group_result.first().data_value):
+        return ""  # в savehomework вообще не пойдет по ветке этого if при условии что группы не назначены несуществующие админу
+        # а вот с другими если использовать то фиг знает. ну она в принципе то туда только и нужна
+    return group_number
+
+
+@router.get("/convert")
 async def convert_to_datavalue(
     group_number: str | None = None,
     date: str | None = None,
     db: AsyncSession = Depends(get_db),
-): 
+):
     """ПЕРЕВОДИТ группы и даты в data_value-формат"""
 
     group_result = await db.scalars(
         select(Group).where(Group.group_number == group_number)
     )
     db_group = group_result.first()
-    
-    date_result = await db.scalars(
-        select(Date).where(Date.date == date)
-    )
 
-    db_date = date_result.first() 
+    date_result = await db.scalars(select(Date).where(Date.date == date))
 
-    if not db_group and not db_date: 
-        raise HTTPException(status_code=404, 
-        detail="at least group or date has to be selected (or they were just not found)")
-    
-    return {'date_data_value': db_date.data_value if db_date else "", 
-    'group_data_value': db_group.data_value if db_group else ""}
+    db_date = date_result.first()
+
+    if not db_group and not db_date:
+        raise HTTPException(
+            status_code=404,
+            detail="at least group or date has to be selected (or they were just not found)",
+        )
+
+    return {
+        "date_data_value": db_date.data_value if db_date else "",
+        "group_data_value": db_group.data_value if db_group else "",
+    }
 
 
-@router.get('/convert-back')
+@router.get("/convert-back")
 async def convert_from_datavalue(
     group_number: str | None = None,
     date: str | None = None,
     db: AsyncSession = Depends(get_db),
-): 
+):
     """ПЕРЕВОДИТ группы и даты из data_value-формата"""
 
     group_result = await db.scalars(
         select(Group).where(Group.group_number == group_number)
     )
     db_group = group_result.first()
-    
-    date_result = await db.scalars(
-        select(Date).where(Date.date == date)
-    )
 
-    db_date = date_result.first() 
+    date_result = await db.scalars(select(Date).where(Date.date == date))
 
-    if not db_group and not db_date: 
+    db_date = date_result.first()
+
+    if not db_group and not db_date:
         return {"failure": "group and date not selected or not found"}
-    
-    return {'date_data_value': db_date.data_value if db_date else "", 'group_data_value': db_group.data_value if db_group else ""}
+
+    return {
+        "date_data_value": db_date.data_value if db_date else "",
+        "group_data_value": db_group.data_value if db_group else "",
+    }
+
 
 @router.get("/get")
 async def get_homework(
@@ -170,11 +196,13 @@ async def get_homework(
                 GroupDateAssociation.lesson == lesson_index,
             )
         )
-        association = association_result.first() 
+        association = association_result.first()
 
         return {
             "homework": association.homework if association else "",
-            "updated": association.updated if association.updated else "" #type:ignore
+            "updated": (
+                association.updated if association.updated else ""
+            ),  # type:ignore
         }
 
     except Exception as e:
