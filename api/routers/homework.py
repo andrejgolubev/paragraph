@@ -21,6 +21,8 @@ async def save_homework(
     if not user:
         raise HTTPException(status_code=401, detail="пожалуйста, войдите в аккаунт")
 
+    print(f'{user =}')
+
     if "admin" not in (role := user["role"]):
         raise HTTPException(status_code=403, detail="недостаточно прав")
 
@@ -31,6 +33,7 @@ async def save_homework(
 
     moderated_group_numbers = role.split(".")[1:]
     moderated_group_datavalues = [await get_group_datavalue(group_number, db) for group_number in moderated_group_numbers]
+    print(f'{moderated_group_datavalues = }')
     if not any([group_dv for group_dv in moderated_group_datavalues if group_data_value == group_dv]): 
         raise HTTPException(status_code=403, detail="недостаточно прав для управления д/з этой группы.")
         

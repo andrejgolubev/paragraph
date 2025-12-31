@@ -3,7 +3,7 @@ from nt import access
 
 import jwt
 from api.auth.demo_jwt_auth import get_current_active_auth_user
-from api.auth.validation import get_current_token_payload
+from api.auth.validation import get_access_token_payload, get_refresh_token_payload
 from api.db.database import get_db
 from api.db.models import Group, User
 from api.db.schemas import UserResponse
@@ -79,7 +79,7 @@ async def make_admin(
     ),
     db: AsyncSession = Depends(get_db),
 ):
-    """делает админом :O   (или наоборот)"""
+    """делает админом :O"""
 
     user = await db.scalars(select(User).where(User.email == email))
     user = user.first()
@@ -180,10 +180,11 @@ async def login(
 #     return {'access_token': access_token}
 
 
+
 @router.post("/refresh-token")
 async def refresh_token(
     response: Response,
-    payload: dict = Depends(get_current_token_payload), 
+    payload: dict = Depends(get_refresh_token_payload), 
     db: AsyncSession = Depends(get_db)):
     """
     Обновляет access_token с помощью refresh_token.
@@ -203,6 +204,7 @@ async def refresh_token(
     user = result.first()
     if not user:
         raise credentials_exception
+
     access_token = encode_jwt(
         payload={
             "sub": user.email,

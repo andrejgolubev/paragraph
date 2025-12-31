@@ -39,8 +39,6 @@ async def validate_auth_user( # ФУНКЦИЯ ПЕРЕЕХАЛА CМОТРИ us
 
 
 
-
-
 async def get_current_active_auth_user(
     user: User = Depends(get_current_auth_user),
     db: AsyncSession = Depends(get_db),
