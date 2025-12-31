@@ -11,9 +11,9 @@ def encode_jwt(
     private_key: str = settings.auth_jwt.private_key_path.read_text(),
     algorithm: str = settings.auth_jwt.algorithm,
     expire_minutes: int = settings.auth_jwt.access_token_expire_minutes,
-    expire_timedelta: timedelta|None = None,
+    expire_timedelta: timedelta | None = None,
 ):
-
+    
     now = datetime.now(tz=UTC)
     expire = now + expire_timedelta if expire_timedelta else now + timedelta(minutes=expire_minutes)
     payload |= {
@@ -47,6 +47,9 @@ def validate_password(
         password=password.encode('utf-8'),
         hashed_password=hashed_password.encode('utf-8'),
     )
+
+
+
 
 
 

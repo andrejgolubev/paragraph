@@ -27,7 +27,7 @@ const homeworkAPI = {
     })
 
     // console.log('http://127.0.0.1:8000/homework/get?${params.toString() :>> ', `http://127.0.0.1:8000/homework/get?${params.toString()}`)
-    return fetch(`http://127.0.0.1:8000/homework/get?${params.toString()}`, {
+    return fetch(`${BASE_URL}/homework/get?${params.toString()}`, {
       method: "GET",
     })
       .then((resp) => resp.json())
@@ -35,7 +35,7 @@ const homeworkAPI = {
   },
 
   loadGroups: async function loadGroups() {
-    return fetch("http://127.0.0.1:8000/schedule/get-all-groups")
+    return fetch(`${BASE_URL}/schedule/get-all-groups`)
       .then((response) => response.json())
       .catch((err) => {
         console.log("Error loading dates:", err)
@@ -44,7 +44,7 @@ const homeworkAPI = {
   },
 
   loadDates: async function loadDates() {
-    return fetch("http://127.0.0.1:8000/schedule/get-all-dates")
+    return fetch(`${BASE_URL}/schedule/get-all-dates`)
       .then((response) => response.json())
       .catch((err) => {
         console.log("Error loading dates:", err)
@@ -59,7 +59,7 @@ const homeworkAPI = {
       group_number: String(groupNumber),
       date: date,
     })
-    const url = `http://127.0.0.1:8000/homework/convert?${params.toString()}`
+    const url = `${BASE_URL}/homework/convert?${params.toString()}`
     console.log("url :>> ", url)
     return fetch(url, {
       method: "GET",
@@ -75,7 +75,7 @@ const homeworkAPI = {
     })
 
     const resp = await fetch(
-      `http://127.0.0.1:8000/homework/convert-back?${params.toString()}`,
+      `${BASE_URL}/homework/convert-back?${params.toString()}`,
       {
         method: "GET",
       }
@@ -85,7 +85,7 @@ const homeworkAPI = {
   },
 
   getAllGroups: async () => {
-    return fetch("http://127.0.0.1:8000/schedule/get-all-groups").then((resp) =>
+    return fetch(`${BASE_URL}/schedule/get-all-groups`).then((resp) =>
       resp.json()
     ).catch(err => console.log(err))
   },

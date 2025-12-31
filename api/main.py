@@ -2,7 +2,7 @@ from api.db.refresh_db import load_groups_and_dates
 
 from api.db.database import get_db
 from api.routers import schedule, homework
-from api.auth import users
+from api.auth.users import router as user_router
 from api.parser.group_parser import parse_groups
 from api.parser.date_parser import parse_dates
 from api.parser.utils import convert_date
@@ -10,15 +10,11 @@ from api.services.data_service import data_service
 from api.auth.utils import verify_admin_api_key
 
 from fastapi import FastAPI, Depends, HTTPException
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from api.db.models import Group, Date
 
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="параграф")
@@ -35,14 +31,7 @@ app.add_middleware(
     allow_headers=["*"],  # Разрешить все заголовки
 )
 
-
-app.mount("/static", StaticFiles(directory="templates/static"), name="static") # монтируем CSS, js, png etc
-
-app.include_router(
-    users.user_router,
-    prefix="/user",
-    tags=["users"],
-)
+app.include_router(user_router)
 app.include_router(schedule.schedule_router)
 app.include_router(homework.homework_router)
 

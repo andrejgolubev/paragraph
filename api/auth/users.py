@@ -1,24 +1,32 @@
+from email.policy import HTTP
+from nt import access
+
+import jwt
 from api.auth.demo_jwt_auth import get_current_active_auth_user
+from api.auth.validation import get_current_token_payload
 from api.db.database import get_db
 from api.db.models import Group, User
 from api.db.schemas import UserResponse
 from api import settings
-from api.auth.utils import encode_jwt, hash_password, validate_password, verify_admin_api_key
+from api.auth.utils import (
+    encode_jwt,
+    hash_password,
+    validate_password,
+    verify_admin_api_key,
+)
 
 from fastapi import Depends, Form, HTTPException, Response, status, APIRouter, Query
-from fastapi.security import (
-    HTTPBasicCredentials,
-    OAuth2PasswordBearer,
-    OAuth2PasswordRequestForm,
-)
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-import jwt
+from .helpers import create_access_token, create_refresh_token
 
-user_router = APIRouter()
+router = APIRouter(
+    prefix="/user",
+    tags=["users"],
+)
 
 
-@user_router.post("/register", response_model=UserResponse)
+@router.post("/register", response_model=UserResponse)
 async def register(
     username: str = Form(),
     email: str = Form(),
@@ -63,10 +71,12 @@ async def register(
     )
 
 
-@user_router.post("/make-admin/", dependencies=[Depends(verify_admin_api_key)])
+@router.post("/make-admin/", dependencies=[Depends(verify_admin_api_key)])
 async def make_admin(
     email: str = Query(alias="почта того, кого сделать админом"),
-    groups_to_admin: str = Query(alias="Например: 543, 5413. Можно указать несколько через запятую."),
+    groups_to_admin: str = Query(
+        alias="Например: 543, 5413. Можно указать несколько через запятую."
+    ),
     db: AsyncSession = Depends(get_db),
 ):
     """делает админом :O   (или наоборот)"""
@@ -79,7 +89,7 @@ async def make_admin(
             detail="пользователя с такой почтой не существует.",
         )
 
-    user.role = 'admin.' + '.'.join(groups_to_admin.split(','))
+    user.role = "admin." + ".".join(groups_to_admin.split(","))
 
     db.add(user)
     await db.commit()
@@ -90,21 +100,22 @@ async def make_admin(
         "role": user.role,
     }
 
-@user_router.get('/me')
-def auth_user_check_self_info(
-    user: dict = Depends(get_current_active_auth_user)
-): 
+
+@router.get("/me")
+def auth_user_check_self_info(user: dict = Depends(get_current_active_auth_user)):
+    """для возрвата данных на фронтенд в раздел 'профиль'"""
     return {
-        'username': user.get('username'), 
-        'email': user.get('email'), 
-        'role': user.get('role'),
-        "group": user.get('group')
+        "username": user.get("username"),
+        "email": user.get("email"),
+        "role": user.get("role"),
+        "group": user.get("group"),
     }
+
 
 # -------------------------------------------------------------AUTH OPERATIONS-------------------------------------------------------------
 
 
-@user_router.post("/login", name="login")
+@router.post("/login", name="login")
 async def login(
     response: Response,
     email: str = Form(),
@@ -117,69 +128,96 @@ async def login(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="неверный email или пароль",
-            headers={"WWW-Authenticate": "Bearer"},
         )
 
-    access_token = encode_jwt(
+    if not user.active:
+        raise HTTPException(
+            status_code=403,
+            detail="доступ запрещён",
+        )
+
+    access_token = create_access_token(
         payload={"sub": user.email, "role": user.role, "username": user.name}
     )
 
-    response.set_cookie(
-        key="access_token",
-        value=access_token, 
-        httponly=True,
-        secure=True, # только для htpps 
-        samesite='strict' # защита от csrf 
-    )
+    refresh_token = create_refresh_token(payload={"sub": user.email})
+
+    secure_cookies = {'access_token': access_token, 'refresh_token': refresh_token}
+    for key, value in secure_cookies.items():
+        if key == 'access_token': 
+            lifetime_seconds = settings.settings.auth_jwt.access_token_expire_minutes*60 
+        if key == 'refresh_token': 
+            lifetime_seconds = settings.settings.auth_jwt.refresh_token_expire_days*24*60*60
+        response.set_cookie(
+            key=key,
+            value=value,
+            httponly=True,
+            secure=True,  # только для htpps
+            samesite="strict",  # защита от csrf
+            max_age=lifetime_seconds
+        )   
+
+    
 
     return {
-        "username": user.name,
-        "access_token": access_token,
-        # "refresh_token": refresh_token,
-        "token_type": "bearer",
+        "message": "успешный вход",
+        "access_token": access_token,  # НЕ ВОЗВРАЩАТЬ ТОКЕН ТК ИСПОЛЬЗУЮ cookie А НЕ bearer
+        "refresh_token": refresh_token,  # НЕ ВОЗВРАЩАТЬ ТОКЕН ТК ИСПОЛЬЗУЮ cookie А НЕ bearer
     }
 
 
-@user_router.get("/get-role", name="role")
-async def get_user_role(username: str, db: AsyncSession = Depends(get_db)):
-    db_user = await db.scalars(select(User).where(User.name == username))
-    if not (user := db_user.first()):
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="username doesn`t exist"
-        )
+# @router.post("/refresh")
+# async def refresh_jwt(
+#     user: User = Depends(get_current_auth_user_for_refresh), 
 
-    return {"role": user.role}
+# ):
+#     token_data = {
+#         'sub': user.email, 
+        
+#     }
+#     access_token = create_access_token(user)
+    
+#     return {'access_token': access_token}
 
 
-@user_router.post("/refresh-token")
-async def refresh_token(refresh_token: str, db: AsyncSession = Depends(get_db)):
+@router.post("/refresh-token")
+async def refresh_token(
+    response: Response,
+    payload: dict = Depends(get_current_token_payload), 
+    db: AsyncSession = Depends(get_db)):
     """
     Обновляет access_token с помощью refresh_token.
     """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate refresh token",
-        headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(
-            refresh_token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
-        )
         # Автоматически проверяется exp! Если токен просрочен, здесь выбросится исключение.
         email: str = payload.get("sub")
         if not email:
             raise credentials_exception
-    except jwt.exceptions:
+    except jwt.exceptions.PyJWTError:
         raise credentials_exception
     result = await db.scalars(select(User).where(User.email == email))
     user = result.first()
     if not user:
         raise credentials_exception
     access_token = encode_jwt(
-        data={
+        payload={
             "sub": user.email,
             "role": user.role,
-            "id": user.id,
+            "username": user.name,
         }
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+
+    response.set_cookie(
+            key='access_token',
+            value=access_token,
+            httponly=True,
+            secure=True,  # только для htpps
+            samesite="strict",  # защита от csrf
+            max_age=settings.settings.auth_jwt.access_token_expire_minutes*60
+        )  
+
+    return {"access_token": access_token}

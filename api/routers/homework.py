@@ -7,8 +7,7 @@ from api.db.models import Group, Date, GroupDateAssociation
 from datetime import datetime
 from api.db.schemas import HomeworkRequest
 
-homework_router = APIRouter(tags=["Homework"], prefix="/homework")
-router = homework_router
+router = homework_router = APIRouter(tags=["Homework"], prefix="/homework")
 
 
 @router.post("/save")
@@ -107,7 +106,7 @@ async def get_group_datavalue(
     )
     if not (group_number := group_result.first().data_value):
         return ""  # в savehomework вообще не пойдет по ветке этого if при условии что группы не назначены несуществующие админу
-        # а вот с другими если использовать то фиг знает. ну она в принципе то туда только и нужна
+        # а вот с другими если использовать то фиг знает. ну она в принципе то туда только и нужна 
     return group_number
 
 
