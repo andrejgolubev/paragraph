@@ -19,7 +19,6 @@ def encode_jwt(
     payload |= {
         'exp': expire, 
         'iat': now,
-        # 'loggen_in_at': ... , можно еще что угодно докидывать
     }
 
     return jwt.encode(payload, private_key, algorithm)

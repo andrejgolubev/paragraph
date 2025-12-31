@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Depends, Request, HTTPException, Body, status
+from fastapi import APIRouter, Depends, Request, HTTPException, Body, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from api.auth.demo_jwt_auth import get_current_active_auth_user
 from api.db.database import get_db
 from api.db.models import Group, Date, GroupDateAssociation
 from datetime import datetime
@@ -13,7 +14,8 @@ router = homework_router
 
 @router.post("/save")
 async def save_homework(
-    request: Request,
+    response: Response,
+    user: dict = Depends(get_current_active_auth_user),
     homework_request: HomeworkRequest = Body(),
     db: AsyncSession = Depends(get_db),
 ):
@@ -22,21 +24,20 @@ async def save_homework(
     date_data_value = homework_request.date_data_value
     lesson_index = homework_request.lesson_index
     homework = homework_request.homework
+    print(user)
     try:
         group_result = await db.scalars(
             select(Group).where(Group.data_value == group_data_value)
         )
-        group = group_result.first()
 
-        if not group:
+        if not (group := group_result.first()):
             raise HTTPException(status_code=404, detail="Group not found")
 
         date_result = await db.scalars(
             select(Date).where(Date.data_value == date_data_value)
         )
-        date = date_result.first()
 
-        if not date:
+        if not (date := date_result.first()):
             raise HTTPException(status_code=404, detail="Date not found")
 
         # находим или создаем связь
@@ -61,6 +62,23 @@ async def save_homework(
         else:
             association.homework = homework or ""
             association.updated = datetime.now()
+
+        public_cookies = {
+            'group_data_value': group_data_value, 
+            'date_data_value': date_data_value,
+        }
+
+        for key, value in public_cookies.items():
+            response.set_cookie(
+            key=key, 
+            value=value, 
+            httponly=False, # тк JS может читать эти куки чтоб в соответствии с выбранной группой и датой пользователем сразу отображалась нужная таблица
+            secure=True, # для htpps 
+            samesite='strict', # защита от csrf 
+            # max_age=
+        )
+
+        
 
         await db.commit()
 

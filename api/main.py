@@ -1,28 +1,25 @@
 from api.db.refresh_db import load_groups_and_dates
 
 from api.db.database import get_db
-from api.routers import schedule, homework, users
+from api.routers import schedule, homework
+from api.auth import users
 from api.parser.group_parser import parse_groups
 from api.parser.date_parser import parse_dates
 from api.parser.utils import convert_date
 from api.services.data_service import data_service
 from api.auth.utils import verify_admin_api_key
 
-from fastapi import FastAPI, Depends, Request, HTTPException, status, Header
+from fastapi import FastAPI, Depends, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
-from api.db.models import Group, Date, GroupDateAssociation
-import os
+from api.db.models import Group, Date
 
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-
-from api.auth.demo_jwt_auth import router as demo_user_router
 
 app = FastAPI(title="параграф")
 
@@ -40,8 +37,6 @@ app.add_middleware(
 
 
 app.mount("/static", StaticFiles(directory="templates/static"), name="static") # монтируем CSS, js, png etc
-# templates = Jinja2Templates(directory="templates")
-
 
 app.include_router(
     users.user_router,
@@ -51,13 +46,11 @@ app.include_router(
 app.include_router(schedule.schedule_router)
 app.include_router(homework.homework_router)
 
-app.include_router(demo_user_router)
 
 
-# Главная страница - отдаем базовый HTML
-@app.get("/", response_class=HTMLResponse)
-async def index():
-    return FileResponse("templates/index.html")
+# @app.get("/", response_class=HTMLResponse)
+# async def index():
+#     return FileResponse("templates/index.html")
 
 
 
@@ -80,7 +73,7 @@ async def get_all_dates_related_to_group(group_number: str, db: AsyncSession = D
     if not group: 
         raise HTTPException(status_code=404, detail='Group not found or doesn`t exist. Try again or parse relevant data.')
     
-    dates = [{'date':date.date, "data-value": date.data_value} for date in group.dates]
+    dates = [{'date': date.date, "data-value": date.data_value} for date in group.dates]
 
     return {
         "group_number": group.group_number,
@@ -98,7 +91,7 @@ async def get_all_groups_related_to_date(date_input: str, db: AsyncSession = Dep
     if not date: 
         raise HTTPException(status_code=404, detail='Date not found or doesn`t exist. Try again or parse relevant data.')
     
-    groups = [{'group':group, "data-value": group.data_value} for group in date.groups]
+    groups = [{'group': group, "data-value": group.data_value} for group in date.groups]
 
     return {
         "date": date,
