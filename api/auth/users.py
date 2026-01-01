@@ -3,7 +3,7 @@ from api.auth.validation import get_current_active_auth_user
 from api.auth.validation import get_access_token_payload, get_refresh_token_payload
 from api.db.database import get_db
 from api.db.models import Group, User
-from api.db.schemas import UserResponse
+from api.db.schemas import UserRegistration, UserLogin
 from api import settings
 from api.auth.utils import (
     encode_jwt,
@@ -12,26 +12,27 @@ from api.auth.utils import (
     verify_admin_api_key,
 )
 
-from fastapi import Depends, Form, HTTPException, Response, status, APIRouter, Query
+from fastapi import Body, Depends, Form, HTTPException, Response, status, APIRouter, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from .helpers import create_access_token, create_refresh_token
 
 router = APIRouter(
     prefix="/user",
-    tags=["users"],
+    tags=["user"],
 )
 
 
-@router.post("/register", response_model=UserResponse)
+@router.post("/register")
 async def register(
-    username: str = Form(),
-    email: str = Form(),
-    password: str = Form(),
-    group_number: str = Form(),
+    register_data: UserRegistration = Body(),
     db: AsyncSession = Depends(get_db),
 ):
     """для регистрации пользователя саморучно"""
+    username = register_data.username
+    email = register_data.email
+    password = register_data.password
+    group_number = register_data.group_number
 
     result = await db.scalars(select(User).where(User.email == email))
 
@@ -66,6 +67,62 @@ async def register(
         active=db_user.active,
         group_id=db_user.group_id,
     )
+
+
+@router.post("/login", name="login")
+async def login(
+    response: Response,
+    login_data: UserLogin = Body(),
+    db: AsyncSession = Depends(get_db),
+):  
+
+    email = login_data.email
+    password = login_data.password
+
+    result = await db.scalars(select(User).where(User.email == email))
+    if not (user := result.first()) or not validate_password(password, user.password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="неверный email или пароль",
+        )
+
+    if not user.active:
+        raise HTTPException(
+            status_code=403,
+            detail="доступ запрещён",
+        )
+
+    access_token = create_access_token(
+        payload={"sub": user.email, "role": user.role, "username": user.name}
+    )
+
+    refresh_token = create_refresh_token(payload={"sub": user.email})
+
+    secure_cookies = {
+        'access_token': access_token, 
+        'refresh_token': refresh_token,
+    }
+    for key, value in secure_cookies.items():
+        if key == 'access_token': 
+            lifetime_seconds = settings.settings.auth_jwt.access_token_expire_minutes*60 
+        if key == 'refresh_token': 
+            lifetime_seconds = settings.settings.auth_jwt.refresh_token_expire_days*24*60*60
+        response.set_cookie(
+            key=key,
+            value=value,
+            httponly=True,
+            secure=True,  # только для htpps
+            samesite="none",  
+            max_age=lifetime_seconds
+        )   
+
+    
+
+    return {
+        "message": "успешный вход",
+        "access": access_token, 
+        "refresh": refresh_token
+    }
 
 
 @router.post("/make-admin/", dependencies=[Depends(verify_admin_api_key)])
@@ -111,61 +168,7 @@ def auth_user_check_self_info(user: dict = Depends(get_current_active_auth_user)
     }
 
 
-# -------------------------------------------------------------AUTH OPERATIONS-------------------------------------------------------------
 
-
-@router.post("/login", name="login")
-async def login(
-    response: Response,
-    email: str = Form(),
-    password: str = Form(),
-    db: AsyncSession = Depends(get_db),
-):
-
-    result = await db.scalars(select(User).where(User.email == email))
-    if not (user := result.first()) or not validate_password(password, user.password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="неверный email или пароль",
-        )
-
-    if not user.active:
-        raise HTTPException(
-            status_code=403,
-            detail="доступ запрещён",
-        )
-
-    access_token = create_access_token(
-        payload={"sub": user.email, "role": user.role, "username": user.name}
-    )
-
-    refresh_token = create_refresh_token(payload={"sub": user.email})
-
-    secure_cookies = {
-        'access_token': access_token, 
-        'refresh_token': refresh_token,
-    }
-    for key, value in secure_cookies.items():
-        if key == 'access_token': 
-            lifetime_seconds = settings.settings.auth_jwt.access_token_expire_minutes*60 
-        if key == 'refresh_token': 
-            lifetime_seconds = settings.settings.auth_jwt.refresh_token_expire_days*24*60*60
-        response.set_cookie(
-            key=key,
-            value=value,
-            httponly=True,
-            secure=True,  # только для htpps
-            samesite="strict",  # защита от csrf
-            max_age=lifetime_seconds
-        )   
-
-    
-
-    return {
-        "message": "успешный вход",
-        "access": access_token, 
-        # "refresh": refresh_token
-    }
 
 
 async def get_refreshed_access_token(
@@ -178,7 +181,7 @@ async def get_refreshed_access_token(
         detail="Could not validate refresh token",
     )
     try:
-        # Автоматически проверяется exp! Если токен просрочен, здесь выбросится исключение.
+        # автоматически проверяется exp и если токен просрочен, здесь выбросится исключение.
         email: str = payload.get("sub")
         if not email:
             raise credentials_exception
@@ -217,8 +220,8 @@ async def refresh_token(
             key='access_token',
             value=access_token,
             httponly=True,
-            secure=True,  # только для htpps
-            samesite="strict",  # защита от csrf
+            secure=True,  # для htpps
+            samesite="none",  
             max_age=settings.settings.auth_jwt.access_token_expire_minutes*60
         )  
 

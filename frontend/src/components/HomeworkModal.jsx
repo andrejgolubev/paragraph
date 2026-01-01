@@ -25,9 +25,10 @@ const HomeworkModal = ({
     } = lessonInfo
 
     const [readOnly, setReadOnly] = useState(true)
+    const [respText, setRespText] = useState('д/з не может быть пустым')
     const textareaRef = useRef("")
     const dialogRef = useRef(null)
-
+    
     const dialog = dialogRef.current
 
     // срабатывает тогда когда модалка появляется
@@ -81,13 +82,25 @@ const HomeworkModal = ({
         dateDataValue,
         lessonIndex,
         homeworkTextClean
-      )
+      ).then( resp => {
+        console.log('response from hmwModal :>> ', resp)
+        console.log('response.detail from hmwModal :>> ', resp.detail)
 
-      dialog.close() // нативное закрытие (обязательно!!)
-      setShowDialog(false) // просто убираем компонент из ScheduleContainer
-      setLastUpdate('')
+        if (!(resp.detail === 'saved')) {
+          setRespText(resp.detail)
+          setNoTextSubmitError(true)
+        } else {
+          setNoTextSubmitError(true)
+          dialog.close() // нативное закрытие (обязательно!!)
+          setShowDialog(false) // просто убираем компонент из ScheduleContainer
+          setLastUpdate('')
+    
+          setHomeworkSaved(true)
+        }
+        
+      })
+      
 
-      setHomeworkSaved(true)
     }
 
     const handleCancel = (event) => {
@@ -147,7 +160,8 @@ const HomeworkModal = ({
               отмена
             </button>
             <NotificationInner
-              message={"д/з не может быть пустым."}
+              // message={"д/з не может быть пустым."}
+              message={respText}
               type={"error"}
               noTextSubmitError={noTextSubmitError}
               setNoTextSubmitError={setNoTextSubmitError}

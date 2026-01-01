@@ -14,10 +14,8 @@ router = schedule_router
 
 @router.get("/get-schedule")
 async def get_schedule(
-    request: Request,
     group_data_value: str | None = None,
     date_data_value: str | None = None,
-    db: AsyncSession = Depends(get_db)
 ):
     st = time.time() 
     
@@ -40,7 +38,6 @@ async def get_schedule(
 async def select_group(
     group_data: GroupSelection,
     response: Response,
-    db: AsyncSession = Depends(get_db)
 ):
     # Сохраняем в cookie на 30 дней
     response.set_cookie(
@@ -48,6 +45,7 @@ async def select_group(
         value=group_data.group_data_value,
         max_age=30*24*60*60,  # 30 дней
         httponly=True,
+        samesite='lax',
         secure=True  # для HTTPS
     )
     

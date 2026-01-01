@@ -1,3 +1,4 @@
+import email
 from fastapi import HTTPException
 from pydantic import BaseModel, Field, EmailStr, field_validator, ConfigDict
 from typing import Optional
@@ -10,20 +11,30 @@ class HomeworkRequest(BaseModel):
     homework: str
 
 
-# class UserRegistration(BaseModel):
-#     email: EmailStr 
-#     password: str = Field(min_length=8, max_length=40)
+class UserRegistration(BaseModel):
+    username: str
+    email: EmailStr 
+    password: str 
+    group_number: str
    
 
+
+class UserLogin(BaseModel): 
+    email: str 
+    password: str
+    
 
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     
     id: int
+    email: str
     name: str
     role: str
+    active: bool
     group_id: int | None = None
-    group: Optional["GroupResponse"] = None
+
+    
 
 class GroupCreate(BaseModel): 
     data_value: str

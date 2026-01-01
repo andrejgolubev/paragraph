@@ -1,7 +1,5 @@
 import logging
 import uvicorn
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 from api.settings import settings
 logging.basicConfig(
     level=settings.logging.log_level_value,

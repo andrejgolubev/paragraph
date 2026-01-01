@@ -2,18 +2,34 @@ const BASE_URL = "http://127.0.0.1:8000"
 const headers = { "Content-Type": "application/json"}
 
 const homeworkAPI = {
-  saveHomework: (groupDataValue, dateDataValue, lessonIndex, homeworkText) => {
-    return fetch(`${BASE_URL}/homework/save`, {
+  saveHomework: async (groupDataValue, dateDataValue, lessonIndex, homeworkText) => {
+    
+    const payload = {
+      group_data_value: String(groupDataValue),
+      date_data_value: String(dateDataValue),
+      lesson_index: Number(lessonIndex),
+      homework: String(homeworkText),
+    };
+    
+    const response = await fetch(`${BASE_URL}/homework/save`, {
       method: "POST",
-      headers,
-      body: JSON.stringify({
-        group_data_value: String(groupDataValue),
-        date_data_value: dateDataValue,
-        lesson_index: lessonIndex,
-        homework: homeworkText,
-      }),
-    })
+      headers: { 
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+      credentials: 'include',
+    });
+    
+    
+    const responseData = await response.json();
+    console.log("responseData:", responseData)
+    console.log("responseData.detail:", responseData.detail)
+
+    return responseData;
+      
+    
   },
+
 
   loadHomeworkData: async function loadHomeworkData(
     groupDataValue,
@@ -23,12 +39,12 @@ const homeworkAPI = {
     const params = new URLSearchParams({
       group_data_value: String(groupDataValue),
       date_data_value: dateDataValue,
-      lesson_index: lessonIndex,
+      lesson_index: parseInt(lessonIndex),
     })
 
-    // console.log('http://127.0.0.1:8000/homework/get?${params.toString() :>> ', `http://127.0.0.1:8000/homework/get?${params.toString()}`)
     return fetch(`${BASE_URL}/homework/get?${params.toString()}`, {
       method: "GET",
+      credentials: "include"
     })
       .then((resp) => resp.json())
       .catch((e) => console.error(e))
@@ -89,6 +105,31 @@ const homeworkAPI = {
       resp.json()
     ).catch(err => console.log(err))
   },
+
+  sendRegisterData: async (email, password, username, group) => {
+    return fetch(`${BASE_URL}/user/register`, {
+      method: "POST",
+      headers,
+      credentials: 'include',
+      body: JSON.stringify({
+        username,
+        email,
+        password,
+        group_number: group,
+      }), 
+    })
+  }, 
+  sendLoginData: async (email, password) => {
+    return fetch(`${BASE_URL}/user/login`, {
+      method: "POST", 
+      headers, 
+      body: JSON.stringify({
+        email,
+        password,
+      }), 
+      credentials: 'include'
+    })
+  } 
 }
 
 export default homeworkAPI

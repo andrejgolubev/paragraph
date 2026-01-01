@@ -47,7 +47,7 @@ class RefreshToken(BaseHTTPMiddleware):
                 value=access_token,
                 httponly=True,
                 secure=True,  # но можно False для localhost
-                samesite="lax",
+                samesite="none", # для localhost
                 max_age=settings.auth_jwt.access_token_expire_minutes * 60
             )
             
@@ -69,7 +69,7 @@ def register_middlewares(app: FastAPI):
         allow_origins=ALLOW_ORIGINS,
         allow_methods=["*"],  # Разрешить все методы (ПОКА ЧТО ДЛЯ РАЗРАБОТКИ)
         allow_headers=["*"],  # Разрешить все заголовки
-        allow_credentials=False # использую куки
+        allow_credentials=True # использую куки поэтому надо True 
     )
 
     app.add_middleware(RefreshToken)

@@ -32,9 +32,14 @@ export const AuthForm = ({ type }) => {
   
   const debounceTimerRef = useRef(null)
 
-  const onSubmit = (data) => {
-    console.log('form submitted\ndata:', data)
-    
+  const onSubmit = ({email, password, username, group}) => {
+    if (type === 'sign-up') {
+      homeworkAPI.sendRegisterData(email, password, username, group)
+    } else if (type === 'sign-in') {
+      homeworkAPI.sendLoginData(email, password)
+    } else {
+      console.log('Указан неверный тип формы');
+    }
   }
 
   let groupAttempts = 0
@@ -88,7 +93,7 @@ export const AuthForm = ({ type }) => {
         } catch (error) {
           resolve("ошибка при проверке группы")
         }
-      }, 300)
+      }, 100)
     })
   } 
 

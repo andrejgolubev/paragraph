@@ -26,7 +26,7 @@ class User(Base):
     group_id: Mapped[int] = mc(ForeignKey("groups.id"), nullable=True)
 
     group: Mapped["Group"] = relationship(back_populates="users")
-
+    
 
 
 """MANY TO MANY RELATION - GROUPS <-> parse_dates"""

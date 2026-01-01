@@ -25,6 +25,8 @@ def get_access_token_payload(
 
     return payload
 
+
+
 def get_refresh_token_payload(
     request: Request,
 ) -> dict:

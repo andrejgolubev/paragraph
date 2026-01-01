@@ -17,7 +17,6 @@ async def save_homework(
     homework_request: HomeworkRequest = Body(),
     db: AsyncSession = Depends(get_db),
 ):
-
     if not user:
         raise HTTPException(status_code=401, detail="пожалуйста, войдите в аккаунт")
 
@@ -36,7 +35,7 @@ async def save_homework(
     moderated_group_datavalues = [await get_group_datavalue(group_number, db=db) for group_number in moderated_group_numbers]
     print(f'{moderated_group_datavalues = }')
     if not any([group_dv for group_dv in moderated_group_datavalues if group_data_value == group_dv]): 
-        raise HTTPException(status_code=403, detail="недостаточно прав для управления д/з этой группы.")
+        raise HTTPException(status_code=403, detail="недостаточно прав для управления этим д/з.")
         
 
     try:
@@ -88,13 +87,13 @@ async def save_homework(
                 value=value,
                 httponly=False,  # тк JS может читать эти куки чтоб в соответствии с выбранной группой и датой пользователем сразу отображалась нужная таблица
                 secure=True,  # для htpps
-                samesite="strict",  # защита от csrf
+                samesite="none",  
                 # max_age=
             )
 
         await db.commit()
 
-        return {"status": "Homework saved", "user": user}
+        return {"detail": "saved", "user": user}
 
     except Exception as e:
         await db.rollback()
