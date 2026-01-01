@@ -1,6 +1,7 @@
 import logging
-
+import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from api.settings import settings
 logging.basicConfig(
     level=settings.logging.log_level_value,
@@ -9,7 +10,6 @@ logging.basicConfig(
 
 log = logging.getLogger(__name__)
 
-from starlette.middleware.base import BaseHTTPMiddleware
 from api.db.refresh_db import load_groups_and_dates
 
 from api.db.database import get_db
@@ -36,16 +36,6 @@ app.include_router(user_router)
 app.include_router(schedule.schedule_router)
 app.include_router(homework.homework_router)
 
-app.add_middleware(
-    CORSMiddleware, 
-    allow_origins=['*'],
-    allow_methods=['*'],
-)
-
-
-# @app.get("/", response_class=HTMLResponse)
-# async def index():
-#     return FileResponse("templates/index.html")
 
 
 
@@ -94,4 +84,5 @@ async def get_all_groups_related_to_date(date_input: str, db: AsyncSession = Dep
         "groups": groups
     }       
 
-
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")

@@ -1,5 +1,5 @@
 const BASE_URL = "http://127.0.0.1:8000"
-const headers = { "Content-Type": "application/json" }
+const headers = { "Content-Type": "application/json"}
 
 const homeworkAPI = {
   saveHomework: (groupDataValue, dateDataValue, lessonIndex, homeworkText) => {

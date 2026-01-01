@@ -1,21 +1,18 @@
 import time
-from fastapi import FastAPI, Response, Request
+from fastapi import FastAPI, HTTPException, Response, Request
 from fastapi.middleware.cors import CORSMiddleware
-import jwt
-from sqlalchemy import select
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from api.auth.users import get_refreshed_access_token
-from api.auth.utils import encode_jwt
 from api.auth.validation import get_refresh_token_payload
 from api.db.database import AsyncSessionLocal
-from api.db.models import User
 from api.settings import settings
-from api.auth import utils as auth_utils
 
 ALLOW_ORIGINS = [
-    "http://localhost:8000",
-    "http://localhost:5173", # frontend
-]
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+    ]
 
 class ProcessTimeHeaderMiddleware(BaseHTTPMiddleware): 
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
@@ -29,27 +26,40 @@ class ProcessTimeHeaderMiddleware(BaseHTTPMiddleware):
 
 class RefreshToken(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
-        payload = get_refresh_token_payload(request=request)
-        response = await call_next(request)
+
+        if request.method == "OPTIONS":
+            return await call_next(request)
+
         excluded_paths = ['/favicon.ico', '/openapi.json', '/redoc', '/static/', '/user/login']
         if any(request.url.path.startswith(path) for path in excluded_paths):
+            return await call_next(request)
+
+        try:
+            payload = get_refresh_token_payload(request=request)
+            
+            async with AsyncSessionLocal() as session: 
+                access_token = await get_refreshed_access_token(payload=payload, db=session)
+            
+            response = await call_next(request)
+            
+            response.set_cookie(
+                key='access_token',
+                value=access_token,
+                httponly=True,
+                secure=True,  # но можно False для localhost
+                samesite="lax",
+                max_age=settings.auth_jwt.access_token_expire_minutes * 60
+            )
+            
             return response
-
-        async with AsyncSessionLocal() as session: 
-            access_token = await get_refreshed_access_token(payload=payload, db=session)
-
-
-        response.set_cookie(
-            key='access_token',
-            value=access_token,
-            httponly=True,
-            secure=True,  # только для htpps
-            samesite="strict",  # защита от csrf
-            max_age=settings.auth_jwt.access_token_expire_minutes*60
-        )
-
-        return response
-
+            
+        except HTTPException:
+            # ели нет валидного refresh token, просто пропускаем обновление
+            # НЕ выбрасываем исключение, а продолжаем цепочку
+            return await call_next(request)
+        except Exception:
+            # любая другая ошибка - тоже пропускаем
+            return await call_next(request)
 
 
 def register_middlewares(app: FastAPI):
@@ -59,7 +69,7 @@ def register_middlewares(app: FastAPI):
         allow_origins=ALLOW_ORIGINS,
         allow_methods=["*"],  # Разрешить все методы (ПОКА ЧТО ДЛЯ РАЗРАБОТКИ)
         allow_headers=["*"],  # Разрешить все заголовки
-        allow_credentials=True # использую куки
+        allow_credentials=False # использую куки
     )
 
     app.add_middleware(RefreshToken)

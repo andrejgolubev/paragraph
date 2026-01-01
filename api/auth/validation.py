@@ -32,7 +32,8 @@ def get_refresh_token_payload(
     unauth_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="время сессии истекло.",
-    )
+    ) # чисто для swagger UI. в middleware отлавливается 
+
     try:
         if not (token := request.cookies.get("refresh_token")):
             raise unauth_exception
