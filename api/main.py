@@ -1,5 +1,7 @@
-import logging 
-from .settings import settings
+import logging
+
+from fastapi.middleware.cors import CORSMiddleware
+from api.settings import settings
 logging.basicConfig(
     level=settings.logging.log_level_value,
     format=settings.logging.log_format,
@@ -19,13 +21,13 @@ from api.parser.utils import convert_date
 from api.services.data_service import data_service
 from api.auth.utils import verify_admin_api_key
 
-from fastapi import Depends, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from api.db.models import Group, Date
 
-from .create_app import create_app
+from api.create_app import create_app
 
 app = create_app()
 
@@ -34,6 +36,11 @@ app.include_router(user_router)
 app.include_router(schedule.schedule_router)
 app.include_router(homework.homework_router)
 
+app.add_middleware(
+    CORSMiddleware, 
+    allow_origins=['*'],
+    allow_methods=['*'],
+)
 
 
 # @app.get("/", response_class=HTMLResponse)
@@ -86,12 +93,5 @@ async def get_all_groups_related_to_date(date_input: str, db: AsyncSession = Dep
         "date_data_value": date.data_value,
         "groups": groups
     }       
-
-
-
-
-
-
-
 
 

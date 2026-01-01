@@ -1,6 +1,3 @@
-from email.policy import HTTP
-from nt import access
-
 import jwt
 from api.auth.validation import get_current_active_auth_user
 from api.auth.validation import get_access_token_payload, get_refresh_token_payload
@@ -144,12 +141,15 @@ async def login(
 
     refresh_token = create_refresh_token(payload={"sub": user.email})
 
-    secure_cookies = {'access_token': access_token, 'refresh_token': refresh_token}
+    secure_cookies = {
+        'access_token': access_token, 
+        # 'refresh_token': refresh_token,
+    }
     for key, value in secure_cookies.items():
         if key == 'access_token': 
             lifetime_seconds = settings.settings.auth_jwt.access_token_expire_minutes*60 
-        if key == 'refresh_token': 
-            lifetime_seconds = settings.settings.auth_jwt.refresh_token_expire_days*24*60*60
+        # if key == 'refresh_token': 
+        #     lifetime_seconds = settings.settings.auth_jwt.refresh_token_expire_days*24*60*60
         response.set_cookie(
             key=key,
             value=value,
@@ -163,19 +163,16 @@ async def login(
 
     return {
         "message": "успешный вход",
+        "access": access_token, 
+        "refresh": refresh_token
     }
 
 
+async def get_refreshed_access_token(
+    payload: dict = Depends(get_refresh_token_payload),
+    db: AsyncSession = Depends(get_db), 
 
-
-@router.post("/refresh-token")
-async def refresh_token(
-    response: Response,
-    payload: dict = Depends(get_refresh_token_payload), 
-    db: AsyncSession = Depends(get_db)):
-    """
-    Обновляет access_token с помощью refresh_token.
-    """
+):  
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate refresh token",
@@ -187,8 +184,8 @@ async def refresh_token(
             raise credentials_exception
     except jwt.exceptions.PyJWTError:
         raise credentials_exception
-    result = await db.scalars(select(User).where(User.email == email))
-    user = result.first()
+    user_result = await db.scalars(select(User).where(User.email == email))
+    user = user_result.first()
     if not user:
         raise credentials_exception
 
@@ -199,6 +196,22 @@ async def refresh_token(
             "username": user.name,
         }
     )
+
+    return access_token
+
+    
+
+
+@router.post("/refresh-token")
+async def refresh_token(
+    response: Response,
+    payload: dict = Depends(get_refresh_token_payload), 
+    db: AsyncSession = Depends(get_db)):
+    """
+    Обновляет access_token с помощью refresh_token.
+    """
+
+    access_token = await get_refreshed_access_token(payload=payload, db=db)
 
     response.set_cookie(
             key='access_token',
