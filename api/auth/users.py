@@ -143,13 +143,13 @@ async def login(
 
     secure_cookies = {
         'access_token': access_token, 
-        # 'refresh_token': refresh_token,
+        'refresh_token': refresh_token,
     }
     for key, value in secure_cookies.items():
         if key == 'access_token': 
             lifetime_seconds = settings.settings.auth_jwt.access_token_expire_minutes*60 
-        # if key == 'refresh_token': 
-        #     lifetime_seconds = settings.settings.auth_jwt.refresh_token_expire_days*24*60*60
+        if key == 'refresh_token': 
+            lifetime_seconds = settings.settings.auth_jwt.refresh_token_expire_days*24*60*60
         response.set_cookie(
             key=key,
             value=value,
@@ -164,7 +164,7 @@ async def login(
     return {
         "message": "успешный вход",
         "access": access_token, 
-        "refresh": refresh_token
+        # "refresh": refresh_token
     }
 
 

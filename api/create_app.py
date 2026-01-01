@@ -9,7 +9,7 @@ def create_app() -> FastAPI:
         # webhooks=...
     )
 
-    # register_middlewares(app)
+    register_middlewares(app)
     return app
 
 
