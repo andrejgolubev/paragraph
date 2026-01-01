@@ -1,3 +1,13 @@
+import logging 
+from .settings import settings
+logging.basicConfig(
+    level=settings.logging.log_level_value,
+    format=settings.logging.log_format,
+)
+
+log = logging.getLogger(__name__)
+
+from starlette.middleware.base import BaseHTTPMiddleware
 from api.db.refresh_db import load_groups_and_dates
 
 from api.db.database import get_db
@@ -9,27 +19,16 @@ from api.parser.utils import convert_date
 from api.services.data_service import data_service
 from api.auth.utils import verify_admin_api_key
 
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import Depends, HTTPException, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from api.db.models import Group, Date
 
-from fastapi.middleware.cors import CORSMiddleware
+from .create_app import create_app
 
-app = FastAPI(title="параграф")
+app = create_app()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:8000", 
-        "http://localhost:5173", # фронтенд
-        # "https://*.loca.lt",  # Все subdomains
-        ],  
-    allow_credentials=True,
-    allow_methods=["*"],  # Разрешить все методы
-    allow_headers=["*"],  # Разрешить все заголовки
-)
 
 app.include_router(user_router)
 app.include_router(schedule.schedule_router)

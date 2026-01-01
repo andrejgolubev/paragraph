@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Request, HTTPException, Body, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from api.auth.demo_jwt_auth import get_current_active_auth_user
+from api.auth.validation import get_current_active_auth_user
 from api.db.database import get_db
 from api.db.models import Group, Date, GroupDateAssociation
 from datetime import datetime
@@ -31,8 +31,9 @@ async def save_homework(
     lesson_index = homework_request.lesson_index
     homework = homework_request.homework
 
-    moderated_group_numbers = role.split(".")[1:]
-    moderated_group_datavalues = [await get_group_datavalue(group_number, db) for group_number in moderated_group_numbers]
+    print(f'ИЗ savehomework : {group_data_value = }')
+    moderated_group_numbers = [gr for gr in role.split(".")[1:] if gr] # недоразумение 
+    moderated_group_datavalues = [await get_group_datavalue(group_number, db=db) for group_number in moderated_group_numbers]
     print(f'{moderated_group_datavalues = }')
     if not any([group_dv for group_dv in moderated_group_datavalues if group_data_value == group_dv]): 
         raise HTTPException(status_code=403, detail="недостаточно прав для управления д/з этой группы.")
@@ -104,13 +105,15 @@ async def get_group_datavalue(
     group_number: str,
     db: AsyncSession = Depends(get_db),
 ):
+    print(f' ИЗ get_group_datavalue: {group_number = }')
     group_result = await db.scalars(
         select(Group).where(Group.group_number == group_number)
     )
-    if not (group_number := group_result.first().data_value):
-        return ""  # в savehomework вообще не пойдет по ветке этого if при условии что группы не назначены несуществующие админу
-        # а вот с другими если использовать то фиг знает. ну она в принципе то туда только и нужна 
-    return group_number
+
+    
+    group_data_value = group_result.first().data_value
+    print(f'{group_data_value = }')
+    return group_data_value
 
 
 @router.get("/convert")

@@ -2,7 +2,7 @@ from email.policy import HTTP
 from nt import access
 
 import jwt
-from api.auth.demo_jwt_auth import get_current_active_auth_user
+from api.auth.validation import get_current_active_auth_user
 from api.auth.validation import get_access_token_payload, get_refresh_token_payload
 from api.db.database import get_db
 from api.db.models import Group, User
@@ -81,22 +81,24 @@ async def make_admin(
 ):
     """делает админом :O"""
 
-    user = await db.scalars(select(User).where(User.email == email))
-    user = user.first()
+    user_result = await db.scalars(select(User).where(User.email == email))
+    user = user_result.first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="пользователя с такой почтой не существует.",
         )
 
-    user.role = "admin." + ".".join(groups_to_admin.split(","))
+    user.role = "admin." + ".".join(set(
+        [gr.strip() for gr in groups_to_admin.split(",")]
+    ))
 
     db.add(user)
     await db.commit()
     await db.refresh(user)
 
     return {
-        "message": f"{user.name}`s role is now {user.role}",
+        "message": f"{user.name}`s role is now: {user.role}",
         "role": user.role,
     }
 
@@ -161,23 +163,8 @@ async def login(
 
     return {
         "message": "успешный вход",
-        "access_token": access_token,  # НЕ ВОЗВРАЩАТЬ ТОКЕН ТК ИСПОЛЬЗУЮ cookie А НЕ bearer
-        "refresh_token": refresh_token,  # НЕ ВОЗВРАЩАТЬ ТОКЕН ТК ИСПОЛЬЗУЮ cookie А НЕ bearer
     }
 
-
-# @router.post("/refresh")
-# async def refresh_jwt(
-#     user: User = Depends(get_current_auth_user_for_refresh), 
-
-# ):
-#     token_data = {
-#         'sub': user.email, 
-        
-#     }
-#     access_token = create_access_token(user)
-    
-#     return {'access_token': access_token}
 
 
 
@@ -222,4 +209,4 @@ async def refresh_token(
             max_age=settings.settings.auth_jwt.access_token_expire_minutes*60
         )  
 
-    return {"access_token": access_token}
+    return {"message": 'токен успешно обновлен'}
