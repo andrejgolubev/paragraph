@@ -36,6 +36,18 @@
 
   pointer-events: none; // Чтобы не мешало кликам
 
+  // 
+  position: fixed;
+    z-index: 1000;
+
+    padding: 16px 24px;
+    bottom: 20px;
+    right: 36px;
+    top: auto;
+    left: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  //
 
   &.active {
     opacity: 0.8;
@@ -45,21 +57,16 @@
   &.success {
     background: linear-gradient(135deg, #4CAF50, #45a049);
     border-left: 4px solid #2E7D32;
-
-    position: fixed;
-    z-index: 1000;
-
-    padding: 16px 24px;
-    bottom: 20px;
-    right: 36px;
-    top: auto;
-    left: auto;
-
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
   &.error {
+    background: linear-gradient(135deg, #f44336, #e53935);
+    border-left: 4px solid #c62828;
+  }
+
+  &.inner {
+    bottom: 0px;
+    right: 0px;
     position: relative;
     background: linear-gradient(135deg, #f44336, #e53935);
     border-left: 4px solid #c62828;

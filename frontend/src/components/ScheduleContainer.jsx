@@ -6,7 +6,6 @@ import { Context } from "../context/Provider"
 import homeworkAPI from "../api/homeworkAPI"
 import { Mosaic } from "react-loading-indicators"
 import { getDateValueFromDisplay, getLessonTypeClass } from "../utils/converters"
-import NotificationOuter from "./notifications/NotificationOuter"
 
 let lessonInfoGlobal = {}
 
@@ -22,12 +21,13 @@ const ScheduleContainer = () => {
   const [year, setYear] = useState(new Date().getFullYear())
 
   useEffect(() => {
+    setGroupDataValueCookies('groupDataValue', groupDataValue) // чтобы сразу загружалась нужная группа 
+    
+    // логирование - потом убрать
     console.log("ScheduleContainer - текущие значения:", {
       groupDataValue,
       dateDataValue,
     })
-    setGroupDataValueCookies('groupDataValue', groupDataValue)
-    
 
   }, [groupDataValue, dateDataValue])
 

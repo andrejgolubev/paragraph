@@ -10,7 +10,7 @@ const HomeworkModal = ({
   homeworkText,
   homeworkUpdated,
 }) => {
-  const { homeworkSaved, setHomeworkSaved } = useContext(Context)
+  const { notificationOuterActive, setNotificationOuterActive } = useContext(Context)
   const [inputValue, setInputValue] = useState("")
   const [noTextSubmitError, setNoTextSubmitError] = useState(false)
   const [lastUpdate, setLastUpdate] = useState("")
@@ -96,7 +96,7 @@ const HomeworkModal = ({
           setShowDialog(false) // просто убираем компонент из ScheduleContainer
           setLastUpdate('')
     
-          setHomeworkSaved(true)
+          setNotificationOuterActive(true)
         }
       })
 

@@ -52,7 +52,7 @@ const ScheduleContent = () => {
         />
       )}
 
-      <NotificationOuter message={"домашнее задание сохранено."} />
+      <NotificationOuter message={"домашнее задание сохранено."} type={'success'} />
       {/* ... */}
     </div>
   )

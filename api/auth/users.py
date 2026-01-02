@@ -38,7 +38,7 @@ async def register(
 
     if result.first():
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=status.HTTP_409_CONFLICT,
             detail="пользователь с такой почтой уже существует.",
         )
 
@@ -46,13 +46,19 @@ async def register(
         select(Group).where(Group.group_number == group_number)
     )
 
+    if not (group := group_result.first()): 
+        group_id = None
+    else: 
+        group_id = group.id
+
+
     db_user = User(
         name=username,
         email=email,
         password=hash_password(password),
         role="student",
         active=True,
-        group_id=group_result.first().id,  # будет None если группа не нашлась и в БД будет null
+        group_id=group_id,  # будет None если группа не нашлась и в БД будет null
     )
 
     db.add(db_user)
@@ -66,6 +72,8 @@ async def register(
         role=db_user.role,
         active=db_user.active,
         group_id=db_user.group_id,
+        detail='Вы успешно зарегистрировались!',
+        status='ok'
     )
 
 
@@ -120,6 +128,7 @@ async def login(
 
     return {
         "message": "успешный вход",
+        "access_token": access_token
     }
 
 
@@ -187,7 +196,7 @@ async def get_refreshed_access_token(
         raise credentials_exception
     user_result = await db.scalars(select(User).where(User.email == email))
     user = user_result.first()
-    if not user:
+    if not user or not user.active:
         raise credentials_exception
 
     access_token = encode_jwt(

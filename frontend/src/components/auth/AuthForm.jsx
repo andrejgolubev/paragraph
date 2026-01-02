@@ -1,10 +1,12 @@
-import React, { useRef, useCallback, useEffect } from "react"
+import React, { useRef, useCallback, useEffect, useState, useContext } from "react"
 import { Link } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { DevTool } from "@hookform/devtools"
 
 import homeworkAPI from "../../api/homeworkAPI"
 import {latinToCyrillic} from '../../utils/converters.js'
+import NotificationOuter from '../notifications/NotificationOuter.jsx'
+import { Context } from "../../context/Provider"
 
 import user_icon from "../../images/auth/person.svg"
 import group_icon from "../../images/auth/group.svg"
@@ -16,6 +18,8 @@ export const AuthForm = ({ type }) => {
   // так что такя реализация с let допустима
   let authType = ""
   let authTitle = ""
+  const [submitMessage, setSubmitMessage] = useState('')
+  const [submitMessageType, setSubmitMessageType] = useState('success')
 
   if (type === "sign-up") {
     authType = "зарегистироваться"
@@ -25,16 +29,30 @@ export const AuthForm = ({ type }) => {
     authTitle = "добро пожаловать!"
   }
 
+  
   const form = useForm()
-
   const { register, control, handleSubmit, formState } = form
   const { errors } = formState
   
   const debounceTimerRef = useRef(null)
 
+  const {notificationOuterActive, setNotificationOuterActive} = useContext(Context)
+
   const onSubmit = ({email, password, username, group}) => {
     if (type === 'sign-up') {
-      homeworkAPI.sendRegisterData(email, password, username, group)
+      try {
+        homeworkAPI.sendRegisterData(email, password, username, group).then(
+          resp => {
+            setSubmitMessage(resp.detail)
+            setNotificationOuterActive(true)
+            if (resp.status === 'ok') setSubmitMessageType('success') 
+            else setSubmitMessageType('error')
+          }
+        )
+        
+      } catch (err) {
+        console.log('errrrrrrrrrrrr', err);
+      }
     } else if (type === 'sign-in') {
       homeworkAPI.sendLoginData(email, password)
     } else {
@@ -198,6 +216,10 @@ export const AuthForm = ({ type }) => {
           </Link>
         )}
       </form>
+      <NotificationOuter 
+      message={submitMessage}
+      type={submitMessageType}
+      />
       <DevTool control={control} />
     </div>
   )

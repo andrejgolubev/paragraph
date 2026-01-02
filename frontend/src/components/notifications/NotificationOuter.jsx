@@ -2,26 +2,31 @@ import { useEffect, useContext } from "react"
 import { Context } from "../../context/Provider"
 
 const NotificationOuter = ({message, type='success'}) => {
-  const {homeworkSaved, setHomeworkSaved} = useContext(Context)
+  const {notificationOuterActive, setNotificationOuterActive} = useContext(Context)
 
   useEffect(() => {
-    console.log('homeworkSaved :>> ', homeworkSaved);
     const timer = setTimeout( async () => {
-      setHomeworkSaved(false)
+      setNotificationOuterActive(false)
     }, 3000)
 
     return () => clearTimeout(timer) //отменяем ожидание если элемент notification inner больше не вмонтирован в разметку 
-  } , [homeworkSaved])
-  
+  } , [notificationOuterActive])
+
+
+  useEffect( () => {
+    return () => setNotificationOuterActive(false) // если компонент размонтирован, скрываем его
+  }, [])
   return (
     <div
       className={`notification outer ${
-        homeworkSaved ? "active" : ""
+        notificationOuterActive ? "active" : ""
       }  ${type}`}
     >
       {message}
     </div>
   )
+
+
 }
 
 export default NotificationOuter

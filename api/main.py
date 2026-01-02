@@ -84,4 +84,5 @@ if __name__ == "__main__":
         app,
         port=8000,
         log_level="info",
+        # reload=True
     )

@@ -106,8 +106,23 @@ const homeworkAPI = {
     ).catch(err => console.log(err))
   },
 
+  // sendRegisterData: async (email, password, username, group) => {
+  //   return fetch(`${BASE_URL}/user/register`, {
+  //     method: "POST",
+  //     headers,
+  //     credentials: 'include',
+  //     body: JSON.stringify({
+  //       username,
+  //       email,
+  //       password,
+  //       group_number: group,
+  //     }), 
+  //   })
+  //   .then(resp => resp.json())
+  // }, 
+
   sendRegisterData: async (email, password, username, group) => {
-    return fetch(`${BASE_URL}/user/register`, {
+    const response = await fetch(`${BASE_URL}/user/register`, {
       method: "POST",
       headers,
       credentials: 'include',
@@ -118,6 +133,16 @@ const homeworkAPI = {
         group_number: group,
       }), 
     })
+    const responseData = await response.json() 
+    // console.log('data from sendReg', responseData);
+
+    if (!response.ok) {
+      return {...responseData, status: 'error'}
+    }
+
+    return {...responseData, status: 'ok'}
+
+
   }, 
   sendLoginData: async (email, password) => {
     return fetch(`${BASE_URL}/user/login`, {
