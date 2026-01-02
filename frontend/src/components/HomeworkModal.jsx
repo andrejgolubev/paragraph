@@ -10,7 +10,7 @@ const HomeworkModal = ({
   homeworkText,
   homeworkUpdated,
 }) => {
-  const { notificationOuterActive, setNotificationOuterActive } = useContext(Context)
+  const { notificationOuterActive, setNotificationOuterActive, notificationOuterMessage, setNotificationOuterMessage,  } = useContext(Context)
   const [inputValue, setInputValue] = useState("")
   const [noTextSubmitError, setNoTextSubmitError] = useState(false)
   const [lastUpdate, setLastUpdate] = useState("")
@@ -91,11 +91,11 @@ const HomeworkModal = ({
           setNoTextSubmitError(true)
         } else { 
           // если сохранена домашка, то:
-          setNoTextSubmitError(true)
           dialog.close() // нативное закрытие (обязательно!!)
           setShowDialog(false) // просто убираем компонент из ScheduleContainer
           setLastUpdate('')
-    
+          
+          setNotificationOuterMessage('домашнее задание сохранено.')
           setNotificationOuterActive(true)
         }
       })
@@ -160,7 +160,6 @@ const HomeworkModal = ({
               отмена
             </button>
             <NotificationInner
-              // message={"д/з не может быть пустым."}
               message={respText}
               type={"error"}
               noTextSubmitError={noTextSubmitError}

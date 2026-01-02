@@ -1,8 +1,9 @@
 import { useEffect, useContext } from "react"
 import { Context } from "../../context/Provider"
 
-const NotificationOuter = ({message, type='success'}) => {
-  const {notificationOuterActive, setNotificationOuterActive} = useContext(Context)
+const NotificationOuter = ({type='success'}) => {
+  const {notificationOuterActive, setNotificationOuterActive, notificationOuterMessage, setNotificationOuterMessage} = useContext(Context)
+  
 
   useEffect(() => {
     const timer = setTimeout( async () => {
@@ -22,7 +23,7 @@ const NotificationOuter = ({message, type='success'}) => {
         notificationOuterActive ? "active" : ""
       }  ${type}`}
     >
-      {message}
+      {notificationOuterMessage}
     </div>
   )
 

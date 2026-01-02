@@ -49,11 +49,10 @@ const ScheduleContent = () => {
         <ScheduleContainer
           groupDataValue={groupDataValue}
           dateDataValue={dateDataValue}
-        />
-      )}
+          />
+        )}
 
       <NotificationOuter message={"домашнее задание сохранено."} type={'success'} />
-      {/* ... */}
     </div>
   )
 }

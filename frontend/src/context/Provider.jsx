@@ -4,14 +4,20 @@ import { useCookies } from "react-cookie"
 export const Context = createContext({})
 
 export const Provider = ({ children }) => {
+  // уведомления по типу "дз сохранено" , "успешный вход в аккаунт"
+  const [notificationOuterMessage, setNotificationOuterMessage] = useState('')
   const [notificationOuterActive, setNotificationOuterActive] = useState(false)
-  const [tipActive, setTipActive] = useState(false)
+
+  const [tipActive, setTipActive] = useState(false) //подсказка при первом заходе на сайт
   
+  // клиентские куки
   const [groupDataValueCookies, setGroupDataValueCookies, removeGroupDataValueCookies] = useCookies(['group_data_value'])
   const groupDataValueCookie = groupDataValueCookies.groupDataValue
-
   const [groupDataValue, setGroupDataValue] = useState(groupDataValueCookie)
+
+
   const [dateDataValue, setDateDataValue] = useState("")
+
   
   return (
     <Context.Provider
@@ -25,6 +31,8 @@ export const Provider = ({ children }) => {
         tipActive, 
         setTipActive,
         setGroupDataValueCookies,
+        notificationOuterMessage, 
+        setNotificationOuterMessage,
       }}
     >
       {children}

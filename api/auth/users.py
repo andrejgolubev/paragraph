@@ -127,8 +127,7 @@ async def login(
     
 
     return {
-        "message": "успешный вход",
-        "access_token": access_token
+        "detail": f"Вы вошли как {user.name}",
     }
 
 

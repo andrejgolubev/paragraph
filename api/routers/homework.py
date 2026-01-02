@@ -20,10 +20,8 @@ async def save_homework(
     if not user:
         raise HTTPException(status_code=401, detail="пожалуйста, войдите в аккаунт")
 
-    print(f'{user =}')
-
     if "admin" not in (role := user["role"]):
-        raise HTTPException(status_code=403, detail="недостаточно прав")
+        raise HTTPException(status_code=403, detail="недостаточно прав для управления этим д/з.")
 
     group_data_value = homework_request.group_data_value
     date_data_value = homework_request.date_data_value

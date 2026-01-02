@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useEffect, useState, useContext } from "react"
-import { Link } from "react-router-dom"
+import { Link, replace, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { DevTool } from "@hookform/devtools"
 
@@ -14,11 +14,14 @@ import password_icon from "../../images/auth/password.svg"
 import email_icon from "../../images/auth/email.svg"
 
 export const AuthForm = ({ type }) => {
+
+  const navigate = useNavigate()
+
   // будет переменная userAuthorized с СОСТОЯНИЕМ от которой будет зависеть type
   // так что такя реализация с let допустима
   let authType = ""
   let authTitle = ""
-  const [submitMessage, setSubmitMessage] = useState('')
+  // const [submitMessage, setSubmitMessage] = useState('')
   const [submitMessageType, setSubmitMessageType] = useState('success')
 
   if (type === "sign-up") {
@@ -29,6 +32,8 @@ export const AuthForm = ({ type }) => {
     authTitle = "добро пожаловать!"
   }
 
+
+
   
   const form = useForm()
   const { register, control, handleSubmit, formState } = form
@@ -36,31 +41,43 @@ export const AuthForm = ({ type }) => {
   
   const debounceTimerRef = useRef(null)
 
-  const {notificationOuterActive, setNotificationOuterActive} = useContext(Context)
+  const {notificationOuterActive, setNotificationOuterActive, setNotificationOuterMessage} = useContext(Context)
+
+  const handleAuth = (resp) => {
+    setNotificationOuterMessage(resp.detail)
+    if (resp.status === 'ok') {
+      setSubmitMessageType('success') 
+      
+      if (resp.type === 'sign-in') navigate('/', {replace: true})  //редирект на расписание если логин
+      else navigate('/sign-in', {replace: true})  //редирект на логин если успешно зарегался
+
+      setTimeout( async () => { 
+        setNotificationOuterActive(true)
+      }, 100)
+      
+    } else {
+      setSubmitMessageType('error')
+      setNotificationOuterActive(true)
+    }
+  }
 
   const onSubmit = ({email, password, username, group}) => {
     if (type === 'sign-up') {
-      try {
-        homeworkAPI.sendRegisterData(email, password, username, group).then(
-          resp => {
-            setSubmitMessage(resp.detail)
-            setNotificationOuterActive(true)
-            if (resp.status === 'ok') setSubmitMessageType('success') 
-            else setSubmitMessageType('error')
-          }
-        )
+      homeworkAPI.sendRegisterData(email, password, username, group).then(
+        resp => handleAuth(resp)
+      )
         
-      } catch (err) {
-        console.log('errrrrrrrrrrrr', err);
-      }
     } else if (type === 'sign-in') {
-      homeworkAPI.sendLoginData(email, password)
+      homeworkAPI.sendLoginData(email, password).then(
+        resp => handleAuth(resp)
+      )
     } else {
       console.log('Указан неверный тип формы');
     }
   }
 
-  let groupAttempts = 0
+  const groupAttemptsRef = useRef(0)
+
   const validateGroup = async (value) => {
     // если поле пустое, валидация проходит (поле опционально)
     if (!value || value.trim() === "") {
@@ -80,8 +97,8 @@ export const AuthForm = ({ type }) => {
       )
       
       if (!groupExists) {
-        groupAttempts++
-        return groupAttempts < 5
+        groupAttemptsRef.current ++
+        return groupAttemptsRef.current < 5
           ? `группа не найдена, либо не существует.`
           : "введите группу в точности, как на официальном сайте расписания."
       }
@@ -217,7 +234,6 @@ export const AuthForm = ({ type }) => {
         )}
       </form>
       <NotificationOuter 
-      message={submitMessage}
       type={submitMessageType}
       />
       <DevTool control={control} />

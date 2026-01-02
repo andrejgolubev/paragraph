@@ -134,18 +134,17 @@ const homeworkAPI = {
       }), 
     })
     const responseData = await response.json() 
-    // console.log('data from sendReg', responseData);
 
     if (!response.ok) {
-      return {...responseData, status: 'error'}
+      return {...responseData, status: 'error', type: 'sign-up'}
     }
 
-    return {...responseData, status: 'ok'}
+    return {...responseData, status: 'ok', type: 'sign-up'}
 
 
   }, 
   sendLoginData: async (email, password) => {
-    return fetch(`${BASE_URL}/user/login`, {
+    const response = await fetch(`${BASE_URL}/user/login`, {
       method: "POST", 
       headers, 
       body: JSON.stringify({
@@ -154,6 +153,14 @@ const homeworkAPI = {
       }), 
       credentials: 'include'
     })
+
+    const responseData = await response.json() 
+    console.log('responseData :>> ', responseData);
+    if (!response.ok) {
+      return {...responseData, status: 'error', type: 'sign-in'}
+    }
+
+    return {...responseData, status: 'ok', type: 'sign-in'}
   } 
 }
 
