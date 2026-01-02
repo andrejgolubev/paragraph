@@ -97,7 +97,7 @@ async def save_homework(
 
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error saving homework: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"ошибка сохранения д/з: {e}")
 
 
 async def get_group_datavalue(

@@ -41,6 +41,7 @@ const Dropdown = (props) => {
 
 
   const handleEnterKey = (event, inputText) => {
+    
     if (event.key === 'Enter') {
       if (name === "group") {
         console.log('inputText :>> ', inputText);

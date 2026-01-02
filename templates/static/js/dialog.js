@@ -88,7 +88,7 @@ async function saveHomework(lessonInfo, homeworkText) {
       showNotification(`${errorData.detail || "произошла неизвестная ошибка"}`, "error", true);
     }
   } catch (error) {
-    console.error("Error saving homework:", error, true);
+    console.error("ошибка сохранения:", error, true);
     showNotification("Ошибка сохранения", "error");
   }
 }

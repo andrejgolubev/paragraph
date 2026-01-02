@@ -80,10 +80,14 @@
   }
 
   .modal-buttons {
-    // height: fit-content;
-    height: 50px;
+    height: fit-content;
     display: flex;
     justify-content: space-between;
+
+    button, 
+    div {
+      height: 48px;
+    }
   }
 
   h3 {

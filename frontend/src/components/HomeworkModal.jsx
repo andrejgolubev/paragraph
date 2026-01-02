@@ -89,7 +89,8 @@ const HomeworkModal = ({
         if (!(resp.detail === 'saved')) {
           setRespText(resp.detail)
           setNoTextSubmitError(true)
-        } else {
+        } else { 
+          // если сохранена домашка, то:
           setNoTextSubmitError(true)
           dialog.close() // нативное закрытие (обязательно!!)
           setShowDialog(false) // просто убираем компонент из ScheduleContainer
@@ -97,9 +98,7 @@ const HomeworkModal = ({
     
           setHomeworkSaved(true)
         }
-        
       })
-      
 
     }
 
@@ -138,6 +137,7 @@ const HomeworkModal = ({
         className="modal"
         ref={dialogRef}
         onClick={handleClickOutside}
+        onCancel={handleCancel}
       >
         <form id="homework-form" method="post" onSubmit={handleHomeworkSubmit}>
           <h3>

@@ -35,16 +35,11 @@ app.include_router(schedule.schedule_router)
 app.include_router(homework.homework_router)
 
 
-
-
-
-
 @app.post("/initial", dependencies=[Depends(verify_admin_api_key)])
 async def load_initial_groups_and_dates(db: AsyncSession = Depends(get_db)):
     """FOR SUPERUSER ONLY"""
     await load_groups_and_dates(groups=parse_groups(), dates=parse_dates(), db=db)
     return {"status": "Data loaded successfully"}
-
 
 
 @app.get('/get-all-dates-related-to-group', dependencies=[Depends(verify_admin_api_key)])
@@ -64,7 +59,7 @@ async def get_all_dates_related_to_group(group_number: str, db: AsyncSession = D
         "dates": dates
     }   
 
-    
+
 @app.get('/get-all-groups-related-to-date', dependencies=[Depends(verify_admin_api_key)])
 async def get_all_groups_related_to_date(date_input: str, db: AsyncSession = Depends(get_db)):
     """Принимает дату в формате (xx.xx.xxxx) или (xxxx-xx-xx). FOR SUPERUSER ONLY. """
@@ -83,4 +78,8 @@ async def get_all_groups_related_to_date(date_input: str, db: AsyncSession = Dep
     }       
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")
+    uvicorn.run(
+        app,
+        port=8000,
+        log_level="info",
+    )
