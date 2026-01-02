@@ -4,9 +4,10 @@ import toggleBg from "../images/toggle-bg.svg"
 import toggleSun from "../images/toggle-sun.svg"
 import profileIcon from "../images/ProfileIcon.svg"
 import { ProfileDropdown } from "./ProfileDropdown"
-import { useState, useRef } from "react"
+import { useState, useRef, useContext } from "react"
 import { useClickOutside } from "../hooks/useClickOutside"
 import { Link, useLocation } from "react-router-dom"
+import { Context } from "../context/Provider"
 
 const Header = () => {
 
@@ -15,6 +16,7 @@ const Header = () => {
   const profileRef = useRef(null)
   const location = useLocation()
 
+  const {username, userRole} = useContext(Context)
   useClickOutside([dropdownRef, profileRef], () => {
     setDisplayProfile(false)
   })
@@ -61,8 +63,8 @@ const Header = () => {
               />
               {displayProfile && (
                 <ProfileDropdown
-                // username={'Андрей Голубев'}
-                // role={'Администратор'}
+                username={username}
+                role={userRole}
                 dropdownRef={dropdownRef}
                 setDisplayProfile={setDisplayProfile}
                  />

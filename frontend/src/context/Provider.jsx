@@ -1,5 +1,7 @@
 import { createContext, useEffect, useState } from "react"
 import { useCookies } from "react-cookie"
+import homeworkAPI from "../api/homeworkAPI"
+
 
 export const Context = createContext({})
 
@@ -17,8 +19,19 @@ export const Provider = ({ children }) => {
 
 
   const [dateDataValue, setDateDataValue] = useState("")
-
   
+
+  // устанавливаем имя для ProfileDropdown используя access_token 
+  const [username, setUsername] = useState('')
+  const [userRole, setUserRole] = useState('')
+  
+  useEffect( () => {
+    homeworkAPI.getUserData().then(resp => {
+      setUsername(resp.username)
+      setUserRole(resp.role)
+    })
+  }, [notificationOuterActive]) // такая зависимость т.к. при входе в аккаунт срабатывает эта нотификэйшн
+
   return (
     <Context.Provider
       value={{
@@ -26,13 +39,19 @@ export const Provider = ({ children }) => {
         setGroupDataValue,
         dateDataValue,
         setDateDataValue,
+        //notificationOuter
         notificationOuterActive, 
         setNotificationOuterActive,
+        notificationOuterMessage, 
+        setNotificationOuterMessage,
+        //
         tipActive, 
         setTipActive,
         setGroupDataValueCookies,
-        notificationOuterMessage, 
-        setNotificationOuterMessage,
+        username, 
+        setUsername, 
+        userRole, 
+        setUserRole,
       }}
     >
       {children}

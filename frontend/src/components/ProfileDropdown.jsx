@@ -4,13 +4,47 @@ import closeIcon from "../images/close-icon.svg"
 import loginIcon from "../images/login-icon.svg"
 import registerIcon from "../images/register-icon.svg"
 import { Link } from "react-router-dom"
+import { useContext, useRef } from "react"
+import homeworkAPI from "../api/homeworkAPI"
+import { Context } from "../context/Provider"
 
 export const ProfileDropdown = (props) => {
   const { setDisplayProfile, dropdownRef, username, role } = props
 
-  const disappearOnClick = () => {
+  const displayRole = useRef('')
+  const moderatedGroups = useRef('')
+
+  const { setNotificationOuterActive, setNotificationOuterMessage } =
+    useContext(Context) // импортируем чтобы вызвалась проверка access_token (т.к. в Provider такая dependency)
+
+
+  const handleLogout = () => {
+    homeworkAPI.logout().then( resp => {
+      setNotificationOuterActive(true)
+      setNotificationOuterMessage(resp.detail)
+      // console.log('resp.detail :>> ', resp.detail);
+
+    })
     setDisplayProfile(false)
   }
+
+  const roleMap = {
+    student: 'Студент', 
+    admin: 'Администратор',
+    teacher: 'Преподаватель',
+  }
+
+  if (role?.includes('admin')) {
+
+    displayRole.current = role.split('.')[0]
+    moderatedGroups.current = role.split('.').slice(1,)
+    console.log('moderatedGroups :>> ', moderatedGroups);
+  } else {
+    displayRole.current = role
+  } 
+  
+
+
 
   if (username && role) {
     return (
@@ -18,11 +52,16 @@ export const ProfileDropdown = (props) => {
         <img
           className="profile-dropdown__close"
           src={closeIcon}
-          onClick={disappearOnClick}
+          onClick={handleLogout}
         ></img>
         <div className="profile-dropdown__inner">
           <p>{username}</p>
-          <p className="role small">{role}</p>
+          <p className="role small">
+            {roleMap[displayRole.current]}
+          </p>
+          <p className="small">
+            {`${moderatedGroups.current}`}
+          </p>
           <div className="stroke">
             <svg
               width="270"
@@ -36,18 +75,18 @@ export const ProfileDropdown = (props) => {
           </div>
           <div className="options-list">
             <Link to="/help">
-              <div className="options-list__elem" onClick={disappearOnClick}>
+              <div className="options-list__elem" >
                 <img className="options-list__elem__img" src={questionMark} />
-                <a href="#">
+                {/* <a href="#"> */}
                   <p>Помощь</p>
-                </a>
+                {/* </a> */}
               </div>
             </Link>
-            <div className="options-list__elem" onClick={disappearOnClick}>
+            <div className="options-list__elem" onClick={handleLogout}>
               <img className="options-list__elem__img" src={exitIcon} />
-              <a href="#">
+              {/* <a href="#"> */}
                 <p>Выход</p>
-              </a>
+              {/* </a> */}
             </div>
           </div>
         </div>

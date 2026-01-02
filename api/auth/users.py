@@ -123,12 +123,21 @@ async def login(
             samesite="none",  
             max_age=lifetime_seconds
         )   
-
     
-
     return {
         "detail": f"Вы вошли как {user.name}",
+        'username': user.name,
+        'role': user.role,
     }
+
+
+
+@router.post('/logout') 
+async def logout(response: Response): 
+    response.delete_cookie('access_token', samesite='none', secure=True)
+    response.delete_cookie('refresh_token', samesite='none', secure=True)
+
+    return {"detail": "Вы успешно вышли из аккаунта"}
 
 
 @router.post("/make-admin/", dependencies=[Depends(verify_admin_api_key)])
@@ -166,6 +175,7 @@ async def make_admin(
 @router.get("/me")
 def auth_user_check_self_info(user: dict = Depends(get_current_active_auth_user)):
     """для возрвата данных на фронтенд в раздел 'профиль'"""
+
     return {
         "username": user.get("username"),
         "email": user.get("email"),

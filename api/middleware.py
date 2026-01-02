@@ -30,7 +30,7 @@ class RefreshToken(BaseHTTPMiddleware):
         if request.method == "OPTIONS":
             return await call_next(request)
 
-        excluded_paths = ['/favicon.ico', '/openapi.json', '/redoc', '/static/', '/user/login']
+        excluded_paths = ['/favicon.ico', '/openapi.json', '/redoc', '/static/', '/user/login', '/user/logout']
         if any(request.url.path.startswith(path) for path in excluded_paths):
             return await call_next(request)
 

@@ -16,7 +16,7 @@ def get_access_token_payload(
         detail="пожалуйста, войдите в аккаунт.",
     )
     try:
-        if not (token := request.cookies.get("access_token")):
+        if not (token := request.cookies.get("access_token")) and not (request.cookies.get('refresh_token')):
             raise unauth_exception
         payload = auth_utils.decode_jwt(token=token)
 
@@ -49,12 +49,11 @@ def get_refresh_token_payload(
 
 
 async def get_current_auth_user(
-    payload: dict = Depends(get_access_token_payload),
+    payload: dict = Depends(get_access_token_payload), # но можно и get_refresh_token_payload если пофиг на то что рефреш станет как аксес )))
     db: AsyncSession = Depends(get_db),
 ) -> User:
     """returns user by payload NO MATTER HE IS ACTIVE OR NOT 
-    (should not be used as dependency, 
-    better use get_current_active_auth_user)"""
+    (should not be used as dependency, better use get_current_active_auth_user)"""
     email: str = payload.get('sub')
 
     user_result = await db.scalars(select(User).where(User.email == email))

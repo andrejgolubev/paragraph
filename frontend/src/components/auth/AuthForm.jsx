@@ -17,6 +17,7 @@ export const AuthForm = ({ type }) => {
 
   const navigate = useNavigate()
 
+
   // будет переменная userAuthorized с СОСТОЯНИЕМ от которой будет зависеть type
   // так что такя реализация с let допустима
   let authType = ""
@@ -32,8 +33,6 @@ export const AuthForm = ({ type }) => {
     authTitle = "добро пожаловать!"
   }
 
-
-
   
   const form = useForm()
   const { register, control, handleSubmit, formState } = form
@@ -48,12 +47,15 @@ export const AuthForm = ({ type }) => {
     if (resp.status === 'ok') {
       setSubmitMessageType('success') 
       
-      if (resp.type === 'sign-in') navigate('/', {replace: true})  //редирект на расписание если логин
+      if (resp.type === 'sign-in') navigate('/', {replace: true}) // редирект на расписание если логин   
       else navigate('/sign-in', {replace: true})  //редирект на логин если успешно зарегался
+      // имя и роль в ProfileDropdown устанавливаются через Provider
 
       setTimeout( async () => { 
         setNotificationOuterActive(true)
       }, 100)
+      
+      
       
     } else {
       setSubmitMessageType('error')

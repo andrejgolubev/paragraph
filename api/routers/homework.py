@@ -28,10 +28,10 @@ async def save_homework(
     lesson_index = homework_request.lesson_index
     homework = homework_request.homework
 
-    print(f'ИЗ savehomework : {group_data_value = }')
     moderated_group_numbers = [gr for gr in role.split(".")[1:] if gr] # недоразумение 
     moderated_group_datavalues = [await get_group_datavalue(group_number, db=db) for group_number in moderated_group_numbers]
-    print(f'{moderated_group_datavalues = }')
+
+    
     if not any([group_dv for group_dv in moderated_group_datavalues if group_data_value == group_dv]): 
         raise HTTPException(status_code=403, detail="недостаточно прав для управления этим д/з.")
         
