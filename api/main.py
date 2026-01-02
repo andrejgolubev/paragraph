@@ -1,12 +1,6 @@
 import logging
 import uvicorn
 from api.settings import settings
-logging.basicConfig(
-    level=settings.logging.log_level_value,
-    format=settings.logging.log_format,
-)
-
-log = logging.getLogger(__name__)
 
 from api.db.refresh_db import load_groups_and_dates
 
@@ -16,16 +10,24 @@ from api.auth.users import router as user_router
 from api.parser.group_parser import parse_groups
 from api.parser.date_parser import parse_dates
 from api.parser.utils import convert_date
-from api.services.data_service import data_service
 from api.auth.utils import verify_admin_api_key
+from api.db.models import Group, Date
 
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
-from api.db.models import Group, Date
 
 from api.create_app import create_app
+
+
+logging.basicConfig(
+    level=settings.logging.log_level_value,
+    format=settings.logging.log_format,
+)
+
+log = logging.getLogger(__name__)
+
 
 app = create_app()
 

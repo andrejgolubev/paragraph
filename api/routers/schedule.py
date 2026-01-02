@@ -5,28 +5,32 @@ from api.parser.schedule_parser import parse_schedule_from_url, parse_schedule
 from sqlalchemy.ext.asyncio import AsyncSession
 from api.db.schemas import GroupSelection
 from api.services.data_service import data_service
-from datetime import datetime
-import time
 
-schedule_router = APIRouter(tags=['Schedule'], prefix='/schedule')
-router = schedule_router
+
+router = schedule_router = APIRouter(tags=['Schedule'], prefix='/schedule')
 
 
 @router.get("/get-schedule")
 async def get_schedule(
+    response: Response,
     group_data_value: str | None = None,
     date_data_value: str | None = None,
 ):
-    st = time.time() 
-    
+        
     url = f'https://rasp.rsreu.ru/schedule-frame/group?faculty=1&group={group_data_value}&date={date_data_value or ""}'    
 
-    try:
-        # парсим расписание (ничего не указываем в function если хотим обычный парсинг)
+    # заменено клиентским куки
+    # response.set_cookie(
+    #     key="group_data_value",
+    #     value=group_data_value,
+    #     httponly=False,  # тк JS может читать эти куки чтоб в соответствии с выбранной группой и датой пользователем сразу отображалась нужная таблица
+    #     secure=False,  # для htpps - True , для http - False
+    #     samesite="lax",  
+    #     max_age=60*60*24*14 # 14 days
+    # )
+
+    try:    
         schedule_data = await parse_schedule_from_url(url, function=parse_schedule) 
-        if schedule_data: 
-            end = time.time() 
-            print(end - st)
         return schedule_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error parsing schedule: {str(e)}")
@@ -45,8 +49,8 @@ async def select_group(
         value=group_data.group_data_value,
         max_age=30*24*60*60,  # 30 дней
         httponly=True,
-        samesite='lax',
-        secure=True  # для HTTPS
+        samesite='none',
+        secure=True  
     )
     
     return {"status": "success", "selected_group": group_data.group_data_value} 

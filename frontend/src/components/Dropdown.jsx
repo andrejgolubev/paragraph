@@ -17,11 +17,22 @@ const Dropdown = (props) => {
   const dropdownRef = useRef(null)
   const inputRef = useRef("")
 
+  useEffect( () => {
+    // console.log('Dropdown: groupDataValue :>> ', groupDataValue);
+    if (func === 'search') {
+      console.log('Dropdown: groupDataValue :>> ', groupDataValue);
+       homeworkAPI.convertFromDataValue({groupDataValue}).then(resp => {
+        inputRef.current.value = resp?.group_data_value ?? ""
+      })
+      
+    }
+    
+  }, [])
   useClickOutside([dropdownRef], () => {
     setActiveSearch(false)
   })
 
-  const { groupDataValue, setGroupDataValue, dateDataValue, setDateDataValue } =
+  const { groupDataValue, setGroupDataValue, dateDataValue, setDateDataValue,  } =
     useContext(Context)
 
   // будет только для "group" ну и для других, где пользователь сам вводит текст

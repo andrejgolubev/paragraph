@@ -11,7 +11,7 @@ import NotificationOuter from "./notifications/NotificationOuter"
 let lessonInfoGlobal = {}
 
 const ScheduleContainer = () => {
-  const { groupDataValue, dateDataValue } = useContext(Context)
+  const { groupDataValue, dateDataValue, setGroupDataValueCookies } = useContext(Context)
   const [scheduleData, setScheduleData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -21,12 +21,14 @@ const ScheduleContainer = () => {
   const [homeworkUpdated, setHomeworkUpdated] = useState("")
   const [year, setYear] = useState(new Date().getFullYear())
 
-  console.log('Перерисовка ScheduleCOnt')
   useEffect(() => {
     console.log("ScheduleContainer - текущие значения:", {
       groupDataValue,
       dateDataValue,
     })
+    setGroupDataValueCookies('groupDataValue', groupDataValue)
+    
+
   }, [groupDataValue, dateDataValue])
 
   useEffect( () => {

@@ -120,8 +120,6 @@ async def login(
 
     return {
         "message": "успешный вход",
-        "access": access_token, 
-        "refresh": refresh_token
     }
 
 

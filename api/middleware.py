@@ -47,7 +47,7 @@ class RefreshToken(BaseHTTPMiddleware):
                 value=access_token,
                 httponly=True,
                 secure=True,  # но можно False для localhost
-                samesite="none", # для localhost
+                samesite="none", 
                 max_age=settings.auth_jwt.access_token_expire_minutes * 60
             )
             

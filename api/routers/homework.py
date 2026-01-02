@@ -76,20 +76,20 @@ async def save_homework(
             association.homework = homework or ""
             association.updated = datetime.now()
 
-        public_cookies = {
-            "group_data_value": group_data_value,
-            "date_data_value": date_data_value,
-        }
+        # public_cookies = {
+        #     "group_data_value": group_data_value,
+        #     "date_data_value": date_data_value,
+        # }
 
-        for key, value in public_cookies.items():
-            response.set_cookie(
-                key=key,
-                value=value,
-                httponly=False,  # тк JS может читать эти куки чтоб в соответствии с выбранной группой и датой пользователем сразу отображалась нужная таблица
-                secure=True,  # для htpps
-                samesite="none",  
-                # max_age=
-            )
+        # for key, value in public_cookies.items():
+        #     response.set_cookie(
+        #         key=key,
+        #         value=value,
+        #         httponly=False,  # тк JS может читать эти куки чтоб в соответствии с выбранной группой и датой пользователем сразу отображалась нужная таблица
+        #         secure=True,  # для htpps
+        #         samesite="none",  
+        #         max_age=60*60*24*14 # 14 days
+        #     )
 
         await db.commit()
 
@@ -146,18 +146,17 @@ async def convert_to_datavalue(
 
 @router.get("/convert-back")
 async def convert_from_datavalue(
-    group_number: str | None = None,
-    date: str | None = None,
+    group_data_value: str | None = None,
+    date_data_value: str | None = None,
     db: AsyncSession = Depends(get_db),
 ):
     """ПЕРЕВОДИТ группы и даты из data_value-формата"""
-
     group_result = await db.scalars(
-        select(Group).where(Group.group_number == group_number)
+        select(Group).where(Group.data_value == group_data_value)
     )
     db_group = group_result.first()
 
-    date_result = await db.scalars(select(Date).where(Date.date == date))
+    date_result = await db.scalars(select(Date).where(Date.data_value == date_data_value))
 
     db_date = date_result.first()
 
@@ -165,8 +164,8 @@ async def convert_from_datavalue(
         return {"failure": "group and date not selected or not found"}
 
     return {
-        "date_data_value": db_date.data_value if db_date else "",
-        "group_data_value": db_group.data_value if db_group else "",
+        "date_data_value": db_date.date if db_date else "",
+        "group_data_value": db_group.group_number if db_group else "",
     }
 
 

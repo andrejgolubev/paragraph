@@ -10,9 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "js-cookie": "^3.0.5",
     "lucide-react": "^0.562.0",
     "radix-ui": "^1.4.3",
     "react": "^19.2.0",
+    "react-cookie": "^8.0.1",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.69.0",
     "react-loading-indicators": "^1.0.1",

@@ -87,7 +87,7 @@ const homeworkAPI = {
   convertFromDataValue: async ({ groupDataValue, dateDataValue }) => {
     const params = new URLSearchParams({
       group_data_value: String(groupDataValue),
-      date_data_value: dateDataValue,
+      date_data_value: dateDataValue ?? "",
     })
 
     const resp = await fetch(
