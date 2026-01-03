@@ -3,6 +3,8 @@ import homeworkAPI from "../api/homeworkAPI"
 import { Context } from "../context/Provider"
 import { useRef } from "react"
 import { useClickOutside } from "../hooks/useClickOutside"
+import { latinToCyrillic } from "../utils/converters"
+import { useDebounce } from "../hooks/useDebouce"
 
 const Dropdown = (props) => {
   const { name, func, placeholder, readOnly} = props
@@ -12,22 +14,19 @@ const Dropdown = (props) => {
   const [filteredData, setFilteredData] = useState([])
   const [elemKey, setElemKey] = useState("")
   const [activeSearch, setActiveSearch] = useState(false)
-  // const [error, setError] = useState(false)
 
   const dropdownRef = useRef(null)
   const inputRef = useRef("")
 
   useEffect( () => {
-    // console.log('Dropdown: groupDataValue :>> ', groupDataValue);
     if (func === 'search') {
-      console.log('Dropdown: groupDataValue :>> ', groupDataValue);
-       homeworkAPI.convertFromDataValue({groupDataValue}).then(resp => {
+      homeworkAPI.convertFromDataValue({groupDataValue}).then(resp => {
         inputRef.current.value = resp?.group_data_value ?? ""
       })
-      
     }
     
   }, [])
+
   useClickOutside([dropdownRef], () => {
     setActiveSearch(false)
   })
@@ -35,36 +34,36 @@ const Dropdown = (props) => {
   const { groupDataValue, setGroupDataValue, dateDataValue, setDateDataValue,  } =
     useContext(Context)
 
+  const debouncedInputText = useDebounce(inputText, 100)
+
   // будет только для "group" ну и для других, где пользователь сам вводит текст
   useEffect(() => {
     setFilteredData(
       data.filter((elem) => {
+        
         const element = elem[elemKey]
 
-
         return (
-          element &&
-          element.toLowerCase().trim().includes(inputText.trim().toLowerCase())
+          element && (
+            element.toLowerCase().trim().includes(latinToCyrillic(inputText).trim().toLowerCase())
+          )
         )
       })
     )
-  }, [inputText])
+  }, [debouncedInputText])
 
 
   const handleEnterKey = (event, inputText) => {
     
     if (event.key === 'Enter') {
       if (name === "group") {
-        console.log('inputText :>> ', inputText);
         homeworkAPI.convertToDataValue({groupNumber: inputText})
         .then(resp => resp['group_data_value']).then(responseValue => {
-          console.log('responseValue :>> ', responseValue)
           if (responseValue) {
             setGroupDataValue(responseValue) 
           } else {
             setGroupDataValue('')
             setActiveSearch(false)
-            // ТУТ ЧТО ТО ТИПА setError({true, type: 'wrong-group'})
 
           }
         })
@@ -101,7 +100,9 @@ const Dropdown = (props) => {
   }
 
   const onInput = (event) => {
-    setInputText(event.target?.value.trim())
+    const trimmedText = event.target?.value.trim() 
+    setInputText(trimmedText )
+    console.log('latinToCyrillic( trimmedText)', latinToCyrillic( trimmedText))
     setActiveSearch(true)
   }
 

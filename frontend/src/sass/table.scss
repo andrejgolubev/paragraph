@@ -41,7 +41,6 @@
 
   margin-top: 25px;
   margin-right: 13px;
-  // transition: all 0.3s ease 0s;
 
   thead {
     height: 60px;
@@ -66,7 +65,6 @@
     }
 
     p {
-      // transition: all 0.3s ease 0s;
       font-size: 16px;
 
       @media (max-width: 1200px) {
@@ -105,7 +103,7 @@
     padding: 12px 0;
     padding-left: 10px;
     min-width: 90px;
-    max-width: 200px;
+    max-width: 150px;
     
     &:first-child {
       text-align: left;

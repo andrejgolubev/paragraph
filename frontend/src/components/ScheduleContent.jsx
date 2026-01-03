@@ -4,6 +4,7 @@ import Tip from "./Tip"
 import { useEffect, useContext } from "react"
 import { Context } from "../context/Provider"
 import NotificationOuter from "./notifications/NotificationOuter"
+import { useDebounce } from "../hooks/useDebouce"
 
 const ScheduleContent = () => {
   const { groupDataValue, dateDataValue, tipActive, setTipActive } = useContext(Context)
@@ -15,6 +16,7 @@ const ScheduleContent = () => {
   if (groupDataValue) {
     setTipActive(false)
   } 
+
 
   useEffect(() => {
     const timer = setTimeout( async () => {

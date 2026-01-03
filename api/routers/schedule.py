@@ -5,7 +5,7 @@ from api.parser.schedule_parser import parse_schedule_from_url, parse_schedule
 from sqlalchemy.ext.asyncio import AsyncSession
 from api.db.schemas import GroupSelection
 from api.services.data_service import data_service
-
+from api.settings import settings
 
 router = schedule_router = APIRouter(tags=['Schedule'], prefix='/schedule')
 
@@ -19,15 +19,7 @@ async def get_schedule(
         
     url = f'https://rasp.rsreu.ru/schedule-frame/group?faculty=1&group={group_data_value}&date={date_data_value or ""}'    
 
-    # заменено клиентским куки
-    # response.set_cookie(
-    #     key="group_data_value",
-    #     value=group_data_value,
-    #     httponly=False,  # тк JS может читать эти куки чтоб в соответствии с выбранной группой и датой пользователем сразу отображалась нужная таблица
-    #     secure=False,  # для htpps - True , для http - False
-    #     samesite="lax",  
-    #     max_age=60*60*24*14 # 14 days
-    # )
+    
 
     try:    
         schedule_data = await parse_schedule_from_url(url, function=parse_schedule) 
@@ -49,7 +41,7 @@ async def select_group(
         value=group_data.group_data_value,
         max_age=30*24*60*60,  # 30 дней
         httponly=True,
-        samesite='none',
+        samesite='none', # обязательно 'lax' для продакшна
         secure=True  
     )
     

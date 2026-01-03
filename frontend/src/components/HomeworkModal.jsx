@@ -10,7 +10,7 @@ const HomeworkModal = ({
   homeworkText,
   homeworkUpdated,
 }) => {
-  const { notificationOuterActive, setNotificationOuterActive, notificationOuterMessage, setNotificationOuterMessage,  } = useContext(Context)
+  const {setNotificationOuterActive, setNotificationOuterMessage } = useContext(Context)
   const [inputValue, setInputValue] = useState("")
   const [noTextSubmitError, setNoTextSubmitError] = useState(false)
   const [lastUpdate, setLastUpdate] = useState("")
@@ -38,9 +38,9 @@ const HomeworkModal = ({
           setLastUpdate("")
         } else {
 
-          let hmwUpdated = homeworkUpdated.split("T")
-          let hmwDate = convertDate(hmwUpdated[0])
-          let hmwTime = hmwUpdated[1].slice(0, 5)
+          const hmwUpdatedTime = homeworkUpdated.split("T")
+          const hmwDate = convertDate(hmwUpdatedTime[0])
+          const hmwTime = hmwUpdatedTime[1].slice(0, 5)
   
   
           setLastUpdate("последнее изменение: " + hmwDate + ", " + hmwTime)

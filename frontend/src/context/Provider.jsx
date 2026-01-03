@@ -13,7 +13,10 @@ export const Provider = ({ children }) => {
   const [tipActive, setTipActive] = useState(false) //подсказка при первом заходе на сайт
   
   // клиентские куки
-  const [groupDataValueCookies, setGroupDataValueCookies, removeGroupDataValueCookies] = useCookies(['group_data_value'])
+  const [groupDataValueCookies, setGroupDataValueCookies, removeGroupDataValueCookies] 
+    = useCookies(
+      ['group_data_value'], 
+    )
   const groupDataValueCookie = groupDataValueCookies.groupDataValue
   const [groupDataValue, setGroupDataValue] = useState(groupDataValueCookie)
 

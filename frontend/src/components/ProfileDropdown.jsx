@@ -15,15 +15,15 @@ export const ProfileDropdown = (props) => {
   const moderatedGroups = useRef('')
 
   const { setNotificationOuterActive, setNotificationOuterMessage } =
-    useContext(Context) // импортируем чтобы вызвалась проверка access_token (т.к. в Provider такая dependency)
+    useContext(Context) 
 
+  const disappearOnClick = () => setDisplayProfile(false)
 
+  // чтобы вызвалась проверка access_token (т.к. в Provider такая dependency)
   const handleLogout = () => {
     homeworkAPI.logout().then( resp => {
       setNotificationOuterActive(true)
       setNotificationOuterMessage(resp.detail)
-      // console.log('resp.detail :>> ', resp.detail);
-
     })
     setDisplayProfile(false)
   }
@@ -44,15 +44,12 @@ export const ProfileDropdown = (props) => {
   } 
   
 
-
-
   if (username && role) {
     return (
       <div className="profile-dropdown" ref={dropdownRef}>
         <img
           className="profile-dropdown__close"
           src={closeIcon}
-          onClick={handleLogout}
         ></img>
         <div className="profile-dropdown__inner">
           <p>{username}</p>
@@ -76,7 +73,7 @@ export const ProfileDropdown = (props) => {
           <div className="options-list">
             <Link to="/help">
               <div className="options-list__elem" >
-                <img className="options-list__elem__img" src={questionMark} />
+                <img className="options-list__elem__img" src={questionMark} onClick={disappearOnClick} />
                 {/* <a href="#"> */}
                   <p>Помощь</p>
                 {/* </a> */}
@@ -98,7 +95,7 @@ export const ProfileDropdown = (props) => {
         <img
           className="profile-dropdown__close"
           src={closeIcon}
-          onClick={() => setDisplayProfile(false)}
+          onClick={disappearOnClick}
         ></img>
         <div className="profile-dropdown__inner">
           <p className="role small">*Вы не вошли в аккаунт*</p>
@@ -115,20 +112,20 @@ export const ProfileDropdown = (props) => {
           </div>
           <div className="options-list">
             <Link to="/sign-in">
-              <div className="options-list__elem" style={{ gap: "6px" }}>
+              <div className="options-list__elem" style={{ gap: "6px" }} onClick={disappearOnClick}>
                 <img className="options-list__elem__img" src={loginIcon} />
                 <p>Вход</p>
               </div>
             </Link>
             <Link to="/sign-up">
-              <div className="options-list__elem" style={{ gap: "3px" }}>
+              <div className="options-list__elem" style={{ gap: "3px" }} onClick={disappearOnClick}>
                 <img className="options-list__elem__img" src={registerIcon} />
                 <p style={{ position: "relative", top: "1px" }}>Регистрация</p>
               </div>
             </Link>
             <Link to="/help">
               <div className="options-list__elem">
-                <img className="options-list__elem__img" src={questionMark} />
+                <img className="options-list__elem__img" src={questionMark} onClick={disappearOnClick}/>
                 <p>Помощь</p>
               </div>
             </Link>

@@ -31,7 +31,7 @@ async def save_homework(
     moderated_group_numbers = [gr for gr in role.split(".")[1:] if gr] # недоразумение 
     moderated_group_datavalues = [await get_group_datavalue(group_number, db=db) for group_number in moderated_group_numbers]
 
-    
+
     if not any([group_dv for group_dv in moderated_group_datavalues if group_data_value == group_dv]): 
         raise HTTPException(status_code=403, detail="недостаточно прав для управления этим д/з.")
         
@@ -74,20 +74,6 @@ async def save_homework(
             association.homework = homework or ""
             association.updated = datetime.now()
 
-        # public_cookies = {
-        #     "group_data_value": group_data_value,
-        #     "date_data_value": date_data_value,
-        # }
-
-        # for key, value in public_cookies.items():
-        #     response.set_cookie(
-        #         key=key,
-        #         value=value,
-        #         httponly=False,  # тк JS может читать эти куки чтоб в соответствии с выбранной группой и датой пользователем сразу отображалась нужная таблица
-        #         secure=True,  # для htpps
-        #         samesite="none",  
-        #         max_age=60*60*24*14 # 14 days
-        #     )
 
         await db.commit()
 

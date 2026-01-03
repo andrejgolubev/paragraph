@@ -30,7 +30,7 @@ class RefreshToken(BaseHTTPMiddleware):
         if request.method == "OPTIONS":
             return await call_next(request)
 
-        excluded_paths = ['/favicon.ico', '/openapi.json', '/redoc', '/static/', '/user/login', '/user/logout']
+        excluded_paths = ['/favicon.ico', '/openapi.json', '/redoc', '/static/', '/user/login', '/user/logout', '/homework/get']
         if any(request.url.path.startswith(path) for path in excluded_paths):
             return await call_next(request)
 
@@ -47,7 +47,7 @@ class RefreshToken(BaseHTTPMiddleware):
                 value=access_token,
                 httponly=True,
                 secure=True,  # но можно False для localhost
-                samesite="none", 
+                samesite='none', # обязательно 'lax' для продакшна 
                 max_age=settings.auth_jwt.access_token_expire_minutes * 60
             )
             
@@ -69,7 +69,8 @@ def register_middlewares(app: FastAPI):
         allow_origins=ALLOW_ORIGINS,
         allow_methods=["*"],  # Разрешить все методы (ПОКА ЧТО ДЛЯ РАЗРАБОТКИ)
         allow_headers=["*"],  # Разрешить все заголовки
-        allow_credentials=True # использую куки поэтому надо True 
+        allow_credentials=True, # использую куки поэтому надо True 
+        expose_headers=["*"],  # Позволяет фронтенду видеть Set-Cookie
     )
 
     app.add_middleware(RefreshToken)

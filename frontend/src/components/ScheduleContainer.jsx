@@ -21,7 +21,7 @@ const ScheduleContainer = () => {
   const [year, setYear] = useState(new Date().getFullYear())
 
   useEffect(() => {
-    setGroupDataValueCookies('groupDataValue', groupDataValue) // чтобы сразу загружалась нужная группа 
+    setGroupDataValueCookies('groupDataValue', groupDataValue, {maxAge: 60*60*24*14}) // чтобы сразу загружалась нужная группа 
     
     // логирование - потом убрать
     console.log("ScheduleContainer - текущие значения:", {
@@ -112,11 +112,10 @@ const ScheduleContainer = () => {
     }
 
     setSelectedLesson(lessonInfo)
-    setShowDialog(true)
 
     lessonInfoGlobal = { ...lessonInfo, dateDataValue: scheduleDateDataValue }
-
-    console.log("lessonInfoGlobal :>> ", lessonInfoGlobal)
+    
+    setShowDialog(true)
   }
 
   // Функция для подсветки текущего дня

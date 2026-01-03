@@ -6,6 +6,7 @@ from envparse import Env
 from dotenv import load_dotenv
 import os
 
+from fastapi import Cookie
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 
@@ -52,10 +53,16 @@ class DatabaseConfig(BaseModel):
     max_overflow: int = 10
 
 
+class CookiesConfig(BaseModel): 
+    secure: bool = False # True для продакшна 
+    # samesite: Literal['lax', 'samesite', 'none'] = 'lax'  
+
+
 class Settings(BaseSettings): 
     db: DatabaseConfig = DatabaseConfig()
     auth_jwt: AuthJWT = AuthJWT() 
     logging: LoggingConfig = LoggingConfig()
+    cookie: CookiesConfig = CookiesConfig() 
 
     
 settings = Settings()
