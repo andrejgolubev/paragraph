@@ -96,6 +96,7 @@ const homeworkAPI = {
         method: "GET",
       }
     )
+    
     const response = await resp.json()
     return response
   },

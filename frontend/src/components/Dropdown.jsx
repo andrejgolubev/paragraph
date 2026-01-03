@@ -21,7 +21,7 @@ const Dropdown = (props) => {
   useEffect( () => {
     if (func === 'search') {
       homeworkAPI.convertFromDataValue({groupDataValue}).then(resp => {
-        inputRef.current.value = resp?.group_data_value ?? ""
+        inputRef.current.value = resp?.group_number ?? "" 
       })
     }
     

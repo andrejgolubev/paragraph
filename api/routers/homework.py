@@ -148,8 +148,8 @@ async def convert_from_datavalue(
         return {"failure": "group and date not selected or not found"}
 
     return {
-        "date_data_value": db_date.date if db_date else "",
-        "group_data_value": db_group.group_number if db_group else "",
+        "date": db_date.date if db_date else "",
+        "group_number": db_group.group_number if db_group else "",
     }
 
 

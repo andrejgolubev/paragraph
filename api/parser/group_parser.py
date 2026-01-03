@@ -8,7 +8,7 @@ from api.parser.parser_conf import init
 def _parse_group(driver: webdriver.Chrome): 
     """ПАРСИТ ВСЕ актуальные ГРУППЫ из выпадающего меню """
 
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 0.1)
 
     icon = driver.find_element(By.CSS_SELECTOR, "i.mdi")
     icon.click()    

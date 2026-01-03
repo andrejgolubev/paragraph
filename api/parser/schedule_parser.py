@@ -1,25 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
-from api.parser.group_parser import parse_groups
 import asyncio
-import re 
-from functools import lru_cache
-import hashlib
-from datetime import datetime, timedelta
 
 def garb_remove(string: str): 
     return ' '.join(string.split())
 
 
-def get_datavalue_by_number(number: str): 
-    return parse_groups()[number]
-
-
-def get_number_by_data_value(data_value): 
-    return {key:value for value, key in parse_groups().items()}[data_value]
-
-
-#старый парсер
 def parse_schedule(url: str): 
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'lxml')
@@ -109,5 +95,3 @@ async def parse_schedule_from_url(url: str, function=parse_schedule):
     return await loop.run_in_executor(None, function, url)  
 
 
-if __name__ == '__main__':
-    parsed = parse_schedule('https://rasp.rsreu.ru/schedule-frame/group?faculty=4&group=878&date=2025-11-10')

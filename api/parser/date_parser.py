@@ -9,7 +9,7 @@ from api.parser.parser_conf import init
 def _parse_date(driver: webdriver.Chrome): 
     """ПАРСИТ ВСЕ актуальные ДАТЫ из выпадающего меню """
 
-    wait = WebDriverWait(driver, 1)
+    wait = WebDriverWait(driver, 0.1)
     css_selector = '.column[style*="width: 220px"] .select-wrap' 
 
     option_box = driver.find_element(By.CSS_SELECTOR, css_selector)
@@ -47,16 +47,6 @@ def parse_dates():
 
     dates = _parse_date(driver=driver)
     return dates 
-
-def get_data_value_by_by_date(number: str): 
-    return parse_dates()[number]
-
-
-def get_date_by_data_value(data_value): 
-    return {key:value for value, key in parse_dates().items()}[data_value]
-
-
-
 
 
 

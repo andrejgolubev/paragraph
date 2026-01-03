@@ -242,7 +242,9 @@ const ScheduleContainer = () => {
                             )}
                             <div
                               className="homework"
-                              onClick={() => handleHomeworkClick(lessonInfo)}
+                              onClick={() => {
+                                handleHomeworkClick(lessonInfo)
+                              }}
                               style={{ cursor: "pointer" }}
                               title="добавить д/з"
                             >
@@ -315,7 +317,9 @@ const ScheduleContainer = () => {
           homeworkText={homeworkText}
           homeworkUpdated={homeworkUpdated}
           setHomeworkUpdated={setHomeworkUpdated}
+          showDialog={showDialog}
           setShowDialog={setShowDialog}
+
         />
       )}
     </>

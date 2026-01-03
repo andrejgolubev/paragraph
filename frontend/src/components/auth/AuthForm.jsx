@@ -56,9 +56,7 @@ export const AuthForm = ({ type }) => {
   }
 
   const validatePassword = (pwd) => {
-    
     if (type === 'sign-in') return true // чтоб не бесили уведы про валидацию когда входишь в акк
-    
     
     const password = pwd.trim()
 
