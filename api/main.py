@@ -21,12 +21,12 @@ from sqlalchemy.orm import selectinload
 from api.create_app import create_app
 
 
-logging.basicConfig(
-    level=settings.logging.log_level_value,
-    format=settings.logging.log_format,
-)
+# logging.basicConfig(
+#     level=settings.logging.log_level_value,
+#     format=settings.logging.log_format,
+# )
 
-log = logging.getLogger(__name__)
+# log = logging.getLogger(__name__)
 
 
 app = create_app()

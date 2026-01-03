@@ -13,9 +13,38 @@ import group_icon from "../../images/auth/group.svg"
 import password_icon from "../../images/auth/password.svg"
 import email_icon from "../../images/auth/email.svg"
 
-export const AuthForm = ({ type }) => {
 
+export const AuthForm = ({ type }) => {
   const navigate = useNavigate()
+
+  const validUsernamePreferences = {
+    minLength: 2,
+    maxLength: 40,
+    pattern: /^[a-zA-Zа-яА-ЯёЁ\s\-\']+$/,
+  }
+  
+  const validateUsername = async (value) => {
+    const username = value.trim()
+    
+    if (username.length < validUsernamePreferences.minLength) {
+      return `имя должно содержать минимум ${validUsernamePreferences.minLength} символа`
+    }
+    
+    if (username.length > validUsernamePreferences.maxLength) {
+      return `имя не должно превышать ${validUsernamePreferences.maxLength} символов`
+    }
+    
+    if (!validUsernamePreferences.pattern.test(username)) {
+      return "разрешены только буквы, пробелы, дефисы и апострофы."
+    }
+    
+    
+    if (/\s{2,}/.test(username)) {
+      return "нельзя использовать несколько пробелов подряд.";
+    }
+    
+    return true;
+  };
 
 
   // будет переменная userAuthorized с СОСТОЯНИЕМ от которой будет зависеть type
@@ -160,7 +189,10 @@ export const AuthForm = ({ type }) => {
                   id="username"
                   placeholder="имя"
                   {...register("username", {
-                    required: requireText
+                    required: requireText, 
+                    validate: {
+                      validFormat: async (value) => validateUsername(value)
+                    }
                   })}
                 />
                 <p className='auth__error'>{errors.username?.message}</p>

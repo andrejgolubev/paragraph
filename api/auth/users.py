@@ -1,3 +1,4 @@
+from tabnanny import filename_only
 import jwt
 from api.auth.validation import get_current_active_auth_user
 from api.auth.validation import get_access_token_payload, get_refresh_token_payload
@@ -16,6 +17,7 @@ from fastapi import Body, Depends, Form, HTTPException, Response, status, APIRou
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from .helpers import create_access_token, create_refresh_token
+from api.utils.censor import has_cursive_words
 
 router = APIRouter(
     prefix="/user",
@@ -34,13 +36,19 @@ async def register(
     password = register_data.password
     group_number = register_data.group_number
 
-    result = await db.scalars(select(User).where(User.email == email))
+    
+    if await has_cursive_words(filepath='api/misc/cursive_words.txt', phrase=username): 
+        raise HTTPException(status_code=400, detail='недопустимое имя')    
 
+    result = await db.scalars(select(User).where(User.email == email))
+    
     if result.first():
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="пользователь с такой почтой уже существует.",
         )
+
+    
 
     group_result = await db.scalars(
         select(Group).where(Group.group_number == group_number)
