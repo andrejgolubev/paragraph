@@ -18,6 +18,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from .helpers import create_access_token, create_refresh_token
 from api.utils.censor import has_cursive_words
+from random import choice
 
 router = APIRouter(
     prefix="/user",
@@ -38,18 +39,19 @@ async def register(
 
     
     if await has_cursive_words(filepath='api/misc/cursive_words.txt', phrase=username): 
-        raise HTTPException(status_code=400, detail='недопустимое имя')    
+        answers: dict[str] = ['введённое имя недопустимо :(', 'такое имя неприемлимо :(', 'введённое имя не прошло валидацию :(']
+        raise HTTPException(status_code=400, detail=choice(answers))    
 
-    result = await db.scalars(select(User).where(User.email == email))
+    email_result = await db.scalars(select(User).where(User.email == email))
     
-    if result.first():
+    if email_result.first():
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="пользователь с такой почтой уже существует.",
         )
 
-    
-
+    # серверная валидация группы, чтобы если пользователь не введет группу или введет какую-то херь, 
+    # то группа была null
     group_result = await db.scalars(
         select(Group).where(Group.group_number == group_number)
     )
@@ -66,7 +68,7 @@ async def register(
         password=hash_password(password),
         role="student",
         active=True,
-        group_id=group_id,  # будет None если группа не нашлась и в БД будет null
+        group_id=group_id,  # будет None если группа не нашлась или не введена, и в БД будет null
     )
 
     db.add(db_user)

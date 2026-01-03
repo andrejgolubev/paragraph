@@ -1,9 +1,8 @@
-import asyncio
+import asyncio  # чтобы запустить асинхронную функцию если надо будет дебажить
+from turtle import goto
 from typing import Annotated
 from typing_extensions import Doc
 import aiofiles
-
-import anyio  # чтобы запустить асинхронную функцию если надо будет дебажить
 
 FILEPATH = 'api/misc/cursive_words.txt'
 
@@ -79,7 +78,7 @@ def normalize_text(text: str) -> str:
 async def has_cursive_words(
     phrase: str,
     filepath: str,
-    temperature: float = 0.35,
+    temperature: float = 0.3,
 ) -> bool:
     """ 
     параметры:
@@ -101,17 +100,13 @@ async def has_cursive_words(
 
             for part in range(len(normalized_phrase) - len(word) + 1):
                 fragment = normalized_phrase[part : part + len(word)]
-
-                if levenstein_distance(fragment, word) <= max_distance:
+                    
+                if fragment and levenstein_distance(fragment, word) <= max_distance:
                     print(f'Найдено {fragment}', f'Похоже на {word}', sep='\n') # для дебага
                     return True 
-    print('Не найдено')
     return False
 
-# asyncio.run(
-#     has_cursive_words(
-#         filepath=FILEPATH,
-#         temperature=0.35,
-#         phrase="Олег",
-#     )
-# )
+
+
+    
+

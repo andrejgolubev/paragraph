@@ -17,34 +17,71 @@ import email_icon from "../../images/auth/email.svg"
 export const AuthForm = ({ type }) => {
   const navigate = useNavigate()
 
-  const validUsernamePreferences = {
-    minLength: 2,
-    maxLength: 40,
-    pattern: /^[a-zA-Zа-яА-ЯёЁ\s\-\']+$/,
+  const validationPreferences = {
+    username: {
+      minLength: 2,
+      maxLength: 40,
+      pattern: /^[a-zA-Zа-яА-ЯёЁ\s\-\']+$/,
+    },
+    email: {
+      pattern: /^\S+@\S+\.\S+$/,
+    },
+    password: {
+      // pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+      minLength: 8,
+    }
   }
   
   const validateUsername = async (value) => {
     const username = value.trim()
     
-    if (username.length < validUsernamePreferences.minLength) {
-      return `имя должно содержать минимум ${validUsernamePreferences.minLength} символа`
+    if (username.length < validationPreferences.username.minLength) {
+      return `имя должно содержать минимум ${validationPreferences.username.minLength} символа`
     }
     
-    if (username.length > validUsernamePreferences.maxLength) {
-      return `имя не должно превышать ${validUsernamePreferences.maxLength} символов`
+    if (username.length > validationPreferences.username.maxLength) {
+      return `имя не должно превышать ${validationPreferences.username.maxLength} символов`
     }
     
-    if (!validUsernamePreferences.pattern.test(username)) {
+    if (!validationPreferences.username.pattern.test(username)) {
       return "разрешены только буквы, пробелы, дефисы и апострофы."
     }
     
     
     if (/\s{2,}/.test(username)) {
-      return "нельзя использовать несколько пробелов подряд.";
+      return "нельзя использовать несколько пробелов подряд."
     }
     
-    return true;
-  };
+    return true
+  }
+
+  const validatePassword = (pwd) => {
+    
+    if (type === 'sign-in') return true // чтоб не бесили уведы про валидацию когда входишь в акк
+    
+    
+    const password = pwd.trim()
+
+    if (password.length < validationPreferences.password.minLength) return 'пароль должен содержать минимум 8 символов.'
+    
+    if (!/[A-ZА-Я]/.test(password)) {
+      return "пароль должен содержать хотя бы одну заглавную букву"
+    }
+    
+    if (!/[a-zа-я]/.test(password)) {
+      return "пароль должен содержать хотя бы одну строчную букву."
+    }
+    
+    if (!/[0-9]/.test(password)) {
+      return "пароль должен содержать хотя бы одну цифру."
+    }
+    
+    if (!/[#?!@$%^&*-]/.test(password)) {
+      return "пароль должен содержать хотя бы один специальный символ: # ? ! @ $ % ^ & * -"
+    }
+    
+    return true
+  }
 
 
   // будет переменная userAuthorized с СОСТОЯНИЕМ от которой будет зависеть type
@@ -128,7 +165,7 @@ export const AuthForm = ({ type }) => {
       )
       
       if (!groupExists) {
-        groupAttemptsRef.current ++
+        groupAttemptsRef.current++
         return groupAttemptsRef.current < 5
           ? `группа не найдена, либо не существует.`
           : "введите группу в точности, как на официальном сайте расписания."
@@ -224,10 +261,9 @@ export const AuthForm = ({ type }) => {
               {...register("email", {
                 required: requireText, 
                 pattern: {
-                  value: /^\S+@\S+\.\S+$/,
+                  value: validationPreferences.email.pattern,
                   message: "неправильный формат электронной почты."
                 }, 
-                // validate : обязательно валидация !! 
               })}
               />
               <p className='auth__error'>{errors.email?.message}</p>
@@ -239,7 +275,8 @@ export const AuthForm = ({ type }) => {
               id="password"
               placeholder="пароль"
               {...register("password", {
-                required: requireText
+                required: requireText, 
+                validate: (value) => validatePassword(value)
               }) }
             />
             <p className='auth__error'>{errors.password?.message}</p>

@@ -73,15 +73,18 @@ async def get_current_active_auth_user(
     user: User = Depends(get_current_auth_user),
     db: AsyncSession = Depends(get_db),
 ) -> dict:
+
     db_group = await db.scalars(select(Group).where(Group.id == user.group_id))
 
-    if not (group_number := db_group.first().group_number):
-        group_number = ""
+    if not (group := db_group.first()):
+        group_number = None
+    else: 
+        group_number = group.group_number
 
     return {
         "username": user.name,
         "email": user.email,
         "role": user.role,
-        "group": group_number,  # слева будет None если группа не указана, так что
+        "group": group_number,  
     }
 

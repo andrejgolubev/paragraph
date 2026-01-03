@@ -50,7 +50,7 @@ const homeworkAPI = {
       .catch((e) => console.error(e))
   },
 
-  loadGroups: async function loadGroups() {
+  loadGroups: async () => {
     return fetch(`${BASE_URL}/schedule/get-all-groups`)
       .then((response) => response.json())
       .catch((err) => {
