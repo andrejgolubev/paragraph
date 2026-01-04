@@ -31,7 +31,7 @@ const ScheduleContent = () => {
   }, [])
 
   return (
-    <div className="main-content">
+    <div className='main-content'>
       <div className="options">
         <Dropdown
           name={"group"}

@@ -13,14 +13,18 @@
   font-family: Manrope, serif;
   width: auto;
   margin-inline: 25px;
+
+  &.dark {
+    p {
+      color: $light-white;
+    }
+  }
 }
 
 .nav {
   width: auto;
   height: 70px;
   margin-left: auto;
-  
-
 
 
   &_logo {
@@ -102,9 +106,6 @@
     &:hover {
       scale: 1.03;
 
-      // @media (max-width:1200px) {
-      //   scale: 0.88
-      // }
     }
   }
 
@@ -127,35 +128,33 @@ body {
   background: linear-gradient(180deg, rgba(244, 247, 252, 0.8) 12%, rgba(98, 170, 255, 0.8) 50%);
 
   &.dark {
-    background: linear-gradient(180deg, $dark2 20%, rgb(1, 1, 5) 80%);
-    
+    background: linear-gradient(180deg, $body-top 20%, $body-bottom 80%);
+
+    .corpuses {
+      p{
+        color: $dark6 !important;
+      }
+    }
   }
 }
 
 .main-content {
   margin: 28px 0 0 25px;
 
-
   .options {
-
-
     display: flex;
     gap: 30px;
-
 
     .corpuses {
       padding-left: -2px;
 
       p {
-
         font-family: 'Manrope', sans-serif;
         font-weight: 400;
-        // font-size: 16px;
         letter-spacing: 0.06em;
         color: rgba(29, 29, 33, 0.15);
-        // transition: all 0.7s ease 0s;
 
-        @media (max-width: 1200px) {
+        @media (max-width: 1100px) {
           font-size: 12px;
         }
       }

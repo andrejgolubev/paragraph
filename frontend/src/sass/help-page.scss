@@ -1,5 +1,8 @@
-// СТИЛИ ДЛЯ АККОРДЕОНА
+@use './variables.scss' as *;
+
 .accordion {
+  
+
   display: flex;
   flex-direction: column;
   
@@ -12,6 +15,9 @@
   letter-spacing: 0.06em;
   line-height: 1.5;
   color: #292833e3;
+  &.dark {
+    color: $light-white;
+  }
 
   &__item {
     display: flex;
@@ -41,6 +47,9 @@
     padding: 10px 60px 20px 25px;
     font-size: 16px;
     color: #272626;
+    &.dark {
+      color: $light-white;
+    }
     @media (max-width: 1200px) {
       font-size: 14px;
     }

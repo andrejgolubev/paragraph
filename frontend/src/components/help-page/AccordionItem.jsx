@@ -1,8 +1,10 @@
-import React, { useRef } from "react"
+import React, { useContext, useRef } from "react"
 import arrow from '../../images/help-page/dropdown-arrow.svg'
-
+import { Context } from "../../context/Provider"
 
 export const AccordionItem = ({ faqItem, onClick, isOpen }) => {
+  const {darkTheme} = useContext(Context)
+
   const itemRef = useRef(null)
 
   return (
@@ -17,7 +19,7 @@ export const AccordionItem = ({ faqItem, onClick, isOpen }) => {
           isOpen ? { height: itemRef.current.scrollHeight } : { height: "0" }
         }
       >
-        <div className="accordion__body" ref={itemRef}>
+        <div className={`accordion__body ${darkTheme? 'dark' : ''}`} ref={itemRef}>
           {faqItem.a}
         </div>
       </div>
