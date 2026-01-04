@@ -1,12 +1,6 @@
 @use './fonts.scss';
 @use './variables.scss' as *;
 
-input#select-input, 
-input#search-input {
-  background-color: #f4f9fecd;
-} 
-
-
 .error-message {
   transition: all 0.3s ease 0s;
   text-align: center;
@@ -63,7 +57,38 @@ input#search-input {
 .search-block,
 .select-block, 
 .custom-dropdown {
-  
+
+  input#select-input, 
+  input#search-input {
+    background-color: $table-white;
+  }
+
+  &.dark {
+    input#select-input, 
+    input#search-input {
+      background-color: $dark3;
+      color: $light-grey;
+      
+      &::placeholder {
+        color: $light-grey;
+      }
+    } 
+
+    ul {
+      li {
+        background-color: $dark5;
+        &:hover {
+          background-color: $light-grey;
+          a {
+            color: $dark5;
+          }
+        }
+        a {
+          color: $light-grey;
+        }
+      }
+    }
+  }
 
   ul{
     transition: all 0.1s ease 0.1s;
@@ -81,12 +106,18 @@ input#search-input {
   }
 
   &__wrap-input {
-    border-radius: 0.5rem;
+    border-radius: 0.25rem;
     display: flex;
     align-items: center;
     border: 2px $light-blue dashed;
     background-color: #fff;
     overflow: auto;
+    
+    &.dark {
+      background-color: $dark3;
+      border: 2px $dark1 dashed;
+      border-radius: 0;
+    }
   }
 
   &__input {
@@ -106,18 +137,22 @@ input#search-input {
   &__elements {
     opacity: 0;
     visibility: hidden;
-    max-height: 400px;
+    max-height: 32vmax;
     border-radius: 0.5rem;
+    border: $light-blue 2px dotted;
     position: absolute;
     top: 100%; //чтобы был под инпутом
     margin-top: 5px; //отступ от инпута
     left: 0;
     width: 100%;
     background-color: #fff;
-    border: $light-blue 2px dotted;
     list-style: none;
     overflow: auto;
     z-index: 1000;
+
+    &.dark {
+      border: $dark1 2px solid;
+    }
 
     li {
       font-family: 'Manrope', sans-serif;

@@ -12,6 +12,8 @@ const HomeworkModal = ({
   homeworkUpdated,
 }) => {
 
+  const {darkTheme} = useContext(Context)
+
   const {setNotificationOuterActive, setNotificationOuterMessage, userRole } = useContext(Context)
   const [inputValue, setInputValue] = useState("")
   const [noTextSubmitError, setNoTextSubmitError] = useState(false)
@@ -151,7 +153,7 @@ const HomeworkModal = ({
     return (
       <dialog
         data-modal
-        className="modal"
+        className={`modal ${darkTheme? 'dark' : ''}`}
         ref={dialogRef}
         onClick={handleClickOutside}
         onCancel={handleCancel}

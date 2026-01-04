@@ -12,8 +12,8 @@ import { Link, useLocation } from "react-router-dom"
 import { Context } from "../context/Provider"
 
 const Header = () => {
-
   const { darkTheme, setDarkTheme } = useContext(Context)
+
  
   const [displayProfile, setDisplayProfile] = useState(false)
   const dropdownRef = useRef(null)

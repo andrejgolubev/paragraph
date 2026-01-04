@@ -4,9 +4,14 @@ import Tip from "./Tip"
 import { useEffect, useContext } from "react"
 import { Context } from "../context/Provider"
 import NotificationOuter from "./notifications/NotificationOuter"
-import { useDebounce } from "../hooks/useDebouce"
 
 const ScheduleContent = () => {
+  const {darkTheme} = useContext(Context)
+
+  useEffect( () => {
+    
+  }, [darkTheme])
+
   const { groupDataValue, dateDataValue, tipActive, setTipActive } = useContext(Context)
 
   useEffect( () => {

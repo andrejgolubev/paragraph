@@ -1,7 +1,11 @@
 import tip from '../images/tip/chel.svg'
+import { useContext } from 'react'
+import { Context } from '../context/Provider'
 
 const Tip = ({active}) => {
-  
+  const {darkTheme} = useContext(Context)
+
+
   return (<div className={'tip ' + (active && "active")}>
     <div className="tip__inner">
       <img 

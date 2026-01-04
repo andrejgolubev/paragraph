@@ -123,8 +123,13 @@
 body {
   width: auto;
   height: auto;
-  min-height: 1750px;
-  background: linear-gradient(180deg, rgba(244, 247, 252, 0.8) 8%, rgba(98, 170, 255, 0.8) 75%);
+  min-height: 1200px;
+  background: linear-gradient(180deg, rgba(244, 247, 252, 0.8) 12%, rgba(98, 170, 255, 0.8) 50%);
+
+  &.dark {
+    background: linear-gradient(180deg, $dark2 20%, rgb(1, 1, 5) 80%);
+    
+  }
 }
 
 .main-content {
@@ -161,7 +166,6 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    // background: rgba(255, 255, 255, 0.8);
     background-image: url('../images/tip/tip-bg.png');
     border: 2px $light-blue dashed;
     border-radius: 8px;

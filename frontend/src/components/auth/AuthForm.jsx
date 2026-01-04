@@ -15,6 +15,8 @@ import email_icon from "../../images/auth/email.svg"
 
 
 export const AuthForm = ({ type }) => {
+  const {darkTheme} = useContext(Context)
+
   const navigate = useNavigate()
 
   const validationPreferences = {

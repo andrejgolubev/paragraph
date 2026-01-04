@@ -7,8 +7,10 @@ import { latinToCyrillic } from "../utils/converters"
 import { useDebounce } from "../hooks/useDebouce"
 
 const Dropdown = (props) => {
-  const { name, func, placeholder, readOnly} = props
+  const {darkTheme} = useContext(Context)
 
+  const { name, func, placeholder, readOnly} = props
+  
   const [inputText, setInputText] = useState("")
   const [data, setData] = useState([])
   const [filteredData, setFilteredData] = useState([])
@@ -119,15 +121,18 @@ const Dropdown = (props) => {
   
 
   return (
-    <div className={name} onClick={handleClick} ref={dropdownRef}>
-      <div className="custom-dropdown">
+    <div 
+    className={name} 
+    onClick={handleClick} 
+    ref={dropdownRef}>
+      <div className={`custom-dropdown ${darkTheme? 'dark' : ''}`}>
         <div className={func + "-block"}>
           <div
             className={
               func + "-block__body " + (activeSearch && "active-search")
             }
           >
-            <div className={func + "-block__wrap-input"}>
+            <div className={func + `-block__wrap-input ${darkTheme? 'dark' : ''}` }>
               <input
                 ref={inputRef}
                 readOnly={readOnly}
@@ -140,7 +145,7 @@ const Dropdown = (props) => {
               />
             </div>
             {activeSearch && (
-              <ul className={func + "-block__elements"}>
+              <ul className={func + `-block__elements ${darkTheme? 'dark' : ''}`}>
                 {filteredData.map((elem) => (
                   <li
                     key={elem.id}

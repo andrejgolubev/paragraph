@@ -10,6 +10,8 @@ import { getDateValueFromDisplay, getLessonTypeClass } from "../utils/converters
 let lessonInfoGlobal = {}
 
 const ScheduleContainer = () => {
+  const {darkTheme} = useContext(Context)
+
   const { groupDataValue, dateDataValue, setGroupDataValueCookies } = useContext(Context)
   const [scheduleData, setScheduleData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -175,7 +177,10 @@ const ScheduleContainer = () => {
     let lessonIndex = 1
 
     return (
-      <table className="table" id="schedule-container">
+      <table
+        className={`table ${darkTheme ? " dark" : ""}`}
+        id="schedule-container"
+      >
         <thead>
           <tr className="table_row_high">
             <th>время</th>

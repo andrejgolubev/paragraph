@@ -74,6 +74,11 @@
 }
 
 .modal {
+
+  &.dark {
+    background-color: #0d0e0f;
+  }
+
   max-height: 300px;
 
   .updated-at {
