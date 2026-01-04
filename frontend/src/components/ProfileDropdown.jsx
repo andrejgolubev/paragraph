@@ -9,6 +9,8 @@ import homeworkAPI from "../api/homeworkAPI"
 import { Context } from "../context/Provider"
 
 export const ProfileDropdown = (props) => {
+  const {darkTheme} = useContext(Context)
+
   const { setDisplayProfile, dropdownRef, username, role } = props
 
   const displayRole = useRef('')
@@ -33,9 +35,9 @@ export const ProfileDropdown = (props) => {
     admin: 'Администратор',
     teacher: 'Преподаватель',
   }
+  
 
   if (role?.includes('admin')) {
-
     displayRole.current = role.split('.')[0]
     moderatedGroups.current = role.split('.').slice(1,)
     console.log('moderatedGroups :>> ', moderatedGroups);
@@ -46,7 +48,7 @@ export const ProfileDropdown = (props) => {
 
   if (username && role) {
     return (
-      <div className="profile-dropdown" ref={dropdownRef}>
+      <div className={`profile-dropdown ${darkTheme? 'dark' : ''}`} ref={dropdownRef}>
         <img
           className="profile-dropdown__close"
           src={closeIcon}
@@ -74,16 +76,12 @@ export const ProfileDropdown = (props) => {
             <Link to="/help">
               <div className="options-list__elem" >
                 <img className="options-list__elem__img" src={questionMark} onClick={disappearOnClick} />
-                {/* <a href="#"> */}
                   <p>Помощь</p>
-                {/* </a> */}
               </div>
             </Link>
             <div className="options-list__elem" onClick={handleLogout}>
               <img className="options-list__elem__img" src={exitIcon} />
-              {/* <a href="#"> */}
                 <p>Выход</p>
-              {/* </a> */}
             </div>
           </div>
         </div>
@@ -91,7 +89,7 @@ export const ProfileDropdown = (props) => {
     )
   } else {
     return (
-      <div className="profile-dropdown" ref={dropdownRef}>
+      <div className={`profile-dropdown ${darkTheme? 'dark' : ''}`} ref={dropdownRef}>
         <img
           className="profile-dropdown__close"
           src={closeIcon}

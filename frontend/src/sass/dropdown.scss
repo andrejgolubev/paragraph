@@ -119,7 +119,7 @@
   }
 
   &__wrap-input {
-    border-radius: 0.25rem;
+    border-radius: 0.5rem;
     display: flex;
     align-items: center;
     border: 2px $light-blue dashed;
@@ -127,8 +127,8 @@
     
     &.dark {
       background-color: $dark3;
-      border: 2px $dark1 dashed;
-      border-radius: 0;
+      border: 2px $dark7 dashed;
+      border-radius: 0.5em;
     }
   }
 

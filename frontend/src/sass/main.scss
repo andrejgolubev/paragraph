@@ -128,11 +128,11 @@ body {
   background: linear-gradient(180deg, rgba(244, 247, 252, 0.8) 12%, rgba(98, 170, 255, 0.8) 50%);
 
   &.dark {
-    background: linear-gradient(180deg, $body-top 20%, $body-bottom 80%);
+    background: linear-gradient(180deg, $body-top 5%, $body-bottom 95%);
 
     .corpuses {
       p{
-        color: $dark6 !important;
+        color: $dark7 !important;
       }
     }
   }
@@ -162,15 +162,22 @@ body {
   }
 
   .tip {
+    // background-image: url('../images/tip/tip-bg.png');
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background-image: url('../images/tip/tip-bg.png');
     border: 2px $light-blue dashed;
     border-radius: 8px;
     width: 578px;
     height: 132px;
     margin-top: 20px;
+
+    &.dark {
+      p {
+        color: $light-grey;
+      }
+      border-color: $dark5;
+    }
 
     &_arrow {
       position: relative;
@@ -178,12 +185,11 @@ body {
       margin-right: 30px;
     }
 
-    &_text {
+    &__text {
       display: inline-block;
       align-items: center;
 
       p {
-
         font-family: 'Manrope', serif;
         font-weight: 500;
         font-size: 16px; 

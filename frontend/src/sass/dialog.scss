@@ -12,16 +12,11 @@
   }
 }
 
-// Стили для inline-уведомлений внутри формы
-
-
 .notification {
-  position: absolute;
   right: 4px;
   opacity: 0;
   font-size: 16px;
   padding: 0px 15px;
-  border-radius: 12px;
   color: white;
   font-family: 'Manrope', serif;
   font-weight: 300;
@@ -36,18 +31,16 @@
 
   pointer-events: none; // Чтобы не мешало кликам
 
-  // 
   position: fixed;
-    z-index: 1000;
+  z-index: 1000;
 
-    padding: 16px 24px;
-    bottom: 20px;
-    right: 36px;
-    top: auto;
-    left: auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  //
+  padding: 16px 24px;
+  bottom: 20px;
+  right: 36px;
+  top: auto;
+  left: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
   &.active {
     opacity: 0.8;
@@ -77,13 +70,13 @@
 
   &.dark {
     background-color: #0d0e0f;
-    p{
+    p {
       color: $light-grey;
     }
     h3 {
       color: $light-white;
     }
-    .modal-buttons{
+    .modal-buttons {
       .btn-cancel {
         background-color: $light-grey;
       }
@@ -104,10 +97,7 @@
     font-weight: 400;
   }
 
-  @media (max-width: 1200px) {
-    width: 80%;
-    height: 80%;
-  }
+
 
   h3 {
     margin-bottom: 16px;
@@ -117,6 +107,7 @@
   }
 
   position: fixed;
+
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -129,6 +120,8 @@
   width: 90%;
   max-width: 500px;
   max-height: 80vh;
+
+  
 
   // ПРОКРУТКА ЕСЛИ КОНТЕНТА МНОГО
   overflow-y: auto;
@@ -165,7 +158,6 @@
         opacity: 1;
       }
     }
-
 
     .modal-buttons {
       display: flex;
@@ -242,7 +234,6 @@
 }
 
 
-
 .homework {
   cursor: pointer;
   display: inline-flex;
@@ -252,7 +243,6 @@
   &:hover {
     scale: 1.1;
   }
-
 }
 
 
@@ -262,8 +252,6 @@
     width: 95%;
     max-width: none;
     margin: 20px;
-
-
 
     form {
       padding: 20px;

@@ -6,29 +6,16 @@ import { Context } from "../context/Provider"
 import NotificationOuter from "./notifications/NotificationOuter"
 
 const ScheduleContent = () => {
-  const {darkTheme} = useContext(Context)
-
-  useEffect( () => {
-    
-  }, [darkTheme])
-
   const { groupDataValue, dateDataValue, tipActive, setTipActive } = useContext(Context)
+  
+  if (groupDataValue) setTipActive(false)
 
   useEffect( () => {
-      setTipActive(true)
+    setTipActive(true)
   }, [])
 
-  if (groupDataValue) {
-    setTipActive(false)
-  } 
+  
 
-
-  useEffect(() => {
-    const timer = setTimeout( async () => {
-      setTipActive(true)
-    }, 100)
-    return () => clearTimeout(timer)
-  }, [])
 
   return (
     <div className='main-content'>

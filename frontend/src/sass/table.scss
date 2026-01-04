@@ -53,6 +53,12 @@
   
       }
     }
+    .active-day {
+      p:first-child::after {
+        color: #959ec3bf;
+        content: " (сегодня)";
+      }
+    }
   }
 
   border-collapse: collapse;
