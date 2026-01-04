@@ -7,8 +7,10 @@ import { latinToCyrillic } from "../utils/converters"
 import { useDebounce } from "../hooks/useDebouce"
 
 const Dropdown = (props) => {
-  const { name, func, placeholder, readOnly} = props
+  const {darkTheme} = useContext(Context)
 
+  const { name, func, placeholder, readOnly} = props
+  
   const [inputText, setInputText] = useState("")
   const [data, setData] = useState([])
   const [filteredData, setFilteredData] = useState([])
@@ -26,6 +28,10 @@ const Dropdown = (props) => {
     }
     
   }, [])
+
+
+   
+
 
   useClickOutside([dropdownRef], () => {
     setActiveSearch(false)
@@ -79,8 +85,9 @@ const Dropdown = (props) => {
       loadGroups()
     } else if (name === "week") {
       loadDates()
-      setActiveSearch(true)
     }
+
+    setActiveSearch((prev) => !prev)
     // можно ещё сюда какие угодно добавлять нэймы функция универсальная (почти :) )
 
   }
@@ -94,6 +101,7 @@ const Dropdown = (props) => {
 
   const loadDates = async () => {
     const responseData = await homeworkAPI.loadDates()
+    setData(responseData) // СПОРНО
     setFilteredData(responseData)
     // сразу setFilteredData т.к. фильтрация не требуется, выбор даты осуществляткся руками
     setElemKey("date")
@@ -116,18 +124,28 @@ const Dropdown = (props) => {
     }
   }
 
+  console.log(`Dropdown ${name}:`, {
+    dataLength: data.length,
+    filteredDataLength: filteredData.length,
+    activeSearch: activeSearch
+  })
   
 
   return (
-    <div className={name} onClick={handleClick} ref={dropdownRef}>
-      <div className="custom-dropdown">
+    <div 
+    className={name} 
+    onClick={handleClick} 
+    ref={dropdownRef}>
+      <div className={`custom-dropdown ${darkTheme? 'dark' : ''}`}>
         <div className={func + "-block"}>
           <div
             className={
-              func + "-block__body " + (activeSearch && "active-search")
+              func + "-block__body " + (activeSearch ? "active-search" : '') + (
+                darkTheme ? ' dark' : '' 
+              )
             }
           >
-            <div className={func + "-block__wrap-input"}>
+            <div className={func + `-block__wrap-input ${darkTheme? 'dark' : ''}` }>
               <input
                 ref={inputRef}
                 readOnly={readOnly}
@@ -137,13 +155,14 @@ const Dropdown = (props) => {
                 placeholder={placeholder}
                 className={func + "-block__input"}
                 onKeyDown={(event) => handleEnterKey(event, inputText)}
+                autoComplete="off"
               />
             </div>
             {activeSearch && (
-              <ul className={func + "-block__elements"}>
-                {filteredData.map((elem) => (
+              <ul className={func + `-block__elements ${darkTheme? 'dark' : ''}`}>
+                {filteredData.map((elem, id) => (
                   <li
-                    key={elem.id}
+                    key={id}
                     onClick={(e) => {
                       e.stopPropagation()
                       handleSelect(elem)

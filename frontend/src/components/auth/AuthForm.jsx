@@ -15,6 +15,8 @@ import email_icon from "../../images/auth/email.svg"
 
 
 export const AuthForm = ({ type }) => {
+  const {darkTheme} = useContext(Context)
+
   const navigate = useNavigate()
 
   const validationPreferences = {
@@ -80,7 +82,6 @@ export const AuthForm = ({ type }) => {
     
     return true
   }
-
 
   // будет переменная userAuthorized с СОСТОЯНИЕМ от которой будет зависеть type
   // так что такя реализация с let допустима
@@ -208,8 +209,11 @@ export const AuthForm = ({ type }) => {
   
   const requireText = 'это поле надо бы заполнить.'
 
+  const darkOrNot = useRef('')
+  darkOrNot.current = darkTheme? ' dark' : ''
+
   return (
-    <div className="auth">
+    <div className={`auth${darkOrNot.current}`}>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="auth__header">
           <div className="text">{authTitle}</div>
@@ -217,9 +221,10 @@ export const AuthForm = ({ type }) => {
         <div className="auth__inputs">
           {type === "sign-up" && (
             <>
-              <div className="input">
+              <div className={`input-div${darkOrNot.current}`}>
                 <img src={user_icon} alt="user icon" />
                 <input
+                  className={`input${darkOrNot.current}`}
                   type="text"
                   id="username"
                   placeholder="имя"
@@ -232,9 +237,10 @@ export const AuthForm = ({ type }) => {
                 />
                 <p className='auth__error'>{errors.username?.message}</p>
               </div>
-              <div className="input">
+              <div className={`input-div${darkOrNot.current}`}>
                 <img src={group_icon} alt="user icon" />
                 <input
+                  className={`input${darkOrNot.current}`}
                   type="text"
                   id="group"
                   placeholder="группа (опционально)"
@@ -250,9 +256,10 @@ export const AuthForm = ({ type }) => {
               </div>
             </>
           )}
-          <div className="input">
+          <div className={`input-div${darkOrNot.current}`}>
             <img src={email_icon} alt="email icon" />
             <input
+            className={`input${darkOrNot.current}`}
               type="email"
               id="email"
               placeholder="электронная почта"
@@ -266,9 +273,10 @@ export const AuthForm = ({ type }) => {
               />
               <p className='auth__error'>{errors.email?.message}</p>
           </div>
-          <div className="input">
+          <div className={`input-div${darkOrNot.current}`}>
             <img src={password_icon} alt="password icon" />
             <input
+            className={`input${darkOrNot.current}`}
               type="password"
               id="password"
               placeholder="пароль"
@@ -286,7 +294,7 @@ export const AuthForm = ({ type }) => {
           </div>
         )}
         <div className="auth__submit">
-          <button className="auth__submit__btn">{authType}</button>
+          <button className={`auth__submit__btn${darkOrNot.current}`}>{authType}</button>
         </div>
         {type === "sign-in" ? (
           <Link to="/sign-up">

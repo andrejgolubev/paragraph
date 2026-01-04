@@ -1,10 +1,12 @@
 
-import logo from "../images/logos/paragraph-logo.svg"
+import paragraphLogo from "../images/logos/paragraph-logo.svg"
+import paragraphLogoDark from "../images/logos/paragraph-logo-dark.svg"
 import toggleBgLight from "../images/toggles/toggle-bg.svg"
 import toggleBgDark from "../images/toggles/toggle-bg-dark.svg"
 import toggleIcon from "../images/toggles/toggle-icon.svg"
 import toggleMoon from "../images/toggles/toggle-icon-dark.svg"
 import profileIcon from "../images/profile-dropdown/profile-icon.svg"
+import profileIconDark from "../images/profile-dropdown/profile-icon-dark.svg"
 import { ProfileDropdown } from "./ProfileDropdown"
 import { useState, useRef, useContext } from "react"
 import { useClickOutside } from "../hooks/useClickOutside"
@@ -12,8 +14,8 @@ import { Link, useLocation } from "react-router-dom"
 import { Context } from "../context/Provider"
 
 const Header = () => {
-
   const { darkTheme, setDarkTheme } = useContext(Context)
+
  
   const [displayProfile, setDisplayProfile] = useState(false)
   const dropdownRef = useRef(null)
@@ -26,13 +28,17 @@ const Header = () => {
   })
 
   return (
-    <header className="header">
+    <header className={`header ${darkTheme? 'dark' : ''}`}>
       <nav className="nav">
         <ul className="nav_list">
           <Link to="/">
             <li className="nav_item">
               <p>
-                <img className="nav_logo" src={logo} alt="Logo" />
+                <img 
+                className="nav_logo" 
+                src={darkTheme? paragraphLogoDark : paragraphLogo} 
+                alt="Logo" 
+                />
               </p>
             </li>
           </Link>
@@ -78,7 +84,7 @@ const Header = () => {
               </div>
               <img
                 ref={profileRef}
-                src={profileIcon}
+                src={darkTheme? profileIconDark : profileIcon}
                 onClick={(e) => {
                   e.preventDefault()
                   setDisplayProfile((prev) => !prev)

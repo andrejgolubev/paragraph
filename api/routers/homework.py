@@ -172,7 +172,7 @@ async def get_homework(
             select(Date).where(Date.data_value == date_data_value)
         )
         date = date_result.first()
-
+        print('group, date, ', group, date, )
         if not group or not date:
             return {"failure": "group or date not selected or not found"}
 
@@ -184,11 +184,11 @@ async def get_homework(
             )
         )
         association = association_result.first()
-
+        print(f'{association = }')
         return {
             "homework": association.homework if association else "",
             "updated": (
-                association.updated if association.updated else ""
+                association.updated if association else ""
             ),  # type:ignore
         }
 

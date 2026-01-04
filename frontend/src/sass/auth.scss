@@ -1,25 +1,34 @@
 @use './variables.scss' as *;
 
 .auth {
+    &.dark {
+        background: $dark4;
+        .text {
+            color: $light-white;
+        }
+        
 
-    img {
-        scale: 2;
     }
-
-    font-family: Manrope, serif;
+    img {scale: 2} // icons
     
+    font-family: Manrope, serif;
     display: flex;
     flex-direction: column;
-    // align-items: center;
     gap: 10px;
     margin: auto;
-    background: white;
+    background: $table-white;
     width: 520px;
     
     padding-bottom: 30px;
     
     border-radius: 8px;
-    border: 2px solid $light-blue;
+    border: 1px solid $light-blue;
+
+    .text {
+        color: $light-grey;
+        font-size: 36px;
+        font-weight: 500;
+    }
     
     &__header {
         display: flex;
@@ -29,11 +38,7 @@
         width: 100%;
         margin-top: 30px;
     }
-    .text {
-        color: $light-grey;
-        font-size: 36px;
-        font-weight: 500;
-    }
+    
     
     &__inputs {
         margin-top: 36px;
@@ -41,13 +46,17 @@
         flex-direction: column;
         gap: 12px;   
         font-size: 18px;
-        .input {
+        .input-div {
             display: flex;
             align-items: center;
             margin: auto;
             width: 480px; // 
             height: 70px; // 
-            background-color: rgb(232, 243, 255);
+            // background: rgb(232, 243, 255);
+            background: $field-grey;
+            &.dark {
+                background: $dark7;
+            }
             border-radius: 6px;
             img {
                 margin: 0px 30px;
@@ -55,12 +64,39 @@
             input {
                 height: 50px;
                 width: 380px;
-                background: rgb(232, 243, 255);
-
+                background: $field-grey;
                 border: none;
                 outline: none;
                 color: $grey;
                 font-size: 18px;
+
+                &:-webkit-autofill,
+                &:-webkit-autofill:hover,
+                &:-webkit-autofill:focus,
+                &:-webkit-autofill:active {
+                    -webkit-box-shadow: 0 0 0 1000px $field-grey inset !important; // фон
+                    -webkit-text-fill-color: $grey !important; // цвет текста (плейсхолдера)
+                    transition: background-color 1000s ease-in-out 0s; // чтобы не мигал
+                }
+
+                // чтоб текст нужного щрифта вставлялся
+                &:-webkit-autofill::first-line {
+                    font-family: Manrope, serif !important;
+                    font-size: 18px !important;
+                }
+
+                &.dark {
+                    background: $dark7;
+                    color: $light-white;
+                    &:-webkit-autofill,
+                    &:-webkit-autofill:hover,
+                    &:-webkit-autofill:focus,
+                    &:-webkit-autofill:active {
+                        -webkit-box-shadow: 0 0 0 1000px $dark7 inset !important; //  фон
+                        -webkit-text-fill-color: $light-white !important; // цвет текста (плейсхолдера)
+                        transition: background-color 1000s ease-in-out 0s; // чтобы не мигал
+                    }
+                }
             }
             
         }
@@ -86,18 +122,24 @@
         margin-bottom: 20px;
 
         &__btn {
+            color: $grey;
+            background-color: $field-grey;
             margin-top: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 12px 70px ;
-            color: $grey;
-            background-color: #ebebeb;
             border-radius: 32px;
-            border: 2px solid rgb(232, 243, 255);
+            border: 1px solid $light-white2;
             font-size: 24px;
             font-weight: 700;
             cursor: pointer;
+            
+            &.dark {
+                color: $light-grey; 
+                background-color: $dark7;
+                border: $dark-grey2;
+            }
         }
     }
 
@@ -114,6 +156,7 @@
         margin-right: 2px;
         width: 150px;
     }
+    
 }
 
 

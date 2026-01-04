@@ -1,12 +1,6 @@
 @use './fonts.scss';
 @use './variables.scss' as *;
 
-input#select-input, 
-input#search-input {
-  background-color: #f4f9fecd;
-} 
-
-
 .error-message {
   transition: all 0.3s ease 0s;
   text-align: center;
@@ -56,6 +50,12 @@ input#search-input {
     border-top: var(--size) solid rgb(135, 178, 208);
     top: 50%;
   }
+  
+  &.dark {
+    &::after {
+      border-top: var(--size) solid rgb(141, 154, 163);
+    }
+  }
 }
 
 //STYLES FOR AUTOCOMPLETE DROPDOWN 
@@ -63,7 +63,41 @@ input#search-input {
 .search-block,
 .select-block, 
 .custom-dropdown {
-  
+
+  input#select-input, 
+  input#search-input {
+    background-color: $table-white;
+  }
+
+  &.dark {
+    input#select-input, 
+    input#search-input {
+      background-color: $dark3;
+      color: $light-grey;
+      
+      &::placeholder {
+        color: $light-grey;
+      }
+    } 
+
+   
+
+    ul {
+      
+      li {
+        background-color: $dark5;
+        &:hover {
+          background-color: $light-grey;
+          a {
+            color: $dark5;
+          }
+        }
+        a {
+          color: $light-grey;
+        }
+      }
+    }
+  }
 
   ul{
     transition: all 0.1s ease 0.1s;
@@ -71,7 +105,11 @@ input#search-input {
 
   &__body.active-search &__wrap-input {
     transition: all 0.1s cubic-bezier(0.3, 0.8, 0.3, 2.3) 0.1s;
-    border-color: rgb(104, 165, 206); // Подсветка при активном состоянии
+    border-color: rgb(104, 165, 206); // при активном состоянии
+
+    &.dark {
+      border-color: rgb(152, 181, 196); 
+    }
   }
 
   position: relative;
@@ -86,7 +124,12 @@ input#search-input {
     align-items: center;
     border: 2px $light-blue dashed;
     background-color: #fff;
-    overflow: auto;
+    
+    &.dark {
+      background-color: $dark3;
+      border: 2px $dark7 dashed;
+      border-radius: 0.5em;
+    }
   }
 
   &__input {
@@ -106,18 +149,22 @@ input#search-input {
   &__elements {
     opacity: 0;
     visibility: hidden;
-    max-height: 400px;
+    max-height: 32vmax;
     border-radius: 0.5rem;
+    border: $light-blue 2px dotted;
     position: absolute;
     top: 100%; //чтобы был под инпутом
     margin-top: 5px; //отступ от инпута
-    left: 0;
     width: 100%;
     background-color: #fff;
-    border: $light-blue 2px dotted;
     list-style: none;
-    overflow: auto;
+    overflow-y: auto !important;
     z-index: 1000;
+
+
+    &.dark {
+      border: $dark1 2px solid;
+    }
 
     li {
       font-family: 'Manrope', sans-serif;
@@ -149,30 +196,43 @@ input#search-input {
     }
   }
 
-
-  &__elements::-webkit-scrollbar {
-    background-color: rgba(140, 190, 246, 0.275);
-    height: 7px;
-    width: 7px;
-    border-radius: 10px;
-  }
-
-  &__elements::-webkit-scrollbar-thumb {
-    // для стилизации ползунка
-    background-color: rgba(140, 190, 246, 0.286);
-    border-radius: 10px;
-  }
-
   &__body.active-search &__elements {
     opacity: 1;
     visibility: visible;
+
   }
+
+  &__elements {
+    // для стилизации ползунка
+    &::-webkit-scrollbar{ 
+      display: block !important;
+      background-color: rgba(140, 190, 246, 0.275);
+      height: 7px;
+      width: 7px;
+      border-radius: 10px;
+    }
+    scrollbar-color: red;
+    &.dark::-webkit-scrollbar {
+      background-color: $grey;;
+    }
+    // для стилизации ползунка на мобильных
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(140, 190, 246, 0.286);
+      border-radius: 10px;
+    }
+    &.dark::-webkit-scrollbar {
+      background-color: $grey;
+    }
+  }
+
+  
+
 
 
 }
-
-//STYLES FOR DATES SELECTION
 
 #select-input{
   cursor: pointer;
-}
+} 
+
+

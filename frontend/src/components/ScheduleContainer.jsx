@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react"
 import HomeworkModal from "./HomeworkModal" // Предполагаем, что модалка уже переписана на React
 import paperclip from "../images/homework/paperclip.svg"
+import paperclipDark from "../images/homework/paperclip-dark.svg"
 import { useContext } from "react"
 import { Context } from "../context/Provider"
 import homeworkAPI from "../api/homeworkAPI"
@@ -10,6 +11,8 @@ import { getDateValueFromDisplay, getLessonTypeClass } from "../utils/converters
 let lessonInfoGlobal = {}
 
 const ScheduleContainer = () => {
+  const {darkTheme} = useContext(Context)
+
   const { groupDataValue, dateDataValue, setGroupDataValueCookies } = useContext(Context)
   const [scheduleData, setScheduleData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -98,7 +101,8 @@ const ScheduleContainer = () => {
         const { homework, updated } = resp
         setHomeworkUpdated(updated)
         setHomeworkText(homework)
-      }).catch( () => {
+      }).catch( (err) => {
+        console.log('err from ScheduleCont :>> ', err);
         setHomeworkUpdated('')
       }
       )
@@ -175,7 +179,10 @@ const ScheduleContainer = () => {
     let lessonIndex = 1
 
     return (
-      <table className="table" id="schedule-container">
+      <table
+        className={`table ${darkTheme ? " dark" : ""}`}
+        id="schedule-container"
+      >
         <thead>
           <tr className="table_row_high">
             <th>время</th>
@@ -248,7 +255,10 @@ const ScheduleContainer = () => {
                               style={{ cursor: "pointer" }}
                               title="добавить д/з"
                             >
-                              <img src={paperclip} alt="Homework" />
+                              <img 
+                                src={darkTheme? paperclipDark : paperclip} 
+                                alt="Homework" 
+                              />
                             </div>
                             <div className="lesson-text">
                               {formatLessonText(lesson)}
@@ -274,9 +284,9 @@ const ScheduleContainer = () => {
     return (
       <>
         <div className="schedule-container loading"></div>
-        <div className="loading-indicator">
+        <div className={`loading-indicator`}>
           <Mosaic
-            color="#FFF"
+            color={darkTheme? '#d2d2d2' : '#fff'}
             size="large"
             text="загрузка..."
             textColor="#CBCBDE"
