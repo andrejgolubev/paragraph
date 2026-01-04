@@ -1,4 +1,4 @@
-import tip from '../images/chel.svg'
+import tip from '../images/tip/chel.svg'
 
 const Tip = ({active}) => {
   

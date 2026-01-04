@@ -6,6 +6,9 @@ import homeworkAPI from "../api/homeworkAPI"
 export const Context = createContext({})
 
 export const Provider = ({ children }) => {
+  // тема 
+  const [darkTheme, setDarkTheme] = useState(false)
+
   // уведомления по типу "дз сохранено" , "успешный вход в аккаунт"
   const [notificationOuterMessage, setNotificationOuterMessage] = useState('')
   const [notificationOuterActive, setNotificationOuterActive] = useState(false)
@@ -20,8 +23,8 @@ export const Provider = ({ children }) => {
   const groupDataValueCookie = groupDataValueCookies.groupDataValue
   const [groupDataValue, setGroupDataValue] = useState(groupDataValueCookie)
 
-
-  const [dateDataValue, setDateDataValue] = useState("")
+  const [dateDataValue, setDateDataValue] = useState("") // а дата кукам не подлежит
+  
   
 
   // устанавливаем имя для ProfileDropdown используя access_token 
@@ -42,7 +45,7 @@ export const Provider = ({ children }) => {
         setGroupDataValue,
         dateDataValue,
         setDateDataValue,
-        //notificationOuter
+        //notificationOuter:
         notificationOuterActive, 
         setNotificationOuterActive,
         notificationOuterMessage, 
@@ -55,6 +58,9 @@ export const Provider = ({ children }) => {
         setUsername, 
         userRole, 
         setUserRole,
+        //theme:
+        darkTheme, 
+        setDarkTheme,
       }}
     >
       {children}

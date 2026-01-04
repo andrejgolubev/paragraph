@@ -1,8 +1,10 @@
 
-import logo from "../images/logoAndText2.svg"
-import toggleBg from "../images/toggle-bg.svg"
-import toggleSun from "../images/toggle-sun.svg"
-import profileIcon from "../images/ProfileIcon.svg"
+import logo from "../images/logos/paragraph-logo.svg"
+import toggleBgLight from "../images/toggles/toggle-bg.svg"
+import toggleBgDark from "../images/toggles/toggle-bg-dark.svg"
+import toggleIcon from "../images/toggles/toggle-icon.svg"
+import toggleMoon from "../images/toggles/toggle-icon-dark.svg"
+import profileIcon from "../images/profile-dropdown/profile-icon.svg"
 import { ProfileDropdown } from "./ProfileDropdown"
 import { useState, useRef, useContext } from "react"
 import { useClickOutside } from "../hooks/useClickOutside"
@@ -11,6 +13,8 @@ import { Context } from "../context/Provider"
 
 const Header = () => {
 
+  const { darkTheme, setDarkTheme } = useContext(Context)
+ 
   const [displayProfile, setDisplayProfile] = useState(false)
   const dropdownRef = useRef(null)
   const profileRef = useRef(null)
@@ -25,7 +29,7 @@ const Header = () => {
     <header className="header">
       <nav className="nav">
         <ul className="nav_list">
-          <Link to='/'>
+          <Link to="/">
             <li className="nav_item">
               <p>
                 <img className="nav_logo" src={logo} alt="Logo" />
@@ -34,27 +38,48 @@ const Header = () => {
           </Link>
           <li>
             <div className="links">
-              <Link to='/'>
-                <div className={`nav_item ${location.pathname === '/' ? 'bold' : ''}`} >
+              <Link to="/">
+                <div
+                  className={`nav_item ${
+                    location.pathname === "/" ? "bold" : ""
+                  }`}
+                >
                   <p>дневник</p>
                 </div>
               </Link>
-                <div className={`nav_item ${location.pathname === '/news' ? 'bold' : ''}`} >
-                  <p>новости</p>
-                </div>
-              <Link to='/help'>
-                <div className={`nav_item ${location.pathname === '/help' ? 'bold' : ''}`}>
+              <div
+                className={`nav_item ${
+                  location.pathname === "/news" ? "bold" : ""
+                }`}
+              >
+                <p>новости</p>
+              </div>
+              <Link to="/help">
+                <div
+                  className={`nav_item ${
+                    location.pathname === "/help" ? "bold" : ""
+                  }`}
+                >
                   <p>о проекте</p>
                 </div>
               </Link>
-              <div className="toggle">
-                <img id="toggle-bg" src={toggleBg} alt="Toggle background" />
-                <img id="toggle-sun" src={toggleSun} alt="Toggle sun" />
+
+              <div
+                className="toggle"
+                onClick={() => setDarkTheme((prev) => !prev)}
+              >
+                <img
+                  id={`toggle-bg${darkTheme ? "-dark" : ''}`}
+                  src={darkTheme ? toggleBgDark : toggleBgLight}
+                />
+                <img 
+                id={`toggle-icon${darkTheme ? "-dark" : ''}`} 
+                src={darkTheme ? toggleMoon : toggleIcon} />
               </div>
               <img
                 ref={profileRef}
                 src={profileIcon}
-                onClick={ (e) => {
+                onClick={(e) => {
                   e.preventDefault()
                   setDisplayProfile((prev) => !prev)
                 }}
@@ -63,11 +88,11 @@ const Header = () => {
               />
               {displayProfile && (
                 <ProfileDropdown
-                username={username}
-                role={userRole}
-                dropdownRef={dropdownRef}
-                setDisplayProfile={setDisplayProfile}
-                 />
+                  username={username}
+                  role={userRole}
+                  dropdownRef={dropdownRef}
+                  setDisplayProfile={setDisplayProfile}
+                />
               )}
             </div>
           </li>

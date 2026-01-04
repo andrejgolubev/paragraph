@@ -30,8 +30,10 @@ const HomeworkModal = ({
       // 'д/з не может быть пустым' 
       'недостаточно прав для управления этим д/з'
     )
+
+    // обязательно! изначально true для правильного рендера модалки
     const [readOnly , setReadOnly] = useState(true) 
-    const [isAdmin, setIsAdmin] = useState(false) // очень важно по дефолту true чтоб модалка открывалась c первого клика 
+
     const textareaRef = useRef("")
     const dialogRef = useRef(null)
     const dialog = dialogRef.current
@@ -58,8 +60,8 @@ const HomeworkModal = ({
 
     useEffect( () => {
       homeworkAPI.getUserData().then( ({role}) => {
-        setReadOnly(false)
-        if (role.includes('admin'))  {
+        setReadOnly(false) // обязательно! для правильного рендера модалки
+        if (role?.includes('admin'))  {
           const moderatedGroups = role.split('.').slice(1,)   
           console.log('--------------------------------------');
           homeworkAPI.convertFromDataValue({groupDataValue}).then( (resp) => {

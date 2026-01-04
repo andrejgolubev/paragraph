@@ -1,5 +1,5 @@
 @use './fonts.scss';
-
+@use './variables.scss' as *;
 
 input#select-input, 
 input#search-input {
@@ -34,7 +34,7 @@ input#search-input {
     font-size: 16px;
     font-family: 'Manrope', serif;
     padding: 0.675em 3.8em 0.675em 1.5em;
-    border: 2px rgb(207, 222, 227) dashed;
+    border: 2px $light-blue dashed;
     border-radius: 0.5rem;
     color: #22222a96;
     cursor: pointer;
@@ -84,7 +84,7 @@ input#search-input {
     border-radius: 0.5rem;
     display: flex;
     align-items: center;
-    border: 2px rgb(207, 222, 227) dashed;
+    border: 2px $light-blue dashed;
     background-color: #fff;
     overflow: auto;
   }
@@ -114,7 +114,7 @@ input#search-input {
     left: 0;
     width: 100%;
     background-color: #fff;
-    border: rgb(207, 222, 227) 2px dotted;
+    border: $light-blue 2px dotted;
     list-style: none;
     overflow: auto;
     z-index: 1000;

@@ -1,5 +1,5 @@
 import React, { useRef } from "react"
-import arrow from '../../images/dropdown-arrow.svg'
+import arrow from '../../images/help-page/dropdown-arrow.svg'
 
 
 export const AccordionItem = ({ faqItem, onClick, isOpen }) => {

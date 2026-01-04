@@ -1,5 +1,5 @@
 @use './normalize.scss';
-@use './variables.scss';
+@use './variables.scss' as *;
 @use './fonts.scss';
 @use './dropdown.scss';
 @use './homepage.scss';
@@ -162,8 +162,8 @@ body {
     align-items: center;
     justify-content: center;
     // background: rgba(255, 255, 255, 0.8);
-    background-image: url('../images/tip-bg.png');
-    border: 2px rgb(207, 222, 227) dashed;
+    background-image: url('../images/tip/tip-bg.png');
+    border: 2px $light-blue dashed;
     border-radius: 8px;
     width: 578px;
     height: 132px;

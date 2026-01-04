@@ -335,14 +335,14 @@ input#search-input {
   padding-inline: 8px;
 }
 
-#toggle-sun {
+#toggle-icon {
   position: absolute;
   top: -4px;
   right: 23px;
   transition: all 0.3s ease 0s;
 }
 
-#toggle-sun:hover {
+#toggle-icon:hover {
   transform: translate3d(5px, 0, 20px) rotateY(3deg) perspective(500px);
 }
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react"
 import HomeworkModal from "./HomeworkModal" // Предполагаем, что модалка уже переписана на React
-import paperclip from "../images/paperclip.svg"
+import paperclip from "../images/homework/paperclip.svg"
 import { useContext } from "react"
 import { Context } from "../context/Provider"
 import homeworkAPI from "../api/homeworkAPI"
