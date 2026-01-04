@@ -46,7 +46,6 @@ export const Provider = ({ children }) => {
 
   const [dateDataValue, setDateDataValue] = useState("") // а дата кукам не подлежит
   
-  
 
   // устанавливаем имя для ProfileDropdown используя access_token 
   const [username, setUsername] = useState('')
@@ -54,8 +53,8 @@ export const Provider = ({ children }) => {
   
   useEffect( () => {
     homeworkAPI.getUserData().then(resp => {
-      setUsername(resp.username)
-      setUserRole(resp.role)
+      setUsername(resp?.username)
+      setUserRole(resp?.role)
     })
   }, [notificationOuterActive]) // такая зависимость т.к. при входе в аккаунт срабатывает эта нотификэйшн
 

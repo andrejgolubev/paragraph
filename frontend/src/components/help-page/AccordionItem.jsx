@@ -1,5 +1,6 @@
 import React, { useContext, useRef } from "react"
-import arrow from '../../images/help-page/dropdown-arrow.svg'
+import dropdownArrow from '../../images/help-page/dropdown-arrow.svg'
+import dropdownArrowDark from '../../images/help-page/dropdown-arrow-dark.svg'
 import { Context } from "../../context/Provider"
 
 export const AccordionItem = ({ faqItem, onClick, isOpen }) => {
@@ -11,7 +12,7 @@ export const AccordionItem = ({ faqItem, onClick, isOpen }) => {
     <li className="accordion__item">
       <button onClick={onClick} className="accordion__header">
         {faqItem.q}
-        <img src={arrow} className={`accordion__arrow ${isOpen ? 'active' : ''}`}/>
+        <img src={darkTheme? dropdownArrowDark : dropdownArrow} className={`accordion__arrow ${isOpen ? 'active' : ''}`}/>
       </button>
       <div
         className='accordion__collapse'

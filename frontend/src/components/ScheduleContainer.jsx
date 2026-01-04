@@ -101,7 +101,8 @@ const ScheduleContainer = () => {
         const { homework, updated } = resp
         setHomeworkUpdated(updated)
         setHomeworkText(homework)
-      }).catch( () => {
+      }).catch( (err) => {
+        console.log('err from ScheduleCont :>> ', err);
         setHomeworkUpdated('')
       }
       )

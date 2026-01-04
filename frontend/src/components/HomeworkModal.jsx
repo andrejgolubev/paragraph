@@ -14,7 +14,7 @@ const HomeworkModal = ({
 
   const {darkTheme} = useContext(Context)
 
-  const {setNotificationOuterActive, setNotificationOuterMessage, userRole } = useContext(Context)
+  const {setNotificationOuterActive, setNotificationOuterMessage, userRole, username } = useContext(Context)
   const [inputValue, setInputValue] = useState("")
   const [noTextSubmitError, setNoTextSubmitError] = useState(false)
   const [lastUpdate, setLastUpdate] = useState("")
@@ -33,8 +33,7 @@ const HomeworkModal = ({
       'недостаточно прав для управления этим д/з'
     )
 
-    // обязательно! изначально true для правильного рендера модалки
-    const [readOnly , setReadOnly] = useState(true) 
+    const [readOnly , setReadOnly] = useState(false) 
 
     const textareaRef = useRef("")
     const dialogRef = useRef(null)
@@ -52,7 +51,6 @@ const HomeworkModal = ({
           const hmwTime = hmwUpdatedTime[1].slice(0, 5)
   
           setLastUpdate("последнее изменение: " + hmwDate + ", " + hmwTime)
-          console.log("lastUpdate :>> ", lastUpdate)
         }
         
         dialog.showModal() // используем нативный метод
@@ -61,23 +59,26 @@ const HomeworkModal = ({
 
 
     useEffect( () => {
-      homeworkAPI.getUserData().then( ({role}) => {
-        setReadOnly(false) // обязательно! для правильного рендера модалки
-        if (role?.includes('admin'))  {
-          const moderatedGroups = role.split('.').slice(1,)   
-          console.log('--------------------------------------');
-          homeworkAPI.convertFromDataValue({groupDataValue}).then( (resp) => {
-            const currentGroupNumber = resp?.group_number
-            if (moderatedGroups.some( num => num === currentGroupNumber)) {
-              setReadOnly(false)
-            } else{ 
-              setReadOnly(true)
-            }
-          })
-        } else {
-          setReadOnly(true)
-        }
-      })
+      // setReadOnly(false) // обязательно! для правильного рендера модалки
+      if (userRole) {
+        homeworkAPI.getUserData().then( ({role}) => {
+          if (role?.includes('admin'))  {
+            const moderatedGroups = role.split('.').slice(1,)   
+            homeworkAPI.convertFromDataValue({groupDataValue}).then( (resp) => {
+              const currentGroupNumber = resp?.group_number
+              if (moderatedGroups.some( num => num === currentGroupNumber)) {
+                setReadOnly(false)
+              } else{ 
+                setReadOnly(true)
+              }
+            })
+          } else {
+            setReadOnly(true)
+          }
+        })
+      } 
+
+      return () => setReadOnly(true)
     }, [])
 
 

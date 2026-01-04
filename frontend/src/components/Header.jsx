@@ -84,7 +84,7 @@ const Header = () => {
               </div>
               <img
                 ref={profileRef}
-                src={profileIcon}
+                src={darkTheme? profileIconDark : profileIcon}
                 onClick={(e) => {
                   e.preventDefault()
                   setDisplayProfile((prev) => !prev)

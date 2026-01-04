@@ -47,7 +47,9 @@ const homeworkAPI = {
       credentials: "include"
     })
       .then((resp) => resp.json())
-      .catch((e) => console.error(e))
+      .catch((err) => {
+        console.log('err from loadHomeworkData: ', err)
+      })
   },
 
   loadGroups: async () => {
