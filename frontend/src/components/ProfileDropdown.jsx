@@ -40,7 +40,6 @@ export const ProfileDropdown = (props) => {
   if (role?.includes('admin')) {
     displayRole.current = role.split('.')[0]
     moderatedGroups.current = role.split('.').slice(1,)
-    console.log('moderatedGroups :>> ', moderatedGroups);
   } else {
     displayRole.current = role
   } 

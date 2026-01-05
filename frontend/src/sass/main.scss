@@ -147,6 +147,10 @@ body {
 
     .corpuses {
       padding-left: -2px;
+      overflow: visible;
+      @media (max-width: 1100px) {
+        font-size: 12px;
+      }
 
       p {
         font-family: 'Manrope', sans-serif;
@@ -154,9 +158,9 @@ body {
         letter-spacing: 0.06em;
         color: rgba(29, 29, 33, 0.15);
 
-        @media (max-width: 1100px) {
-          font-size: 12px;
-        }
+        white-space: nowrap;
+        overflow: visible;
+
       }
     }
   }

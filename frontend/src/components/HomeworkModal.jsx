@@ -3,6 +3,7 @@ import NotificationInner from "./notifications/NotificationInner"
 import homeworkAPI from "../api/homeworkAPI"
 import { Context } from "../context/Provider"
 import { convertDate } from "../utils/converters"
+import { useWindowSize } from "../hooks/useWindowSize"
 
 const HomeworkModal = ({
   // showDialog,
@@ -11,14 +12,22 @@ const HomeworkModal = ({
   homeworkText,
   homeworkUpdated,
 }) => {
-
   const {darkTheme} = useContext(Context)
+  const { width } = useWindowSize()
 
   const {setNotificationOuterActive, setNotificationOuterMessage, userRole, username } = useContext(Context)
   const [inputValue, setInputValue] = useState("")
-  const [noTextSubmitError, setNoTextSubmitError] = useState(false)
+  const [notificationInnerActive, setNotificationInnerActive] = useState(false)
   const [lastUpdate, setLastUpdate] = useState("")
   
+  const showError = () => {
+    setNotificationInnerActive(true)
+    
+    setTimeout(() => {
+      setNotificationInnerActive(false)
+    }, 3100) // 3100 a не 3000 чтобы локальный isActive сработал и плавно ушла кнопка 
+  }
+
   if (lessonInfo) {
     const {
       groupDataValue,
@@ -95,7 +104,8 @@ const HomeworkModal = ({
       event.preventDefault()
       const homeworkTextClean = inputValue.trim()
       if (!homeworkTextClean) {
-        setNoTextSubmitError(true)
+        // setNotificationInnerActive(true)
+        showError()
         return
       }
 
@@ -108,7 +118,8 @@ const HomeworkModal = ({
       ).then( resp => {
         if (!(resp.detail === 'saved')) {
           setRespText(resp.detail)
-          setNoTextSubmitError(true)
+          // setNotificationInnerActive(true)
+          showError()
         } else { 
           // если сохранена домашка, то:
           dialog.close() // нативное закрытие (обязательно!!)
@@ -161,7 +172,7 @@ const HomeworkModal = ({
       >
         <form id="homework-form" method="post" onSubmit={handleHomeworkSubmit}>
           <h3>
-            <strong>{lessonName}</strong>, {lessonDay}
+            <p><strong>{lessonName}</strong>, {lessonDay}</p>
           </h3>
           <textarea
             ref={textareaRef}
@@ -176,19 +187,46 @@ const HomeworkModal = ({
           />
           <p className="updated-at">{homeworkText && lastUpdate}</p>
           <div className="modal-buttons">
-            <button type="button" className="btn-cancel" onClick={handleCancel}>
-              отмена
-            </button>
-            <NotificationInner
-              message={respText}
-              type={"error"}
-              noTextSubmitError={noTextSubmitError}
-              setNoTextSubmitError={setNoTextSubmitError}
-            />
+            {/* если мобилка то рендерим кнопку "сохранить" перед нотификэйшном  */}
+            {width > 900 ? 
+            (
+              <>
+                <button type="button" className="btn-cancel" onClick={handleCancel}>
+                  отмена
+                </button>
+                {notificationInnerActive && (
+                
+                <NotificationInner
+                  message={respText}
+                  type={"error"}
+                  notificationInnerActive={notificationInnerActive}
+                  setNotificationInnerActive={setNotificationInnerActive}
+                /> 
+                ) }
+                <button type="submit" className={`btn-${readOnly? 'cancel' : 'save'}`}>
+                  сохранить
+                </button>
+              </>
+            ) : ( 
+              <>
+                <button type="submit" className={`btn-${readOnly? 'cancel' : 'save'}`}>
+                  сохранить
+                </button>
+                <button type="button" className="btn-cancel" onClick={handleCancel}>
+                  отмена
+                </button>
+                {notificationInnerActive && 
+                (<NotificationInner
+                  message={respText}
+                  type={"error"}
+                  notificationInnerActive={notificationInnerActive}
+                  setNotificationInnerActive={setNotificationInnerActive}
+                /> )
+                }
+              </>
+            ) 
             
-            <button type="submit" className={`btn-${readOnly? 'cancel' : 'save'}`}>
-              сохранить
-            </button>
+          }
           </div>
         </form>
       </dialog>

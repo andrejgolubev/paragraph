@@ -3,10 +3,10 @@
 .auth {
     &.dark {
         background: $dark4;
+        border-color: $dark7;
         .text {
             color: $light-white;
         }
-        
 
     }
     img {scale: 2} // icons
