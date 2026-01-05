@@ -8,7 +8,6 @@ import tipBgDark from '../images/tip/tip-bg-dark.png'
 
 const Tip = ({active}) => {
   const {darkTheme} = useContext(Context)
-  
 
   return (<div 
   className={'tip' + (active? " active" : '') + (darkTheme? ' dark' : '')}

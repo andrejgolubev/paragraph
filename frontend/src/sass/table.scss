@@ -4,12 +4,10 @@
 
 .schedule-container {
   &.loading {
-    opacity: 0;
     transform: translateY(20px);
   }
 
   &.loaded {
-    opacity: 1;
     transform: translateY(0);
     transition: opacity 0.6s ease, transform 0.6s ease;
   }
@@ -21,6 +19,9 @@
 
 //анимация полявления 
 @keyframes slideIn {
+  from {
+    opacity: 0;
+  }
   to {
     opacity: 1;
     transform: translateX(0);
@@ -29,7 +30,6 @@
 
 
 //стили таблицы
-
 .table {
   background-color: $table-white;
   &.dark {
@@ -48,6 +48,8 @@
     }
 
     tbody {
+      
+      
       tr:last-of-type {
         border-bottom: 2px solid $dark1;
   
@@ -110,10 +112,7 @@
     tr:not(.table) {
       background-color: rgba(46, 110, 205, 0.2);
       text-align: left;
-
     }
-
-
   }
 
   th:first-child {
@@ -152,14 +151,7 @@
   tbody {
     
     tr {
-      @for $i from 1 through 15 {
-        &:nth-child(#{$i}) {
-          animation-delay: #{$i * 0.07}s;
-        }
-      }
-
       border-bottom: 1px solid #dddddd;
-      opacity: 0;
       transform: translateX(-30px);
       animation: slideIn 0.4s ease forwards;
     }
