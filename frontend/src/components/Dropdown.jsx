@@ -110,7 +110,6 @@ const Dropdown = (props) => {
   const onInput = (event) => {
     const trimmedText = event.target?.value.trim() 
     setInputText(trimmedText )
-    console.log('latinToCyrillic( trimmedText)', latinToCyrillic( trimmedText))
     setActiveSearch(true)
   }
 
@@ -124,11 +123,6 @@ const Dropdown = (props) => {
     }
   }
 
-  console.log(`Dropdown ${name}:`, {
-    dataLength: data.length,
-    filteredDataLength: filteredData.length,
-    activeSearch: activeSearch
-  })
   
 
   return (

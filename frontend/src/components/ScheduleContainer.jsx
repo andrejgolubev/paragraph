@@ -66,8 +66,6 @@ const ScheduleContainer = () => {
       
       const data = await response.json()
       
-      console.log('data (from schedulecont) :>> ', data);
-      
       setScheduleData(data)
       
       setError(null)

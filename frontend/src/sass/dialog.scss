@@ -66,6 +66,8 @@
   }
 }
 
+
+
 .modal {
 
   &.dark {
@@ -93,10 +95,10 @@
   max-height: 300px;
 
   .updated-at {
-    font-size: small;
+    color: $grey;
+    font-size: 14px;
     font-weight: 400;
   }
-
 
 
   h3 {
@@ -117,11 +119,10 @@
   padding: 0;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 
-  width: 90%;
+  width: 100vh;
   max-width: 500px;
   max-height: 80vh;
 
-  
 
   // ПРОКРУТКА ЕСЛИ КОНТЕНТА МНОГО
   overflow-y: auto;
@@ -163,6 +164,7 @@
       display: flex;
       gap: 10px;
       justify-content: space-between;
+      align-content: center;
       height: fit-content;
       margin-top: 15px;
 
@@ -208,6 +210,7 @@
       }
     }
   }
+
 }
 
 
@@ -233,7 +236,6 @@
   }
 }
 
-
 .homework {
   cursor: pointer;
   display: inline-flex;
@@ -247,24 +249,29 @@
 
 
 // АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ
-@media (max-width: 768px) {
+@media (max-width: 800px) {
   .modal {
     width: 95%;
+    height: 85vh;
+    max-height: none;
     max-width: none;
-    margin: 20px;
+    overflow-y: scroll;
 
     form {
       padding: 20px;
-
       h3 {
-        font-size: 1.3rem;
+        font-size: 1.25rem;
+        padding-bottom: 20px;
       }
 
       .modal-buttons {
-        flex-direction: column-reverse;
-
+        padding-top: 20px;
+        flex-direction: column;
         button {
-          width: 100%;
+          button, 
+          div {
+            height: 24px;
+          }
         }
       }
     }
