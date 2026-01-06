@@ -924,13 +924,13 @@ input#search-input {
 
 .links .nav_item:not(.nav_logo) a,
 .links .toggle,
-.links .profile-icon {
+.links .profile-button {
   transition: all 0.3s ease 0s;
 }
 .links .nav_item:not(.nav_logo) a:hover {
   color: rgb(180, 211, 220);
 }
-.links .profile-icon {
+.links .profile-button {
   margin: -3px 0 0 0;
 }
 .links .toggle {

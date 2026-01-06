@@ -178,7 +178,7 @@ export const AuthForm = ({ type }) => {
   }
 
   const groupValidator = (value) => {
-    if (!value.trim()) {
+    if (!value?.trim()) {
       return true
     }
 
@@ -228,18 +228,24 @@ export const AuthForm = ({ type }) => {
   // в usernameField, groupField, emailField, passwordField будет сохранен обьект вида 
   // { onChange, onBlur, ref, name, ... }
 
-  const usernameField = register("username", {
-    required: requireText, 
-    validate: {
-      validFormat: async (value) => validateUsername(value)
-    }
-  }) 
+  let usernameField = null
+  let groupField = null
 
-  const groupField = register("group", {
-    validate: {
-      validateGroup: (value) => groupValidator(value)
-    }
-  })
+  if (type === "sign-up") {
+    usernameField = register("username", {
+      required: requireText, 
+      validate: {
+        validFormat: async (value) => validateUsername(value)
+      }
+    }) 
+    groupField = register("group", {
+      validate: {
+        validateGroup: (value) => groupValidator(value)
+      }
+    }) 
+  } 
+
+
 
   const emailField = register("email", {
     required: requireText, 
@@ -262,7 +268,7 @@ export const AuthForm = ({ type }) => {
           <div className="auth__header__text">{authTitle}</div>
         </div>
         <div className="auth__inputs">
-          {type === "sign-up" && (
+          {type === "sign-up" && usernameField && groupField && (
             <>
               <div
                 className={`input-div${darkOrNot.current}`}

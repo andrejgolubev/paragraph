@@ -3,6 +3,9 @@ import exitIcon from "../images/profile-dropdown/exit-icon.svg"
 import closeIcon from "../images/profile-dropdown/close-icon.svg"
 import loginIcon from "../images/profile-dropdown/login-icon.svg"
 import registerIcon from "../images/profile-dropdown/register-icon.svg"
+import profileIcon from "../images/profile-dropdown/profile-icon.svg"
+
+
 import { Link } from "react-router-dom"
 import { useContext, useRef } from "react"
 import homeworkAPI from "../api/homeworkAPI"
@@ -72,6 +75,12 @@ export const ProfileDropdown = (props) => {
             </svg>
           </div>
           <div className="options-list">
+            <Link to="/profile">
+              <div className="options-list__elem" >
+                <img className="options-list__elem__img" src={profileIcon} onClick={disappearOnClick} />
+                  <p>Профиль</p>
+              </div>
+            </Link>
             <Link to="/help">
               <div className="options-list__elem" >
                 <img className="options-list__elem__img" src={questionMark} onClick={disappearOnClick} />

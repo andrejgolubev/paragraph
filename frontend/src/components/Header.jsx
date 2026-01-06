@@ -2,8 +2,8 @@
 import paragraphLogo from "../images/logos/paragraph-logo.svg"
 import paragraphLogoDark from "../images/logos/paragraph-logo-dark.svg"
 
-import profileIcon from "../images/profile-dropdown/profile-icon.svg"
-import profileIconDark from "../images/profile-dropdown/profile-icon-dark.svg"
+import profileIcon from "../images/profile-dropdown/profile-button.svg"
+import profileIconDark from "../images/profile-dropdown/profile-button-dark.svg"
 import burgerButton from '../images/mobile/burger-button.svg'
 import burgerButtonDark from '../images/mobile/burger-button-dark.svg'
 import { ProfileDropdown } from "./ProfileDropdown"
@@ -80,7 +80,7 @@ const Header = () => {
                 </>
               ) : (
               <img
-                className="profile-icon nav_item"
+                className="profile-button nav_item"
                 ref={profileRef}
                 src={darkTheme? profileIconDark : profileIcon}
                 onClick={(e) => {
