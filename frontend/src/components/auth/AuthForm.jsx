@@ -23,7 +23,7 @@ export const AuthForm = ({ type }) => {
     username: {
       minLength: 2,
       maxLength: 40,
-      pattern: /^[a-zA-Zа-яА-ЯёЁ\s\-\']+$/,
+      pattern: /^[a-zA-Zа-яА-Я\s\-]+$/,
     },
     email: {
       pattern: /^\S+@\S+\.\S+$/,
@@ -46,7 +46,7 @@ export const AuthForm = ({ type }) => {
     }
     
     if (!validationPreferences.username.pattern.test(username)) {
-      return "разрешены только буквы, пробелы, дефисы и апострофы."
+      return "разрешены только буквы, пробелы и дефисы."
     }
     
     
@@ -77,7 +77,7 @@ export const AuthForm = ({ type }) => {
     }
     
     if (!/[#?!@$%^&*-]/.test(password)) {
-      return "пароль должен содержать хотя бы один специальный символ: # ? ! @ $ % ^ & * -"
+      return "пароль должен содержать хотя бы один специальный символ."
     }
     
     return true
@@ -212,99 +212,152 @@ export const AuthForm = ({ type }) => {
   const darkOrNot = useRef('')
   darkOrNot.current = darkTheme? ' dark' : ''
 
+
+  const usernameInputRef = useRef(null)
+  const groupInputRef = useRef(null)
+  const emailInputRef = useRef(null)
+  const passwordInputRef = useRef(null)
+
+  const focusInput = (inputRef) => {
+    if (inputRef?.current) {
+      inputRef.current.focus()
+    }
+  }
+
+  // сохраняем register поля, чтобы привязать ref и к react-hook-form форме, и к нашим refs
+  // в usernameField, groupField, emailField, passwordField будет сохранен обьект вида 
+  // { onChange, onBlur, ref, name, ... }
+
+  const usernameField = register("username", {
+    required: requireText, 
+    validate: {
+      validFormat: async (value) => validateUsername(value)
+    }
+  }) 
+
+  const groupField = register("group", {
+    validate: {
+      validateGroup: (value) => groupValidator(value)
+    }
+  })
+
+  const emailField = register("email", {
+    required: requireText, 
+    pattern: {
+      value: validationPreferences.email.pattern,
+      message: "неправильный формат электронной почты."
+    }, 
+  })
+
+  const passwordField = register("password", {
+    required: requireText,
+    validate: (value) => validatePassword(value)
+  })
+
+ 
   return (
     <div className={`auth${darkOrNot.current}`}>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="auth__header">
-          <div className="text">{authTitle}</div>
+          <div className="auth__header__text">{authTitle}</div>
         </div>
         <div className="auth__inputs">
           {type === "sign-up" && (
             <>
-              <div className={`input-div${darkOrNot.current}`}>
+              <div
+                className={`input-div${darkOrNot.current}`}
+                onClick={() => focusInput(usernameInputRef)}
+              >
                 <img src={user_icon} alt="user icon" />
-                <input
+                <input 
+                  {...usernameField}
+                  ref={(el) => {
+                    usernameField.ref(el)
+                    usernameInputRef.current = el
+                  }}
                   className={`input${darkOrNot.current}`}
                   type="text"
                   id="username"
                   placeholder="имя"
-                  {...register("username", {
-                    required: requireText, 
-                    validate: {
-                      validFormat: async (value) => validateUsername(value)
-                    }
-                  })}
                 />
                 <p className='auth__error'>{errors.username?.message}</p>
               </div>
-              <div className={`input-div${darkOrNot.current}`}>
+              <div
+                className={`input-div${darkOrNot.current}`}
+                onClick={() => focusInput(groupInputRef)}
+              >
                 <img src={group_icon} alt="user icon" />
                 <input
+                  {...groupField}
+                  ref={(el) => {
+                    groupField.ref(el)
+                    groupInputRef.current = el
+                  }}
                   className={`input${darkOrNot.current}`}
                   type="text"
                   id="group"
-                  placeholder="группа (опционально)"
-                  {...register("group", 
-                    {
-                      validate: {
-                        validateGroup: (value) => groupValidator(value)
-                      }
-                  }
-                )}
+                  placeholder="группа (необяз.)"
                 />
-                <p className='auth__error'>{errors.group?.message}</p>
+              <p className='auth__error'>{errors.group?.message}</p>
               </div>
             </>
           )}
-          <div className={`input-div${darkOrNot.current}`}>
+          <div
+            className={`input-div${darkOrNot.current} email-input`}
+            onClick={() => focusInput(emailInputRef)}
+          >
             <img src={email_icon} alt="email icon" />
             <input
-            className={`input${darkOrNot.current}`}
+              {...emailField}
+              ref={(el) => {
+                emailField.ref(el)
+                emailInputRef.current = el
+              }}
+              className={`input${darkOrNot.current}`}
               type="email"
               id="email"
-              placeholder="электронная почта"
-              {...register("email", {
-                required: requireText, 
-                pattern: {
-                  value: validationPreferences.email.pattern,
-                  message: "неправильный формат электронной почты."
-                }, 
-              })}
-              />
+              placeholder="эл. почта"
+            />
               <p className='auth__error'>{errors.email?.message}</p>
           </div>
-          <div className={`input-div${darkOrNot.current}`}>
-            <img src={password_icon} alt="password icon" />
-            <input
-            className={`input${darkOrNot.current}`}
-              type="password"
-              id="password"
-              placeholder="пароль"
-              {...register("password", {
-                required: requireText, 
-                validate: (value) => validatePassword(value)
-              }) }
-            />
-            <p className='auth__error'>{errors.password?.message}</p>
+          <div className="pwd-block">
+            <div
+              className={`input-div${darkOrNot.current} pwd-input`}
+              onClick={() => focusInput(passwordInputRef)}
+            >
+              <img src={password_icon} alt="password icon" />
+              <input
+                {...passwordField}
+                ref={(el) => {
+                  passwordField.ref(el)
+                  passwordInputRef.current = el
+                }}
+                className={`input${darkOrNot.current}`}
+                type="password"
+                id="password"
+                placeholder="пароль"
+              />
+              <p className='auth__error'>{errors.password?.message}</p>
+            </div>
+            {type === "sign-in" && (
+              <div className="forgot-password">
+                <span>забыли пароль?</span>
+              </div>
+            )}
           </div>
         </div>
-        {type === "sign-in" && (
-          <div className="forgot-password">
-            <span>забыли пароль?</span>
-          </div>
-        )}
         <div className="auth__submit">
           <button className={`auth__submit__btn${darkOrNot.current}`}>{authType}</button>
         </div>
         {type === "sign-in" ? (
           <Link to="/sign-up">
-            <div>
+            <div className="alternative-text">
               нет аккаунта? <span>зарегистируйтесь</span>
             </div>
           </Link>
         ) : (
           <Link to="/sign-in">
-            <div>
+            <div className="alternative-text">
               уже есть аккаунт? <span>войдите</span>
             </div>
           </Link>

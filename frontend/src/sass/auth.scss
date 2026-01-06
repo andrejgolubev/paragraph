@@ -4,15 +4,20 @@
     &.dark {
         background: $dark4;
         border-color: $dark7;
-        .text {
-            color: $light-white;
+        .auth__header__text {
+            color: $light-white !important;
         }
-
+        
     }
 
     
 
-    img {scale: 2} // icons
+    img {
+        scale: 2;
+        @media (max-width: 600px) {
+            scale: 1.5;
+        }
+    } // icons
     
     font-family: Manrope, serif;
     display: flex;
@@ -28,18 +33,21 @@
             width: 80% !important;
             font-size: 14px !important;
         }
-    }
+        
+        .alternative {
+            font-size: 14px !important;
+        }
+
+    } 
+    
+
 
     padding-bottom: 30px;
     
     border-radius: 8px;
     border: 1px solid $light-blue;
 
-    .text {
-        color: $light-grey;
-        font-size: 36px;
-        font-weight: 500;
-    }
+    
     
     &__header {
         display: flex;
@@ -48,8 +56,18 @@
         gap: 10px;
         width: 100%;
         margin-top: 30px;
+        &__text {
+            color: $dark1 !important;
+            font-size: 32px;
+            font-weight: 500;
+            @media (max-width: 600px) {
+                font-size: 26px;
+            }
+            @media (max-width: 500px) {
+                font-size: 24px;
+            }
+        }
     }
-    
     
     &__inputs {
         margin-top: 36px;
@@ -111,11 +129,23 @@
             
         }
     }
-
-    .forgot-password {
-        padding-left: 22px;
-        color: $grey;
-        font-size: 16px;
+    .pwd-block {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        .forgot-password {
+            margin-left: 4%;
+            color: $grey;
+            font-size: 16px;
+            
+        }
+        @media (max-width: 600px) {
+            .forgot-password {
+                margin-left: 10%;
+                font-size: 12px !important;
+            }
+        }
     }
 
     span {
@@ -142,7 +172,7 @@
             border-radius: 32px;
             border: 1px solid $light-white2;
             font-size: 24px;
-            font-weight: 700;
+            font-weight: 500;
             cursor: pointer;
             
             &.dark {
@@ -151,9 +181,13 @@
                 border: $dark-grey2;
             }
 
-            @media (max-width: 400px) {
+
+            @media (max-width: 600px) {
+                font-size: 20px !important;
                 width: 80%;
-                font-size: 16px;
+                @media (max-width: 500px) {
+                    font-size: 16px;
+                }
             }
         }
     }
@@ -169,7 +203,10 @@
         padding: 0;
         text-align: left;
         margin-right: 2px;
-        width: 150px;
+        width: 30%;
+        @media (max-width: 600px) {
+            font-size: 10px;
+        }
     }
     
 }
