@@ -13,7 +13,7 @@ const HomeworkModal = ({
   homeworkUpdated,
 }) => {
   const {darkTheme} = useContext(Context)
-  const  width = useWindowSize()
+  const {width} = useWindowSize()
 
   const {setNotificationOuterActive, setNotificationOuterMessage, userRole, username } = useContext(Context)
   const [inputValue, setInputValue] = useState("")
@@ -161,7 +161,6 @@ const HomeworkModal = ({
     }, [homeworkText])
 
 
-
     return (
       <dialog
         data-modal
@@ -188,26 +187,22 @@ const HomeworkModal = ({
           <p className="updated-at">{homeworkText && lastUpdate}</p>
           <div className="modal-buttons">
             {/* если мобилка то рендерим кнопку "сохранить" перед нотификэйшном  */}
-            {width > 900 ? 
-            (
-              <>
-                <button type="button" className="btn-cancel" onClick={handleCancel}>
-                  отмена
-                </button>
-                {notificationInnerActive && (
-                
-                <NotificationInner
-                  message={respText}
-                  type={"error"}
-                  notificationInnerActive={notificationInnerActive}
-                  setNotificationInnerActive={setNotificationInnerActive}
-                /> 
-                ) }
-                <button type="submit" className={`btn-${readOnly? 'cancel' : 'save'}`}>
-                  сохранить
-                </button>
-              </>
-            ) : ( 
+            {width > 800 ? (
+                <>
+                  <button type="button" className="btn-cancel" onClick={handleCancel}>
+                    отмена
+                  </button>
+                  <NotificationInner
+                    message={respText}
+                    type={"error"}
+                    notificationInnerActive={notificationInnerActive}
+                    setNotificationInnerActive={setNotificationInnerActive}
+                  /> 
+                  <button type="submit" className={`btn-${readOnly? 'cancel' : 'save'}`}>
+                    сохранить
+                  </button>
+                </>
+            ) : (
               <>
                 <button type="submit" className={`btn-${readOnly? 'cancel' : 'save'}`}>
                   сохранить
@@ -224,9 +219,8 @@ const HomeworkModal = ({
                 /> )
                 }
               </>
-            ) 
-            
-          }
+            )
+              }
           </div>
         </form>
       </dialog>

@@ -9,6 +9,9 @@
         }
 
     }
+
+    
+
     img {scale: 2} // icons
     
     font-family: Manrope, serif;
@@ -17,8 +20,16 @@
     gap: 10px;
     margin: auto;
     background: $table-white;
+
     width: 520px;
-    
+    @media (max-width: 600px) {
+        width: 80%;
+        .input-div, input {
+            width: 80% !important;
+            font-size: 14px !important;
+        }
+    }
+
     padding-bottom: 30px;
     
     border-radius: 8px;
@@ -50,9 +61,8 @@
             display: flex;
             align-items: center;
             margin: auto;
-            width: 480px; // 
-            height: 70px; // 
-            // background: rgb(232, 243, 255);
+            width: 480px; 
+            height: 70px; 
             background: $field-grey;
             &.dark {
                 background: $dark7;
@@ -139,6 +149,11 @@
                 color: $light-grey; 
                 background-color: $dark7;
                 border: $dark-grey2;
+            }
+
+            @media (max-width: 400px) {
+                width: 80%;
+                font-size: 16px;
             }
         }
     }

@@ -4,6 +4,7 @@ const NotificationInner = (props) => {
   const { message, type, notificationInnerActive, setNotificationInnerActive } = props
   const [isActive, setIsActive] = useState(false)
 
+  
   useEffect(() => {
     if (notificationInnerActive) {
       setIsActive(true) // сразу показываем
@@ -24,8 +25,7 @@ const NotificationInner = (props) => {
   return (
     <div
       className={`notification inner 
-        ${isActive ? "active" : ""
-      }
+        ${isActive ? "active" : ""}
         ${type}`}
     >
       <p>{message}</p>
