@@ -109,13 +109,16 @@
     border-radius: 0.5rem;
     display: flex;
     align-items: center;
-    border: 2px $light-blue dashed;
+    border: 1.5px $light-blue dashed;
     background-color: #fff;
     
     &.dark {
       background-color: $dark3;
-      border: 2px $dark7 dashed;
-      border-radius: 0.5em;
+      border-color: $dark7;
+    }
+
+    @media (max-width: 600px) {
+      border-width: 1px;
     }
   }
 
@@ -129,12 +132,16 @@
     border-radius: 0;
     appearance: none;
     outline: none;
-    border: none;
+    border-style: none;
+    border-radius: 0.5rem;
 
     padding: 0.675em 3.8em 0.675em 1.5em;
     @media (max-width: 1100px) {
       font-size: 12px;
       padding: 0.675em 1.25em 0.675em 1.75em;
+    }
+    @media (max-width: 600px) {
+      padding: 0.675em 0.5em 0.675em 0.5em;
     }
   }
 
@@ -143,7 +150,7 @@
     visibility: hidden;
     max-height: 32vmax;
     border-radius: 0.5rem;
-    border: $light-blue 2px dotted;
+    border: $light-blue 1.5px dotted;
     position: absolute;
     top: 100%; //чтобы был под инпутом
     margin-top: 5px; //отступ от инпута
@@ -155,7 +162,8 @@
 
     
     &.dark {
-      border: $dark1 2px solid;
+      border-color: $dark1;
+      border-style: solid;
     }
     
     li {
@@ -224,7 +232,7 @@
   }
 
   
-
+  
 
 
 }

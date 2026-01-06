@@ -1,0 +1,164 @@
+@use './variables.scss' as *;
+
+.header {
+    font-family: Manrope, serif;
+    width: auto;
+    margin-inline: 25px;
+  
+    &.dark {
+      p {
+        color: $light-white;
+      }
+    }
+  
+    .nav {
+      width: 100%;
+      height: 70px;
+
+      .nav_list {
+        display: flex;
+        justify-content: space-between;
+				
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    
+        li {
+          display: flex;
+          align-items: center;
+        }
+  
+        .nav_links_container {
+          display: flex;
+          justify-content: flex-end;
+          flex: 1;
+					
+          
+          .links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            
+            width: auto;
+            justify-content: flex-end;
+            
+            @media (max-width: 1000px) {
+              display: none;
+              &.active {
+                display: flex;
+              }
+              background-color: $table-white;
+              &.dark {
+                background-color: $body-top;
+              }
+
+              position: fixed;
+              flex-direction: column;
+              right: 0;
+              top: 0;
+              row-gap: 30px;
+              padding: 0 60px; 
+              height: 100vh;
+              width: 100%; 
+              max-width: 400px;
+              z-index: 5;
+              justify-content: center;
+							align-items: center;
+
+							font-size: 24px;
+							
+							div, img {
+								margin: 20px 0;
+							}
+            }
+  
+            @media (max-width: 500px) {
+              max-width: 100%;
+            }
+  
+            
+            .nav_item:not(.nav_logo) {
+              p:hover {
+                color: rgb(180, 211, 220);
+              }
+            }
+        
+            .nav_item {
+              margin-top: -5px;
+            }
+        
+            .profile-icon {
+              transition: scale 0.3s ease;
+        
+              &:hover {
+                scale: 1.03;
+              }
+            }
+        
+            p {
+              transition: color 0.3s ease 0s;
+              cursor: pointer;
+            }
+          }
+        }
+        
+        .burger-button {
+          &:not(.fixed) {
+            position: relative;
+            top: 0; 
+            right: 0;
+            margin-left: -15px;
+            margin-top: 11px;
+          }
+          position: fixed;
+          top: 24px;
+          right: 25px;
+          
+          z-index: 10;
+          @media (min-width: 1001px) {
+            display: none;
+          }
+        }
+      }
+      
+      &_logo {
+				z-index: 15;
+        padding-top: 7px;
+        width: 100%;
+        max-width: 175px;
+        height: auto;
+
+				@media (max-width: 500px) {
+          &.fixed {
+            position: fixed;
+            margin-top: 28px;
+          }
+				}
+      }
+  
+      &_item {
+				font-size: 20px;	
+        display: inline-block;
+        padding-top: 1rem;
+        font-family: 'Manrope', serif;
+        letter-spacing: 0.08em;
+        color: #292833;
+				
+        &.bold { 
+					font-weight: 600; 
+				}
+  
+        a {
+          color: #292833;
+          @media (max-width: 1200px) {
+            font-size: 16px;
+            margin-top: -5px;
+          }
+        }
+
+				@media (max-width:1000px) {
+					font-size: 24px;
+				}
+      }
+    }
+  }

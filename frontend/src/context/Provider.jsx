@@ -6,6 +6,10 @@ import homeworkAPI from "../api/homeworkAPI"
 export const Context = createContext({})
 
 export const Provider = ({ children }) => {
+
+  const [linksActive, setLinksActive] = useState(false) // мобильное меню навигации
+
+
   // тема 
   const [darkTheme, setDarkTheme] = useState(() => {
     const saved = localStorage.getItem('darkTheme');
@@ -13,20 +17,14 @@ export const Provider = ({ children }) => {
   });
 
   useEffect(() => {
-    // Сохраняем тему в localStorage
     localStorage.setItem('darkTheme', darkTheme);
     
-    // Меняем background
     if (darkTheme) {
       document.body.classList.add('dark');
     } else {
       document.body.classList.remove('dark');
     }
   }, [darkTheme]);
-
-  const toggleTheme = () => {
-    setDarkTheme(!darkTheme);
-  };
 
 
 
@@ -70,10 +68,12 @@ export const Provider = ({ children }) => {
         setNotificationOuterActive,
         notificationOuterMessage, 
         setNotificationOuterMessage,
-        //
+        // подсказка при первом входе:
         tipActive, 
         setTipActive,
+        //клиентские куки:
         setGroupDataValueCookies,
+        // имя профиля и роль доставаемая по access_token
         username, 
         setUsername, 
         userRole, 
@@ -81,7 +81,9 @@ export const Provider = ({ children }) => {
         //theme:
         darkTheme, 
         setDarkTheme,
-        toggleTheme,
+        //мобильная навигация: 
+        linksActive,
+        setLinksActive ,
       }}
     >
       {children}

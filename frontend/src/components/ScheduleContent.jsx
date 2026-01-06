@@ -4,6 +4,7 @@ import Tip from "./Tip"
 import { useEffect, useContext } from "react"
 import { Context } from "../context/Provider"
 import NotificationOuter from "./notifications/NotificationOuter"
+import { useWindowSize } from "../hooks/useWindowSize"
 
 const ScheduleContent = () => {
   const { groupDataValue, dateDataValue, tipActive, setTipActive } = useContext(Context)
@@ -14,7 +15,8 @@ const ScheduleContent = () => {
     setTipActive(true)
   }, [])
 
-  
+  const {width} = useWindowSize() 
+  const isMobile = width < 600
 
 
   return (
@@ -32,12 +34,13 @@ const ScheduleContent = () => {
           placeholder={"дата/неделя"}
           readOnly={true}
         />
-        <div className="corpuses">
+
+        {/* <div className="corpuses">
           <p>C - Центральный корпус⠀⠀⠀⠀B - Бизнес-инкубатор</p>
           <p>L - Лабораторный корпус ⠀⠀⠀F - Первый корпус</p>
-        </div>
+        </div> */}
       </div>
-      <Tip active={tipActive} />
+      {/* <Tip active={tipActive} /> */}
 
       {groupDataValue && (
         <ScheduleContainer

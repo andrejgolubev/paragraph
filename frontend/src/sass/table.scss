@@ -125,12 +125,11 @@
 
   th,
   td {
-
     padding: 12px 0 12px 10px;
     max-width: 150px;
     min-width: 80px;
     @media (max-width: 1100px) {
-      min-width: 35px;
+      min-width: none;
       padding: 3px 0px
     }
     

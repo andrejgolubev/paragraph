@@ -9,7 +9,8 @@ import tipBgDark from '../images/tip/tip-bg-dark.png'
 const Tip = ({active}) => {
   const {darkTheme} = useContext(Context)
 
-  return (<div 
+  return (
+  <div 
   className={'tip' + (active? " active" : '') + (darkTheme? ' dark' : '')}
   style={{backgroundImage: darkTheme? `url(${tipBgDark})` :`url(${tipBg})`}}>
     <div className="tip__inner">
@@ -22,7 +23,8 @@ const Tip = ({active}) => {
         <p>хотите посмотреть расписание :)</p>
       </div>
     </div>
-  </div>)
+  </div>
+  )
 }
 
 export default Tip

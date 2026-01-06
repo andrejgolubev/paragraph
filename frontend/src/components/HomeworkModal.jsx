@@ -13,7 +13,7 @@ const HomeworkModal = ({
   homeworkUpdated,
 }) => {
   const {darkTheme} = useContext(Context)
-  const { width } = useWindowSize()
+  const  width = useWindowSize()
 
   const {setNotificationOuterActive, setNotificationOuterMessage, userRole, username } = useContext(Context)
   const [inputValue, setInputValue] = useState("")
