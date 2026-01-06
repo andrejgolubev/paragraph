@@ -17,8 +17,6 @@
 
 
 
-
-
 .custom-dropdown {
   position: relative;
 
@@ -51,17 +49,15 @@
 .select-block, 
 .custom-dropdown {
 
-  input#select-input, 
-  input#search-input {
+  input {
     background-color: $table-white;
   }
 
   &.dark {
-    input#select-input, 
-    input#search-input {
+    input{
       background-color: $dark3;
       color: $light-grey;
-      
+
       &::placeholder {
         color: $light-grey;
       }

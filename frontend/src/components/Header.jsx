@@ -31,10 +31,25 @@ const Header = () => {
   const {width} = useWindowSize()
   const isMobile = width < 1001
   
+  const [isClosing, setIsClosing] = useState(false)
+
+  const openMenu = () => {
+    setIsClosing(false)
+    setLinksActive(true)
+  }
+  
+  const closeMenu = () => {
+    setIsClosing(true)
+    setTimeout(() => {
+      setLinksActive(false)
+      setIsClosing(false)
+    }, 300) // та же длительность, что и в SCSS
+  }
 
 
   const handleBurgerButtonClick = () => {
-    setLinksActive( (prev) => !prev )
+    if (linksActive) closeMenu() 
+    else openMenu()
   }
 
   return (
@@ -51,7 +66,8 @@ const Header = () => {
             </li>
           </Link>
           <li className={`nav_links_container`}>
-            <div className={`links  ${linksActive? 'active' : ''} ${darkTheme? 'dark' : ''}`}>
+            <div className={`links  ${linksActive? 'active' : ''} ${darkTheme? 'dark' : ''}
+            ${isClosing ? 'closing ' : ''}`}>
               <NavItem path={'/'}> дневник </NavItem>
               <NavItem path={'/news'}> новости </NavItem>
               <NavItem path={'/help'}> о проекте </NavItem>

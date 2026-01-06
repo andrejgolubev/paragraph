@@ -133,16 +133,14 @@
       padding: 3px 0px
     }
     
+   
+
     &:first-child {
       text-align: left;
       font-weight: bold;
       
       p:last-child {
-        font-size: 14px;
         font-weight: normal;
-        @media (max-width: 1100px){
-          font-size: 12px;
-        }
       }
     }
 
@@ -168,11 +166,10 @@
     font-size: 14px;
     padding: 10px;
     vertical-align: top;
-
-    @media (max-width:1200px) {
+    @media (max-width:1100px) {
       font-size: 12px;
     }
-    @media (max-width:1100px) {
+    @media (max-width:800px) {
       font-size: 10px;
     }
   }
