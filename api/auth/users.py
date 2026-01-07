@@ -19,6 +19,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from .helpers import create_access_token, create_refresh_token
 from api.utils.censor import has_cursive_words
 from random import choice
+from pathlib import Path
 
 router = APIRouter(
     prefix="/user",
@@ -37,8 +38,8 @@ async def register(
     password = register_data.password
     group_number = register_data.group_number
 
-    
-    if await has_cursive_words(filepath='api/misc/cursive_words.txt', phrase=username): 
+    cursive_words_path = Path(__file__).parent / 'misc' / 'cursive_words.txt'
+    if await has_cursive_words(filepath=cursive_words_path, phrase=username): 
         answers: dict[str] = ['введённое имя недопустимо :(', 'такое имя неприемлимо :(', 'введённое имя не прошло валидацию :(']
         raise HTTPException(status_code=400, detail=choice(answers))    
 
@@ -144,8 +145,8 @@ async def login(
 
 @router.post('/logout') 
 async def logout(response: Response): 
-    response.delete_cookie('access_token', samesite='lax', secure=True)
-    response.delete_cookie('refresh_token', samesite='lax', secure=True)
+    response.delete_cookie('access_token', samesite='none', secure=True)
+    response.delete_cookie('refresh_token', samesite='none', secure=True)
 
     return {"detail": "Вы успешно вышли из аккаунта"}
 

@@ -12,6 +12,17 @@ ALLOW_ORIGINS = [
         "http://127.0.0.1:5173",
         "http://localhost:8000",
         "http://127.0.0.1:8000",
+        "http://192.168.0.108:5173",
+        "http://192.168.0.108:8000",
+        "http://192.168.0.102:8000",
+        # вот эти все для https надо?
+        "https://localhost:5173",
+        "https://127.0.0.1:5173",
+        "https://localhost:8000",
+        "https://127.0.0.1:8000",
+        "https://192.168.0.108:5173",
+        "https://192.168.0.108:8000",
+        "https://192.168.0.102:8000",
     ]
 
 class ProcessTimeHeaderMiddleware(BaseHTTPMiddleware): 
@@ -66,6 +77,7 @@ def register_middlewares(app: FastAPI):
 
     app.add_middleware(
         CORSMiddleware,
+        # allow_origins=['*'],
         allow_origins=ALLOW_ORIGINS,
         allow_methods=["*"],  # Разрешить все методы (ПОКА ЧТО ДЛЯ РАЗРАБОТКИ)
         allow_headers=["*"],  # Разрешить все заголовки

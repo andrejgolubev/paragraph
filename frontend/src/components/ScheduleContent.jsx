@@ -35,10 +35,10 @@ const ScheduleContent = () => {
           readOnly={true}
         />
 
-        {/* <div className="corpuses">
+        <div className="corpuses">
           <p>C - Центральный корпус⠀⠀⠀⠀B - Бизнес-инкубатор</p>
           <p>L - Лабораторный корпус ⠀⠀⠀F - Первый корпус</p>
-        </div> */}
+        </div>
       </div>
       {/* <Tip active={tipActive} /> */}
 

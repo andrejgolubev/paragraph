@@ -7,6 +7,8 @@ import { Context } from "../context/Provider"
 import homeworkAPI from "../api/homeworkAPI"
 import { Mosaic } from "react-loading-indicators"
 import { getDateValueFromDisplay, getLessonTypeClass } from "../utils/converters"
+import { BASE_URL } from "../api/homeworkAPI"
+
 
 let lessonInfoGlobal = {}
 
@@ -54,7 +56,7 @@ const ScheduleContainer = () => {
     try {
       setLoading(true)
       
-      let url = `http://127.0.0.1:8000/schedule/get-schedule?group_data_value=${groupDataValue}`
+      let url = `${BASE_URL}/schedule/get-schedule?group_data_value=${groupDataValue}`
       if (dateDataValue) {
         url += `&date_data_value=${dateDataValue}`
       }

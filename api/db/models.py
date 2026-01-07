@@ -18,10 +18,9 @@ class User(Base):
     email: Mapped[str] = mc(nullable=False, unique=True)
     password: Mapped[str] = mc(nullable=False)
     role: Mapped[str] = mc(nullable=False, default="student")
+    sign_up_date: Mapped[datetime] = mc(nullable=False, default=datetime.now())
     active: Mapped[bool] = mc(nullable=False, default=True)
     
-
-
 
     group_id: Mapped[int] = mc(ForeignKey("groups.id"), nullable=True)
 

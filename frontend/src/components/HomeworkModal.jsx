@@ -68,7 +68,7 @@ const HomeworkModal = ({
 
 
     useEffect( () => {
-      // setReadOnly(false) // обязательно! для правильного рендера модалки
+
       if (userRole) {
         homeworkAPI.getUserData().then( ({role}) => {
           if (role?.includes('admin'))  {
@@ -92,7 +92,7 @@ const HomeworkModal = ({
 
 
     const handleTextInputClick = (event) => {
-      event.preventDefault()
+      // event.preventDefault()
       event.target.focus()
     }
 
@@ -176,6 +176,7 @@ const HomeworkModal = ({
           <textarea
             ref={textareaRef}
             value={inputValue}
+            onPointerDown={handleTextInputClick}
             onClick={handleTextInputClick}
             onInput={onInput}
             name="text-input"

@@ -1,4 +1,5 @@
-const BASE_URL = "http://localhost:8000"
+// export const BASE_URL = "http://localhost:8000"
+export const BASE_URL = "https://192.168.0.108:8000"
 const headers = { "Content-Type": "application/json"}
 
 const homeworkAPI = {
