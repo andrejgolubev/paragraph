@@ -76,6 +76,11 @@
     p {
       color: $light-grey;
     }
+    .error {
+      p {
+        color: $table-white !important;
+      }
+    }
     h3 {
       color: $table-white;
     }
@@ -86,6 +91,7 @@
       .btn-submit {
         background-color: $great-blue;
       }
+      
     }
     textarea {
       color: $light-white;
@@ -179,6 +185,7 @@
         padding: 8px 16px;
         border: none;
         border-radius: 4px;
+        -webkit-tap-highlight-color: transparent;
 
         cursor: pointer;
         &:active {
@@ -188,30 +195,69 @@
         &.btn-cancel {
           background: #e1e1e1;
           transition: all 0.3s ease 0s;
-
-          &:hover {
-            background: #d3d2d2;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(50, 52, 54, 0.3);
-          }
-          
         }
 
         &.btn-save {
           background: $blue;
           transition: all 0.3s ease 0s;
           color: white;
+        }
+      }
+    }
+  }
 
+
+
+  // hover-эффекты только для устройств с курсором
+  @media (hover: hover) and (pointer: fine) {
+    .modal-buttons {
+      button {
+        &.btn-cancel {
+          &:hover {
+            background: #d3d2d2;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(50, 52, 54, 0.3);
+          }
+        }
+        &.btn-save {
           &:hover {
             background: $great-blue;
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
           }
-
         }
       }
     }
   }
+
+  // на тач-устройствах убираем hover и оставляем active
+  @media (hover: none), (pointer: coarse) {
+    .modal-buttons {
+      
+      button {
+        &:hover {
+          background: inherit;
+          transform: translateY(0);
+          box-shadow: none;
+        }
+        &.btn-cancel {
+          &:active {
+            background: #d3d2d2;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(50, 52, 54, 0.3);
+          }
+        }
+        &.btn-save {
+          &:active {
+            background: $great-blue;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+          }
+        }
+      }
+    }
+  }
+
 
 }
 
@@ -253,11 +299,14 @@
 // АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ
 @media (max-width: 800px) {
   .modal {
-    width: 95%;
-    height: 85vh;
+    width: 94%;
+    display: flex;
+    justify-content: center;
+   
     max-height: none;
     max-width: none;
     overflow-y: scroll;
+    // margin: auto;
 
     form {
       padding: 20px;
@@ -269,10 +318,25 @@
       .modal-buttons {
         padding-top: 20px;
         flex-direction: column;
+        justify-content: center;
+
         button {
           button, 
           div {
             height: 24px;
+          }
+        }
+
+        .error {
+          position: absolute;
+          width: 100%;
+          left: 0;
+          right: 0;
+          margin: 0 auto;
+          transform: translateY(16px);
+
+          &.active {
+            transform: translateY(0);
           }
         }
       }

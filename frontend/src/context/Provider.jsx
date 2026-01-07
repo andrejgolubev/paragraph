@@ -51,8 +51,13 @@ export const Provider = ({ children }) => {
   
   useEffect( () => {
     homeworkAPI.getUserData().then(resp => {
-      setUsername(resp?.username)
-      setUserRole(resp?.role)
+      if (resp?.status === 'ok') {
+        setUsername(resp.username)
+        setUserRole(resp.role)
+      } else {
+        setUsername('')
+        setUserRole('')
+      }
     })
   }, [notificationOuterActive]) // такая зависимость т.к. при входе в аккаунт срабатывает эта нотификэйшн
 

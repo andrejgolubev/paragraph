@@ -2,4 +2,4 @@ run-frontend:
 	cd frontend && npx vite 
 
 run-backend:
-	cd api && uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+	uvicorn api.main:app --host 0.0.0.0 --port 8000 --ssl-certfile=certs/192.168.0.108+2.pem --ssl-keyfile=certs/192.168.0.108+2-key.pem --reload

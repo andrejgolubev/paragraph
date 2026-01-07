@@ -28,6 +28,9 @@ async def save_homework(
     lesson_index = homework_request.lesson_index
     homework = homework_request.homework
 
+    if not homework:
+        raise HTTPException(status_code=400, detail="д/з не может быть пустым")
+
     moderated_group_numbers = [gr for gr in role.split(".")[1:] if gr] # недоразумение 
     moderated_group_datavalues = [await get_group_datavalue(group_number, db=db) for group_number in moderated_group_numbers]
 

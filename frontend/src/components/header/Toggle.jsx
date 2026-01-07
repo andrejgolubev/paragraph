@@ -1,11 +1,10 @@
 import React, { useContext } from "react"
-import { Context } from "../context/Provider"
+import { Context } from "../../context/Provider"
 
-import toggleBgLight from "../images/toggles/toggle-bg.svg"
-import toggleBgDark from "../images/toggles/toggle-bg-dark.svg"
-import toggleIcon from "../images/toggles/toggle-icon.svg"
-import toggleIconDark from "../images/toggles/toggle-icon-dark.svg"
-import { useWindowSize } from "../hooks/useWindowSize"
+import toggleBgLight from "../../images/toggles/toggle-bg.svg"
+import toggleBgDark from "../../images/toggles/toggle-bg-dark.svg"
+import toggleIcon from "../../images/toggles/toggle-icon.svg"
+import toggleIconDark from "../../images/toggles/toggle-icon-dark.svg"
 
 export const Toggle = ({isMobile}) => {
   const {darkTheme, setDarkTheme} = useContext(Context)

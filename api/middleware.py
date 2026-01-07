@@ -15,7 +15,7 @@ ALLOW_ORIGINS = [
         "http://192.168.0.108:5173",
         "http://192.168.0.108:8000",
         "http://192.168.0.102:8000",
-        # вот эти все для https надо?
+        # для https 
         "https://localhost:5173",
         "https://127.0.0.1:5173",
         "https://localhost:8000",

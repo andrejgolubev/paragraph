@@ -4,6 +4,7 @@ import homeworkAPI from "../api/homeworkAPI"
 import { Context } from "../context/Provider"
 import { convertDate } from "../utils/converters"
 import { useWindowSize } from "../hooks/useWindowSize"
+import { useModeratedGroups } from "../hooks/useModeratedGroups"
 
 const HomeworkModal = ({
   // showDialog,
@@ -19,13 +20,15 @@ const HomeworkModal = ({
   const [inputValue, setInputValue] = useState("")
   const [notificationInnerActive, setNotificationInnerActive] = useState(false)
   const [lastUpdate, setLastUpdate] = useState("")
-  
+  const showErrorTimerRef = useRef(null)
+
   const showError = () => {
     setNotificationInnerActive(true)
     
     setTimeout(() => {
       setNotificationInnerActive(false)
     }, 3100) // 3100 a не 3000 чтобы локальный isActive сработал и плавно ушла кнопка 
+
   }
 
   if (lessonInfo) {
@@ -46,7 +49,7 @@ const HomeworkModal = ({
 
     const textareaRef = useRef("")
     const dialogRef = useRef(null)
-    const dialog = dialogRef.current
+    const dialog = dialogRef.current  
 
     // срабатывает тогда когда модалка появляется
     useEffect(() => {
@@ -63,36 +66,33 @@ const HomeworkModal = ({
         }
         
         dialog.showModal() // используем нативный метод
+      
+        return () => {
+          dialog.close()
+          homeworkText = ""
+        }
       }
     }, [dialog, homeworkUpdated])
 
 
-    useEffect( () => {
+    const { moderatedGroups } = useModeratedGroups()
 
-      if (userRole) {
-        homeworkAPI.getUserData().then( ({role}) => {
-          if (role?.includes('admin'))  {
-            const moderatedGroups = role.split('.').slice(1,)   
-            homeworkAPI.convertFromDataValue({groupDataValue}).then( (resp) => {
-              const currentGroupNumber = resp?.group_number
-              if (moderatedGroups.some( num => num === currentGroupNumber)) {
-                setReadOnly(false)
-              } else{ 
-                setReadOnly(true)
-              }
-            })
-          } else {
-            setReadOnly(true)
-          }
-        })
-      } 
+    useEffect( () => {
+      homeworkAPI.convertFromDataValue({groupDataValue}).then( (resp) => {
+        const currentGroupNumber = resp?.group_number
+        if (moderatedGroups.some( num => num === currentGroupNumber )) {
+          setReadOnly(false)
+        } else { 
+          setReadOnly(true)
+        }
+      })
 
       return () => setReadOnly(true)
-    }, [])
+
+    }, [moderatedGroups])
 
 
     const handleTextInputClick = (event) => {
-      // event.preventDefault()
       event.target.focus()
     }
 
@@ -102,13 +102,8 @@ const HomeworkModal = ({
 
     const handleHomeworkSubmit = (event) => {
       event.preventDefault()
+     
       const homeworkTextClean = inputValue.trim()
-      if (!homeworkTextClean) {
-        // setNotificationInnerActive(true)
-        showError()
-        return
-      }
-
 
       homeworkAPI.saveHomework(
         groupDataValue,
@@ -118,33 +113,37 @@ const HomeworkModal = ({
       ).then( resp => {
         if (!(resp.detail === 'saved')) {
           setRespText(resp.detail)
-          // setNotificationInnerActive(true)
+          console.log('resp.detail из handleHomeworkSubmit:>> ', resp.detail);
           showError()
+          return
         } else { 
           // если сохранена домашка, то:
-          dialog.close() // нативное закрытие (обязательно!!)
           setShowDialog(false) // просто убираем компонент из ScheduleContainer
-          setLastUpdate('')
           
+          setLastUpdate('')
           setNotificationOuterMessage('домашнее задание сохранено.')
           setNotificationOuterActive(true)
         }
       })
 
+      
+      if (!homeworkTextClean) {
+        setRespText('д/з не может быть пустым')
+        showError()
+        return
+      }
     }
 
     const handleCancel = (event) => {
       event.preventDefault()
       textareaRef.current.value = ""
-      dialog.close()
       setShowDialog(false)
     }
 
     const handleClickOutside = (e) => {
       if (dialog && e.target === dialog) {
-        dialog.close()
-        setShowDialog(false)
         textareaRef.current.value = ""
+        setShowDialog(false)
       }
     }
 
@@ -152,9 +151,7 @@ const HomeworkModal = ({
     useEffect(() => {
       if (homeworkText) {
         setInputValue(homeworkText)
-        setTimeout( async () => {
-          homeworkText = ""
-        }, 300)
+        // для того чтобы текст в поле ввода домашки уже был пуст после закрытия модалки есть useEffect в котором мы закрываем модалку
       } else {
         setInputValue("")
       }

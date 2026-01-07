@@ -1,6 +1,7 @@
-import Header from "./components/Header"
+import Header from "./components/header/Header"
 import Help from "./components/help-page/Help"
 import ScheduleContent from "./components/ScheduleContent"
+import Profile from "./components/profile/Profile"
 import { Provider } from "./context/Provider"
 import { Route, Routes } from "react-router-dom"
 import { Auth } from "./components/auth/Auth"
@@ -18,6 +19,7 @@ function App() {
           <Route path="/help" element={<Help />} />
           <Route path='/sign-in' element={<Auth type='sign-in' />} />
           <Route path='/sign-up' element={<Auth type='sign-up'/>} />
+          <Route path='/profile' element={<Profile />} />
         </Routes>
       </Provider>
     </CookiesProvider>

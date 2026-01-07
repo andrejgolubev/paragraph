@@ -1,6 +1,6 @@
 import React, { useContext } from "react"
 import { useLocation, Link } from "react-router-dom"
-import { Context } from "../context/Provider"
+import { Context } from "../../context/Provider"
 
 export const NavItem = ({ children, path }) => {
   const {setLinksActive} = useContext(Context)

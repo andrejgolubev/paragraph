@@ -7,17 +7,18 @@ import profileIcon from "../images/profile-dropdown/profile-icon.svg"
 
 
 import { Link } from "react-router-dom"
-import { useContext, useRef } from "react"
+import { useContext } from "react"
 import homeworkAPI from "../api/homeworkAPI"
 import { Context } from "../context/Provider"
+import { useModeratedGroups } from "../hooks/useModeratedGroups"
 
 export const ProfileDropdown = (props) => {
   const {darkTheme} = useContext(Context)
 
   const { setDisplayProfile, dropdownRef, username, role } = props
 
-  const displayRole = useRef('')
-  const moderatedGroups = useRef('')
+  const { displayRole, moderatedGroups } = useModeratedGroups()
+  
 
   const { setNotificationOuterActive, setNotificationOuterMessage } =
     useContext(Context) 
@@ -33,20 +34,6 @@ export const ProfileDropdown = (props) => {
     setDisplayProfile(false)
   }
 
-  const roleMap = {
-    student: 'Студент', 
-    admin: 'Администратор',
-    teacher: 'Преподаватель',
-  }
-  
-
-  if (role?.includes('admin')) {
-    displayRole.current = role.split('.')[0]
-    moderatedGroups.current = role.split('.').slice(1,)
-  } else {
-    displayRole.current = role
-  } 
-  
 
   if (username && role) {
     return (
@@ -58,10 +45,10 @@ export const ProfileDropdown = (props) => {
         <div className="profile-dropdown__inner">
           <p>{username}</p>
           <p className="role small">
-            {roleMap[displayRole.current]}
+            {displayRole}
           </p>
           <p className="small">
-            {`${moderatedGroups.current}`}
+            {`${moderatedGroups}`}
           </p>
           <div className="stroke">
             <svg
