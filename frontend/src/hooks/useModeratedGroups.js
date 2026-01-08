@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import homeworkAPI from "../api/homeworkAPI"
+import { Context } from "../context/Provider"
 
 export const useModeratedGroups = () => {
+  const {userRole} = useContext(Context)
   const [moderatedGroups, setModeratedGroups] = useState([])
   const [displayRole, setDisplayRole] = useState('')
 
@@ -24,7 +26,7 @@ export const useModeratedGroups = () => {
         setModeratedGroups([])
       }
     })
-  }, [])
+  }, [ userRole ])
 
   return { moderatedGroups, displayRole }
 }

@@ -82,14 +82,11 @@ export const AuthForm = ({ type }) => {
     
     return true
   }
-
-  // будет переменная userAuthorized с СОСТОЯНИЕМ от которой будет зависеть type
-  // так что такя реализация с let допустима
-  let authType = ""
-  let authTitle = ""
-  // const [submitMessage, setSubmitMessage] = useState('')
+  
+  let authType = "" , authTitle = ""
+  
   const [submitMessageType, setSubmitMessageType] = useState('success')
-
+  
   if (type === "sign-up") {
     authType = "зарегистироваться"
     authTitle = "регистрация"
@@ -105,7 +102,7 @@ export const AuthForm = ({ type }) => {
   
   const debounceTimerRef = useRef(null)
 
-  const {notificationOuterActive, setNotificationOuterActive, setNotificationOuterMessage} = useContext(Context)
+  const {setNotificationOuterActive, setNotificationOuterMessage} = useContext(Context)
 
   const handleAuth = (resp) => {
     setNotificationOuterMessage(resp.detail)
@@ -120,8 +117,6 @@ export const AuthForm = ({ type }) => {
         setNotificationOuterActive(true)
       }, 100)
       
-      
-      
     } else {
       setSubmitMessageType('error')
       setNotificationOuterActive(true)
@@ -133,14 +128,11 @@ export const AuthForm = ({ type }) => {
       homeworkAPI.sendRegisterData(email, password, username, group).then(
         resp => handleAuth(resp)
       )
-        
     } else if (type === 'sign-in') {
       homeworkAPI.sendLoginData(email, password).then(
         resp => handleAuth(resp)
       )
-    } else {
-      console.log('Указан неверный тип формы');
-    }
+    } 
   }
 
   const groupAttemptsRef = useRef(0)
@@ -223,13 +215,12 @@ export const AuthForm = ({ type }) => {
       inputRef.current.focus()
     }
   }
-
+  // ДЛЯ ТОГО ЧТОБЫ ФОКУС СРАБАТЫВАЛ НЕ ТОЛЬКО ПРИ КЛИКЕ НЕПОСРЕДСТВЕННО НА INPUT: 
   // сохраняем register поля, чтобы привязать ref и к react-hook-form форме, и к нашим refs
   // в usernameField, groupField, emailField, passwordField будет сохранен обьект вида 
   // { onChange, onBlur, ref, name, ... }
 
-  let usernameField = null
-  let groupField = null
+  let usernameField = null, groupField = null
 
   if (type === "sign-up") {
     usernameField = register("username", {
@@ -244,7 +235,6 @@ export const AuthForm = ({ type }) => {
       }
     }) 
   } 
-
 
 
   const emailField = register("email", {
@@ -285,6 +275,7 @@ export const AuthForm = ({ type }) => {
                   type="text"
                   id="username"
                   placeholder="имя"
+                  autoComplete="username"
                 />
                 <p className='auth__error'>{errors.username?.message}</p>
               </div>
@@ -303,6 +294,7 @@ export const AuthForm = ({ type }) => {
                   type="text"
                   id="group"
                   placeholder="группа (необяз.)"
+                  autoComplete="group"
                 />
               <p className='auth__error'>{errors.group?.message}</p>
               </div>
@@ -323,6 +315,7 @@ export const AuthForm = ({ type }) => {
               type="email"
               id="email"
               placeholder="эл. почта"
+              autoComplete="email"
             />
               <p className='auth__error'>{errors.email?.message}</p>
           </div>
@@ -342,6 +335,7 @@ export const AuthForm = ({ type }) => {
                 type="password"
                 id="password"
                 placeholder="пароль"
+                autoComplete="password"
               />
               <p className='auth__error'>{errors.password?.message}</p>
             </div>

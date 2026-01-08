@@ -1,8 +1,10 @@
 // export const BASE_URL = "http://localhost:8000"
 export const BASE_URL = "https://192.168.0.108:8000"
+
 const headers = { "Content-Type": "application/json"}
 
 const homeworkAPI = {
+  
   saveHomework: async (groupDataValue, dateDataValue, lessonIndex, homeworkText) => {
     
     const payload = {
@@ -162,10 +164,11 @@ const homeworkAPI = {
     const responseData = await response.json() 
 
     if (!response.ok) {
-      return {...responseData, status: 'error'}
+      return {...responseData, status: 'error'} 
     }
 
     return {...responseData, status: 'ok'}
+    // responseData содержит: username, email, role, group
   }, 
 
   logout: async () => {
@@ -174,6 +177,7 @@ const homeworkAPI = {
       headers, 
       credentials: 'include'
     })
+
 
     const responseData = await response.json() 
 

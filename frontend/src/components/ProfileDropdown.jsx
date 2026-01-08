@@ -6,13 +6,18 @@ import registerIcon from "../images/profile-dropdown/register-icon.svg"
 import profileIcon from "../images/profile-dropdown/profile-icon.svg"
 
 
-import { Link } from "react-router-dom"
+import { Link, useNavigate, useLocation } from "react-router-dom"
 import { useContext } from "react"
 import homeworkAPI from "../api/homeworkAPI"
 import { Context } from "../context/Provider"
 import { useModeratedGroups } from "../hooks/useModeratedGroups"
 
 export const ProfileDropdown = (props) => {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const path = location.pathname.split('/').pop()
+
+  
   const {darkTheme} = useContext(Context)
 
   const { setDisplayProfile, dropdownRef, username, role } = props
@@ -25,10 +30,13 @@ export const ProfileDropdown = (props) => {
 
   const disappearOnClick = () => setDisplayProfile(false)
 
-  // чтобы вызвалась проверка access_token (т.к. в Provider такая dependency)
+  
   const handleLogout = () => {
+    if (path === 'profile') {
+      navigate('/sign-in')
+    }
     homeworkAPI.logout().then( resp => {
-      setNotificationOuterActive(true)
+      setNotificationOuterActive(true)// чтобы вызвалась проверка access_token (т.к. в Provider такая dependency)
       setNotificationOuterMessage(resp.detail)
     })
     setDisplayProfile(false)

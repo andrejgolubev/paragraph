@@ -1,10 +1,10 @@
 @use './variables.scss' as *;
 
-.auth {
+.profile {
     &.dark {
         background: $dark4;
         border-color: $dark7;
-        .auth__header__text {
+        .profile__header__text {
             color: $light-white !important;
         }
     }
@@ -24,15 +24,18 @@
     background: $table-white;
 
     width: 520px;
+
+    
     @media (max-width: 600px) {
         width: 80%;
-        .input-div, input {
+        div[class*="-block"] {
             width: 80% !important;
             font-size: 14px !important;
-        }
-        
-        .alternative {
-            font-size: 14px !important;
+            
+            .input-div, input {
+                width: 100% !important;
+                font-size: 14px !important;
+            }
         }
 
     } 
@@ -70,6 +73,7 @@
         margin-top: 36px;
         display: flex;
         flex-direction: column;
+        align-items: center;
         gap: 12px;   
         font-size: 18px;
         .input-div {
@@ -94,6 +98,7 @@
                 outline: none;
                 color: $grey;
                 font-size: 18px;
+                padding-left: 24px;
 
                 &:-webkit-autofill,
                 &:-webkit-autofill:hover,
@@ -133,6 +138,21 @@
             
         }
     }
+
+    .username-block, 
+    .group-block, 
+    .email-block, 
+    .pwd-block {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        label {
+            color: $light-white;
+            font-size: 16px;
+        }
+    }
+
     .pwd-block {
         display: flex;
         flex-direction: column;

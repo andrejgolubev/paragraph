@@ -48,15 +48,20 @@ export const Provider = ({ children }) => {
   // устанавливаем имя для ProfileDropdown используя access_token 
   const [username, setUsername] = useState('')
   const [userRole, setUserRole] = useState('')
-  
+  const [email, setEmail] = useState('')
+  const [group, setGroup] = useState('')
   useEffect( () => {
     homeworkAPI.getUserData().then(resp => {
       if (resp?.status === 'ok') {
         setUsername(resp.username)
         setUserRole(resp.role)
+        setEmail(resp.email)
+        setGroup(resp.group)
       } else {
         setUsername('')
         setUserRole('')
+        setEmail('')
+        setGroup('')
       }
     })
   }, [notificationOuterActive]) // такая зависимость т.к. при входе в аккаунт срабатывает эта нотификэйшн
@@ -80,9 +85,9 @@ export const Provider = ({ children }) => {
         setGroupDataValueCookies,
         // имя профиля и роль доставаемая по access_token
         username, 
-        setUsername, 
         userRole, 
-        setUserRole,
+        email,
+        group,
         //theme:
         darkTheme, 
         setDarkTheme,
