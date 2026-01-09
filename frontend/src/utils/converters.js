@@ -12,7 +12,6 @@ export const latinToCyrillic = (str) => {
   };
   
   return str
-    .toUpperCase() // Приводим к верхнему регистру
     .split('')
     .map(char => latinToCyrillicMap[char] || char)
     .join('');

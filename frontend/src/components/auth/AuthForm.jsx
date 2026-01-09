@@ -13,26 +13,15 @@ import group_icon from "../../images/auth/group.svg"
 import password_icon from "../../images/auth/password.svg"
 import email_icon from "../../images/auth/email.svg"
 
+import { validationPreferences } from "../../config/settings.js"
+
 
 export const AuthForm = ({ type }) => {
   const {darkTheme} = useContext(Context)
 
   const navigate = useNavigate()
 
-  const validationPreferences = {
-    username: {
-      minLength: 2,
-      maxLength: 40,
-      pattern: /^[a-zA-Zа-яА-Я\s\-]+$/,
-    },
-    email: {
-      pattern: /^\S+@\S+\.\S+$/,
-    },
-    password: {
-      // pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-      minLength: 8,
-    }
-  }
+  
   
   const validateUsername = async (value) => {
     const username = value.trim()

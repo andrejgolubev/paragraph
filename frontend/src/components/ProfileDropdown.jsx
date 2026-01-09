@@ -1,9 +1,9 @@
-import questionMark from "../images/profile-dropdown/question-icon.svg" 
-import exitIcon from "../images/profile-dropdown/exit-icon.svg"
-import closeIcon from "../images/profile-dropdown/close-icon.svg"
-import loginIcon from "../images/profile-dropdown/login-icon.svg"
-import registerIcon from "../images/profile-dropdown/register-icon.svg"
-import profileIcon from "../images/profile-dropdown/profile-icon.svg"
+import questionMark from "../images/profile/profile-dropdown/question-icon.svg" 
+import exitIcon from "../images/profile/profile-dropdown/exit-icon.svg"
+import closeIcon from "../images/profile/profile-dropdown/close-icon.svg"
+import loginIcon from "../images/profile/profile-dropdown/login-icon.svg"
+import registerIcon from "../images/profile/profile-dropdown/register-icon.svg"
+import profileIcon from "../images/profile/profile-dropdown/profile-icon.svg"
 
 
 import { Link, useNavigate, useLocation } from "react-router-dom"

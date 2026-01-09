@@ -1,7 +1,11 @@
-import email
-from fastapi import HTTPException
-from pydantic import BaseModel, Field, EmailStr, field_validator, ConfigDict
-from typing import Optional
+from pydantic import BaseModel,  EmailStr,  ConfigDict
+
+
+class UserUpdate(BaseModel):
+    username: str | None = None
+    email: EmailStr
+    group_number: str | None = None
+    password: str | None = None
 
 
 class HomeworkRequest(BaseModel):
@@ -20,7 +24,7 @@ class UserRegistration(BaseModel):
 
 
 class UserLogin(BaseModel): 
-    email: str 
+    email: EmailStr 
     password: str
     
 

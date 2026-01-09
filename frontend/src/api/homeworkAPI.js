@@ -186,8 +186,24 @@ const homeworkAPI = {
     }
 
     return {...responseData, status: 'ok'}
+  },
 
-  }
+  updateUserData: async ({email, password, username, group }) => {
+    const response = await fetch(`${BASE_URL}/user/update-profile`, {
+      method: "PATCH",
+      headers,
+      credentials: 'include',
+      body: JSON.stringify({email, password, username, group_number: group }),
+    })
+  
+    const responseData = await response.json()
+    console.log('responseData :>> ', responseData);
+    if (!response.ok) {
+      return {...responseData, status: 'error'}
+    }
+
+    return {...responseData, status: 'ok'}
+  },
 }
 
 export default homeworkAPI

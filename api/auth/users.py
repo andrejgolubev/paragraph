@@ -4,7 +4,7 @@ from api.auth.validation import get_current_active_auth_user
 from api.auth.validation import get_access_token_payload, get_refresh_token_payload
 from api.db.database import get_db
 from api.db.models import Group, User
-from api.db.schemas import UserRegistration, UserLogin
+from api.db.schemas import UserRegistration, UserLogin, UserUpdate
 from api import settings
 from api.auth.utils import (
     encode_jwt,
@@ -20,6 +20,7 @@ from .helpers import create_access_token, create_refresh_token
 from api.utils.censor import has_cursive_words
 from random import choice
 from pathlib import Path
+from api.utils.converters import latin_to_cyrillic
 
 router = APIRouter(
     prefix="/user",
@@ -51,10 +52,10 @@ async def register(
             detail="пользователь с такой почтой уже существует.",
         )
 
-    # серверная валидация группы, чтобы если пользователь не введет группу или введет какую-то херь, 
+    # серверная валидация группы, чтобы если пользователь не введет группу или введет что-то не то, 
     # то группа была null
     group_result = await db.scalars(
-        select(Group).where(Group.group_number == group_number)
+        select(Group).where(Group.group_number == latin_to_cyrillic(group_number))
     )
 
     if not (group := group_result.first()): 
@@ -182,6 +183,62 @@ async def make_admin(
         "role": user.role,
     }
 
+@router.patch('/update-profile')
+async def update_profile(
+    update_data: UserUpdate = Body(),
+    db: AsyncSession = Depends(get_db),
+): 
+        
+    email = update_data.email
+    username = update_data.username
+    group_number = update_data.group_number
+    password = update_data.password
+
+    user_result = await db.scalars(select(User).where(User.email == email))
+    user = user_result.first()
+    
+    if not validate_password(password, user.password):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="введён неверный пароль",
+        )
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="ошибка при обновлении данных: профиль не найден.",
+        )
+    
+    
+
+    if username:
+        user.name = username
+    if group_number:
+        group_result = await db.scalars(select(Group).where(Group.group_number == latin_to_cyrillic(group_number)))
+        group = group_result.first()
+        print('group :>> ', group)
+        if group:
+            user.group_id = group.id
+        else: 
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="группа не существует или введена не так, как на официальном сайте университета.",
+            )
+        
+
+
+    db.add(user)
+    await db.commit()
+    await db.refresh(user)
+
+    
+    return {
+        "detail": "профиль обновлен успешно",
+        "username": user.name,
+        "email": user.email,
+        "role": user.role,
+        "group": group.group_number if group_number else None,
+    }
 
 @router.get("/me")
 def auth_user_check_self_info(user: dict = Depends(get_current_active_auth_user)):
@@ -193,7 +250,6 @@ def auth_user_check_self_info(user: dict = Depends(get_current_active_auth_user)
         "role": user.get("role"),
         "group": user.get("group"),
     }
-
 
 
 

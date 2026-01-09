@@ -1,13 +1,15 @@
 import { createContext, useEffect, useState } from "react"
 import { useCookies } from "react-cookie"
 import homeworkAPI from "../api/homeworkAPI"
-
+import { useNavigate, useLocation } from "react-router-dom"
 
 export const Context = createContext({})
 
 export const Provider = ({ children }) => {
 
   const [linksActive, setLinksActive] = useState(false) // мобильное меню навигации
+
+  
 
 
   // тема 
@@ -64,7 +66,24 @@ export const Provider = ({ children }) => {
         setGroup('')
       }
     })
-  }, [notificationOuterActive]) // такая зависимость т.к. при входе в аккаунт срабатывает эта нотификэйшн
+  }, [notificationOuterActive, username]) // такая зависимость т.к. при входе в аккаунт срабатывает эта нотификэйшн
+
+
+  // проверка на авторизацию при переходе на страницу профиля
+  const navigate = useNavigate()
+  const location = useLocation()
+  const path = location.pathname.split('/').pop()
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (path === 'profile' && !username) {
+        navigate('/sign-in')
+      }
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [path, username])
+
 
   return (
     <Context.Provider

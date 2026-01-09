@@ -1,49 +1,40 @@
 import { useModeratedGroups } from "../../hooks/useModeratedGroups"
-import React, { useRef, useCallback, useEffect, useState, useContext } from "react"
-import { Link, replace, useNavigate } from "react-router-dom"
+import React, { useRef, useEffect, useState, useContext } from "react"
+import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
-import { DevTool } from "@hookform/devtools"
 
 import homeworkAPI from "../../api/homeworkAPI"
 import {latinToCyrillic} from '../../utils/converters.js'
-import NotificationOuter from '../notifications/NotificationOuter.jsx'
 import { Context } from "../../context/Provider"
+import pencilIcon from "../../images/profile/profile-page/pencil.svg"
+import pencilIconActive from "../../images/profile/profile-page/pencil-active.svg"
+import pencilIconDark from "../../images/profile/profile-page/pencil-dark.svg"
+import pencilIconActiveDark from "../../images/profile/profile-page/pencil-dark-active.svg"
 
-import user_icon from '../../images/auth/person.svg'
-import group_icon from '../../images/auth/group.svg'
-import password_icon from '../../images/auth/password.svg'
-import email_icon from '../../images/auth/email.svg'
-
+import NotificationOuter from "../notifications/NotificationOuter.jsx"
+import { useWindowSize } from "../../hooks/useWindowSize"
+import { validationPreferences } from "../../config/settings.js"
 
 
 
 const Profile = () => {
-  const { moderatedGroups, displayRole } = useModeratedGroups()
-  
+
   const {
     darkTheme,
     username,
-    userRole,
     email,
     group,
   } = useContext(Context)
 
-  const navigate = useNavigate()
+  if (!username) return <div className="profile"><p>пожалуйста, авторизуйтесь. перенаправляю на страницу входа...</p></div>
 
-  const validationPreferences = {
-    username: {
-      minLength: 2,
-      maxLength: 40,
-      pattern: /^[a-zA-Zа-яА-Я\s\-]+$/,
-    },
-    email: {
-      pattern: /^\S+@\S+\.\S+$/,
-    },
-    password: {
-      // pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-      minLength: 8,
-    }
-  }
+  const {width} = useWindowSize()
+  
+  
+  const { moderatedGroups, displayRole } = useModeratedGroups()
+  
+
+  
   
   const validateUsername = async (value) => {
     const username = value.trim()
@@ -68,68 +59,52 @@ const Profile = () => {
     return true
   }
 
-  const validatePassword = (pwd) => {
-    
-    const password = pwd.trim()
-
-    if (password.length < validationPreferences.password.minLength) return 'пароль должен содержать минимум 8 символов.'
-    
-    if (!/[A-ZА-Я]/.test(password)) {
-      return "пароль должен содержать хотя бы одну заглавную букву"
-    }
-    
-    if (!/[a-zа-я]/.test(password)) {
-      return "пароль должен содержать хотя бы одну строчную букву."
-    }
-    
-    if (!/[0-9]/.test(password)) {
-      return "пароль должен содержать хотя бы одну цифру."
-    }
-    
-    if (!/[#?!@$%^&*-]/.test(password)) {
-      return "пароль должен содержать хотя бы один специальный символ."
-    }
-    
-    return true
-  }
   
   const [submitMessageType, setSubmitMessageType] = useState('success')
   
   
-  const form = useForm()
-  const { register, control, handleSubmit, formState } = form
+  const form = useForm({
+    defaultValues: {
+      username: username,
+      group: group,
+      email: email,
+      password: '***********',
+    },
+    values: {
+      username: username,
+      group: group,
+      email: email,
+      password: '***********',
+    },
+  })
+
+  const { register, handleSubmit, formState } = form
   const { errors } = formState
   
   const debounceTimerRef = useRef(null)
 
   const {setNotificationOuterActive, setNotificationOuterMessage} = useContext(Context)
 
-  const handleProfileChange = (resp) => {
-    setNotificationOuterMessage(resp.detail)
-    if (resp.status === 'ok') {
-      setSubmitMessageType('success') 
-      
-      // if (resp.type === 'sign-in') navigate('/', {replace: true}) // редирект на расписание если логин   
-      // else navigate('/sign-in', {replace: true})  //редирект на логин если успешно зарегался
-      // // имя и роль в ProfileDropdown устанавливаются через Provider
-      // своя логика здесь ...
-
-      setTimeout( async () => { 
-        setNotificationOuterActive(true)
-      }, 100)
-      
-    } else {
-      setSubmitMessageType('error')
-      setNotificationOuterActive(true)
-    }
-  }
-
-  const onSubmit = ({email, password, username, group}) => {
-    console.log('hi');
-    // типа
-    // homeworkAPI.sendProfileData(email, password, username, group).then(
-      // resp => handleProfileChange(resp)
-    // )
+  
+  const onSubmit = ({password, username, group}) => {
+    console.log('password :>> ', password);
+    console.log('username :>> ', username);
+    console.log('group :>> ', group);
+    homeworkAPI.updateUserData({email: email, password, username, group}).then(
+      resp => {
+        setNotificationOuterMessage(resp.detail)
+        if (resp.status === 'ok') {
+          setSubmitMessageType('success') 
+          setTimeout( async () => { 
+            setNotificationOuterActive(true)
+          }, 100)
+          
+        } else {
+          setSubmitMessageType('error')
+          setNotificationOuterActive(true)
+        }
+      }
+    )
   }
 
   const groupAttemptsRef = useRef(0)
@@ -166,6 +141,7 @@ const Profile = () => {
     }
   }
 
+  
   const groupValidator = (value) => {
     if (!value?.trim()) {
       return true
@@ -209,50 +185,87 @@ const Profile = () => {
 
   const focusInput = (inputRef) => {
     if (inputRef?.current) {
-      inputRef.current.focus()
-    }
+      const currentInput = inputRef.current
+      currentInput.focus()
+      // const len = currentInput.value.length
+      // currentInput.setSelectionRange(len, len)
+    } else return
   }
 
-  // ДЛЯ ТОГО ЧТОБЫ ФОКУС СРАБАТЫВАЛ НЕ ТОЛЬКО ПРИ КЛИКЕ НЕПОСРЕДСТВЕННО НА INPUT: 
+  // ДЛЯ ТОГО ЧТОБЫ ФОКУС СРАБАТЫВАЛ НЕ ТОЛЬКО ПРИ КЛИКЕ НЕПОСРЕДСТВЕННО НА input: 
   // сохраняем register поля, чтобы привязать ref и к react-hook-form форме, и к нашим refs
-  // в usernameField, groupField, emailField, passwordField будет сохранен обьект вида 
+  // в usernameField, groupField, passwordField будет сохранен обьект вида 
   // { onChange, onBlur, ref, name, ... }
 
+
   const usernameField = register("username", {
-      required: requireText, 
+      required: false, 
       validate: {
         validFormat: async (value) => validateUsername(value)
-      }
+      },
     }) 
 
   const groupField = register("group", {
+    required: false,
       validate: {
         validateGroup: (value) => groupValidator(value)
-      }
+      }, 
     }) 
 
-  const emailField = register("email", {
-    required: requireText, 
-    pattern: {
-      value: validationPreferences.email.pattern,
-      message: "неправильный формат электронной почты."
-    }, 
-  })
-
   const passwordField = register("password", {
-    required: requireText,
-    validate: (value) => validatePassword(value)
+    required: true,
+    // // не нужно validate, так как не обновляем пароль, а только проверяем его 
   })
 
+  
+
+
+  const [isEditable, setIsEditable] = useState(false)
+
+  useEffect(() => {
+    if (isEditable) focusInput(usernameInputRef)
+    else form.reset()
+  }, [isEditable])
+
+  const handleImmutableFieldClick = (message) => {
+    if (!isEditable) return
+    setSubmitMessageType('error')
+    setNotificationOuterActive(true)
+    setNotificationOuterMessage(message)
+  }
+
+  // если isEditable был false, то скролл вниз на кнопку сохранить (для десктопа), а затем меняем его на true
+  const handleToggleEditing = () => {
+    setIsEditable((prev) => {
+      if (!prev) { 
+        passwordInputRef.current.value = ''
+        setTimeout(() => {
+          // только для десктопа, чтобы скролл не сработал на мобилке. на мобилке только фокус на поле ввода.
+          if (width > 1100) saveButtonRef.current?.scrollIntoView({ behavior: 'smooth' })
+        }, 100)
+      } 
+      return !prev
+    })
+    
+  }
+
+  const saveButtonRef = useRef(null)
 
   return (
     <div className={`profile${darkOrNot.current}`}>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="profile__header">
           <div className="profile__header__text">профиль</div>
+          <div className="profile__header__pencil" onClick={handleToggleEditing}>
+            <img
+              className="profile__header__pencil__icon"
+              src={darkTheme? (isEditable? pencilIconActiveDark : pencilIconDark) : (isEditable? pencilIconActive : pencilIcon)}
+              title="редактировать профиль"
+            />
+          </div>
         </div>
         <div className="profile__inputs">
-          <div className="username-block">
+          <div className="username-block" >
             <label htmlFor="username">имя</label>
             <div
               className={`input-div${darkOrNot.current}`}
@@ -267,11 +280,12 @@ const Profile = () => {
                 className={`input${darkOrNot.current}`}
                 type="text"
                 id="username"
-                defaultValue={username}
+                readOnly={!isEditable}
               />
               <p className='profile__error'>{errors.username?.message}</p>
             </div>
           </div>
+
           <div className="group-block">
             <label htmlFor="group">группа</label>
             <div
@@ -287,32 +301,33 @@ const Profile = () => {
                 className={`input${darkOrNot.current}`}
                 type="text"
                 id="group"
-                placeholder="группа"
-                defaultValue={group}
+                // defaultValue={group}
+                readOnly={!isEditable}
               />
             <p className='profile__error'>{errors.group?.message}</p>
             </div>
           </div>
-          <div className="email-block">
-            <label htmlFor="email">эл. почта</label>
+
+          <div className="role-block" onClick={() => handleImmutableFieldClick('самому себе роль изменять нельзя :(')}>
+            <label htmlFor="role">роль</label>
             <div
-              className={`input-div${darkOrNot.current} email-input`}
-              onClick={() => focusInput(emailInputRef)}
+              className={`input-div${darkOrNot.current}`}
             >
-              <input
-                {...emailField}
-                ref={(el) => {
-                  emailField.ref(el)
-                  emailInputRef.current = el
-                }}
-                className={`input${darkOrNot.current}`}
-                type="email"
-                id="email"
-                defaultValue={email}
-              />
-                <p className='profile__error'>{errors.email?.message}</p>
+              {displayRole.toLowerCase() === 'администратор'
+                  ? <p>{`${displayRole} (${moderatedGroups})`}</p> 
+                  : <p>{displayRole}</p>}
             </div>
           </div>
+
+          <div className="email-block" onClick={() => handleImmutableFieldClick('электронную почту изменять нельзя :(')}>
+            <label htmlFor="role">эл. почта</label>
+            <div
+              className={`input-div${darkOrNot.current}`}
+            >
+              <p>{email}</p>
+            </div>
+          </div>
+          
           <div className="pwd-block">
             <label htmlFor="password">пароль</label>
             <div
@@ -328,20 +343,26 @@ const Profile = () => {
                 className={`input${darkOrNot.current}`}
                 type="password"
                 id="password"
-                defaultValue='abracadabra!'
+                placeholder="пароль для сохранения изменений..."
+                readOnly={!isEditable}
               />
               <p className='profile__error'>{errors.password?.message}</p>
             </div>
+            { isEditable && (
+            <div className="profile__submit">
+              <button className={`profile__submit__cancel__btn${darkOrNot.current}`} onClick={handleToggleEditing}>отмена</button>
+              <button className={`profile__submit__save__btn${darkOrNot.current}`} type="submit" ref={saveButtonRef}>сохранить</button>
+            </div>
+            )}
           </div>
+
         </div>
+        <NotificationOuter type={submitMessageType} />
         
-        <div className="profile__submit">
-          <button className={`profile__submit__btn${darkOrNot.current}`}>сохранить</button>
-        </div>
       </form>
     </div>
   
   )
-};
+}
 
-export default Profile;
+export default Profile
