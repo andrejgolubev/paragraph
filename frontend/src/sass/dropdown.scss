@@ -12,7 +12,6 @@
   padding: 20px;
   margin: 20px 0;
   color: #ac3d3d;
-  
 }
 
 
@@ -56,10 +55,10 @@
   &.dark {
     input{
       background-color: $dark3;
-      color: $light-grey;
+      color: $light-grey1;
 
       &::placeholder {
-        color: $light-grey;
+        color: $light-grey1;
       }
     } 
 
@@ -70,13 +69,13 @@
       li {
         background-color: $dark5;
         &:hover {
-          background-color: $light-grey;
+          background-color: $light-grey1;
           a {
             color: $dark5;
           }
         }
         a {
-          color: $light-grey;
+          color: $light-grey1;
         }
       }
     }
@@ -136,6 +135,7 @@
       font-size: 12px;
       padding: 0.675em 1.25em 0.675em 1.75em;
     }
+    
     @media (max-width: 600px) {
       padding: 0.675em 0.5em 0.675em 0.5em;
     }
@@ -215,7 +215,7 @@
     }
     scrollbar-color: red;
     &.dark::-webkit-scrollbar {
-      background-color: $grey;;
+      background-color: $grey1;
     }
     // для стилизации ползунка на мобильных
     &::-webkit-scrollbar-thumb {
@@ -223,7 +223,7 @@
       border-radius: 10px;
     }
     &.dark::-webkit-scrollbar {
-      background-color: $grey;
+      background-color: $grey1;
     }
   }
 

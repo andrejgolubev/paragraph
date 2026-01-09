@@ -1,6 +1,6 @@
 import Header from "./components/header/Header"
 import Help from "./components/help-page/Help"
-import ScheduleContent from "./components/ScheduleContent"
+import ScheduleContent from "./components/main/ScheduleContent"
 import Profile from "./components/profile/Profile"
 import { Provider } from "./context/Provider"
 import { Route, Routes } from "react-router-dom"

@@ -217,7 +217,6 @@ async def update_profile(
     if group_number:
         group_result = await db.scalars(select(Group).where(Group.group_number == latin_to_cyrillic(group_number)))
         group = group_result.first()
-        print('group :>> ', group)
         if group:
             user.group_id = group.id
         else: 
@@ -239,7 +238,7 @@ async def update_profile(
         "role": user.role,
         "group": group.group_number if group_number else None,
     }
-    
+
 
 @router.get("/me")
 def auth_user_check_self_info(user: dict = Depends(get_current_active_auth_user)):

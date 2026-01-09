@@ -1,10 +1,10 @@
 import { useContext, useEffect, useRef, useState } from "react"
-import NotificationInner from "./notifications/NotificationInner"
-import homeworkAPI from "../api/homeworkAPI"
-import { Context } from "../context/Provider"
-import { convertDate } from "../utils/converters"
-import { useWindowSize } from "../hooks/useWindowSize"
-import { useModeratedGroups } from "../hooks/useModeratedGroups"
+import NotificationInner from "../notifications/NotificationInner"
+import homeworkAPI from "../../api/homeworkAPI"
+import { Context } from "../../context/Provider"
+import { convertDate } from "../../utils/converters"
+import { useWindowSize } from "../../hooks/useWindowSize"
+import { useModeratedGroups } from "../../hooks/useModeratedGroups"
 
 const HomeworkModal = ({
   // showDialog,

@@ -5,7 +5,7 @@
         background: $dark4;
         border-color: $dark7;
         .auth__header__text {
-            color: $light-white !important;
+            color: $light-white1 !important;
         }
     }
 
@@ -92,7 +92,7 @@
                 background: $field-grey;
                 border: none;
                 outline: none;
-                color: $grey;
+                color: $grey1;
                 font-size: 18px;
 
                 &:-webkit-autofill,
@@ -100,7 +100,7 @@
                 &:-webkit-autofill:focus,
                 &:-webkit-autofill:active {
                     -webkit-box-shadow: 0 0 0 1000px $field-grey inset !important; // фон
-                    -webkit-text-fill-color: $grey !important; // цвет текста (плейсхолдера)
+                    -webkit-text-fill-color: $grey1 !important; // цвет текста (плейсхолдера)
                     transition: background-color 1000s ease-in-out 0s; // чтобы не мигал
                 }
 
@@ -119,13 +119,13 @@
                 
                 &.dark {
                     background: $dark7;
-                    color: $light-white;
+                    color: $light-white1;
                     &:-webkit-autofill,
                     &:-webkit-autofill:hover,
                     &:-webkit-autofill:focus,
                     &:-webkit-autofill:active {
                         -webkit-box-shadow: 0 0 0 1000px $dark7 inset !important; //  фон
-                        -webkit-text-fill-color: $light-white !important; // цвет текста (плейсхолдера)
+                        -webkit-text-fill-color: $light-white1 !important; // цвет текста (плейсхолдера)
                         transition: background-color 1000s ease-in-out 0s; // чтобы не мигал
                     }
                 }
@@ -140,7 +140,7 @@
         gap: 5px;
         .forgot-password {
             margin-left: 4%;
-            color: $grey;
+            color: $grey1;
             font-size: 16px;
             
         }
@@ -166,7 +166,7 @@
         margin-bottom: 20px;
 
         &__btn {
-            color: $grey;
+            color: $grey1;
             background-color: $field-grey;
             margin-top: 8px;
             display: flex;
@@ -180,7 +180,7 @@
             cursor: pointer;
             
             &.dark {
-                color: $light-grey; 
+                color: $light-grey1; 
                 background-color: $dark7;
                 border: $dark-grey2;
             }
@@ -198,7 +198,7 @@
 
     div:last-child {
         text-align: center;
-        color: $grey;
+        color: $grey1;
     }
 
     &__error{

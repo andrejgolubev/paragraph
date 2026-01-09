@@ -11,21 +11,22 @@ import { useContext } from "react"
 import homeworkAPI from "../../api/homeworkAPI"
 import { Context } from "../../context/Provider"
 import { useModeratedGroups } from "../../hooks/useModeratedGroups"
+import { useWindowSize } from "../../hooks/useWindowSize"
 
 export const ProfileDropdown = (props) => {
+  const { setDisplayProfile, dropdownRef, username, role } = props
+
   const navigate = useNavigate()
   const location = useLocation()
   const path = location.pathname.split('/').pop()
 
-  
-  const {darkTheme} = useContext(Context)
-
-  const { setDisplayProfile, dropdownRef, username, role } = props
 
   const { displayRole, moderatedGroups } = useModeratedGroups()
-  
 
-  const { setNotificationOuterActive, setNotificationOuterMessage } =
+  const {width} = useWindowSize() 
+  const isMobile = width < 1001
+
+  const {darkTheme, setNotificationOuterActive, setNotificationOuterMessage } =
     useContext(Context) 
 
   const disappearOnClick = () => setDisplayProfile(false)
@@ -42,11 +43,15 @@ export const ProfileDropdown = (props) => {
     setDisplayProfile(false)
   }
 
+  if (isMobile) {
+    setDisplayProfile(false)
+    return null
+  }
 
   if (username && role) {
     return (
       <div className={`profile-dropdown ${darkTheme? 'dark' : ''}`} ref={dropdownRef}>
-        <img
+        <img onClick={disappearOnClick}
           className="profile-dropdown__close"
           src={closeIcon}
         ></img>

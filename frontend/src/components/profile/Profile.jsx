@@ -299,7 +299,7 @@ const Profile = () => {
                 className={`input${darkOrNot.current}`}
                 type="text"
                 id="group"
-                // defaultValue={group}
+                placeholder="не указана"
                 readOnly={!isEditable}
               />
             <p className='profile__error'>{errors.group?.message}</p>
@@ -341,7 +341,7 @@ const Profile = () => {
                 className={`input${darkOrNot.current}`}
                 type="password"
                 id="password"
-                placeholder="пароль для сохранения..."
+                placeholder="для применения правок..."
                 readOnly={!isEditable}
               />
               <p className='profile__error'>{errors.password?.message}</p>

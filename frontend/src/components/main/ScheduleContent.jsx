@@ -1,10 +1,10 @@
 import ScheduleContainer from "./ScheduleContainer" // раньше был MainContent
 import Dropdown from "./Dropdown"
-import Tip from "./Tip"
+import Tip from "../main/Tip"
 import { useEffect, useContext } from "react"
-import { Context } from "../context/Provider"
-import NotificationOuter from "./notifications/NotificationOuter"
-import { useWindowSize } from "../hooks/useWindowSize"
+import { Context } from "../../context/Provider"
+import NotificationOuter from "../../components/notifications/NotificationOuter"
+import { useWindowSize } from "../../hooks/useWindowSize"
 
 const ScheduleContent = () => {
   const { groupDataValue, dateDataValue, tipActive, setTipActive } = useContext(Context)

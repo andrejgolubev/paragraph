@@ -5,11 +5,11 @@
         background: $dark4;
         border-color: $dark7;
         .profile__header__text {
-            color: $light-white !important;
+            color: $light-white1 !important;
         }
         div[class*='-block'] {
             p {
-                color: $light-white;
+                color: $light-white1;
             }
             input {
                 &::placeholder {
@@ -23,7 +23,7 @@
     &.editing {
         .immutable-field {
             p {
-                color: $light-white;
+                color: $light-white1;
             }
         }
         &.dark {
@@ -105,12 +105,6 @@
 
     } 
     
-
-
-
-    
-    
-    
     
     &__inputs {
         margin-top: 36px;
@@ -139,7 +133,7 @@
                 background: $field-grey;
                 border: none;
                 outline: none;
-                color: $grey;
+                color: $grey1;
                 font-size: 18px;
                 padding-left: 24px;
 
@@ -148,7 +142,7 @@
                 &:-webkit-autofill:focus,
                 &:-webkit-autofill:active {
                     -webkit-box-shadow: 0 0 0 1000px $field-grey inset !important; // фон
-                    -webkit-text-fill-color: $grey !important; // цвет текста (плейсхолдера)
+                    -webkit-text-fill-color: $grey1 !important; // цвет текста (плейсхолдера)
                     transition: background-color 1000s ease-in-out 0s; // чтобы не мигал
                 }
 
@@ -167,13 +161,13 @@
                 
                 &.dark {
                     background: $dark7;
-                    color: $light-white;
+                    color: $light-white1;
                     &:-webkit-autofill,
                     &:-webkit-autofill:hover,
                     &:-webkit-autofill:focus,
                     &:-webkit-autofill:active {
                         -webkit-box-shadow: 0 0 0 1000px $dark7 inset !important; //  фон
-                        -webkit-text-fill-color: $light-white !important; // цвет текста (плейсхолдера)
+                        -webkit-text-fill-color: $light-white1 !important; // цвет текста (плейсхолдера)
                         transition: background-color 1000s ease-in-out 0s; // чтобы не мигал
                     }
                 }
@@ -188,7 +182,7 @@
         align-items: flex-start;
         gap: 2px;
         label {
-            color: $light-white;
+            color: $light-white1;
             font-size: 16px;
         }
     }
@@ -197,7 +191,7 @@
         gap: 5px;
         .forgot-password {
             margin-left: 4%;
-            color: $grey;
+            color: $grey1;
             font-size: 16px;
         }
         input {
@@ -219,7 +213,7 @@
         p {
             width: 93%;
             text-align: left;
-            color: $grey;
+            color: $grey1;
             overflow: hidden;       
             text-overflow: ellipsis; 
             white-space: nowrap;
@@ -240,8 +234,8 @@
 
         &__cancel__btn,
         &__save__btn {
-            color: $grey;
-            background-color: $field-grey;
+            color: $grey1;
+            // background-color: $field-grey;
             margin-top: 8px;
             display: flex;
             justify-content: center;
@@ -251,10 +245,15 @@
             border: 1px solid $light-white2;
             font-size: 20px;
             font-weight: 500;
+            transition: all 0.3s ease 0s;
             cursor: pointer;
             
+            &:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 8px rgba(50, 52, 54, 0.3);
+            }
             &.dark {
-                color: $light-grey; 
+                color: $light-grey1; 
                 background-color: $dark7;
                 border: $dark-grey2;
             }
@@ -269,11 +268,43 @@
                 }
             }
         }
+
+        
+        &__save__btn {
+            background-color: $blue;
+            color: $table-white;
+            &:hover {
+                background-color: $great-blue;
+                color: white;
+                box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+            }
+            &.dark {
+                background-color: $blue;
+                color: $table-white;
+                &:hover {
+                    background-color: $blue;
+                }
+            }
+        }
+        &__cancel__btn {
+            background-color: $light-white2;
+            &:hover {
+                background-color: $light-white1;
+            }
+            &.dark {
+                background-color: $dark7;
+                color: $light-white1;
+                &:hover {
+                    background-color: $dark7;
+                    color: $light-white1;
+                }
+            }
+        }
     }
 
     div:last-child {
         text-align: center;
-        color: $grey;
+        color: $grey1;
     }
 
     &__error{
@@ -289,7 +320,7 @@
     }
 
     .notification {
-        color: $light-white !important;
+        color: $light-white1 !important;
         margin-left: 6%;
     }
 }

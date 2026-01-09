@@ -18,7 +18,7 @@
   
     &.dark {
       p {
-        color: $light-white;
+        color: $light-white1;
       }
     }
   
@@ -87,7 +87,7 @@
               z-index: 5;
               justify-content: center;
 							align-items: center;
-              border-left: $grey 1px solid;
+              border-left: $grey1 1px solid;
               transition: opacity 0.3s ease 0s;
 
 							font-size: 20px;

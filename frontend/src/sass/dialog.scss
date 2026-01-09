@@ -74,7 +74,7 @@
   &.dark {
     background-color: #0d0e0f;
     p {
-      color: $light-grey;
+      color: $light-grey1;
     }
     .error {
       p {
@@ -86,7 +86,7 @@
     }
     .modal-buttons {
       .btn-cancel {
-        background-color: $light-grey;
+        background-color: $light-grey1;
       }
       .btn-submit {
         background-color: $great-blue;
@@ -94,7 +94,7 @@
       
     }
     textarea {
-      color: $light-white;
+      color: $light-white1;
     }
   }
 
@@ -102,7 +102,7 @@
   max-height: 300px;
 
   .updated-at {
-    color: $grey;
+    color: $grey1;
     font-size: 14px;
     font-weight: 400;
   }

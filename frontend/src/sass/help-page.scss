@@ -14,7 +14,7 @@
   line-height: 1.5;
   color: #292833e3;
   &.dark {
-    color: $light-white;
+    color: $light-white1;
     
   }
 
@@ -47,7 +47,7 @@
     font-size: 16px;
     color: #272626;
     &.dark {
-      color: $light-white;
+      color: $light-white1;
     }
     @media (max-width: 1200px) {
       font-size: 14px;

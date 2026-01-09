@@ -1,16 +1,16 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import HomeworkModal from "./HomeworkModal" // Предполагаем, что модалка уже переписана на React
-import paperclip from "../images/homework/paperclip.svg"
-import paperclipDark from "../images/homework/paperclip-dark.svg"
+import paperclip from "../../images/homework/paperclip.svg"
+import paperclipDark from "../../images/homework/paperclip-dark.svg"
 import { useContext } from "react"
-import { Context } from "../context/Provider"
-import homeworkAPI from "../api/homeworkAPI"
+import { Context } from "../../context/Provider"
+import homeworkAPI from "../../api/homeworkAPI"
 import { Mosaic } from "react-loading-indicators"
-import { getDateValueFromDisplay, getLessonTypeClass } from "../utils/converters"
-import { BASE_URL } from "../api/homeworkAPI"
+import { getDateValueFromDisplay, getLessonTypeClass } from "../../utils/converters"
+import { BASE_URL } from "../../api/homeworkAPI"
+import { useWindowSize } from "../../hooks/useWindowSize"
 
 
-let lessonInfoGlobal = {}
 
 const ScheduleContainer = () => {
   const {darkTheme} = useContext(Context)
@@ -19,11 +19,13 @@ const ScheduleContainer = () => {
   const [scheduleData, setScheduleData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [selectedLesson, setSelectedLesson] = useState(null)
   const [showDialog, setShowDialog] = useState(false)
   const [homeworkText, setHomeworkText] = useState("")
   const [homeworkUpdated, setHomeworkUpdated] = useState("")
   const [year, setYear] = useState(new Date().getFullYear())
+  const [currentLessonInfo, setCurrentLessonInfo] = useState({})
+  const {width} = useWindowSize()
+  const isMobile = width < 1001
 
   useEffect(() => {
     setGroupDataValueCookies('groupDataValue', groupDataValue, {maxAge: 60*60*24*14}) // чтобы сразу загружалась нужная группа 
@@ -74,7 +76,6 @@ const ScheduleContainer = () => {
     } catch (err) {
       console.error("Error loading schedule:", err)
       setError(err.message)
-      console.log('error :>> ', error);
     } finally {
       setLoading(false)
     }
@@ -89,7 +90,6 @@ const ScheduleContainer = () => {
   const handleHomeworkClick = (lessInfo) => {
     const {
       groupDataValue,
-      dateDataValue,
       lessonIndex,
       lessonDay,
       lessonName,
@@ -109,15 +109,15 @@ const ScheduleContainer = () => {
 
     const lessonInfo = {
       groupDataValue,
-      dateDataValue,
+      // dateDataValue,
       lessonIndex: parseInt(lessonIndex),
       lessonDay,
       lessonName,
     }
 
-    setSelectedLesson(lessonInfo)
-
-    lessonInfoGlobal = { ...lessonInfo, dateDataValue: scheduleDateDataValue }
+    setCurrentLessonInfo( 
+      { ...lessonInfo, dateDataValue: scheduleDateDataValue } 
+    )
     
     setShowDialog(true)
   }
@@ -171,12 +171,14 @@ const ScheduleContainer = () => {
     )
   }
 
+  const lessonIndexRef = useRef(1)
   // Рендер расписания
-  const renderSchedule = () => {
+  const renderDesktopSchedule = () => {
     if (!scheduleData) return null
 
     const datesArr = scheduleData.days.map((day) => day.date)
-    let lessonIndex = 1
+    
+    lessonIndexRef.current = 1
 
     return (
       <table
@@ -203,7 +205,7 @@ const ScheduleContainer = () => {
               </td>
               {timeSlot.lessons.map((dayLessons, dayIndex) => {
                 const dataDate = datesArr[dayIndex]
-                const currentLessonIndex = lessonIndex++
+                const currentLessonIndex = lessonIndexRef.current++
 
                 return (
                   <td
@@ -212,7 +214,10 @@ const ScheduleContainer = () => {
                     data-index={currentLessonIndex}
                   >
                     {dayLessons.length > 0 ? (
-                      dayLessons.map((lesson, lessonIndex) => {
+                      dayLessons.map((
+                        lesson, 
+                        lessonIndex
+                      ) => {
                         const lessonId =
                           lesson.type === "Лек."
                             ? "lec"
@@ -317,13 +322,13 @@ const ScheduleContainer = () => {
       <div
         className={`schedule-container ${scheduleData ? "loaded" : "loading"}`}
       >
-        {renderSchedule()}
+        {isMobile? '' : renderDesktopSchedule()}
       </div>
 
       {/* Модальное окно домашнего задания */}
       {showDialog && (
         <HomeworkModal
-          lessonInfo={lessonInfoGlobal}
+          lessonInfo={currentLessonInfo}
           homeworkText={homeworkText}
           homeworkUpdated={homeworkUpdated}
           setHomeworkUpdated={setHomeworkUpdated}

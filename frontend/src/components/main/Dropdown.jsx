@@ -1,10 +1,10 @@
 import { useState, useEffect, useContext } from "react"
-import homeworkAPI from "../api/homeworkAPI"
-import { Context } from "../context/Provider"
+import homeworkAPI from "../../api/homeworkAPI"
+import { Context } from "../../context/Provider"
 import { useRef } from "react"
-import { useClickOutside } from "../hooks/useClickOutside"
-import { latinToCyrillic } from "../utils/converters"
-import { useDebounce } from "../hooks/useDebouce"
+import { useClickOutside } from "../../hooks/useClickOutside"
+import { latinToCyrillic } from "../../utils/converters"
+import { useDebounce } from "../../hooks/useDebouce"
 
 const Dropdown = (props) => {
   const {darkTheme} = useContext(Context)
@@ -28,7 +28,6 @@ const Dropdown = (props) => {
     }
     
   }, [])
-
 
    
 

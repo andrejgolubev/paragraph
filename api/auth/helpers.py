@@ -21,7 +21,7 @@ def create_jwt(
 ) -> str:
     jwt_payload = {TOKEN_TYPE_FIELD: token_type}
     jwt_payload |= payload
-    print(f'{jwt_payload = }')
+    
     return auth_utils.encode_jwt(jwt_payload, expire_minutes=expire_minutes, expire_timedelta=expire_timedelta)
 
 
@@ -58,7 +58,7 @@ async def get_refreshed_access_token(
 
     user_result = await db.scalars(select(User).where(User.email == email))
     user = user_result.first()
-    
+
     if not user or not user.active:
         raise credentials_exception
 
