@@ -2,9 +2,7 @@ import time
 from fastapi import FastAPI, HTTPException, Response, Request
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
-from api.auth.users import get_refreshed_access_token
-from api.auth.validation import get_refresh_token_payload
-from api.db.database import AsyncSessionLocal
+from api.auth.validation import get_access_token_payload
 from api.settings import settings
 
 ALLOW_ORIGINS = [
@@ -46,16 +44,14 @@ class RefreshToken(BaseHTTPMiddleware):
             return await call_next(request)
 
         try:
-            payload = get_refresh_token_payload(request=request)
+            payload = await get_access_token_payload(request=request, response=response)
             
-            async with AsyncSessionLocal() as session: 
-                access_token = await get_refreshed_access_token(payload=payload, db=session)
             
             response = await call_next(request)
             
             response.set_cookie(
                 key='access_token',
-                value=access_token,
+                value=payload,
                 httponly=True,
                 secure=True,  # но можно False для localhost
                 samesite='none', # обязательно 'lax' для продакшна 

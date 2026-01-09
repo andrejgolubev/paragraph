@@ -1,4 +1,4 @@
-"""File with settings and configs for the project"""
+"""file with settings and configs for the backend"""
 import logging
 from pathlib import Path
 from typing import Literal
@@ -6,7 +6,6 @@ from envparse import Env
 from dotenv import load_dotenv
 import os
 
-from fastapi import Cookie
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 
@@ -26,7 +25,7 @@ class AuthJWT(BaseModel):
     private_key_path: Path = BASE_DIR / 'certs' / 'jwt-private.pem' 
     public_key_path: Path = BASE_DIR / 'certs' / 'jwt-public.pem' 
     algorithm: str = "RS256"
-    access_token_expire_minutes: int = 15
+    access_token_expire_minutes: int = 1
     refresh_token_expire_days: int = 30
 
 
@@ -54,8 +53,8 @@ class DatabaseConfig(BaseModel):
 
 
 class CookiesConfig(BaseModel): 
-    secure: bool = False # True для продакшна 
-    # samesite: Literal['lax', 'samesite', 'none'] = 'lax'  
+    secure: bool = True  
+    samesite: Literal['lax', 'samesite', 'none'] = 'lax'  
 
 
 class Settings(BaseSettings): 
@@ -63,6 +62,7 @@ class Settings(BaseSettings):
     auth_jwt: AuthJWT = AuthJWT() 
     logging: LoggingConfig = LoggingConfig()
     cookie: CookiesConfig = CookiesConfig() 
+
 
     
 settings = Settings()

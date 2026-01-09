@@ -6,6 +6,7 @@ from api.db.database import get_db
 from api.db.models import Group, Date, GroupDateAssociation
 from datetime import datetime
 from api.db.schemas import HomeworkRequest
+from api.utils.converters import latin_to_cyrillic
 
 router = homework_router = APIRouter(tags=["Homework"], prefix="/homework")
 
@@ -31,7 +32,7 @@ async def save_homework(
     if not homework:
         raise HTTPException(status_code=400, detail="д/з не может быть пустым")
 
-    moderated_group_numbers = [gr for gr in role.split(".")[1:] if gr] # недоразумение 
+    moderated_group_numbers = [latin_to_cyrillic(gr) for gr in role.split(".")[1:] if gr] 
     moderated_group_datavalues = [await get_group_datavalue(group_number, db=db) for group_number in moderated_group_numbers]
 
 
@@ -82,9 +83,9 @@ async def save_homework(
 
         return {"detail": "saved", "user": user}
 
-    except Exception as e:
+    except Exception:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"ошибка сохранения д/з: {e}")
+        raise HTTPException(status_code=500, detail=f"ошибка сохранения д/з.")
 
 
 async def get_group_datavalue(

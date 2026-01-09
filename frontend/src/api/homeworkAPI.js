@@ -23,14 +23,12 @@ const homeworkAPI = {
       credentials: 'include',
     });
     
-    
     const responseData = await response.json();
-    console.log("responseData:", responseData)
-    console.log("responseData.detail:", responseData.detail)
+    if (!response.ok) {
+      return {...responseData, status: 'error'}
+    }
 
-    return responseData;
-      
-    
+    return {...responseData, status: 'ok'};
   },
 
 
@@ -51,7 +49,7 @@ const homeworkAPI = {
     })
       .then((resp) => resp.json())
       .catch((err) => {
-        console.log('err from loadHomeworkData: ', err)
+        console.error('err from loadHomeworkData: ', err)
       })
   },
 
@@ -59,7 +57,7 @@ const homeworkAPI = {
     return fetch(`${BASE_URL}/schedule/get-all-groups`)
       .then((response) => response.json())
       .catch((err) => {
-        console.log("Error loading dates:", err)
+        console.error("Returning an empty array of dates due to error loading dates:", err)
         return []
       })
   },

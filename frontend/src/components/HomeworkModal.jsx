@@ -111,7 +111,7 @@ const HomeworkModal = ({
         lessonIndex,
         homeworkTextClean
       ).then( resp => {
-        if (!(resp.detail === 'saved')) {
+        if (!(resp.detail === 'saved')) { // FastAPI возвращает 'saved' если домашка сохранена успешно
           setRespText(resp.detail)
           console.log('resp.detail из handleHomeworkSubmit:>> ', resp.detail);
           showError()

@@ -5,7 +5,7 @@ import profileIcon from "../../images/profile/profile-dropdown/profile-button.sv
 import profileIconDark from "../../images/profile/profile-dropdown/profile-button-dark.svg"
 import burgerButton from '../../images/mobile/burger-button.svg'
 import burgerButtonDark from '../../images/mobile/burger-button-dark.svg'
-import { ProfileDropdown } from "../ProfileDropdown"
+import { ProfileDropdown } from "../profile/ProfileDropdown"
 import { useState, useRef, useContext } from "react"
 import { useClickOutside } from "../../hooks/useClickOutside"
 import { Link, useLocation } from "react-router-dom"

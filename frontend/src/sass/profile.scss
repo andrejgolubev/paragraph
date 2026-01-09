@@ -11,8 +11,30 @@
             p {
                 color: $light-white;
             }
+            input {
+                &::placeholder {
+                    color: $grey2;
+                }
+            }
         }
     }
+
+
+    &.editing {
+        .immutable-field {
+            p {
+                color: $light-white;
+            }
+        }
+        &.dark {
+            .immutable-field {
+                p {
+                    color: $dark1;
+                }
+            }
+        }
+    }
+
 
     font-family: Manrope, serif;
     display: flex;
@@ -78,6 +100,7 @@
                 width: 100% !important;
                 font-size: 14px !important;
             }
+            
         }
 
     } 

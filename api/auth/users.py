@@ -1,7 +1,8 @@
-from tabnanny import filename_only
 import jwt
-from api.auth.validation import get_current_active_auth_user
-from api.auth.validation import get_access_token_payload, get_refresh_token_payload
+from api.auth.validation import (
+    get_refresh_token_payload,
+    get_current_active_auth_user,
+)
 from api.db.database import get_db
 from api.db.models import Group, User
 from api.db.schemas import UserRegistration, UserLogin, UserUpdate
@@ -12,6 +13,7 @@ from api.auth.utils import (
     validate_password,
     verify_admin_api_key,
 )
+from api.auth.helpers import get_refreshed_access_token
 
 from fastapi import Body, Depends, Form, HTTPException, Response, status, APIRouter, Query
 from sqlalchemy import select
@@ -209,7 +211,6 @@ async def update_profile(
             detail="ошибка при обновлении данных: профиль не найден.",
         )
     
-    
 
     if username:
         user.name = username
@@ -226,7 +227,6 @@ async def update_profile(
             )
         
 
-
     db.add(user)
     await db.commit()
     await db.refresh(user)
@@ -239,6 +239,7 @@ async def update_profile(
         "role": user.role,
         "group": group.group_number if group_number else None,
     }
+    
 
 @router.get("/me")
 def auth_user_check_self_info(user: dict = Depends(get_current_active_auth_user)):
@@ -251,41 +252,6 @@ def auth_user_check_self_info(user: dict = Depends(get_current_active_auth_user)
         "group": user.get("group"),
     }
 
-
-
-
-async def get_refreshed_access_token(
-    payload: dict = Depends(get_refresh_token_payload),
-    db: AsyncSession = Depends(get_db), 
-
-):  
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate refresh token",
-    )
-    try:
-        # автоматически проверяется exp и если токен просрочен, здесь выбросится исключение.
-        email: str = payload.get("sub")
-        if not email:
-            raise credentials_exception
-    except jwt.exceptions.PyJWTError:
-        raise credentials_exception
-    user_result = await db.scalars(select(User).where(User.email == email))
-    user = user_result.first()
-    if not user or not user.active:
-        raise credentials_exception
-
-    access_token = encode_jwt(
-        payload={
-            "sub": user.email,
-            "role": user.role,
-            "username": user.name,
-        }
-    )
-
-    return access_token
-
-    
 
 
 @router.post("/refresh-token")

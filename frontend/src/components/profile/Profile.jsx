@@ -87,12 +87,10 @@ const Profile = () => {
 
   
   const onSubmit = ({password, username, group}) => {
-    console.log('password :>> ', password);
-    console.log('username :>> ', username);
-    console.log('group :>> ', group);
     homeworkAPI.updateUserData({email: email, password, username, group}).then(
       resp => {
         setNotificationOuterMessage(resp.detail)
+        setIsEditable(false)
         if (resp.status === 'ok') {
           setSubmitMessageType('success') 
           setTimeout( async () => { 
@@ -172,7 +170,6 @@ const Profile = () => {
     }
   }, [])
   
-  const requireText = 'это поле надо бы заполнить.'
 
   const darkOrNot = useRef('')
   darkOrNot.current = darkTheme? ' dark' : ''
@@ -234,7 +231,8 @@ const Profile = () => {
     setNotificationOuterMessage(message)
   }
 
-  // если isEditable был false, то скролл вниз на кнопку сохранить (для десктопа), а затем меняем его на true
+  // если isEditable был false (т.е. нажали на кнопку редактировать), 
+  // то скроллим вниз на кнопку сохранить (для десктопа), а затем меняем его на true
   const handleToggleEditing = () => {
     setIsEditable((prev) => {
       if (!prev) { 
@@ -252,7 +250,7 @@ const Profile = () => {
   const saveButtonRef = useRef(null)
 
   return (
-    <div className={`profile${darkOrNot.current}`}>
+    <div className={`profile${darkOrNot.current} ${isEditable? 'editing' : ''}`}>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="profile__header">
           <div className="profile__header__text">профиль</div>
@@ -310,8 +308,8 @@ const Profile = () => {
 
           <div className="role-block" onClick={() => handleImmutableFieldClick('самому себе роль изменять нельзя :(')}>
             <label htmlFor="role">роль</label>
-            <div
-              className={`input-div${darkOrNot.current}`}
+            <div 
+              className={`input-div${darkOrNot.current} immutable-field`}
             >
               {displayRole.toLowerCase() === 'администратор'
                   ? <p>{`${displayRole} (${moderatedGroups})`}</p> 
@@ -322,7 +320,7 @@ const Profile = () => {
           <div className="email-block" onClick={() => handleImmutableFieldClick('электронную почту изменять нельзя :(')}>
             <label htmlFor="role">эл. почта</label>
             <div
-              className={`input-div${darkOrNot.current}`}
+              className={`input-div${darkOrNot.current} immutable-field`}
             >
               <p>{email}</p>
             </div>
@@ -343,7 +341,7 @@ const Profile = () => {
                 className={`input${darkOrNot.current}`}
                 type="password"
                 id="password"
-                placeholder="пароль для сохранения изменений..."
+                placeholder="пароль для сохранения..."
                 readOnly={!isEditable}
               />
               <p className='profile__error'>{errors.password?.message}</p>
