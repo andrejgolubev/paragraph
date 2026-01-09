@@ -13,7 +13,11 @@ function App() {
     <CookiesProvider>
       <Provider>
         <Header />
-      
+
+
+
+
+
         <Routes>
           <Route path="/" element={<ScheduleContent />} />
           <Route path="/help" element={<Help />} />

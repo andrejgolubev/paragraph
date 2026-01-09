@@ -3,8 +3,8 @@
 @use './fonts.scss';
 @use './dropdown.scss';
 @use './homepage.scss';
-@use './table.scss';
-@use './dialog.scss';
+@use './schedule.scss';
+@use './homework-modal.scss';
 @use './profile-dropdown.scss';
 @use './help-page.scss';
 @use './auth.scss';
@@ -31,10 +31,23 @@ body {
 .main-content {
   margin: 28px 0 0 25px;
 
+
+  @media (max-width: 1000px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+
   .options {
     display: flex;
     gap: 30px;
 
+    @media (max-width: 1000px) {
+      padding-right: 22px;
+      justify-content: center;
+      width: 100%;
+    }
 
     .corpuses {
       padding-left: -2px;
@@ -44,7 +57,7 @@ body {
         font-size: 12px;
       }
 
-      @media (max-width: 850px) {
+      @media (max-width: 1000px) {
        display: none;
       }
 

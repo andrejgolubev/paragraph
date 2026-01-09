@@ -9,11 +9,14 @@ import { useWindowSize } from "../../hooks/useWindowSize"
 const ScheduleContent = () => {
   const { groupDataValue, dateDataValue, tipActive, setTipActive } = useContext(Context)
   
-  if (groupDataValue) setTipActive(false)
-
+  
   useEffect( () => {
-    setTipActive(true)
-  }, [])
+    if (groupDataValue) {
+      setTipActive(false)
+    } else {
+      setTipActive(true)
+    }
+  }, [groupDataValue])
 
   const {width} = useWindowSize() 
   const isMobile = width < 600
@@ -42,12 +45,12 @@ const ScheduleContent = () => {
       </div>
       {/* <Tip active={tipActive} /> */}
 
-      {groupDataValue && (
+      {/* {groupDataValue && (
         <ScheduleContainer
           groupDataValue={groupDataValue}
           dateDataValue={dateDataValue}
           />
-        )}
+        )} */}
 
       <NotificationOuter message={"домашнее задание сохранено."} type={'success'} />
     </div>

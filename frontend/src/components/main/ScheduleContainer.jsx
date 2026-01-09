@@ -7,7 +7,6 @@ import { Context } from "../../context/Provider"
 import homeworkAPI from "../../api/homeworkAPI"
 import { Mosaic } from "react-loading-indicators"
 import { getDateValueFromDisplay, getLessonTypeClass } from "../../utils/converters"
-import { BASE_URL } from "../../api/homeworkAPI"
 import { useWindowSize } from "../../hooks/useWindowSize"
 
 
@@ -55,30 +54,28 @@ const ScheduleContainer = () => {
 
   // Загрузка расписания
   const loadSchedule = useCallback(async () => {
-    try {
+    // try {
       setLoading(true)
       
-      let url = `${BASE_URL}/schedule/get-schedule?group_data_value=${groupDataValue}`
-      if (dateDataValue) {
-        url += `&date_data_value=${dateDataValue}`
-      }
+      homeworkAPI.getScheduleData({groupDataValue, dateDataValue}).then((data) => {
+        setScheduleData(data)
+        setError(null)
+      }).catch((err) => {
+        console.error("Error loading schedule:", err)
+        setError(err.message)
+      }).finally(() => {
+        setLoading(false)
+      })
       
-      const response = await fetch(url)
-      if (!response.ok) {
-        throw new Error(`HTTP error. ${response}`)
-      }
-      
-      const data = await response.json()
-      
-      setScheduleData(data)
-      
-      setError(null)
-    } catch (err) {
-      console.error("Error loading schedule:", err)
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
+    //   setScheduleData(data)
+    //   setError(null)
+
+    // } catch (err) {
+    //   console.error("Error loading schedule:", err)
+    //   setError(err.message)
+    // } finally {
+    //   setLoading(false)
+    // }
   }, [groupDataValue, dateDataValue])
 
   // загружаем расписание при монтировании расписания
@@ -173,7 +170,7 @@ const ScheduleContainer = () => {
 
   const lessonIndexRef = useRef(1)
   // Рендер расписания
-  const renderDesktopSchedule = () => {
+  const renderDesktopSchedule = (scheduleData) => {
     if (!scheduleData) return null
 
     const datesArr = scheduleData.days.map((day) => day.date)
@@ -284,6 +281,26 @@ const ScheduleContainer = () => {
     )
   }
 
+  const renderMobileSchedule = (scheduleData) => {
+    if (!scheduleData) return null 
+
+    return (
+      <div className="mobile-schedule">
+        
+        {/* {scheduleData.schedule.map((timeSlot) => (
+          <div key={timeSlot.time_start}>
+            <p>{timeSlot.time_start}-{timeSlot.time_end}</p>
+            {timeSlot.lessons.map((lesson) => (
+              <div key={lesson.text}>
+                <p>{lesson.text}</p>
+              </div>
+            ))}
+          </div>
+        ))} */}
+      </div>
+    )
+  }
+
   // Состояния загрузки и ошибки
   if (loading) {
     return (
@@ -303,16 +320,13 @@ const ScheduleContainer = () => {
 
   if (error) {
     return ( 
-      <div className="schedule-container error">
-        <div className="tip active">
-          <button 
-          style={{background: '#FFFFFF', padding: '4px', border: '2px rgb(207, 222, 227) dashed', position: 'absolute', 'border-radius': '8px'}} 
-          onClick={loadSchedule}>
-            <p>{error}</p>
-            <p>произошла ошибка. нажмите сюда, </p>
-            <p>чтобы попробовать снова</p>
-          </button>
-        </div>
+      <div className='schedule-container error'>
+        <button className={`${darkTheme ? " dark" : ""}`}
+        onClick={loadSchedule}>
+          <p>{error}</p>
+          <p>нажмите сюда, чтобы повторить </p>
+          <p>попытку</p>
+        </button>
       </div>
     )
   }
@@ -322,10 +336,9 @@ const ScheduleContainer = () => {
       <div
         className={`schedule-container ${scheduleData ? "loaded" : "loading"}`}
       >
-        {isMobile? '' : renderDesktopSchedule()}
+        {isMobile ? renderMobileSchedule(scheduleData) : renderDesktopSchedule(scheduleData)}
       </div>
 
-      {/* Модальное окно домашнего задания */}
       {showDialog && (
         <HomeworkModal
           lessonInfo={currentLessonInfo}

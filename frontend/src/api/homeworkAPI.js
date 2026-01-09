@@ -5,6 +5,21 @@ const headers = { "Content-Type": "application/json"}
 
 const homeworkAPI = {
   
+  getScheduleData: async ({groupDataValue, dateDataValue}) => {
+    let url = `${BASE_URL}/schedule/get-schedule?group_data_value=${groupDataValue}`
+      if (dateDataValue) {
+        url += `&date_data_value=${dateDataValue}`
+      }
+      
+      const response = await fetch(url)
+      if (!response.ok) {
+        throw new Error(`ошибка при загрузке расписания.`)
+      }
+      
+      const data = await response.json()
+      return data
+  },
+
   saveHomework: async (groupDataValue, dateDataValue, lessonIndex, homeworkText) => {
     
     const payload = {
@@ -79,7 +94,7 @@ const homeworkAPI = {
       date: date,
     })
     const url = `${BASE_URL}/homework/convert?${params.toString()}`
-    console.log("url :>> ", url)
+
     return fetch(url, {
       method: "GET",
     })

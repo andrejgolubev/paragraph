@@ -1,4 +1,4 @@
-from fastapi import Request, Response, HTTPException, APIRouter, Depends
+from fastapi import Response, HTTPException, APIRouter, Depends
 from fastapi.responses import JSONResponse
 from api.db.database import get_db
 from api.parser.schedule_parser import parse_schedule_from_url, parse_schedule  
@@ -12,20 +12,17 @@ router = schedule_router = APIRouter(tags=['Schedule'], prefix='/schedule')
 
 @router.get("/get-schedule")
 async def get_schedule(
-    response: Response,
     group_data_value: str | None = None,
     date_data_value: str | None = None,
 ):
-        
+
     url = f'https://rasp.rsreu.ru/schedule-frame/group?faculty=1&group={group_data_value}&date={date_data_value or ""}'    
-
     
-
     try:    
         schedule_data = await parse_schedule_from_url(url, function=parse_schedule) 
         return schedule_data
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error parsing schedule: {str(e)}")
+    except Exception:
+        raise HTTPException(status_code=500, detail=f"Error parsing schedule.")
 
 
 

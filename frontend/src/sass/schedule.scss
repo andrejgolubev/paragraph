@@ -12,6 +12,27 @@
     transition: opacity 0.6s ease, transform 0.6s ease;
   }
 
+  &.error {
+    padding-top: 10px;
+    button {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      padding-inline: 8%;
+      background: $table-white;
+      border: 2px rgb(207, 222, 227) dashed;
+      position: absolute;
+      border-radius: 8px;
+
+      &.dark {
+        background: $dark4;
+        border: 2px $dark-grey1 dashed;
+      }
+    }
+    p {
+      color: $light-grey1;
+    }
+  }
+
   p{
     font-family: 'Manrope', serif;
   }
