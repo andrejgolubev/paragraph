@@ -1,6 +1,6 @@
 import Header from "./components/header/Header"
 import Help from "./components/help-page/Help"
-import ScheduleContent from "./components/main/ScheduleContent"
+import MainContent from "./components/main/MainContent"
 import Profile from "./components/profile/Profile"
 import { Provider } from "./context/Provider"
 import { Route, Routes } from "react-router-dom"
@@ -19,7 +19,7 @@ function App() {
 
 
         <Routes>
-          <Route path="/" element={<ScheduleContent />} />
+          <Route path="/" element={<MainContent />} />
           <Route path="/help" element={<Help />} />
           <Route path='/sign-in' element={<AuthForm type='sign-in' />} />
           <Route path='/sign-up' element={<AuthForm type='sign-up'/>} />

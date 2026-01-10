@@ -35,7 +35,7 @@ export const AuthForm = ({ type }) => {
     }
     
     if (!validationPreferences.username.pattern.test(username)) {
-      return "разрешены только буквы, пробелы и дефисы."
+      return "разрешены только буквы, пробелы, точки и дефисы."
     }
     
     

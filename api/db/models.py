@@ -33,14 +33,7 @@ class User(Base):
 
 class GroupDateAssociation(Base):
     __tablename__ = "group_date_association"
-    __table_args__ = (
-        # UniqueConstraint(
-        #     "group_id",
-        #     "dates_id",
-        #     name="index_unique_group_date",
-        # ),
-    )  # благодаря UniqueConstraint все комбинации group_id и dates_id будут УНИКАЛЬНЫМИ в ассоциативной таблице 
-    # (что для моего проекта оказалось неверным в итоге)
+    
 
     id: Mapped[int] = mc(primary_key=True)
     group_id: Mapped[int] = mc(ForeignKey("groups.id"), nullable=False)

@@ -8,9 +8,7 @@ class DataService:
         result = await db.scalars(select(Group))
         result_all = result.all()
 
-        # dumpdata = [gr.group_number for gr in result_all]
-        # with open('templates/static/json/groups.json', 'w') as f:
-        #     json.dump(dumpdata, f)
+     
         
         return result_all
     

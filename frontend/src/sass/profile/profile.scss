@@ -1,4 +1,5 @@
-@use './variables.scss' as *;
+@use '../variables.scss' as *;
+@use '../fonts.scss' as *;
 
 .profile {
     &.dark {

@@ -1,13 +1,14 @@
 import { useState, useEffect, useCallback, useRef } from "react"
-import HomeworkModal from "./HomeworkModal" // Предполагаем, что модалка уже переписана на React
-import paperclip from "../../images/homework/paperclip.svg"
-import paperclipDark from "../../images/homework/paperclip-dark.svg"
+import HomeworkModal from "../HomeworkModal" // Предполагаем, что модалка уже переписана на React
+import paperclip from "../../../images/homework/paperclip.svg"
+import paperclipDark from "../../../images/homework/paperclip-dark.svg"
 import { useContext } from "react"
-import { Context } from "../../context/Provider"
-import homeworkAPI from "../../api/homeworkAPI"
+import { Context } from "../../../context/Provider"
+import homeworkAPI from "../../../api/homeworkAPI"
 import { Mosaic } from "react-loading-indicators"
-import { getDateValueFromDisplay, getLessonTypeClass } from "../../utils/converters"
-import { useWindowSize } from "../../hooks/useWindowSize"
+import { getDateValueFromDisplay, getLessonTypeClass } from "../../../utils/converters"
+import { useWindowSize } from "../../../hooks/useWindowSize"
+import MobileItem from "./mobile/MobileItem"
 
 
 
@@ -281,28 +282,55 @@ const ScheduleContainer = () => {
     )
   }
 
+  const renderMobileLesson = (lessonId) => {
+    return (
+      <div className="mobile-schedule__content__lesson" key={id}>
+        
+      </div>
+    )
+  }
+
   const renderMobileSchedule = (scheduleData) => {
     if (!scheduleData) return null 
 
+    console.log('scheduleData из renderMobileSchedule:>> ', scheduleData);
     return (
       <div className="mobile-schedule">
+        <div className="mobile-schedule__header">
+          <button className="mobile-schedule__header__button">
+            Пн
+          </button> 
+          <button className="mobile-schedule__header__button">
+            Вт
+          </button> 
+          <button className="mobile-schedule__header__button">
+            Ср
+          </button> 
+          <button className="mobile-schedule__header__button">
+            Чт
+          </button> 
+          <button className="mobile-schedule__header__button">
+            Пт
+          </button> 
+          <button className="mobile-schedule__header__button">
+            Сб
+          </button> 
+        </div>
+        <div className="mobile-schedule__content">
+          <MobileItem time="09:55-11:30" text="Лек. Технологии проектирования информационных систем, доц. Громов А.Ю., ауд. 403 C" />
+          <MobileItem time="09:55-11:30" text="Лек. Технологии проектирования информационных систем, доц. Громов А.Ю., ауд. 403 C" />
+          <MobileItem time="09:55-11:30" text="Лек. Технологии проектирования информационных систем, доц. Громов А.Ю., ауд. 403 C" />
+          <MobileItem time="09:55-11:30" text="Лек. Технологии проектирования информационных систем, доц. Громов А.Ю., ауд. 403 C" />
+
+        </div>
         
-        {/* {scheduleData.schedule.map((timeSlot) => (
-          <div key={timeSlot.time_start}>
-            <p>{timeSlot.time_start}-{timeSlot.time_end}</p>
-            {timeSlot.lessons.map((lesson) => (
-              <div key={lesson.text}>
-                <p>{lesson.text}</p>
-              </div>
-            ))}
-          </div>
-        ))} */}
       </div>
     )
   }
 
   // Состояния загрузки и ошибки
   if (loading) {
+    if (!isMobile) {
     return (
       <>
         <div className="schedule-container loading"></div>
@@ -315,7 +343,41 @@ const ScheduleContainer = () => {
           />
         </div>
       </>
-    )
+    )} else {
+      return (
+        <div className="mobile-schedule loading">
+          <div className="mobile-schedule__header">
+            <button className="mobile-schedule__header__button">
+              Пн
+            </button> 
+            <button className="mobile-schedule__header__button">
+              Вт
+            </button> 
+            <button className="mobile-schedule__header__button">
+              Ср
+            </button> 
+            <button className="mobile-schedule__header__button">
+              Чт
+            </button> 
+            <button className="mobile-schedule__header__button">
+              Пт
+            </button> 
+            <button className="mobile-schedule__header__button">
+              Сб
+            </button> 
+          </div>
+
+          <div className="loading-indicator">
+            <Mosaic
+              color={darkTheme? '#d2d2d2' : '#fff'}
+              size="large"
+              text="загрузка..."
+              textColor="#CBCBDE"
+            />
+          </div>
+        </div>
+      )
+    }
   }
 
   if (error) {
@@ -334,7 +396,10 @@ const ScheduleContainer = () => {
   return (
     <>
       <div
-        className={`schedule-container ${scheduleData ? "loaded" : "loading"}`}
+        className={`
+          ${ isMobile ? "mobile-schedule" : "schedule-container" } 
+          ${ scheduleData ? "loaded" : "loading" }`
+        }
       >
         {isMobile ? renderMobileSchedule(scheduleData) : renderDesktopSchedule(scheduleData)}
       </div>

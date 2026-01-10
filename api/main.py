@@ -38,9 +38,10 @@ app.include_router(homework.homework_router)
 
 
 @app.post("/initial", dependencies=[Depends(verify_admin_api_key)])
-async def load_initial_groups_and_dates(db: AsyncSession = Depends(get_db)):
-    """FOR SUPERUSER ONLY"""
-    await load_groups_and_dates(groups=parse_groups(), dates=parse_dates(), db=db)
+async def load_initial_groups_and_dates(refresh: bool = False, db: AsyncSession = Depends(get_db)):
+    """FOR SUPERUSER ONLY
+    refresh=True totally updates database"""
+    await load_groups_and_dates(groups=parse_groups(), dates=parse_dates(), db=db, refresh=refresh)
     return {"status": "Data loaded successfully"}
 
 

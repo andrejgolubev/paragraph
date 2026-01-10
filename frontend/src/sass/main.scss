@@ -3,13 +3,14 @@
 @use './fonts.scss';
 @use './dropdown.scss';
 @use './homepage.scss';
-@use './schedule.scss';
+@use './schedule/schedule.scss';
 @use './homework-modal.scss';
-@use './profile-dropdown.scss';
+@use './profile/profile-dropdown.scss';
 @use './help-page.scss';
 @use './auth.scss';
 @use './header.scss';
-@use './profile.scss';
+@use './profile/profile.scss';
+@use './schedule/mobile-schedule.scss';
 
 body {
   max-width: 100%;
@@ -30,7 +31,7 @@ body {
 
 .main-content {
   margin: 28px 0 0 25px;
-
+  padding-bottom: 8px;
 
   @media (max-width: 1000px) {
     display: flex;
@@ -44,8 +45,7 @@ body {
     gap: 30px;
 
     @media (max-width: 1000px) {
-      padding-right: 22px;
-      justify-content: center;
+      justify-content: space-between;
       width: 100%;
     }
 
@@ -76,7 +76,6 @@ body {
   }
 
   .tip {
-    // background-image: url('../images/tip/tip-bg.png');
     display: inline-flex;
     align-items: center;
     justify-content: center;

@@ -2,7 +2,7 @@ export const validationPreferences = {
   username: {
     minLength: 2,
     maxLength: 40,
-    pattern: /^[a-zA-Zа-яА-Я\s\-]+$/,
+    pattern: /^[a-zA-Zа-яА-Я\s\.\-]+$/,
   },
   email: {
     pattern: /^\S+@\S+\.\S+$/,

@@ -1,4 +1,4 @@
-import jwt
+from string import ascii_letters
 from api.auth.validation import (
     get_refresh_token_payload,
     get_current_active_auth_user,
@@ -8,14 +8,13 @@ from api.db.models import Group, User
 from api.db.schemas import UserRegistration, UserLogin, UserUpdate
 from api import settings
 from api.auth.utils import (
-    encode_jwt,
     hash_password,
     validate_password,
     verify_admin_api_key,
 )
 from api.auth.helpers import get_refreshed_access_token
 
-from fastapi import Body, Depends, Form, HTTPException, Response, status, APIRouter, Query
+from fastapi import Body, Depends, HTTPException, Response, status, APIRouter, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from .helpers import create_access_token, create_refresh_token
@@ -24,10 +23,16 @@ from random import choice
 from pathlib import Path
 from api.utils.converters import latin_to_cyrillic
 
+
 router = APIRouter(
     prefix="/user",
     tags=["user"],
 )
+
+
+def username_is_cyrillic_only(username: str) -> bool:
+    allowed_chars = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя' + '-' + '.' + ' '
+    return all(char.lower() in allowed_chars for char in username)
 
 
 @router.post("/register")
@@ -40,6 +45,9 @@ async def register(
     email = register_data.email
     password = register_data.password
     group_number = register_data.group_number
+
+    if not username_is_cyrillic_only(username):
+        raise HTTPException(status_code=400, detail="имя может содержать только кириллицу.")
 
     cursive_words_path = Path(__file__).parent / 'misc' / 'cursive_words.txt'
     if await has_cursive_words(filepath=cursive_words_path, phrase=username): 
@@ -196,8 +204,16 @@ async def update_profile(
     group_number = update_data.group_number
     password = update_data.password
 
+    if not username_is_cyrillic_only(username):
+        raise HTTPException(status_code=400, detail="имя может содержать только кириллицу.")
+
     user_result = await db.scalars(select(User).where(User.email == email))
     user = user_result.first()
+    
+    cursive_words_path = Path(__file__).parent / 'misc' / 'cursive_words.txt'
+    if await has_cursive_words(filepath=cursive_words_path, phrase=username): 
+        answers: dict[str] = ['введённое имя недопустимо :(', 'такое имя неприемлимо :(', 'введённое имя не прошло валидацию :(']
+        raise HTTPException(status_code=400, detail=choice(answers))  
     
     if not validate_password(password, user.password):
         raise HTTPException(

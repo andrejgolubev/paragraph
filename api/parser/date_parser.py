@@ -24,16 +24,16 @@ def _parse_date(driver: webdriver.Chrome):
     dates_dict = {}
     dates_options = options_list.find_elements(By.TAG_NAME, "option")
 
-    for user_date in dates_options:
+    for date in dates_options:
         
-        data_value = user_date.get_attribute("value")
-        user_date = user_date.text.strip()
+        data_value = date.get_attribute("value")
+        date = date.text.strip()
+        for word in ['(текущая)', 'знам.', 'числ.']:
+            date = date.replace(word, '').strip(' ,')
 
-        if ' (текущая)' in user_date: 
-            user_date = user_date.replace(' (текущая)', '')
 
-        if data_value and user_date:
-            dates_dict[user_date] = data_value 
+        if data_value and date:
+            dates_dict[date] = data_value 
 
     return dates_dict
 
