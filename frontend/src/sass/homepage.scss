@@ -1,7 +1,6 @@
 .tip {
   transition: opacity 0.4s cubic-bezier(0.1, -0.6, 0.2, 0);
   opacity: 1;
-
   // Через микро-задержку скрываем
   &:not(.active) {
     opacity: 0;
@@ -19,24 +18,27 @@
   &__inner:hover {
     transform: translateY(1px);
   }
-
 }
-
-
 
 
 .toggle,
 .toggle-bg {
   display: inline-block;
-  position: relative;
 }
+
 
 .toggle { 
   position: relative;
-  top: 1px;
   padding-bottom: 10px;
   padding-inline: 8px; 
+  margin-top: 24px;
+  &.mobile {
+    top: 0;
+    position: relative;
+    right: 35px;
+  }
 }
+
 
 #toggle-icon,
 #toggle-icon-dark { 

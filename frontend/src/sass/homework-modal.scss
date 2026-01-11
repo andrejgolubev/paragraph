@@ -1,0 +1,358 @@
+@use './variables.scss' as *;
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notification {
+  right: 4px;
+  opacity: 0;
+  font-size: 16px;
+  padding: 0px 15px;
+  color: white;
+  font-family: 'Manrope', serif;
+  font-weight: 300;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateX(100px);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.350, 1.275);
+  text-align: center;
+  border: 2px dotted rgba(255, 255, 255, 0.2);
+
+  display: inline-flex;
+  align-items: center;
+
+  pointer-events: none; // чтобы не мешало кликам
+
+  position: fixed;
+  z-index: 1000;
+
+  padding: 16px 24px;
+  bottom: 20px;
+  right: 36px;
+  top: auto;
+  left: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  &.active {
+    opacity: 0.8;
+    transform: translateX(0);
+  }
+
+  &.success {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    border-left: 4px solid #2E7D32;
+  }
+
+  &.error {
+    background: linear-gradient(135deg, #f44336, #e53935);
+    border-left: 4px solid #c62828;
+  }
+
+  &.inner {
+    bottom: 0px;
+    right: 0px;
+    position: relative;
+    background: linear-gradient(135deg, #f44336, #e53935);
+    border-left: 4px solid #c62828;
+
+  }
+}
+
+
+
+.modal {
+
+  &.dark {
+    background-color: #0d0e0f;
+    p {
+      color: $light-grey1;
+    }
+    .error {
+      p {
+        color: $table-white !important;
+      }
+    }
+    h3 {
+      color: $table-white;
+    }
+    .modal-buttons {
+      .btn-cancel {
+        background-color: $light-grey1;
+      }
+      .btn-submit {
+        background-color: $great-blue;
+      }
+      
+    }
+    textarea {
+      color: $light-white1;
+    }
+  }
+
+
+  max-height: 300px;
+
+  .updated-at {
+    color: $grey1;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+
+  h3 {
+    margin-bottom: 16px;
+    text-align: center;
+    margin-top: 0;
+    color: #333;
+  }
+
+  position: fixed;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Manrope', serif;
+  border: none;
+  border-radius: 8px;
+  padding: 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+  width: 100vh;
+  max-width: 500px;
+  max-height: 80vh;
+
+
+  // ПРОКРУТКА ЕСЛИ КОНТЕНТА МНОГО
+  overflow-y: auto;
+  overflow-x: hidden !important;
+
+  // АНИМАЦИЯ ПОЯВЛЕНИЯ
+  animation: modalAppear 0.3s ease-out;
+
+
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(1px);
+    animation: backdropFadeIn 0.3s ease-out;
+  }
+
+  form {
+    padding: 20px;
+    min-width: 400px;
+
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #a6a6a6;
+      border-radius: 6px;
+      resize: vertical;
+      font-family: inherit;
+
+      &:focus {
+        outline: none;
+      }
+
+      &[class="dark"]::placeholder {
+        color: #0f0d0d;
+        opacity: 1;
+      }
+    }
+
+    .modal-buttons {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      justify-content: space-between;
+      align-content: center;
+      height: fit-content;
+      margin-top: 15px;
+
+      button, 
+      div {
+        height: 48px;
+      }
+
+      button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        -webkit-tap-highlight-color: transparent;
+
+        cursor: pointer;
+        &:active {
+          transform: translateY(0);
+        }
+
+        &.btn-cancel {
+          background: #e1e1e1;
+          transition: all 0.3s ease 0s;
+        }
+
+        &.btn-save {
+          background: $blue;
+          transition: all 0.3s ease 0s;
+          color: white;
+        }
+      }
+    }
+  }
+
+
+
+  // hover-эффекты только для устройств с курсором
+  @media (hover: hover) and (pointer: fine) {
+    .modal-buttons {
+      button {
+        &.btn-cancel {
+          &:hover {
+            background: #d3d2d2;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(50, 52, 54, 0.3);
+          }
+        }
+        &.btn-save {
+          &:hover {
+            background: $great-blue;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+          }
+        }
+      }
+    }
+  }
+
+  // на тач-устройствах убираем hover и оставляем active
+  @media (hover: none), (pointer: coarse) {
+    .modal-buttons {
+      button {
+        &:hover {
+          background: inherit;
+          transform: translateY(0);
+          box-shadow: none;
+        }
+        &.btn-cancel {
+          &:active {
+            background: #d3d2d2;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(50, 52, 54, 0.3);
+          }
+        }
+        &.btn-save {
+          &:active {
+            background: $great-blue;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+          }
+        }
+      }
+    }
+  }
+
+
+}
+
+
+// АНИМАЦИИ
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+
+@keyframes backdropFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.homework {
+  cursor: pointer;
+  display: inline-flex;
+  transition: all 0.3s ease 0s;
+  margin-left: 2px;
+
+  &:hover {
+    scale: 1.1;
+  }
+}
+
+
+// АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ
+@media (max-width: 800px) {
+  .modal {
+    width: 92%;
+    display: flex;
+    justify-content: center;
+    max-height: none;
+    max-width: none;
+    overflow-y: scroll;
+    // margin: auto;
+
+    form {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      h3 {
+        font-size: 1.25rem;
+        padding-bottom: 20px;
+      }
+
+      textarea {
+        width: 100%;
+      }
+
+      .modal-buttons {
+        padding-top: 20px;
+        width: 100%;
+        flex-direction: column;
+        justify-content: center;
+
+        button {
+          button, 
+          div {
+            height: 24px;
+          }
+        }
+
+        .error {
+          position: absolute;
+          width: 100%;
+          left: 0;
+          right: 0;
+          margin: 0 auto;
+          transform: translateY(16px);
+
+          &.active {
+            transform: translateY(0);
+          }
+        }
+      }
+
+      @media (max-width: 400px) { 
+        textarea, .modal-buttons, h3 {
+          width: 85%;
+        }
+      }
+    }
+  }
+}

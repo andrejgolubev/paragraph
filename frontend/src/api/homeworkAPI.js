@@ -1,7 +1,25 @@
-const BASE_URL = "http://localhost:8000"
+// export const BASE_URL = "http://localhost:8000"
+export const BASE_URL = "https://192.168.0.108:8000"
+
 const headers = { "Content-Type": "application/json"}
 
 const homeworkAPI = {
+  
+  getScheduleData: async ({groupDataValue, dateDataValue}) => {
+    let url = `${BASE_URL}/schedule/get-schedule?group_data_value=${groupDataValue}`
+      if (dateDataValue) {
+        url += `&date_data_value=${dateDataValue}`
+      }
+      
+      const response = await fetch(url)
+      if (!response.ok) {
+        throw new Error(`ошибка при загрузке расписания.`)
+      }
+      
+      const data = await response.json()
+      return data
+  },
+
   saveHomework: async (groupDataValue, dateDataValue, lessonIndex, homeworkText) => {
     
     const payload = {
@@ -20,14 +38,12 @@ const homeworkAPI = {
       credentials: 'include',
     });
     
-    
     const responseData = await response.json();
-    console.log("responseData:", responseData)
-    console.log("responseData.detail:", responseData.detail)
+    if (!response.ok) {
+      return {...responseData, status: 'error'}
+    }
 
-    return responseData;
-      
-    
+    return {...responseData, status: 'ok'};
   },
 
 
@@ -48,7 +64,7 @@ const homeworkAPI = {
     })
       .then((resp) => resp.json())
       .catch((err) => {
-        console.log('err from loadHomeworkData: ', err)
+        console.error('err from loadHomeworkData: ', err)
       })
   },
 
@@ -56,7 +72,7 @@ const homeworkAPI = {
     return fetch(`${BASE_URL}/schedule/get-all-groups`)
       .then((response) => response.json())
       .catch((err) => {
-        console.log("Error loading dates:", err)
+        console.error("Returning an empty array of dates due to error loading dates:", err)
         return []
       })
   },
@@ -78,7 +94,7 @@ const homeworkAPI = {
       date: date,
     })
     const url = `${BASE_URL}/homework/convert?${params.toString()}`
-    console.log("url :>> ", url)
+
     return fetch(url, {
       method: "GET",
     })
@@ -161,10 +177,11 @@ const homeworkAPI = {
     const responseData = await response.json() 
 
     if (!response.ok) {
-      return {...responseData, status: 'error'}
+      return {...responseData, status: 'error'} 
     }
 
     return {...responseData, status: 'ok'}
+    // responseData содержит: username, email, role, group
   }, 
 
   logout: async () => {
@@ -174,6 +191,7 @@ const homeworkAPI = {
       credentials: 'include'
     })
 
+
     const responseData = await response.json() 
 
     if (!response.ok) {
@@ -181,8 +199,24 @@ const homeworkAPI = {
     }
 
     return {...responseData, status: 'ok'}
+  },
 
-  }
+  updateUserData: async ({email, password, username, group }) => {
+    const response = await fetch(`${BASE_URL}/user/update-profile`, {
+      method: "PATCH",
+      headers,
+      credentials: 'include',
+      body: JSON.stringify({email, password, username, group_number: group }),
+    })
+  
+    const responseData = await response.json()
+    console.log('responseData :>> ', responseData);
+    if (!response.ok) {
+      return {...responseData, status: 'error'}
+    }
+
+    return {...responseData, status: 'ok'}
+  },
 }
 
 export default homeworkAPI

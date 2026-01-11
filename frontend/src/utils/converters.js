@@ -12,13 +12,13 @@ export const latinToCyrillic = (str) => {
   };
   
   return str
-    .toUpperCase() // Приводим к верхнему регистру
     .split('')
     .map(char => latinToCyrillicMap[char] || char)
     .join('');
 };
 
 export const getDateValueFromDisplay = (dateDisplay, year) => {
+  
   const months = {
     января: "01",
     февраля: "02",

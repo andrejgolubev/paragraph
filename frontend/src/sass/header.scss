@@ -1,0 +1,201 @@
+@use './variables.scss' as *;
+
+@keyframes appear {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes disappear {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(20px); }
+}
+
+
+.header {
+    font-family: Manrope, serif;
+    width: auto;
+    margin-inline: 25px;
+
+    @media (max-width: 1000px) {
+      margin-inline: 15px;
+    }
+  
+    &.dark {
+      p {
+        color: $light-white1;
+      }
+    }
+  
+    .nav {
+      width: 100%;
+      height: 70px;
+
+      .nav_list {
+        display: flex;
+        justify-content: space-between;
+				
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    
+        li {
+          display: flex;
+          align-items: center;
+        }
+  
+        .nav_links_container {
+          display: flex;
+          justify-content: flex-end;
+          flex: 1;
+					
+          
+          .links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            width: auto;
+            justify-content: flex-end;
+            
+            @media (max-width: 1000px) {
+              display: none;
+
+              &.active {
+                display: flex;
+                z-index: 30;
+                @media (max-width: 500px) {
+                  z-index: 10;
+                }
+
+                &:not(.closing) {
+                  opacity: 0;
+                  animation: appear 0.3s ease forwards;
+                }
+
+                &.closing {
+                  opacity: 1;
+                  animation: disappear 0.3s ease forwards;
+                }
+              }
+
+
+              background-color: $table-white;
+              &.dark {
+                background-color: $body-top;
+              }
+
+              position: fixed;
+              flex-direction: column;
+              right: 0;
+              top: 0;
+              row-gap: 30px;
+              padding: 0 60px; 
+              height: 100vh;
+              width: 100%; 
+              max-width: 400px;
+              z-index: 5;
+              justify-content: center;
+							align-items: center;
+              border-left: $grey1 1px solid;
+              transition: opacity 0.3s ease 0s;
+
+							font-size: 20px;
+              
+
+							div, img {
+								margin: 20px 0;
+							}
+            }
+  
+            @media (max-width: 500px) {
+              border: none;
+              max-width: 100%;
+              font-size: 24px;
+            }
+  
+            
+            .nav_item:not(.nav_logo) {
+              p:hover {
+                color: rgb(180, 211, 220);
+              }
+            }
+        
+            .nav_item {
+              margin-top: -5px;
+            }
+        
+            .profile-button {
+              transition: scale 0.3s ease;
+        
+              &:hover {
+                scale: 1.03;
+              }
+            }
+        
+            p {
+              transition: color 0.3s ease 0s;
+              cursor: pointer;
+            }
+          }
+        }
+
+        .burger-button {
+          &:not(.fixed) {
+            position: relative;
+            top: 0; 
+            right: 0;
+            margin-left: -21px;
+            margin-top: 10px;
+          }
+          position: fixed;
+          top: 24px;
+          right: 15px;
+          z-index: 50;
+
+          @media (min-width: 1001px) {
+            display: none;
+          }
+        }
+      }
+      
+      &_logo {
+				z-index: 5;
+        padding-top: 7px;
+        width: 100%;
+        max-width: 175px;
+        height: auto;
+
+				// @media (max-width: 500px) {
+        //   &.fixed {
+        //     position: fixed;
+        //     margin-top: 28px;
+        //   }
+				// }
+      }
+  
+      &_item {
+				font-size: 20px;	
+        display: inline-block;
+        padding-top: 1rem;
+        font-family: 'Manrope', serif;
+        letter-spacing: 0.08em;
+        color: #292833;
+				
+        &.bold { 
+					font-weight: 600; 
+				}
+
+  
+        a {
+          color: #292833;
+          @media (max-width: 1200px) {
+            font-size: 16px;
+            margin-top: -5px;
+          }
+        }
+
+				@media (max-width:1000px) {
+					font-size: 24px;
+				}
+      }
+    }
+  }

@@ -1,10 +1,11 @@
-import Header from "./components/Header"
+import Header from "./components/header/Header"
 import Help from "./components/help-page/Help"
-import ScheduleContent from "./components/ScheduleContent"
+import MainContent from "./components/main/MainContent"
+import Profile from "./components/profile/Profile"
 import { Provider } from "./context/Provider"
 import { Route, Routes } from "react-router-dom"
-import { Auth } from "./components/auth/Auth"
 import { CookiesProvider } from "react-cookie"
+import { AuthForm } from "./components/auth/AuthForm"
 
 function App() {
 
@@ -12,12 +13,17 @@ function App() {
     <CookiesProvider>
       <Provider>
         <Header />
-      
+
+
+
+
+
         <Routes>
-          <Route path="/" element={<ScheduleContent />} />
+          <Route path="/" element={<MainContent />} />
           <Route path="/help" element={<Help />} />
-          <Route path='/sign-in' element={<Auth type='sign-in' />} />
-          <Route path='/sign-up' element={<Auth type='sign-up'/>} />
+          <Route path='/sign-in' element={<AuthForm type='sign-in' />} />
+          <Route path='/sign-up' element={<AuthForm type='sign-up'/>} />
+          <Route path='/profile' element={<Profile />} />
         </Routes>
       </Provider>
     </CookiesProvider>

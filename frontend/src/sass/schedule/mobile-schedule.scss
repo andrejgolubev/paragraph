@@ -1,0 +1,193 @@
+@use '../variables.scss' as *;
+@use '../fonts.scss' as *;
+
+.schedule-wrap {
+    &.mobile {
+        margin-top: -31px;
+        background-color: $table-white;
+        margin-right: 15px;
+        margin-left: -10px;
+        padding: 8px 8px 4px;
+        border-radius: 8px;
+    }
+    &.dark {
+        &.mobile {
+            background-color: $dark4 !important;
+        }
+        .mobile-schedule {
+            &__header {
+                &__button {
+                background-color: $dark3 !important;
+                color: $light-white1 !important;
+                border: 1px solid $dark7 !important;
+                }
+            }
+            &__content {
+                &__item {
+                    background-color: $dark3 !important;
+                    color: $light-white1 !important;
+                    border: 1px solid $dark7;
+                    &__time {
+                        background-color: $dark7;
+                        border: 1px solid $dark3;
+                        color: $light-grey2;
+                        
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+.mobile-schedule {
+    font-family: Manrope, serif;
+    padding-top: 2px;
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    
+    &__header {
+        margin-top: -2px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 4px;
+
+        &__button {
+            border: 1px dashed $light-blue;
+            margin: 2px 0;
+            padding: 8px 0;
+            flex: 1;
+            text-align: center;
+
+            &:first-child {
+                border-top-left-radius: 8px;
+                border-bottom-left-radius: 8px;
+            }
+
+            &:last-child {
+                border-top-right-radius: 8px;
+                border-bottom-right-radius: 8px;
+            }
+
+            &.active {
+                background-color: $toggle-blue;
+                &.dark {
+                    background-color: $dark4 !important;
+                }
+            }
+           
+        }
+    }
+
+    &__content {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        &__item {
+            background-color: $table-white;
+            border: 1px dashed $light-blue;
+            width: 100%;
+            max-width: 550px;
+            min-height: 40px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            padding: 8px;
+            margin: 2px 0;
+            border-radius: 8px;
+
+            &__time {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                
+                font-weight: 500;
+                font-size: 14px;
+                background-color: $field-grey;
+                border: 1px dashed $light-blue;
+                border-radius: 8px;
+                padding: 0px 8px;
+                margin: 6px 0;
+
+                img {
+                    scale: 1.1;
+                }
+
+            }
+
+            &__text {
+                word-break: break-word;
+                white-space: normal;
+                text-align: center;
+
+                p {
+                    width: 100%;
+                    word-break: break-word;
+                    white-space: normal;
+                }
+
+                &__type {
+                    background-color: $dark-grey1;
+                    border-top-right-radius: 4px;
+                    opacity: 0.85;
+                    
+                    &#lec {
+                        background-color: $lec;
+                    }
+                    &#upr {
+                        background-color: $upr;
+                    }
+                    &#lab {
+                        background-color: $lab;
+                    }
+                    &#exam {
+                        background-color: $exam;
+                    }
+                    &#cred {
+                        background-color: $cred;
+                    }
+                    &#consult {
+                        background-color: $consult;
+                    }
+                }
+            }
+
+            &__no-lessons-text {
+                text-align: center;
+                padding: 2px 0;
+                padding-bottom: 4px;
+                font-size: 16px;
+                color: $light-grey2;
+            }
+
+        }
+    }
+
+    &.loading {
+        padding-top: 4px;
+    }
+
+    &__loading-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding-bottom: 22%;
+    }
+}
+
+.loading-indicator {
+    &.mobile {
+        position: static !important;
+        margin-top: 22%;
+    }
+}

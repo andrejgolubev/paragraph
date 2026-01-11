@@ -1,29 +1,38 @@
-from tabnanny import filename_only
-import jwt
-from api.auth.validation import get_current_active_auth_user
-from api.auth.validation import get_access_token_payload, get_refresh_token_payload
+from string import ascii_letters
+from api.auth.validation import (
+    get_refresh_token_payload,
+    get_current_active_auth_user,
+)
 from api.db.database import get_db
 from api.db.models import Group, User
-from api.db.schemas import UserRegistration, UserLogin
+from api.db.schemas import UserRegistration, UserLogin, UserUpdate
 from api import settings
 from api.auth.utils import (
-    encode_jwt,
     hash_password,
     validate_password,
     verify_admin_api_key,
 )
+from api.auth.helpers import get_refreshed_access_token
 
-from fastapi import Body, Depends, Form, HTTPException, Response, status, APIRouter, Query
+from fastapi import Body, Depends, HTTPException, Response, status, APIRouter, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from .helpers import create_access_token, create_refresh_token
 from api.utils.censor import has_cursive_words
 from random import choice
+from pathlib import Path
+from api.utils.converters import latin_to_cyrillic
+
 
 router = APIRouter(
     prefix="/user",
     tags=["user"],
 )
+
+
+def username_is_cyrillic_only(username: str) -> bool:
+    allowed_chars = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя' + '-' + '.' + ' '
+    return all(char.lower() in allowed_chars for char in username)
 
 
 @router.post("/register")
@@ -37,8 +46,11 @@ async def register(
     password = register_data.password
     group_number = register_data.group_number
 
-    
-    if await has_cursive_words(filepath='api/misc/cursive_words.txt', phrase=username): 
+    if not username_is_cyrillic_only(username):
+        raise HTTPException(status_code=400, detail="имя может содержать только кириллицу.")
+
+    cursive_words_path = Path(__file__).parent / 'misc' / 'cursive_words.txt'
+    if await has_cursive_words(filepath=cursive_words_path, phrase=username): 
         answers: dict[str] = ['введённое имя недопустимо :(', 'такое имя неприемлимо :(', 'введённое имя не прошло валидацию :(']
         raise HTTPException(status_code=400, detail=choice(answers))    
 
@@ -50,10 +62,10 @@ async def register(
             detail="пользователь с такой почтой уже существует.",
         )
 
-    # серверная валидация группы, чтобы если пользователь не введет группу или введет какую-то херь, 
+    # серверная валидация группы, чтобы если пользователь не введет группу или введет что-то не то, 
     # то группа была null
     group_result = await db.scalars(
-        select(Group).where(Group.group_number == group_number)
+        select(Group).where(Group.group_number == latin_to_cyrillic(group_number))
     )
 
     if not (group := group_result.first()): 
@@ -144,8 +156,8 @@ async def login(
 
 @router.post('/logout') 
 async def logout(response: Response): 
-    response.delete_cookie('access_token', samesite='lax', secure=True)
-    response.delete_cookie('refresh_token', samesite='lax', secure=True)
+    response.delete_cookie('access_token', samesite='none', secure=True)
+    response.delete_cookie('refresh_token', samesite='none', secure=True)
 
     return {"detail": "Вы успешно вышли из аккаунта"}
 
@@ -181,6 +193,68 @@ async def make_admin(
         "role": user.role,
     }
 
+@router.patch('/update-profile')
+async def update_profile(
+    update_data: UserUpdate = Body(),
+    db: AsyncSession = Depends(get_db),
+): 
+        
+    email = update_data.email
+    username = update_data.username
+    group_number = update_data.group_number
+    password = update_data.password
+
+    if not username_is_cyrillic_only(username):
+        raise HTTPException(status_code=400, detail="имя может содержать только кириллицу.")
+
+    user_result = await db.scalars(select(User).where(User.email == email))
+    user = user_result.first()
+    
+    cursive_words_path = Path(__file__).parent / 'misc' / 'cursive_words.txt'
+    if await has_cursive_words(filepath=cursive_words_path, phrase=username): 
+        answers: dict[str] = ['введённое имя недопустимо :(', 'такое имя неприемлимо :(', 'введённое имя не прошло валидацию :(']
+        raise HTTPException(status_code=400, detail=choice(answers))  
+    
+    if not validate_password(password, user.password):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="введён неверный пароль",
+        )
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="ошибка при обновлении данных: профиль не найден.",
+        )
+    
+
+    if username:
+        user.name = username
+    if group_number:
+        group_result = await db.scalars(select(Group).where(Group.group_number == latin_to_cyrillic(group_number)))
+        group = group_result.first()
+        if group:
+            user.group_id = group.id
+        else: 
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="группа не существует или введена не так, как на официальном сайте университета.",
+            )
+        
+
+    db.add(user)
+    await db.commit()
+    await db.refresh(user)
+
+    
+    return {
+        "detail": "профиль обновлен успешно",
+        "username": user.name,
+        "email": user.email,
+        "role": user.role,
+        "group": group.group_number if group_number else None,
+    }
+
 
 @router.get("/me")
 def auth_user_check_self_info(user: dict = Depends(get_current_active_auth_user)):
@@ -193,42 +267,6 @@ def auth_user_check_self_info(user: dict = Depends(get_current_active_auth_user)
         "group": user.get("group"),
     }
 
-
-
-
-
-async def get_refreshed_access_token(
-    payload: dict = Depends(get_refresh_token_payload),
-    db: AsyncSession = Depends(get_db), 
-
-):  
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate refresh token",
-    )
-    try:
-        # автоматически проверяется exp и если токен просрочен, здесь выбросится исключение.
-        email: str = payload.get("sub")
-        if not email:
-            raise credentials_exception
-    except jwt.exceptions.PyJWTError:
-        raise credentials_exception
-    user_result = await db.scalars(select(User).where(User.email == email))
-    user = user_result.first()
-    if not user or not user.active:
-        raise credentials_exception
-
-    access_token = encode_jwt(
-        payload={
-            "sub": user.email,
-            "role": user.role,
-            "username": user.name,
-        }
-    )
-
-    return access_token
-
-    
 
 
 @router.post("/refresh-token")

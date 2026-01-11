@@ -1,0 +1,356 @@
+@use '../variables.scss' as *;
+@use '../fonts.scss' as *;
+
+.profile {
+    &.dark {
+        background: $dark4;
+        border-color: $dark7;
+        .profile__header__text {
+            color: $light-white1 !important;
+        }
+        div[class*='-block'] {
+            p {
+                color: $light-white1;
+            }
+            input {
+                &::placeholder {
+                    color: $grey2;
+                }
+            }
+        }
+    }
+
+
+    &.editing {
+        .immutable-field {
+            p {
+                color: $light-white1;
+            }
+        }
+        &.dark {
+            .immutable-field {
+                p {
+                    color: $dark1;
+                }
+            }
+        }
+    }
+
+
+    font-family: Manrope, serif;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: auto;
+    background: $table-white;
+
+    width: 520px;
+    padding-bottom: 30px;
+    
+    border-radius: 8px;
+    border: 1px solid $light-blue;
+
+
+
+    &__header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin: auto;
+        
+        padding-inline: 4%;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        margin-top: 30px;
+        @media (max-width: 600px) {
+            width: 88.5%;            
+        }
+        &__pencil {
+            &__icon {
+                cursor: pointer;
+                transition: all 0.3s ease 0s;
+            }
+        }
+        &__text {
+            color: $dark1 !important;
+            font-size: 32px;
+            font-weight: 500;
+            @media (max-width: 600px) {
+                
+                font-size: 26px;
+            }
+            @media (max-width: 500px) {
+                font-size: 24px;
+            }
+        }
+    }
+
+    
+    
+    
+    
+    
+    @media (max-width: 600px) {
+        width: 80%;
+        div[class*="-block"] {
+            width: 80% !important;
+            font-size: 14px !important;
+            
+            .input-div, input {
+                width: 100% !important;
+                font-size: 14px !important;
+            }
+            
+        }
+
+    } 
+    
+    
+    &__inputs {
+        margin-top: 36px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;   
+        font-size: 18px;
+        .input-div {
+            display: flex;
+            align-items: center;
+            margin: auto;
+            width: 480px; 
+            height: 70px; 
+            background: $field-grey;
+            &.dark {
+                background: $dark7;
+            }
+            border-radius: 6px;
+            img {
+                margin: 0px 30px;
+            }
+            input {
+                height: 50px;
+                width: 380px;
+                background: $field-grey;
+                border: none;
+                outline: none;
+                color: $grey1;
+                font-size: 18px;
+                padding-left: 24px;
+
+                &:-webkit-autofill,
+                &:-webkit-autofill:hover,
+                &:-webkit-autofill:focus,
+                &:-webkit-autofill:active {
+                    -webkit-box-shadow: 0 0 0 1000px $field-grey inset !important; // фон
+                    -webkit-text-fill-color: $grey1 !important; // цвет текста (плейсхолдера)
+                    transition: background-color 1000s ease-in-out 0s; // чтобы не мигал
+                }
+
+                // чтоб текст нужного щрифта вставлялся
+                &:-webkit-autofill::first-line {
+                    font-family: Manrope, serif !important;
+                    font-size: 18px !important;
+                }
+
+                @media (max-width: 600px) {
+                    &:-webkit-autofill::first-line {
+                        font-family: Manrope, serif !important;
+                        font-size: 14px !important;
+                    }
+                }
+                
+                &.dark {
+                    background: $dark7;
+                    color: $light-white1;
+                    &:-webkit-autofill,
+                    &:-webkit-autofill:hover,
+                    &:-webkit-autofill:focus,
+                    &:-webkit-autofill:active {
+                        -webkit-box-shadow: 0 0 0 1000px $dark7 inset !important; //  фон
+                        -webkit-text-fill-color: $light-white1 !important; // цвет текста (плейсхолдера)
+                        transition: background-color 1000s ease-in-out 0s; // чтобы не мигал
+                    }
+                }
+            }
+            
+        }
+    }
+
+    div[class*='-block'] {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        label {
+            color: $light-white1;
+            font-size: 16px;
+        }
+    }
+
+    .pwd-block {
+        gap: 5px;
+        .forgot-password {
+            margin-left: 4%;
+            color: $grey1;
+            font-size: 16px;
+        }
+        input {
+            &::placeholder {
+                color: $light-grey2;
+                
+            }
+        }
+        @media (max-width: 600px) {
+            .forgot-password {
+                margin-left: 10%;
+                font-size: 12px !important;
+            }
+        }
+    }
+
+    .role-block, 
+    .email-block {
+        p {
+            width: 93%;
+            text-align: left;
+            color: $grey1;
+            overflow: hidden;       
+            text-overflow: ellipsis; 
+            white-space: nowrap;
+            padding-left: 24px;
+        }
+    }
+
+    span {
+        color: $great-blue;
+        cursor: pointer;
+    }
+
+    &__submit {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 20px;
+
+        &__cancel__btn,
+        &__save__btn, 
+        &__logout__btn {
+            color: $grey1;
+            // background-color: $field-grey;
+            margin-top: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 8% ;
+            border-radius: 32px;
+            border: 1px solid $light-white2;
+            font-size: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease 0s;
+            cursor: pointer;
+            
+            &:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 8px rgba(50, 52, 54, 0.3);
+            }
+            &.dark {
+                color: $light-grey1; 
+                background-color: $dark7;
+                border: $dark-grey2;
+            }
+
+
+            @media (max-width: 600px) {
+                font-size: 16px !important;
+                padding: 8px 5% !important;
+                border-radius: 24px;
+                @media (max-width: 500px) {
+                    font-size: 14px;
+                }
+            }
+        }
+
+        
+        &__save__btn {
+            background-color: $blue;
+            color: $table-white;
+            &:hover {
+                background-color: $great-blue;
+                color: white;
+                box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+            }
+            &.dark {
+                background-color: $blue;
+                color: $table-white;
+                &:hover {
+                    background-color: $blue;
+                }
+            }
+        }
+        &__cancel__btn,
+        &__logout__btn {
+            background-color: $light-white2;
+            &:hover {
+                background-color: $light-white1;
+            }
+            &.dark {
+                background-color: $dark7;
+                color: $light-white1;
+                &:hover {
+                    background-color: $dark7;
+                    color: $light-white1;
+                }
+            }
+        }
+
+        &__logout-wrap {
+            width: 100%;
+            display: flex;
+            justify-content: right;
+        }
+
+        &__logout__btn {
+            font-size: 12px !important;
+            margin-bottom: -16px;
+            padding: 6px 4%; 
+            color: $light-grey1 !important;
+
+            &:hover {
+                color: $table-white;
+                background-color: $exam !important;
+            }
+        }
+    }
+
+    div:last-child {
+        text-align: center;
+        color: $grey1;
+    }
+
+    &__error{
+        color: #c42d2dcc;
+        font-size: 12px;
+        padding: 0;
+        text-align: left;
+        margin-right: 2px;
+        width: 30%;
+        @media (max-width: 600px) {
+            font-size: 10px;
+        }
+    }
+
+    .notification {
+        color: $light-white1 !important;
+        margin-left: 6%;
+    }
+}
+
+
+
+
+
+
+
+
+

@@ -1,10 +1,10 @@
-import asyncio  # чтобы запустить асинхронную функцию если надо будет дебажить
-from turtle import goto
-from typing import Annotated
-from typing_extensions import Doc
+import asyncio
+from string import ascii_letters  # чтобы запустить асинхронную функцию если надо будет дебажить
 import aiofiles
+import re
 
-FILEPATH = 'api/misc/cursive_words.txt'
+
+FILEPATH = 'api/auth/misc/cursive_words.txt'
 
 def levenstein_distance(a, b):
     "Levenshtein distance between a and b."
@@ -66,9 +66,17 @@ replacement_dict: dict[str, list[str]] = {
     "я": ["я", "ya"],
 }
 
+
+
 def normalize_text(text: str) -> str:
     """Нормализует текст: заменяет символы, приводит к нижнему регистру"""
-    result = text.lower()
+    result = text.replace("-", "").replace(" ", "").replace('.', '').lower()
+
+    # тут убираем любые повторения буквы длиной >= 3 в одну
+    result = re.sub(r"(.)\1{2,}", r"\1", result)
+    # теперь чистим двойные повторения
+    result = re.sub(r"(.)\1+", r"\1", result)
+
     for standard_char, variations in replacement_dict.items():
         for variation in variations:
             result = result.replace(variation, standard_char)
@@ -78,7 +86,7 @@ def normalize_text(text: str) -> str:
 async def has_cursive_words(
     phrase: str,
     filepath: str,
-    temperature: float = 0.3,
+    temperature: float = 0.24
 ) -> bool:
     """ 
     параметры:
@@ -91,6 +99,7 @@ async def has_cursive_words(
     возвращает:
         bool: True если найдено нецензурное слово, иначе False
     """
+    
     normalized_phrase = normalize_text(phrase)
 
     async with aiofiles.open(filepath, "r", encoding="utf-8") as file:
@@ -100,13 +109,11 @@ async def has_cursive_words(
 
             for part in range(len(normalized_phrase) - len(word) + 1):
                 fragment = normalized_phrase[part : part + len(word)]
-                    
+                print(f'fragment: {fragment}', f'word: {word}', sep='\n')
                 if fragment and levenstein_distance(fragment, word) <= max_distance:
                     print(f'Найдено {fragment}', f'Похоже на {word}', sep='\n') # для дебага
-                    return True 
+                    return True
     return False
 
 
-
-    
 

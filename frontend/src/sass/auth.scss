@@ -3,13 +3,18 @@
 .auth {
     &.dark {
         background: $dark4;
-        .text {
-            color: $light-white;
+        border-color: $dark7;
+        .auth__header__text {
+            color: $light-white1 !important;
         }
-        
-
     }
-    img {scale: 2} // icons
+
+    img {
+        scale: 2;
+        @media (max-width: 600px) {
+            scale: 1.5;
+        }
+    } // icons
     
     font-family: Manrope, serif;
     display: flex;
@@ -17,18 +22,29 @@
     gap: 10px;
     margin: auto;
     background: $table-white;
+
     width: 520px;
+    @media (max-width: 600px) {
+        width: 80%;
+        .input-div, input {
+            width: 80% !important;
+            font-size: 14px !important;
+        }
+        
+        .alternative {
+            font-size: 14px !important;
+        }
+
+    } 
     
+
+
     padding-bottom: 30px;
     
     border-radius: 8px;
     border: 1px solid $light-blue;
 
-    .text {
-        color: $light-grey;
-        font-size: 36px;
-        font-weight: 500;
-    }
+    
     
     &__header {
         display: flex;
@@ -37,8 +53,18 @@
         gap: 10px;
         width: 100%;
         margin-top: 30px;
+        &__text {
+            color: $dark1 !important;
+            font-size: 32px;
+            font-weight: 500;
+            @media (max-width: 600px) {
+                font-size: 26px;
+            }
+            @media (max-width: 500px) {
+                font-size: 24px;
+            }
+        }
     }
-    
     
     &__inputs {
         margin-top: 36px;
@@ -50,9 +76,8 @@
             display: flex;
             align-items: center;
             margin: auto;
-            width: 480px; // 
-            height: 70px; // 
-            // background: rgb(232, 243, 255);
+            width: 480px; 
+            height: 70px; 
             background: $field-grey;
             &.dark {
                 background: $dark7;
@@ -67,7 +92,7 @@
                 background: $field-grey;
                 border: none;
                 outline: none;
-                color: $grey;
+                color: $grey1;
                 font-size: 18px;
 
                 &:-webkit-autofill,
@@ -75,7 +100,7 @@
                 &:-webkit-autofill:focus,
                 &:-webkit-autofill:active {
                     -webkit-box-shadow: 0 0 0 1000px $field-grey inset !important; // фон
-                    -webkit-text-fill-color: $grey !important; // цвет текста (плейсхолдера)
+                    -webkit-text-fill-color: $grey1 !important; // цвет текста (плейсхолдера)
                     transition: background-color 1000s ease-in-out 0s; // чтобы не мигал
                 }
 
@@ -85,15 +110,22 @@
                     font-size: 18px !important;
                 }
 
+                @media (max-width: 600px) {
+                    &:-webkit-autofill::first-line {
+                        font-family: Manrope, serif !important;
+                        font-size: 14px !important;
+                    }
+                }
+                
                 &.dark {
                     background: $dark7;
-                    color: $light-white;
+                    color: $light-white1;
                     &:-webkit-autofill,
                     &:-webkit-autofill:hover,
                     &:-webkit-autofill:focus,
                     &:-webkit-autofill:active {
                         -webkit-box-shadow: 0 0 0 1000px $dark7 inset !important; //  фон
-                        -webkit-text-fill-color: $light-white !important; // цвет текста (плейсхолдера)
+                        -webkit-text-fill-color: $light-white1 !important; // цвет текста (плейсхолдера)
                         transition: background-color 1000s ease-in-out 0s; // чтобы не мигал
                     }
                 }
@@ -101,11 +133,23 @@
             
         }
     }
-
-    .forgot-password {
-        padding-left: 22px;
-        color: $grey;
-        font-size: 16px;
+    .pwd-block {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        .forgot-password {
+            margin-left: 4%;
+            color: $grey1;
+            font-size: 16px;
+            
+        }
+        @media (max-width: 600px) {
+            .forgot-password {
+                margin-left: 10%;
+                font-size: 12px !important;
+            }
+        }
     }
 
     span {
@@ -122,7 +166,7 @@
         margin-bottom: 20px;
 
         &__btn {
-            color: $grey;
+            color: $grey1;
             background-color: $field-grey;
             margin-top: 8px;
             display: flex;
@@ -132,20 +176,29 @@
             border-radius: 32px;
             border: 1px solid $light-white2;
             font-size: 24px;
-            font-weight: 700;
+            font-weight: 500;
             cursor: pointer;
             
             &.dark {
-                color: $light-grey; 
+                color: $light-grey1; 
                 background-color: $dark7;
                 border: $dark-grey2;
+            }
+
+
+            @media (max-width: 600px) {
+                font-size: 20px !important;
+                width: 80%;
+                @media (max-width: 500px) {
+                    font-size: 16px;
+                }
             }
         }
     }
 
     div:last-child {
         text-align: center;
-        color: $grey;
+        color: $grey1;
     }
 
     &__error{
@@ -154,7 +207,10 @@
         padding: 0;
         text-align: left;
         margin-right: 2px;
-        width: 150px;
+        width: 30%;
+        @media (max-width: 600px) {
+            font-size: 10px;
+        }
     }
     
 }

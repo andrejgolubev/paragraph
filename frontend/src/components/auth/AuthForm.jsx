@@ -13,26 +13,15 @@ import group_icon from "../../images/auth/group.svg"
 import password_icon from "../../images/auth/password.svg"
 import email_icon from "../../images/auth/email.svg"
 
+import { validationPreferences } from "../../config/settings.js"
+
 
 export const AuthForm = ({ type }) => {
   const {darkTheme} = useContext(Context)
 
   const navigate = useNavigate()
 
-  const validationPreferences = {
-    username: {
-      minLength: 2,
-      maxLength: 40,
-      pattern: /^[a-zA-Zа-яА-ЯёЁ\s\-\']+$/,
-    },
-    email: {
-      pattern: /^\S+@\S+\.\S+$/,
-    },
-    password: {
-      // pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-      minLength: 8,
-    }
-  }
+  
   
   const validateUsername = async (value) => {
     const username = value.trim()
@@ -46,7 +35,7 @@ export const AuthForm = ({ type }) => {
     }
     
     if (!validationPreferences.username.pattern.test(username)) {
-      return "разрешены только буквы, пробелы, дефисы и апострофы."
+      return "разрешены только буквы, пробелы, точки и дефисы."
     }
     
     
@@ -77,19 +66,16 @@ export const AuthForm = ({ type }) => {
     }
     
     if (!/[#?!@$%^&*-]/.test(password)) {
-      return "пароль должен содержать хотя бы один специальный символ: # ? ! @ $ % ^ & * -"
+      return "пароль должен содержать хотя бы один специальный символ."
     }
     
     return true
   }
-
-  // будет переменная userAuthorized с СОСТОЯНИЕМ от которой будет зависеть type
-  // так что такя реализация с let допустима
-  let authType = ""
-  let authTitle = ""
-  // const [submitMessage, setSubmitMessage] = useState('')
+  
+  let authType = "" , authTitle = ""
+  
   const [submitMessageType, setSubmitMessageType] = useState('success')
-
+  
   if (type === "sign-up") {
     authType = "зарегистироваться"
     authTitle = "регистрация"
@@ -105,7 +91,7 @@ export const AuthForm = ({ type }) => {
   
   const debounceTimerRef = useRef(null)
 
-  const {notificationOuterActive, setNotificationOuterActive, setNotificationOuterMessage} = useContext(Context)
+  const {setNotificationOuterActive, setNotificationOuterMessage} = useContext(Context)
 
   const handleAuth = (resp) => {
     setNotificationOuterMessage(resp.detail)
@@ -120,8 +106,6 @@ export const AuthForm = ({ type }) => {
         setNotificationOuterActive(true)
       }, 100)
       
-      
-      
     } else {
       setSubmitMessageType('error')
       setNotificationOuterActive(true)
@@ -133,14 +117,11 @@ export const AuthForm = ({ type }) => {
       homeworkAPI.sendRegisterData(email, password, username, group).then(
         resp => handleAuth(resp)
       )
-        
     } else if (type === 'sign-in') {
       homeworkAPI.sendLoginData(email, password).then(
         resp => handleAuth(resp)
       )
-    } else {
-      console.log('Указан неверный тип формы');
-    }
+    } 
   }
 
   const groupAttemptsRef = useRef(0)
@@ -178,7 +159,7 @@ export const AuthForm = ({ type }) => {
   }
 
   const groupValidator = (value) => {
-    if (!value.trim()) {
+    if (!value?.trim()) {
       return true
     }
 
@@ -212,99 +193,160 @@ export const AuthForm = ({ type }) => {
   const darkOrNot = useRef('')
   darkOrNot.current = darkTheme? ' dark' : ''
 
+
+  const usernameInputRef = useRef(null)
+  const groupInputRef = useRef(null)
+  const emailInputRef = useRef(null)
+  const passwordInputRef = useRef(null)
+
+  const focusInput = (inputRef) => {
+    if (inputRef?.current) {
+      inputRef.current.focus()
+    }
+  }
+  // ДЛЯ ТОГО ЧТОБЫ ФОКУС СРАБАТЫВАЛ НЕ ТОЛЬКО ПРИ КЛИКЕ НЕПОСРЕДСТВЕННО НА INPUT: 
+  // сохраняем register поля, чтобы привязать ref и к react-hook-form форме, и к нашим refs
+  // в usernameField, groupField, emailField, passwordField будет сохранен обьект вида 
+  // { onChange, onBlur, ref, name, ... }
+
+  let usernameField = null, groupField = null
+
+  if (type === "sign-up") {
+    usernameField = register("username", {
+      required: requireText, 
+      validate: {
+        validFormat: async (value) => validateUsername(value)
+      }
+    }) 
+    groupField = register("group", {
+      validate: {
+        validateGroup: (value) => groupValidator(value)
+      }
+    }) 
+  } 
+
+
+  const emailField = register("email", {
+    required: requireText, 
+    pattern: {
+      value: validationPreferences.email.pattern,
+      message: "неправильный формат электронной почты."
+    }, 
+  })
+
+  const passwordField = register("password", {
+    required: requireText,
+    validate: (value) => validatePassword(value)
+  })
+
+ 
   return (
     <div className={`auth${darkOrNot.current}`}>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="auth__header">
-          <div className="text">{authTitle}</div>
+          <div className="auth__header__text">{authTitle}</div>
         </div>
         <div className="auth__inputs">
-          {type === "sign-up" && (
+          {type === "sign-up" && usernameField && groupField && (
             <>
-              <div className={`input-div${darkOrNot.current}`}>
+              <div
+                className={`input-div${darkOrNot.current}`}
+                onClick={() => focusInput(usernameInputRef)}
+              >
                 <img src={user_icon} alt="user icon" />
-                <input
+                <input 
+                  {...usernameField}
+                  ref={(el) => {
+                    usernameField.ref(el)
+                    usernameInputRef.current = el
+                  }}
                   className={`input${darkOrNot.current}`}
                   type="text"
                   id="username"
                   placeholder="имя"
-                  {...register("username", {
-                    required: requireText, 
-                    validate: {
-                      validFormat: async (value) => validateUsername(value)
-                    }
-                  })}
+                  autoComplete="username"
                 />
                 <p className='auth__error'>{errors.username?.message}</p>
               </div>
-              <div className={`input-div${darkOrNot.current}`}>
+              <div
+                className={`input-div${darkOrNot.current}`}
+                onClick={() => focusInput(groupInputRef)}
+              >
                 <img src={group_icon} alt="user icon" />
                 <input
+                  {...groupField}
+                  ref={(el) => {
+                    groupField.ref(el)
+                    groupInputRef.current = el
+                  }}
                   className={`input${darkOrNot.current}`}
                   type="text"
                   id="group"
-                  placeholder="группа (опционально)"
-                  {...register("group", 
-                    {
-                      validate: {
-                        validateGroup: (value) => groupValidator(value)
-                      }
-                  }
-                )}
+                  placeholder="группа (необяз.)"
+                  autoComplete="group"
                 />
-                <p className='auth__error'>{errors.group?.message}</p>
+              <p className='auth__error'>{errors.group?.message}</p>
               </div>
             </>
           )}
-          <div className={`input-div${darkOrNot.current}`}>
+          <div
+            className={`input-div${darkOrNot.current} email-input`}
+            onClick={() => focusInput(emailInputRef)}
+          >
             <img src={email_icon} alt="email icon" />
             <input
-            className={`input${darkOrNot.current}`}
+              {...emailField}
+              ref={(el) => {
+                emailField.ref(el)
+                emailInputRef.current = el
+              }}
+              className={`input${darkOrNot.current}`}
               type="email"
               id="email"
-              placeholder="электронная почта"
-              {...register("email", {
-                required: requireText, 
-                pattern: {
-                  value: validationPreferences.email.pattern,
-                  message: "неправильный формат электронной почты."
-                }, 
-              })}
-              />
+              placeholder="эл. почта"
+              autoComplete="email"
+            />
               <p className='auth__error'>{errors.email?.message}</p>
           </div>
-          <div className={`input-div${darkOrNot.current}`}>
-            <img src={password_icon} alt="password icon" />
-            <input
-            className={`input${darkOrNot.current}`}
-              type="password"
-              id="password"
-              placeholder="пароль"
-              {...register("password", {
-                required: requireText, 
-                validate: (value) => validatePassword(value)
-              }) }
-            />
-            <p className='auth__error'>{errors.password?.message}</p>
+          <div className="pwd-block">
+            <div
+              className={`input-div${darkOrNot.current} pwd-input`}
+              onClick={() => focusInput(passwordInputRef)}
+            >
+              <img src={password_icon} alt="password icon" />
+              <input
+                {...passwordField}
+                ref={(el) => {
+                  passwordField.ref(el)
+                  passwordInputRef.current = el
+                }}
+                className={`input${darkOrNot.current}`}
+                type="password"
+                id="password"
+                placeholder="пароль"
+                autoComplete="password"
+              />
+              <p className='auth__error'>{errors.password?.message}</p>
+            </div>
+            {type === "sign-in" && (
+              <div className="forgot-password">
+                <span>забыли пароль?</span>
+              </div>
+            )}
           </div>
         </div>
-        {type === "sign-in" && (
-          <div className="forgot-password">
-            <span>забыли пароль?</span>
-          </div>
-        )}
         <div className="auth__submit">
           <button className={`auth__submit__btn${darkOrNot.current}`}>{authType}</button>
         </div>
         {type === "sign-in" ? (
           <Link to="/sign-up">
-            <div>
+            <div className="alternative-text">
               нет аккаунта? <span>зарегистируйтесь</span>
             </div>
           </Link>
         ) : (
           <Link to="/sign-in">
-            <div>
+            <div className="alternative-text">
               уже есть аккаунт? <span>войдите</span>
             </div>
           </Link>

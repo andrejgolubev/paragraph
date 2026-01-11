@@ -12,28 +12,12 @@
   padding: 20px;
   margin: 20px 0;
   color: #ac3d3d;
-  
 }
-
-
 
 
 
 .custom-dropdown {
   position: relative;
-
-  select {
-    appearance: none;
-    width: 100%;
-    font-size: 16px;
-    font-family: 'Manrope', serif;
-    padding: 0.675em 3.8em 0.675em 1.5em;
-    border: 2px $light-blue dashed;
-    border-radius: 0.5rem;
-    color: #22222a96;
-    cursor: pointer;
-  }
-
 
   &::before,
   &::after {
@@ -63,39 +47,20 @@
 .search-block,
 .select-block, 
 .custom-dropdown {
+  position: relative;
 
-  input#select-input, 
-  input#search-input {
+
+  input {
     background-color: $table-white;
   }
 
   &.dark {
-    input#select-input, 
-    input#search-input {
+    input{
       background-color: $dark3;
-      color: $light-grey;
-      
-      &::placeholder {
-        color: $light-grey;
-      }
+      color: $light-white1;
     } 
-
-   
-
-    ul {
-      
-      li {
-        background-color: $dark5;
-        &:hover {
-          background-color: $light-grey;
-          a {
-            color: $dark5;
-          }
-        }
-        a {
-          color: $light-grey;
-        }
-      }
+    li:hover a {
+      color: $dark3 !important;
     }
   }
 
@@ -108,11 +73,11 @@
     border-color: rgb(104, 165, 206); // при активном состоянии
 
     &.dark {
-      border-color: rgb(152, 181, 196); 
+      border-color: rgba(201, 201, 201, 0.415); 
     }
   }
 
-  position: relative;
+  
 
   &__body {
     position: relative;
@@ -122,14 +87,19 @@
     border-radius: 0.5rem;
     display: flex;
     align-items: center;
-    border: 2px $light-blue dashed;
+    border: 1.5px $light-blue dashed;
     background-color: #fff;
     
     &.dark {
       background-color: $dark3;
-      border: 2px $dark7 dashed;
-      border-radius: 0.5em;
+      border-color: $dark7;
     }
+
+    @media (max-width: 1000px) {
+      border-width: 1px;
+      
+    }
+    
   }
 
   &__input {
@@ -141,9 +111,22 @@
     color: inherit;
     border-radius: 0;
     appearance: none;
-    padding: 0.675em 3.8em 0.675em 1.5em;
     outline: none;
-    border: none;
+    border-style: none;
+    border-radius: 0.5rem;
+
+    padding: 0.675em 3.8em 0.675em 1.5em;
+    
+
+    @media (max-width: 1100px) {
+      font-size: 12px;
+      padding: 0.675em 1.25em 0.675em 1.75em;
+    }
+
+    @media (max-width: 1000px) {
+      font-size: 16px;
+      padding: 8px 1.25em 8px 1.75em;
+    }
   }
 
   &__elements {
@@ -151,48 +134,74 @@
     visibility: hidden;
     max-height: 32vmax;
     border-radius: 0.5rem;
-    border: $light-blue 2px dotted;
+    border: $light-blue 1.5px dotted;
     position: absolute;
     top: 100%; //чтобы был под инпутом
-    margin-top: 5px; //отступ от инпута
+    margin-top: 4px; //отступ от инпута
     width: 100%;
     background-color: #fff;
     list-style: none;
     overflow-y: auto !important;
+    overflow-x: hidden;
     z-index: 1000;
 
-
+    
     &.dark {
-      border: $dark1 2px solid;
+      border-color: $dark7;
+      border-style: solid;
+      background-color: $dark3;
+      a {
+        color: $light-white1;
+      }
     }
-
+    
     li {
-      font-family: 'Manrope', sans-serif;
-      padding: 10px;
-      transition: all 0.3s ease 0s; 
-
       cursor: pointer;
+      font-family: 'Manrope', sans-serif;
+      padding: 8px;
+      transition: all 0.3s ease 0s; 
+      text-decoration: none;
+      color: rgb(242, 240, 240);
 
       &:hover {
-        background-color: rgba(104, 165, 206, 0.218);
+        // background-color: rgba(104, 165, 206, 0.218);
+        background-color: $toggle-blue;
       }
-
-      text-decoration: none;
-      color: rgb(242, 240, 240)
+      
+      @media (max-width:1100px) {
+        padding: 6px;
+        a {
+          font-size: 12px;
+        }
+        @media (max-width:1000px) {
+        padding: 4px;
+          a {
+            font-size: 16px;
+            padding-left: 22px;
+          }
+        }
+      }
+      @media (hover: none), (pointer: coarse) {
+        background-color: transparent;
+        &:active {
+          background-color: $toggle-blue;
+        }
+      }
     }
 
     a {
-      all: unset; // Сбрасываем все стили
+      all: unset;
       display: block;
+      padding-left: 12px;
       width: 100%;
       height: 100%;
-      cursor: pointer;
       font-family: 'Manrope', sans-serif;
       color: #1a1b1c;
 
-      // Восстанавливаем нужные свойства
       font-size: 16px;
       box-sizing: border-box;
+
+      
     }
   }
 
@@ -211,9 +220,8 @@
       width: 7px;
       border-radius: 10px;
     }
-    scrollbar-color: red;
     &.dark::-webkit-scrollbar {
-      background-color: $grey;;
+      background-color: $grey1;
     }
     // для стилизации ползунка на мобильных
     &::-webkit-scrollbar-thumb {
@@ -221,12 +229,12 @@
       border-radius: 10px;
     }
     &.dark::-webkit-scrollbar {
-      background-color: $grey;
+      background-color: $grey1;
     }
   }
 
   
-
+  
 
 
 }

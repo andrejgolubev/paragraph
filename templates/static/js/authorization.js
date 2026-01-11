@@ -1,4 +1,4 @@
-const profileIcon = document.querySelector('.profile-icon')
+const profileIcon = document.querySelector('.profile-button')
 
 profileIcon.addEventListener('click', () => {
     
