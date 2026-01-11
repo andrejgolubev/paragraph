@@ -13,7 +13,13 @@ const MobileItem = ({ time, lessonId, onClick, texts = [], types = [] }) => {
   const normalized = texts.map((text, index) => ({
     text: text?.trim(),
     typeColor: types?.[index] ? types.map(type => (
-      type === 'Лек.' ? 'lec' : type === 'Упр.' ? 'upr' : type === 'Лаб.' ? 'lab' : type
+      type === 'Лек.' ? 'lec' 
+      : type === 'Упр.' ? 'upr' 
+      : type === 'Лаб.' ? 'lab' 
+      : type === 'Экзамен' ? 'exam' 
+      : type === 'Зач.' ? 'cred' 
+      : type === 'Конс.' ? 'consult' 
+      : type
     ))?.[index].trim() : "",
     type: types?.[index] ? types[index] : "",
     key: `${text}-${index}`,

@@ -136,7 +136,7 @@
                 }
 
                 &__type {
-                    background-color: $toggle-blue;
+                    background-color: $dark-grey1;
                     border-top-right-radius: 4px;
                     opacity: 0.85;
                     
@@ -148,6 +148,15 @@
                     }
                     &#lab {
                         background-color: $lab;
+                    }
+                    &#exam {
+                        background-color: $exam;
+                    }
+                    &#cred {
+                        background-color: $cred;
+                    }
+                    &#consult {
+                        background-color: $consult;
                     }
                 }
             }
@@ -179,6 +188,6 @@
 .loading-indicator {
     &.mobile {
         position: static !important;
-        margin-top: 15vh;
+        margin-top: 22%;
     }
 }

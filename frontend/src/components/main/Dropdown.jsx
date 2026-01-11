@@ -64,7 +64,6 @@ const Dropdown = (props) => {
 
 
   const handleEnterKey = (event, inputText) => {
-    
     if (event.key === 'Enter') {
       if (name === "group") {
         homeworkAPI.convertToDataValue({groupNumber: inputText})
@@ -74,11 +73,8 @@ const Dropdown = (props) => {
           } else {
             setGroupDataValue('')
             setActiveSearch(false)
-
           }
         })
-        
-
       }
     }
 
@@ -105,7 +101,7 @@ const Dropdown = (props) => {
 
   const loadDates = async () => {
     const responseData = await homeworkAPI.loadDates()
-    setData(responseData) // СПОРНО
+    setData(responseData) 
     setFilteredData(responseData)
     // сразу setFilteredData т.к. фильтрация не требуется, выбор даты осуществляткся руками
     setElemKey("date")
