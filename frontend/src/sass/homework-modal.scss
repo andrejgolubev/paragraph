@@ -29,7 +29,7 @@
   display: inline-flex;
   align-items: center;
 
-  pointer-events: none; // Чтобы не мешало кликам
+  pointer-events: none; // чтобы не мешало кликам
 
   position: fixed;
   z-index: 1000;
@@ -299,7 +299,7 @@
 // АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ
 @media (max-width: 800px) {
   .modal {
-    width: 94%;
+    width: 92%;
     display: flex;
     justify-content: center;
    

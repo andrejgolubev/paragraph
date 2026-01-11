@@ -26,8 +26,28 @@ const ScheduleContainer = () => {
   const [year, setYear] = useState(new Date().getFullYear())
   const [currentLessonInfo, setCurrentLessonInfo] = useState({})
   const [mobileLesson, setMobileLesson] = useState(0)
-  const {width} = useWindowSize()
-  const isMobile = width < 1001
+  const windowSize = useWindowSize()
+  const [debouncedWidth, setDebouncedWidth] = useState(windowSize.width)
+  const widthDebounceRef = useRef(null)
+
+  useEffect(() => {
+    if (widthDebounceRef.current) {
+      clearTimeout(widthDebounceRef.current)
+    }
+    widthDebounceRef.current = setTimeout(() => {
+      setDebouncedWidth(windowSize.width)
+    }, 30)
+    console.log('debouncedWidth :>>', debouncedWidth);
+    return () => {
+      if (widthDebounceRef.current) {
+        clearTimeout(widthDebounceRef.current)
+      }
+    }
+  }, [windowSize.width])
+
+
+
+  const isMobile = debouncedWidth < 1001
 
   useEffect(() => {
     setGroupDataValueCookies('groupDataValue', groupDataValue, {maxAge: 60*60*24*14}) // чтобы сразу загружалась нужная группа 

@@ -134,6 +134,22 @@
                     word-break: break-word;
                     white-space: normal;
                 }
+
+                &__type {
+                    background-color: $toggle-blue;
+                    border-top-right-radius: 4px;
+                    opacity: 0.85;
+                    
+                    &#lec {
+                        background-color: $lec;
+                    }
+                    &#upr {
+                        background-color: $upr;
+                    }
+                    &#lab {
+                        background-color: $lab;
+                    }
+                }
             }
 
             &__no-lessons-text {

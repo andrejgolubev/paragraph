@@ -12,10 +12,15 @@ const MobileItem = ({ time, lessonId, onClick, texts = [], types = [] }) => {
 
   const normalized = texts.map((text, index) => ({
     text: text?.trim(),
-    type: types?.[index] ? types[index].trim() : "",
+    typeColor: types?.[index] ? types.map(type => (
+      type === 'Лек.' ? 'lec' : type === 'Упр.' ? 'upr' : type === 'Лаб.' ? 'lab' : type
+    ))?.[index].trim() : "",
+    type: types?.[index] ? types[index] : "",
     key: `${text}-${index}`,
   }))
 
+
+  
   return (
     <div data-index={lessonId} className="mobile-schedule__content__item">
       <div className="mobile-schedule__content__item__time" onClick={onClick}>
@@ -23,10 +28,10 @@ const MobileItem = ({ time, lessonId, onClick, texts = [], types = [] }) => {
         <img src={darkTheme ? paperclipDark : paperclip} alt="paperclip" />
       </div>
       <div className="mobile-schedule__content__item__text">
-        {normalized.map(({ text, type, key }, index) =>
+        {normalized.map(({ text, type, key, typeColor }, index) =>
           text ? (
             <p key={key}>
-              {type && <span className="mobile-schedule__content__item__text__type">{type}</span>}
+              {type && <span className={`mobile-schedule__content__item__text__type`} id={typeColor}>{type}</span>}
               {type ? " " : ""}
               {text}
               {index < normalized.length - 1 ? "," : ""}

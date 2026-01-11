@@ -59,6 +59,9 @@
       background-color: $dark3;
       color: $light-white1;
     } 
+    li:hover a {
+      color: $dark3 !important;
+    }
   }
 
   ul{
@@ -94,8 +97,9 @@
 
     @media (max-width: 1000px) {
       border-width: 1px;
-      // border-style: solid;
+      
     }
+    
   }
 
   &__input {
@@ -160,7 +164,8 @@
       color: rgb(242, 240, 240);
 
       &:hover {
-        background-color: rgba(104, 165, 206, 0.218);
+        // background-color: rgba(104, 165, 206, 0.218);
+        background-color: $toggle-blue;
       }
       
       @media (max-width:1100px) {
@@ -174,6 +179,12 @@
             font-size: 16px;
             padding-left: 22px;
           }
+        }
+      }
+      @media (hover: none), (pointer: coarse) {
+        background-color: transparent;
+        &:active {
+          background-color: $toggle-blue;
         }
       }
     }
