@@ -13,12 +13,9 @@ import { Context } from "../../context/Provider"
 import { useModeratedGroups } from "../../hooks/useModeratedGroups"
 import { useWindowSize } from "../../hooks/useWindowSize"
 
+
 export const ProfileDropdown = (props) => {
   const { setDisplayProfile, dropdownRef, username, role } = props
-
-  const navigate = useNavigate()
-  const location = useLocation()
-  const path = location.pathname.split('/').pop()
 
 
   const { displayRole, moderatedGroups } = useModeratedGroups()

@@ -234,7 +234,8 @@
         margin-top: 20px;
 
         &__cancel__btn,
-        &__save__btn {
+        &__save__btn, 
+        &__logout__btn {
             color: $grey1;
             // background-color: $field-grey;
             margin-top: 8px;
@@ -287,7 +288,8 @@
                 }
             }
         }
-        &__cancel__btn {
+        &__cancel__btn,
+        &__logout__btn {
             background-color: $light-white2;
             &:hover {
                 background-color: $light-white1;
@@ -299,6 +301,24 @@
                     background-color: $dark7;
                     color: $light-white1;
                 }
+            }
+        }
+
+        &__logout-wrap {
+            width: 100%;
+            display: flex;
+            justify-content: right;
+        }
+
+        &__logout__btn {
+            font-size: 12px !important;
+            margin-bottom: -16px;
+            padding: 6px 4%; 
+            color: $light-grey1 !important;
+
+            &:hover {
+                color: $table-white;
+                background-color: $exam !important;
             }
         }
     }

@@ -233,7 +233,6 @@
   // на тач-устройствах убираем hover и оставляем active
   @media (hover: none), (pointer: coarse) {
     .modal-buttons {
-      
       button {
         &:hover {
           background: inherit;
@@ -302,7 +301,6 @@
     width: 92%;
     display: flex;
     justify-content: center;
-   
     max-height: none;
     max-width: none;
     overflow-y: scroll;
@@ -310,13 +308,22 @@
 
     form {
       padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
       h3 {
         font-size: 1.25rem;
         padding-bottom: 20px;
       }
 
+      textarea {
+        width: 100%;
+      }
+
       .modal-buttons {
         padding-top: 20px;
+        width: 100%;
         flex-direction: column;
         justify-content: center;
 
@@ -338,6 +345,12 @@
           &.active {
             transform: translateY(0);
           }
+        }
+      }
+
+      @media (max-width: 400px) { 
+        textarea, .modal-buttons, h3 {
+          width: 85%;
         }
       }
     }

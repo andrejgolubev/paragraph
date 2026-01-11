@@ -1,6 +1,6 @@
 import { useModeratedGroups } from "../../hooks/useModeratedGroups"
 import React, { useRef, useEffect, useState, useContext } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { useForm } from "react-hook-form"
 
 import homeworkAPI from "../../api/homeworkAPI"
@@ -14,7 +14,6 @@ import pencilIconActiveDark from "../../images/profile/profile-page/pencil-dark-
 import NotificationOuter from "../notifications/NotificationOuter.jsx"
 import { useWindowSize } from "../../hooks/useWindowSize"
 import { validationPreferences } from "../../config/settings.js"
-
 
 
 const Profile = () => {
@@ -193,8 +192,6 @@ const Profile = () => {
   // сохраняем register поля, чтобы привязать ref и к react-hook-form форме, и к нашим refs
   // в usernameField, groupField, passwordField будет сохранен обьект вида 
   // { onChange, onBlur, ref, name, ... }
-
-
   const usernameField = register("username", {
       required: false, 
       validate: {
@@ -244,7 +241,21 @@ const Profile = () => {
       } 
       return !prev
     })
-    
+  }
+
+
+  const navigate = useNavigate()
+  const location = useLocation()
+  const path = location.pathname.split('/').pop()
+
+  const handleLogout = () => {
+    if (path === 'profile') {
+      navigate('/sign-in')
+    }
+    homeworkAPI.logout().then( resp => {
+      setNotificationOuterActive(true)// чтобы вызвалась проверка access_token (т.к. в Provider такая dependency)
+      setNotificationOuterMessage(resp.detail)
+    })
   }
 
   const saveButtonRef = useRef(null)
@@ -346,11 +357,23 @@ const Profile = () => {
               />
               <p className='profile__error'>{errors.password?.message}</p>
             </div>
-            { isEditable && (
+            { isEditable ? (
             <div className="profile__submit">
               <button className={`profile__submit__cancel__btn${darkOrNot.current}`} onClick={handleToggleEditing}>отмена</button>
               <button className={`profile__submit__save__btn${darkOrNot.current}`} type="submit" ref={saveButtonRef}>сохранить</button>
             </div>
+            ):(
+              <div className="profile__submit">
+                <div className="profile__submit__logout-wrap">
+                  <button
+                    type="button"
+                    className={`profile__submit__logout__btn${darkOrNot.current}`}
+                    onClick={handleLogout}
+                  >
+                    выйти из аккаунта
+                  </button>
+                </div>
+              </div>
             )}
           </div>
 
