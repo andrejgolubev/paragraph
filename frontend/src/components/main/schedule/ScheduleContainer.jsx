@@ -9,6 +9,7 @@ import { Mosaic } from "react-loading-indicators"
 import { getDateValueFromDisplay, getLessonTypeClass } from "../../../utils/converters"
 import { useWindowSize } from "../../../hooks/useWindowSize"
 import MobileItem from "./mobile/MobileItem"
+import Button from "./mobile/Button"
 
 
 
@@ -24,6 +25,7 @@ const ScheduleContainer = () => {
   const [homeworkUpdated, setHomeworkUpdated] = useState("")
   const [year, setYear] = useState(new Date().getFullYear())
   const [currentLessonInfo, setCurrentLessonInfo] = useState({})
+  const [mobileLesson, setMobileLesson] = useState(0)
   const {width} = useWindowSize()
   const isMobile = width < 1001
 
@@ -282,48 +284,57 @@ const ScheduleContainer = () => {
     )
   }
 
-  const renderMobileLesson = (lessonId) => {
-    return (
-      <div className="mobile-schedule__content__lesson" key={id}>
-        
-      </div>
-    )
-  }
+  
 
   const renderMobileSchedule = (scheduleData) => {
     if (!scheduleData) return null 
 
-    console.log('scheduleData из renderMobileSchedule:>> ', scheduleData);
+    console.log('scheduleData :>> ', scheduleData);
+
+    const weekdays = ["Пн","Вт","Ср","Чт","Пт","Сб"]
+    const daysArr = weekdays.map((day, dayIndex) => (
+      {day,
+      lessons: scheduleData.schedule.map(({lessons, time_start, time_end}, slotIndex) => ({
+        lesson: lessons[dayIndex],
+        lessonId: slotIndex*6 + dayIndex + 1, 
+        start: time_start, 
+        end: time_end,
+      }))}
+    ))
+
+    const renderMobileItem = (weekDayIndex) => {
+      return daysArr[weekDayIndex].lessons.map(({lesson, lessonId, start, end }) => (
+      <MobileItem 
+        time={`${start}-${end}`} 
+        texts={lesson?.map(sublesson => (sublesson.text))} 
+        types={lesson?.map(sublesson => (sublesson.type))}  
+        lessonId={lessonId}
+      />
+      )) 
+    }
+
+    console.log('mobileLesson:', mobileLesson)
+
     return (
       <div className="mobile-schedule">
         <div className="mobile-schedule__header">
-          <button className="mobile-schedule__header__button">
-            Пн
-          </button> 
-          <button className="mobile-schedule__header__button">
-            Вт
-          </button> 
-          <button className="mobile-schedule__header__button">
-            Ср
-          </button> 
-          <button className="mobile-schedule__header__button">
-            Чт
-          </button> 
-          <button className="mobile-schedule__header__button">
-            Пт
-          </button> 
-          <button className="mobile-schedule__header__button">
-            Сб
-          </button> 
+          {weekdays.map((weekday, index) => (
+            <Button isActive={index === mobileLesson} onClick={() => setMobileLesson(index)}>{weekday}</Button>
+          ))}
         </div>
         <div className="mobile-schedule__content">
-          <MobileItem time="09:55-11:30" text="Лек. Технологии проектирования информационных систем, доц. Громов А.Ю., ауд. 403 C" />
-          <MobileItem time="09:55-11:30" text="Лек. Технологии проектирования информационных систем, доц. Громов А.Ю., ауд. 403 C" />
-          <MobileItem time="09:55-11:30" text="Лек. Технологии проектирования информационных систем, доц. Громов А.Ю., ауд. 403 C" />
-          <MobileItem time="09:55-11:30" text="Лек. Технологии проектирования информационных систем, доц. Громов А.Ю., ауд. 403 C" />
-
+          {
+            renderMobileItem(mobileLesson)
+          // daysArr[1].lessons.map(({lesson, lessonId, start, end }) => (
+          // <MobileItem 
+          //   time={`${start}-${end}`} 
+          //   texts={lesson?.map(sublesson => (sublesson.text))} 
+          //   types={lesson?.map(sublesson => (sublesson.type))}  
+          //   lessonId={lessonId}
+          // />
+          // )) 
+          }
         </div>
-        
       </div>
     )
   }

@@ -43,7 +43,7 @@
 .mobile-schedule {
     font-family: Manrope, serif;
     padding-top: 2px;
-    font-size: 14px;
+    font-size: 16px;
     display: flex;
     flex-direction: column;
     
@@ -70,6 +70,14 @@
                 border-top-right-radius: 8px;
                 border-bottom-right-radius: 8px;
             }
+
+            &.active {
+                background-color: $light-blue;
+                &.dark {
+                    background-color: $dark4 !important;
+                }
+            }
+           
         }
     }
 
@@ -90,7 +98,7 @@
             justify-content: center;
             align-items: center;
 
-            padding: 4px;
+            padding: 8px;
             border-radius: 8px;
 
             &__time {
@@ -100,6 +108,7 @@
                 gap: 6px;
                 
                 font-weight: 500;
+                font-size: 14px;
                 background-color: $field-grey;
                 border: 1px dashed $light-blue;
                 border-radius: 8px;
