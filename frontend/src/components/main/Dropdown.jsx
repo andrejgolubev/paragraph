@@ -26,7 +26,11 @@ const Dropdown = (props) => {
         inputRef.current.value = resp?.group_number ?? "" 
       })
     }
-    
+    if (func === 'select') {
+      homeworkAPI.convertFromDataValue({dateDataValue}).then(resp => {
+        inputRef.current.value = resp?.date ?? "" 
+      })
+    }
   }, [])
 
    
@@ -36,7 +40,7 @@ const Dropdown = (props) => {
     setActiveSearch(false)
   })
 
-  const { groupDataValue, setGroupDataValue, dateDataValue, setDateDataValue,  } =
+  const { groupDataValue, setGroupDataValue, dateDataValue, setDateDataValue } =
     useContext(Context)
 
   const debouncedInputText = useDebounce(inputText, 100)
@@ -50,7 +54,8 @@ const Dropdown = (props) => {
 
         return (
           element && (
-            element.toLowerCase().trim().includes(latinToCyrillic(inputText).trim().toLowerCase())
+            element.toLowerCase().trim()
+            .includes(latinToCyrillic(inputText).trim().toLowerCase())
           )
         )
       })

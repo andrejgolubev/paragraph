@@ -16,7 +16,7 @@ import Button from "./mobile/Button"
 const ScheduleContainer = () => {
   const {darkTheme} = useContext(Context)
 
-  const { groupDataValue, dateDataValue, setGroupDataValueCookies } = useContext(Context)
+  const { groupDataValue, dateDataValue, setGroupDataValueCookies, setDateDataValueCookies } = useContext(Context)
   const [scheduleData, setScheduleData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -31,7 +31,8 @@ const ScheduleContainer = () => {
 
   useEffect(() => {
     setGroupDataValueCookies('groupDataValue', groupDataValue, {maxAge: 60*60*24*14}) // чтобы сразу загружалась нужная группа 
-    
+    setDateDataValueCookies('dateDataValue', dateDataValue, {maxAge: 60*60*24*14}) // чтобы сразу загружалась нужная дата
+
     // логирование - потом убрать
     console.log("ScheduleContainer - текущие значения:", {
       groupDataValue,
@@ -69,16 +70,7 @@ const ScheduleContainer = () => {
       }).finally(() => {
         setLoading(false)
       })
-      
-    //   setScheduleData(data)
-    //   setError(null)
-
-    // } catch (err) {
-    //   console.error("Error loading schedule:", err)
-    //   setError(err.message)
-    // } finally {
-    //   setLoading(false)
-    // }
+   
   }, [groupDataValue, dateDataValue])
 
   // загружаем расписание при монтировании расписания
@@ -232,7 +224,6 @@ const ScheduleContainer = () => {
                             datesArr[dayIndex]
                           ),
                           lessonIndex: currentLessonIndex,
-                          // lessonName: lesson.text.split(", ")[0],
                           lessonName: lesson.text.split(", ").slice(0, 2).join(", "),
                           lessonDate: dataDate,
                         }
@@ -354,13 +345,14 @@ const ScheduleContainer = () => {
 
   // Состояния загрузки и ошибки
   if (loading) {
-    if (!isMobile) {
+    if (!isMobile) { 
     return (
       <>
         <div className="schedule-container loading"></div>
         <div className={`loading-indicator`}>
           <Mosaic
             color={darkTheme? '#d2d2d2' : '#fff'}
+            
             size="large"
             text="загрузка..."
             textColor="#CBCBDE"
@@ -374,32 +366,33 @@ const ScheduleContainer = () => {
           <div className="mobile-schedule__header">
             <button className="mobile-schedule__header__button">
               Пн
-            </button> 
+            </button>
             <button className="mobile-schedule__header__button">
               Вт
-            </button> 
+            </button>
             <button className="mobile-schedule__header__button">
               Ср
-            </button> 
+            </button>
             <button className="mobile-schedule__header__button">
               Чт
-            </button> 
+            </button>
             <button className="mobile-schedule__header__button">
               Пт
-            </button> 
+            </button>
             <button className="mobile-schedule__header__button">
               Сб
-            </button> 
+            </button>
           </div>
-          <div className="loading-indicator mobile">
-            <Mosaic
-              color={darkTheme? '#d2d2d2' : '#fff'}
-              size="large"
-              text="загрузка..."
-              textColor="#CBCBDE"
-            />
+          <div className="mobile-schedule__loading-wrap">
+            <div className="loading-indicator mobile">
+              <Mosaic
+                color={'#E6E6E6'}
+                size="large"
+                text="загрузка..."
+                textColor="#D0D0D0"
+              />
+            </div>
           </div>
-
         </div>
       </>
       )

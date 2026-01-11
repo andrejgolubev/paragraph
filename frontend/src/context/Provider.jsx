@@ -41,10 +41,16 @@ export const Provider = ({ children }) => {
     = useCookies(
       ['group_data_value'], 
     )
-  const groupDataValueCookie = groupDataValueCookies.groupDataValue
+  const groupDataValueCookie = groupDataValueCookies?.groupDataValue
   const [groupDataValue, setGroupDataValue] = useState(groupDataValueCookie)
 
-  const [dateDataValue, setDateDataValue] = useState("") // а дата кукам не подлежит
+
+  const [dateDataValueCookies, setDateDataValueCookies, removeDateDataValueCookies] 
+  = useCookies(
+    ['date_data_value'], 
+  )
+
+  const [dateDataValue, setDateDataValue] = useState(dateDataValueCookies?.dateDataValue) 
   
 
   // устанавливаем имя для ProfileDropdown используя access_token 
@@ -102,6 +108,7 @@ export const Provider = ({ children }) => {
         setTipActive,
         //клиентские куки:
         setGroupDataValueCookies,
+        setDateDataValueCookies,
         // имя профиля и роль доставаемая по access_token
         username, 
         userRole, 
