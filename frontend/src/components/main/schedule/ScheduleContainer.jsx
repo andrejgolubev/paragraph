@@ -91,7 +91,7 @@ const ScheduleContainer = () => {
     const {
       groupDataValue,
       lessonIndex,
-      lessonDay,
+      lessonDate,
       lessonName,
     } = lessInfo
 
@@ -109,9 +109,8 @@ const ScheduleContainer = () => {
 
     const lessonInfo = {
       groupDataValue,
-      // dateDataValue,
       lessonIndex: parseInt(lessonIndex),
-      lessonDay,
+      lessonDate,
       lessonName,
     }
 
@@ -233,8 +232,9 @@ const ScheduleContainer = () => {
                             datesArr[dayIndex]
                           ),
                           lessonIndex: currentLessonIndex,
-                          lessonName: lesson.text.split(", ")[0],
-                          lessonDay: dataDate,
+                          // lessonName: lesson.text.split(", ")[0],
+                          lessonName: lesson.text.split(", ").slice(0, 2).join(", "),
+                          lessonDate: dataDate,
                         }
 
                         return (
@@ -303,37 +303,50 @@ const ScheduleContainer = () => {
     ))
 
     const renderMobileItem = (weekDayIndex) => {
-      return daysArr[weekDayIndex].lessons.map(({lesson, lessonId, start, end }) => (
+      const datesArr = scheduleData.days.map((day) => day.date)
+
+      const mobileItem = daysArr[weekDayIndex].lessons.map(({lesson, lessonId, start, end }) => (
       <MobileItem 
         time={`${start}-${end}`} 
         texts={lesson?.map(sublesson => (sublesson.text))} 
         types={lesson?.map(sublesson => (sublesson.type))}  
         lessonId={lessonId}
+
+        onClick={() => handleHomeworkClick({
+          groupDataValue: groupDataValue,
+          dateDataValue: scheduleDateDataValue,
+          lessonIndex: lessonId,
+          lessonName: lesson?.map(sublesson => (sublesson.text)).slice(0, 2).join(", "),
+          lessonDate: datesArr[weekDayIndex],
+        })}
+
       />
       )) 
+
+      if (mobileItem.every((item) => item.props?.texts.length === 0)) { 
+        return (
+          <p className="mobile-schedule__content__item__no-lessons-text">в этот день нет занятий</p>
+        )
+      }
+      return mobileItem
     }
 
-    console.log('mobileLesson:', mobileLesson)
+
 
     return (
       <div className="mobile-schedule">
         <div className="mobile-schedule__header">
           {weekdays.map((weekday, index) => (
-            <Button isActive={index === mobileLesson} onClick={() => setMobileLesson(index)}>{weekday}</Button>
+            <Button
+              isActive={index === mobileLesson}
+              onClick={() => setMobileLesson(index)}
+            >
+              {weekday}
+            </Button>
           ))}
         </div>
         <div className="mobile-schedule__content">
-          {
-            renderMobileItem(mobileLesson)
-          // daysArr[1].lessons.map(({lesson, lessonId, start, end }) => (
-          // <MobileItem 
-          //   time={`${start}-${end}`} 
-          //   texts={lesson?.map(sublesson => (sublesson.text))} 
-          //   types={lesson?.map(sublesson => (sublesson.type))}  
-          //   lessonId={lessonId}
-          // />
-          // )) 
-          }
+          {renderMobileItem(mobileLesson)}
         </div>
       </div>
     )
@@ -356,6 +369,7 @@ const ScheduleContainer = () => {
       </>
     )} else {
       return (
+        <>
         <div className="mobile-schedule loading">
           <div className="mobile-schedule__header">
             <button className="mobile-schedule__header__button">
@@ -377,8 +391,7 @@ const ScheduleContainer = () => {
               Сб
             </button> 
           </div>
-
-          <div className="loading-indicator">
+          <div className="loading-indicator mobile">
             <Mosaic
               color={darkTheme? '#d2d2d2' : '#fff'}
               size="large"
@@ -386,7 +399,9 @@ const ScheduleContainer = () => {
               textColor="#CBCBDE"
             />
           </div>
+
         </div>
+      </>
       )
     }
   }

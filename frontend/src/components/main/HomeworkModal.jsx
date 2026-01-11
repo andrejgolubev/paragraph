@@ -36,7 +36,7 @@ const HomeworkModal = ({
       groupDataValue,
       dateDataValue,
       lessonIndex,
-      lessonDay,
+      lessonDate,
       lessonName,
     } = lessonInfo
 
@@ -168,7 +168,7 @@ const HomeworkModal = ({
       >
         <form id="homework-form" method="post" onSubmit={handleHomeworkSubmit}>
           <h3>
-            <p><strong>{lessonName}</strong>, {lessonDay}</p>
+            <p><strong>{lessonName}</strong>, {lessonDate}</p>
           </h3>
           <textarea
             ref={textareaRef}

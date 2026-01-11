@@ -5,7 +5,7 @@ import { useContext } from "react"
 import { Context } from "../../../../context/Provider"
 
 
-const MobileItem = ({ time, lessonId, texts = [], types = [] }) => {
+const MobileItem = ({ time, lessonId, onClick, texts = [], types = [] }) => {
   const { darkTheme } = useContext(Context)
 
   if (!texts.length && !types.length) return null
@@ -15,10 +15,10 @@ const MobileItem = ({ time, lessonId, texts = [], types = [] }) => {
     type: types?.[index] ? types[index].trim() : "",
     key: `${text}-${index}`,
   }))
-  console.log('lessonId :>> ', lessonId)
+
   return (
     <div data-index={lessonId} className="mobile-schedule__content__item">
-      <div className="mobile-schedule__content__item__time">
+      <div className="mobile-schedule__content__item__time" onClick={onClick}>
         <p>{time}</p>
         <img src={darkTheme ? paperclipDark : paperclip} alt="paperclip" />
       </div>

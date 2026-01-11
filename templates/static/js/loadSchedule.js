@@ -51,11 +51,11 @@ function addHomeworkHandlers() {
       
       const lessonText = lessonElement.querySelector('.lesson-text').textContent.replace(lessonName, '').split(',').join(', ')
       const lessonIndex = lessonElement.parentElement.getAttribute("data-index");
-      const lessonDay = lessonElement.parentElement.getAttribute("data-date"); //x ноября , достается из колонки
+      const lessonDate = lessonElement.parentElement.getAttribute("data-date"); //x ноября , достается из колонки
 
       
       let formHeader = document.querySelector("#homework-form h3");
-      formHeader.innerHTML = `<p><strong>${lessonName}</strong>, ${lessonDay}</p> <p>${lessonText}</p>`
+      formHeader.innerHTML = `<p><strong>${lessonName}</strong>, ${lessonDate}</p> <p>${lessonText}</p>`
       
 
       //реализация связи с эндпоинтом

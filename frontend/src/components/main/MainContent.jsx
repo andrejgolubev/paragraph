@@ -35,7 +35,7 @@ const MainContent = () => {
           <Dropdown
             name="week"
             func="select"
-            placeholder="дата/неделя"
+            placeholder="неделя"
             readOnly={true}
           />
           <div className="corpuses">

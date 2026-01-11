@@ -18,6 +18,7 @@ export const latinToCyrillic = (str) => {
 };
 
 export const getDateValueFromDisplay = (dateDisplay, year) => {
+  
   const months = {
     января: "01",
     февраля: "02",
