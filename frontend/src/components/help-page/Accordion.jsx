@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react"
+import React, { useState } from "react"
 import { AccordionItem } from "./AccordionItem"
-import { Context } from "../../context/Provider"
+import { useThemeStore } from "../../store/themeStore"
 
 export const Accordion = ({ faqList }) => {
-  const {darkTheme} = useContext(Context)
+  const darkTheme = useThemeStore(state => state.darkTheme)
 
   const [openId, setOpenId] = useState(null)
 

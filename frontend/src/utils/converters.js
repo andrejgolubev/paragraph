@@ -42,12 +42,3 @@ export const getDateValueFromDisplay = (dateDisplay, year) => {
 }
 
 
-// Получение класса для типа занятия
-export const getLessonTypeClass = (type) => {
-  const typeMap = {
-    "Лек.": "lecture",
-    "Лаб.": "lab",
-    "Упр.": "practice",
-  }
-  return typeMap[type] || "default"
-}

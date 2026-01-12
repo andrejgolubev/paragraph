@@ -1,15 +1,25 @@
 import ScheduleContainer from "./schedule/ScheduleContainer" 
 import Dropdown from "./Dropdown"
 import Tip from "./Tip"
-import { useEffect, useContext } from "react"
-import { Context } from "../../context/Provider"
+import { useEffect } from "react"
 import NotificationOuter from "../notifications/NotificationOuter"
 import { useWindowSize } from "../../hooks/useWindowSize"
+import { useDropdownStore } from "../../store/dropdownStore"
+import { useThemeStore } from "../../store/themeStore"
+import { useUiStore } from "../../store/uiStore"
+import { useAuthStore } from "../../store/authStore"
 
 const MainContent = () => {
-  const { groupDataValue, dateDataValue, tipActive, setTipActive, darkTheme } = useContext(Context)
+  const { groupDataValue, dateDataValue, } = useDropdownStore()
+  const { darkTheme } = useThemeStore()
+  const { tipActive, setTipActive } = useUiStore()
+    
+  const {width} = useWindowSize() 
+  const isMobile = width < 1001
   
   
+
+
   useEffect( () => {
     if (groupDataValue) {
       setTipActive(false)
@@ -18,8 +28,6 @@ const MainContent = () => {
     }
   }, [groupDataValue])
 
-  const {width} = useWindowSize() 
-  const isMobile = width < 1001
 
 
   return (

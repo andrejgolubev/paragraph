@@ -1,9 +1,9 @@
-import { useState, useEffect, useContext } from "react"
+import { useState, useEffect } from "react"
 import homeworkAPI from "../api/homeworkAPI"
-import { Context } from "../context/Provider"
+import { useAuthStore } from "../store/authStore"
 
 export const useModeratedGroups = () => {
-  const {userRole} = useContext(Context)
+  const user = useAuthStore((state) => state.user) 
   const [moderatedGroups, setModeratedGroups] = useState([])
   const [displayRole, setDisplayRole] = useState('')
 
@@ -26,7 +26,7 @@ export const useModeratedGroups = () => {
         setModeratedGroups([])
       }
     })
-  }, [ userRole ])
+  }, [ user?.role ])
 
   return { moderatedGroups, displayRole }
 }

@@ -1,10 +1,10 @@
-import React, { useContext, useRef } from "react"
+import React, { useRef } from "react"
 import dropdownArrow from '../../images/help-page/dropdown-arrow.svg'
 import dropdownArrowDark from '../../images/help-page/dropdown-arrow-dark.svg'
-import { Context } from "../../context/Provider"
+import { useThemeStore } from "../../store/themeStore"
 
 export const AccordionItem = ({ faqItem, onClick, isOpen }) => {
-  const {darkTheme} = useContext(Context)
+  const darkTheme = useThemeStore(state => state.darkTheme)
 
   const itemRef = useRef(null)
 

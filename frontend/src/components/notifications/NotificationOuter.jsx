@@ -1,8 +1,9 @@
-import { useEffect, useContext } from "react"
-import { Context } from "../../context/Provider"
+import { useEffect } from "react"
+import { useUiStore } from "../../store/uiStore"
+
 
 const NotificationOuter = ({type='success'}) => {
-  const {notificationOuterActive, setNotificationOuterActive, notificationOuterMessage, setNotificationOuterMessage} = useContext(Context)
+  const {notificationOuterActive, setNotificationOuterActive, notificationOuterMessage, setNotificationOuterMessage} = useUiStore()
   
 
   useEffect(() => {

@@ -1,15 +1,13 @@
 import telegramIcon from "../images/news/telegram-icon.svg"
 import telegramIconDark from "../images/news/telegram-icon-dark.svg"
-import { useContext } from "react"
-import { Context } from "../context/Provider"
-
+import { useThemeStore } from "../store/themeStore"
 
 
 
 const News = () => {
 
-  const {darkTheme} = useContext(Context)
-  const url = "https://www.youtube.com/watch?v=IfrBUr9aU5U"
+  const darkTheme = useThemeStore(state => state.darkTheme)
+  const url = "https://t.me/paragraphschedule"
 
   return (
     <div className={`news-container ${darkTheme ? "dark" : ""}`}>
@@ -17,7 +15,7 @@ const News = () => {
       <p>Подписывайтесь на 
         <a className={`news-container__link ${darkTheme ? "dark" : ""}`} href={url} target="_blank"> "параграф"
           
-        </a> в Telegram и будьте в курсе актуальных событий и обновлений.
+        </a> в Telegram! Любая активность мотивирует меня продолжать разработку.
       </p>
     </div>
   )

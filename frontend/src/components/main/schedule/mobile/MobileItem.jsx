@@ -1,12 +1,11 @@
 import paperclip from "../../../../images/homework/paperclip.svg"
 import paperclipDark from "../../../../images/homework/paperclip-dark.svg"
 
-import { useContext } from "react"
-import { Context } from "../../../../context/Provider"
+import { useThemeStore } from "../../../../store/themeStore"
 
 
 const MobileItem = ({ time, lessonId, onClick, texts = [], types = [] }) => {
-  const { darkTheme } = useContext(Context)
+  const darkTheme = useThemeStore(state => state.darkTheme)
 
   if (!texts.length && !types.length) return null
 

@@ -1,5 +1,4 @@
-import { useContext } from 'react'
-import { Context } from '../../context/Provider'
+
 
 import chel from '../../images/tip/chel.svg'
 import chelDark from '../../images/tip/chel-dark.svg'
@@ -7,10 +6,11 @@ import tipBg from '../../images/tip/tip-bg.png'
 import tipBgNoArrow from '../../images/tip/tip-bg-no-arrow.png'
 import tipBgDark from '../../images/tip/tip-bg-dark.png'
 import tipBgDarkNoArrow from '../../images/tip/tip-bg-dark-no-arrow.png'
+import { useThemeStore } from '../../store/themeStore'
 import { useWindowSize } from '../../hooks/useWindowSize'
 
 const Tip = ({active}) => {
-  const {darkTheme} = useContext(Context)
+  const darkTheme = useThemeStore(state => state.darkTheme)
   const {width} = useWindowSize()
   const noArrow = width < 1101
 

@@ -3,7 +3,17 @@
 .accordion {
   display: flex;
   flex-direction: column;
-  
+  &__link {
+    font-weight: 500;
+    color: $dark4;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  &.dark &__link {
+    color: $light-white1;
+  }
+
   font-family: 'Manrope', serif;
   margin: 12px 0 0 0;
   width: auto;

@@ -7,24 +7,31 @@ import { Route, Routes } from "react-router-dom"
 import { CookiesProvider } from "react-cookie"
 import { AuthForm } from "./components/auth/AuthForm"
 import News from "./components/News"
+import { ProtectedRoute } from "./components/ProtectedRoute"
+import { useEffect } from "react"
 
 
 function App() {
+  
 
   return (
     <CookiesProvider>
       <Provider>
         <Header />
 
-
-
         <Routes>
           <Route path="/" element={<MainContent />} />
           <Route path="/news" element={<News />} />
           <Route path="/help" element={<Help />} />
-          <Route path='/sign-in' element={<AuthForm type='sign-in' />} />
-          <Route path='/sign-up' element={<AuthForm type='sign-up'/>} />
-          <Route path='/profile' element={<Profile />} />
+          <Route path='/sign-in' element={
+            <ProtectedRoute type='auth'> <AuthForm type='sign-in' /> </ProtectedRoute>
+            } />
+          <Route path='/sign-up' element={
+            <ProtectedRoute type='auth'> <AuthForm type='sign-up'/> </ProtectedRoute>
+            } />
+          <Route path='/profile' element={
+            <ProtectedRoute type='profile'> <Profile /> </ProtectedRoute>
+            } />
         </Routes>
       </Provider>
     </CookiesProvider>

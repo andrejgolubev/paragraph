@@ -14,16 +14,21 @@
   font-family: 'Manrope', serif;
   color: $dark4;
 
+  
   &.dark {
     color: $light-white1;
   }
-
+  
   img {
     min-width: 24px; 
     @media (max-width: 600px) {
       scale: 1.5;
       margin-inline: 8px;
     }
+  }
+  p {
+    font-size: 18px;
+    margin: 0 0 2px 2px;
   }
 
   a {

@@ -1,11 +1,10 @@
 import { useModeratedGroups } from "../../hooks/useModeratedGroups"
-import React, { useRef, useEffect, useState, useContext } from "react"
+import React, { useRef, useEffect, useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { useForm } from "react-hook-form"
 
 import homeworkAPI from "../../api/homeworkAPI"
 import {latinToCyrillic} from '../../utils/converters.js'
-import { Context } from "../../context/Provider"
 import pencilIcon from "../../images/profile/profile-page/pencil.svg"
 import pencilIconActive from "../../images/profile/profile-page/pencil-active.svg"
 import pencilIconDark from "../../images/profile/profile-page/pencil-dark.svg"
@@ -14,18 +13,20 @@ import pencilIconActiveDark from "../../images/profile/profile-page/pencil-dark-
 import NotificationOuter from "../notifications/NotificationOuter.jsx"
 import { useWindowSize } from "../../hooks/useWindowSize"
 import { validationPreferences } from "../../config/settings.js"
+import { useThemeStore } from "../../store/themeStore"
+import { useUiStore } from "../../store/uiStore"
+import { useAuthStore } from "../../store/authStore"
 
 
 const Profile = () => {
 
-  const {
-    darkTheme,
-    username,
-    email,
-    group,
-  } = useContext(Context)
+  
 
-  if (!username) return <div className="profile"><p>пожалуйста, авторизуйтесь. перенаправляю на страницу входа...</p></div>
+  const { darkTheme } = useThemeStore()
+  const user = useAuthStore((state) => state.user)
+  const fetchUser = useAuthStore((state) => state.fetchUser)
+
+  if (!user) return <div className="profile"><p>пожалуйста, авторизуйтесь. перенаправляю на страницу входа...</p></div>
 
   const {width} = useWindowSize()
   
@@ -64,15 +65,15 @@ const Profile = () => {
   
   const form = useForm({
     defaultValues: {
-      username: username,
-      group: group,
-      email: email,
+      username: user?.username,
+      group: user?.group,
+      email: user?.email,
       password: '***********',
     },
     values: {
-      username: username,
-      group: group,
-      email: email,
+      username: user?.username,
+      group: user?.group,
+      email: user?.email,
       password: '***********',
     },
   })
@@ -82,20 +83,21 @@ const Profile = () => {
   
   const debounceTimerRef = useRef(null)
 
-  const {setNotificationOuterActive, setNotificationOuterMessage} = useContext(Context)
+  const setNotificationOuterActive = useUiStore((state) => state.setNotificationOuterActive)
+  const setNotificationOuterMessage = useUiStore((state) => state.setNotificationOuterMessage)
 
   
   const onSubmit = ({password, username, group}) => {
-    homeworkAPI.updateUserData({email: email, password, username, group}).then(
+    homeworkAPI.updateUserData({email: user?.email, password, username, group}).then(
       resp => {
         setNotificationOuterMessage(resp.detail)
-        setIsEditable(false)
         if (resp.status === 'ok') {
+          fetchUser()
+          setIsEditable(false)
           setSubmitMessageType('success') 
           setTimeout( async () => { 
             setNotificationOuterActive(true)
           }, 100)
-          
         } else {
           setSubmitMessageType('error')
           setNotificationOuterActive(true)
@@ -255,6 +257,7 @@ const Profile = () => {
     homeworkAPI.logout().then( resp => {
       setNotificationOuterActive(true)// чтобы вызвалась проверка access_token (т.к. в Provider такая dependency)
       setNotificationOuterMessage(resp.detail)
+      fetchUser()
     })
   }
 
@@ -333,7 +336,7 @@ const Profile = () => {
             <div
               className={`input-div${darkOrNot.current} immutable-field`}
             >
-              <p>{email}</p>
+              <p>{user?.email}</p>
             </div>
           </div>
           

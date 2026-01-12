@@ -1,17 +1,18 @@
-import React, { useContext } from "react"
-import { Context } from "../../context/Provider"
-
+import React from "react"
+import { useThemeStore } from "../../store/themeStore"
 import toggleBgLight from "../../images/toggles/toggle-bg.svg"
 import toggleBgDark from "../../images/toggles/toggle-bg-dark.svg"
 import toggleIcon from "../../images/toggles/toggle-icon.svg"
 import toggleIconDark from "../../images/toggles/toggle-icon-dark.svg"
 
 export const Toggle = ({isMobile}) => {
-  const {darkTheme, setDarkTheme} = useContext(Context)
+  const darkTheme = useThemeStore(state => state.darkTheme)
+  const toggleTheme = useThemeStore(state => state.toggleTheme)
+  
   return (
     <div 
       className={`toggle ${isMobile? 'mobile' : ''}`} 
-      onClick={() => setDarkTheme((prev) => !prev)}
+      onClick={toggleTheme}
     >
       <img
         id={`toggle-bg${darkTheme ? "-dark" : ""}`}

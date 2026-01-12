@@ -1,22 +1,22 @@
 import { useState, useEffect, useCallback, useRef } from "react"
-import HomeworkModal from "../HomeworkModal" // Предполагаем, что модалка уже переписана на React
+import HomeworkModal from "../HomeworkModal" 
 import paperclip from "../../../images/homework/paperclip.svg"
 import paperclipDark from "../../../images/homework/paperclip-dark.svg"
-import { useContext } from "react"
-import { Context } from "../../../context/Provider"
 import homeworkAPI from "../../../api/homeworkAPI"
 import { Mosaic } from "react-loading-indicators"
-import { getDateValueFromDisplay, getLessonTypeClass } from "../../../utils/converters"
+import { getDateValueFromDisplay} from "../../../utils/converters"
 import { useWindowSize } from "../../../hooks/useWindowSize"
 import MobileItem from "./mobile/MobileItem"
 import Button from "./mobile/Button"
+import { useDropdownStore } from "../../../store/dropdownStore"
+import { useThemeStore } from "../../../store/themeStore"
 
 
 
 const ScheduleContainer = () => {
-  const {darkTheme} = useContext(Context)
+  const darkTheme = useThemeStore(state => state.darkTheme)
 
-  const { groupDataValue, dateDataValue, setGroupDataValueCookies, setDateDataValueCookies } = useContext(Context)
+  const { groupDataValue, dateDataValue } = useDropdownStore()
   const [scheduleData, setScheduleData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -29,6 +29,7 @@ const ScheduleContainer = () => {
   const windowSize = useWindowSize()
   const [debouncedWidth, setDebouncedWidth] = useState(windowSize.width)
   const widthDebounceRef = useRef(null)
+  const isMobile = debouncedWidth < 1001
 
   useEffect(() => {
     if (widthDebounceRef.current) {
@@ -47,13 +48,10 @@ const ScheduleContainer = () => {
 
 
 
-  const isMobile = debouncedWidth < 1001
-
   useEffect(() => {
-    setGroupDataValueCookies('groupDataValue', groupDataValue, {maxAge: 60*60*24*14}) // чтобы сразу загружалась нужная группа 
-    setDateDataValueCookies('dateDataValue', dateDataValue, {maxAge: 60*60*24*14}) // чтобы сразу загружалась нужная дата
+    // setGroupDataValueCookies('groupDataValue', groupDataValue, {maxAge: 60*60*24*14}) // чтобы сразу загружалась нужная группа 
+    // setDateDataValueCookies('dateDataValue', dateDataValue, {maxAge: 60*60*24*14}) // чтобы сразу загружалась нужная дата
 
-    // логирование - потом убрать
     console.log("ScheduleContainer - текущие значения:", {
       groupDataValue,
       dateDataValue,
@@ -236,6 +234,12 @@ const ScheduleContainer = () => {
                             ? "upr"
                             : lesson.type === "Лаб."
                             ? "lab"
+                            : lesson.type === "Конс."
+                            ? "consult"
+                            : lesson.type === "Экзамен"
+                            ? "exam"
+                            : lesson.type === "Зач."
+                            ? "cred"
                             : "default"
 
                         const lessonInfo = {
@@ -256,9 +260,7 @@ const ScheduleContainer = () => {
                           >
                             {lesson.type && (
                               <span
-                                className={`lesson-type ${getLessonTypeClass(
-                                  lesson.type
-                                )}`}
+                                className={`lesson-type ${lessonId}`}
                               >
                                 {lesson.type}
                               </span>

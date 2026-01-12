@@ -1,8 +1,8 @@
-import { useContext } from "react"
-import { Context } from "../../../../context/Provider"
+
+import { useThemeStore } from "../../../../store/themeStore"
 
 const Button = ({ children, onClick, isActive = false }) => { 
-  const {darkTheme} = useContext(Context)
+  const darkTheme = useThemeStore(state => state.darkTheme)
 
   return (
     <button 

@@ -6,17 +6,21 @@ import profileIconDark from "../../images/profile/profile-dropdown/profile-butto
 import burgerButton from '../../images/mobile/burger-button.svg'
 import burgerButtonDark from '../../images/mobile/burger-button-dark.svg'
 import { ProfileDropdown } from "../profile/ProfileDropdown"
-import { useState, useRef, useContext } from "react"
+import { useState, useRef } from "react"
 import { useClickOutside } from "../../hooks/useClickOutside"
 import { Link, useLocation } from "react-router-dom"
-import { Context } from "../../context/Provider"
 import { useWindowSize } from "../../hooks/useWindowSize"
 import { Toggle } from "./Toggle"
 import { NavItem } from "./NavItem"
+import { useAuthStore } from "../../store/authStore"
+import { useThemeStore } from "../../store/themeStore"
+import { useUiStore } from "../../store/uiStore"
 
 
 const Header = () => {
-  const { darkTheme, username, userRole, linksActive, setLinksActive } = useContext(Context)
+  const { linksActive, setLinksActive } = useUiStore()
+  const { darkTheme } = useThemeStore()
+  const user = useAuthStore((state) => state.user)
 
   const [displayProfile, setDisplayProfile] = useState(false)
   const dropdownRef = useRef(null)
@@ -76,7 +80,7 @@ const Header = () => {
               
               {isMobile 
                 ? (
-                  username
+                  user?.username
                     ? <NavItem path={'/profile'}> профиль </NavItem>
                     : (
                       <>
@@ -99,8 +103,8 @@ const Header = () => {
             </div>
             {displayProfile && (
               <ProfileDropdown
-              username={username}
-              role={userRole}
+              username={user?.username}
+              role={user?.role}
               dropdownRef={dropdownRef}
               setDisplayProfile={setDisplayProfile}
               />

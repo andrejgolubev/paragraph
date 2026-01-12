@@ -1,12 +1,11 @@
-import React, { useRef, useCallback, useEffect, useState, useContext } from "react"
-import { Link, replace, useNavigate } from "react-router-dom"
+import React, { useRef, useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { DevTool } from "@hookform/devtools"
 
 import homeworkAPI from "../../api/homeworkAPI"
 import {latinToCyrillic} from '../../utils/converters.js'
 import NotificationOuter from '../notifications/NotificationOuter.jsx'
-import { Context } from "../../context/Provider"
 
 import user_icon from "../../images/auth/person.svg"
 import group_icon from "../../images/auth/group.svg"
@@ -15,10 +14,14 @@ import email_icon from "../../images/auth/email.svg"
 
 import { validationPreferences } from "../../config/settings.js"
 
+import { useThemeStore } from "../../store/themeStore"
+import { useUiStore } from "../../store/uiStore"
+import { useAuthStore } from "../../store/authStore"
+
 
 export const AuthForm = ({ type }) => {
-  const {darkTheme} = useContext(Context)
-
+  const {darkTheme} = useThemeStore()
+  const fetchUser = useAuthStore((state) => state.fetchUser)
   const navigate = useNavigate()
 
   
@@ -91,16 +94,18 @@ export const AuthForm = ({ type }) => {
   
   const debounceTimerRef = useRef(null)
 
-  const {setNotificationOuterActive, setNotificationOuterMessage} = useContext(Context)
-
+  const setNotificationOuterActive = useUiStore((state) => state.setNotificationOuterActive)
+  const setNotificationOuterMessage = useUiStore((state) => state.setNotificationOuterMessage)
+  
   const handleAuth = (resp) => {
     setNotificationOuterMessage(resp.detail)
     if (resp.status === 'ok') {
       setSubmitMessageType('success') 
-      
-      if (resp.type === 'sign-in') navigate('/', {replace: true}) // редирект на расписание если логин   
-      else navigate('/sign-in', {replace: true})  //редирект на логин если успешно зарегался
-      // имя и роль в ProfileDropdown устанавливаются через Provider
+      if (resp.type === 'sign-in') {
+        fetchUser()
+        navigate('/', {replace: true}) // редирект на расписание если логин  
+      }  
+      else navigate('/sign-in', {replace: true}) // редирект на логин если успешно зарегался
 
       setTimeout( async () => { 
         setNotificationOuterActive(true)
@@ -126,7 +131,7 @@ export const AuthForm = ({ type }) => {
 
   const groupAttemptsRef = useRef(0)
 
-  const validateGroup = async (value) => {
+  const groupValidator = async (value) => {
     // если поле пустое, валидация проходит (поле опционально)
     if (!value || value.trim() === "") {
       return true
@@ -158,7 +163,7 @@ export const AuthForm = ({ type }) => {
     }
   }
 
-  const groupValidator = (value) => {
+  const validateGroup = (value) => {
     if (!value?.trim()) {
       return true
     }
@@ -171,7 +176,7 @@ export const AuthForm = ({ type }) => {
     return new Promise((resolve) => {
       debounceTimerRef.current = setTimeout(async () => {
         try {
-          const result = await validateGroup(value)
+          const result = await groupValidator(value)
           resolve(result)
         } catch (error) {
           resolve("ошибка при проверке группы")
@@ -220,7 +225,7 @@ export const AuthForm = ({ type }) => {
     }) 
     groupField = register("group", {
       validate: {
-        validateGroup: (value) => groupValidator(value)
+        validateGroup: (value) => validateGroup(value)
       }
     }) 
   } 

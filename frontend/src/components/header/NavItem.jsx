@@ -1,9 +1,9 @@
-import React, { useContext } from "react"
+import React from "react"
 import { useLocation, Link } from "react-router-dom"
-import { Context } from "../../context/Provider"
+import { useUiStore } from "../../store/uiStore"
 
 export const NavItem = ({ children, path }) => {
-  const {setLinksActive} = useContext(Context)
+  const setLinksActive = useUiStore((state) => state.setLinksActive)
   const location = useLocation()
 
 

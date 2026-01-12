@@ -60,7 +60,10 @@
       color: $light-white1;
     } 
     li:hover a {
-      color: $dark3 !important;
+      color: $dark3;
+    }
+    li:hover {
+      background-color: $light-grey2 ;
     }
   }
 

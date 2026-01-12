@@ -229,21 +229,19 @@
 
 
 .lesson-item {
-
-  
   margin-bottom: 10px;
   padding: 8px;
   border-radius: 4px;
 
-  &.lesson-type {
-    color: #dddddd;
-  }
+  // &.lesson-type {
+  //   color: #dddddd;
+  // }
 
   &#lec {
     border-left: 3px solid $lec;
   }
 
-  .lecture {
+  .lec {
     background: $lec;
   }
 
@@ -251,7 +249,7 @@
     border-left: 3px solid $upr;
   }
 
-  .practice {
+  .upr {
     background: $upr;
   }
 
@@ -260,19 +258,35 @@
   }
 
   .lab {
-    border-left: 3px solid $lab;
+    background: $lab;
+  }
+
+  &#exam {
+    border-left: 3px solid $exam;
+  }
+
+  .exam {
+    background: $exam;
+  }
+
+  &#cred {
+    border-left: 3px solid $cred;
+  }
+
+  .cred {
+    background: $cred;
+  }
+
+  &#consult {
+    border-left: 3px solid $consult;
+  }
+
+  .consult {
+    background: $consult;
   }
 
 }
 
-//НЕ ТРОГАТЬ СЕЛЕКТОР С МЕСТА, ТАК НАДО, ХОТЬ 
-// И СИНТАКСИС SCSS НЕ ЮЗАЕТСЯ В ПОЛНОЙ МЕРЕ
-//----
-.lesson-type.lab {
-  background: $lab;
-}
-
-//-----
 
 
 

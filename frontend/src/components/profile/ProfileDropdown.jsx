@@ -7,11 +7,12 @@ import profileIcon from "../../images/profile/profile-dropdown/profile-icon.svg"
 
 
 import { Link, useNavigate, useLocation } from "react-router-dom"
-import { useContext } from "react"
 import homeworkAPI from "../../api/homeworkAPI"
-import { Context } from "../../context/Provider"
 import { useModeratedGroups } from "../../hooks/useModeratedGroups"
 import { useWindowSize } from "../../hooks/useWindowSize"
+import { useAuthStore } from "../../store/authStore"
+import { useUiStore } from "../../store/uiStore"
+import { useThemeStore } from "../../store/themeStore"
 
 
 export const ProfileDropdown = (props) => {
@@ -23,19 +24,25 @@ export const ProfileDropdown = (props) => {
   const {width} = useWindowSize() 
   const isMobile = width < 1001
 
-  const {darkTheme, setNotificationOuterActive, setNotificationOuterMessage } =
-    useContext(Context) 
+  const {darkTheme} = useThemeStore()
+  const setNotificationOuterActive = useUiStore((state) => state.setNotificationOuterActive)
+  const setNotificationOuterMessage = useUiStore((state) => state.setNotificationOuterMessage)
+  const fetchUser = useAuthStore((state) => state.fetchUser)
 
   const disappearOnClick = () => setDisplayProfile(false)
 
-  
+  const navigate = useNavigate()
+  const location = useLocation()
+  const path = location.pathname.split('/').pop()
+
   const handleLogout = () => {
     if (path === 'profile') {
       navigate('/sign-in')
     }
     homeworkAPI.logout().then( resp => {
-      setNotificationOuterActive(true)// чтобы вызвалась проверка access_token (т.к. в Provider такая dependency)
       setNotificationOuterMessage(resp.detail)
+      setNotificationOuterActive(true)
+      fetchUser()
     })
     setDisplayProfile(false)
   }

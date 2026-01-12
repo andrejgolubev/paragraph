@@ -1,13 +1,14 @@
-import { useState, useEffect, useContext } from "react"
+import { useState, useEffect } from "react"
 import homeworkAPI from "../../api/homeworkAPI"
-import { Context } from "../../context/Provider"
 import { useRef } from "react"
 import { useClickOutside } from "../../hooks/useClickOutside"
 import { latinToCyrillic } from "../../utils/converters"
 import { useDebounce } from "../../hooks/useDebouce"
+import { useDropdownStore } from "../../store/dropdownStore"
+import { useThemeStore } from "../../store/themeStore"
 
 const Dropdown = (props) => {
-  const {darkTheme} = useContext(Context)
+  const darkTheme = useThemeStore(state => state.darkTheme)
 
   const { name, func, placeholder, readOnly} = props
   
@@ -41,7 +42,7 @@ const Dropdown = (props) => {
   })
 
   const { groupDataValue, setGroupDataValue, dateDataValue, setDateDataValue } =
-    useContext(Context)
+    useDropdownStore()
 
   const debouncedInputText = useDebounce(inputText, 100)
 
