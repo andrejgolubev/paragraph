@@ -2,7 +2,7 @@ import logging
 import uvicorn
 from api.settings import settings
 
-from api.db.refresh_db import cleanup_dates_by_period, load_groups_and_dates
+from api.db.refresh_db import load_groups_and_dates
 
 from api.db.database import get_db
 from api.routers import schedule, homework, database

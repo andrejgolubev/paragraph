@@ -1,4 +1,4 @@
-from api.db.refresh_db import cleanup_dates_by_period, load_groups_and_dates
+from api.db.refresh_db import clean_up_date, clean_up_dates, load_groups_and_dates
 
 from api.db.database import get_db
 from api.parser.group_parser import parse_groups
@@ -24,14 +24,23 @@ async def load_initial_groups_and_dates(
     return {"status": "Data loaded successfully"}
 
 
-@router.post("/cleanup-dates", dependencies=[Depends(verify_admin_api_key)])
-async def cleanup_dates(
-    start_date: str | None = Query(None, description="Начальная дата (dd.mm.yyyy или yyyy-mm-dd)"), 
-    end_date: str | None = Query(None, description="Конечная дата (dd.mm.yyyy или yyyy-mm-dd)"), 
+@router.post("/cleanup-date", dependencies=[Depends(verify_admin_api_key)])
+async def cleanup_date(
+    date_input: str = Query(..., description="Дата (yyyy-mm-dd)"),
     db: AsyncSession = Depends(get_db)
 ):
-    """Очистка дат в базу данных за указанный период."""
-    return await cleanup_dates_by_period(start_date=start_date, end_date=end_date, db=db)
+    """Очистка даты из базы данных."""
+
+    return await clean_up_date(date_input=date_input, db=db)
+
+@router.post("/cleanup-dates", dependencies=[Depends(verify_admin_api_key)])
+async def cleanup_dates(
+    dates_amount: int = Query(..., description="Количество дат для очистки"),
+    db: AsyncSession = Depends(get_db)
+):
+    """Очистка дат из базы данных."""
+
+    return await clean_up_dates(dates_amount=dates_amount, db=db)
 
 
 @router.get('/get-all-dates-related-to-group', dependencies=[Depends(verify_admin_api_key)])
