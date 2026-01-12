@@ -21,7 +21,11 @@ export const AccordionItem = ({ faqItem, onClick, isOpen }) => {
         }
       >
         <div className={`accordion__body ${darkTheme? 'dark' : ''}`} ref={itemRef}>
-          {faqItem.a}
+          {typeof faqItem.a === "string" ? (
+            <p>{faqItem.a}</p>
+          ) : (
+            faqItem.a
+          )}
         </div>
       </div>
     </li>

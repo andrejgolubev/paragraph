@@ -2,6 +2,7 @@ import Accordion from "./Accordion.jsx"
 
 const Help = () => {
   const email = "paragraphfeedback@gmail.com"
+  const donateUrl = 'https://www.donationalerts.com/r/andrejgolubev'
 
   const faqList = [
     {
@@ -47,7 +48,17 @@ const Help = () => {
           рекомендации, предложения и пожелания, которые могут сделать «параграф» лучше,
           отправляйте на почту: ${email}`,
     },
-    
+    {
+      q: 'Как можно поддержать разработку и усовершенствование проекта?',
+      a: (
+        <>
+          Вы можете поддержать "параграф", сделав пожертвование по ссылке:{" "}
+          <a href={donateUrl} target="_blank" rel="noreferrer">
+            {donateUrl}
+          </a>
+        </>
+      ),
+    },
 
   ]
 

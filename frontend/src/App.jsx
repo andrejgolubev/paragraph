@@ -6,6 +6,8 @@ import { Provider } from "./context/Provider"
 import { Route, Routes } from "react-router-dom"
 import { CookiesProvider } from "react-cookie"
 import { AuthForm } from "./components/auth/AuthForm"
+import News from "./components/News"
+
 
 function App() {
 
@@ -16,10 +18,9 @@ function App() {
 
 
 
-
-
         <Routes>
           <Route path="/" element={<MainContent />} />
+          <Route path="/news" element={<News />} />
           <Route path="/help" element={<Help />} />
           <Route path='/sign-in' element={<AuthForm type='sign-in' />} />
           <Route path='/sign-up' element={<AuthForm type='sign-up'/>} />
