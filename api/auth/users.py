@@ -159,7 +159,7 @@ async def logout(response: Response):
     response.delete_cookie('access_token', samesite='none', secure=True)
     response.delete_cookie('refresh_token', samesite='none', secure=True)
 
-    return {"detail": "Вы успешно вышли из аккаунта"}
+    return {"detail": "Вы вышли из аккаунта"}
 
 
 @router.post("/make-admin/", dependencies=[Depends(verify_admin_api_key)])
