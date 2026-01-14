@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form"
 import { DevTool } from "@hookform/devtools"
 
 import homeworkAPI from "../../api/homeworkAPI"
-import {latinToCyrillic} from '../../utils/converters.js'
-import NotificationOuter from '../notifications/NotificationOuter.jsx'
+import { latinToCyrillic } from "../../utils/converters.js"
+import NotificationOuter from "../notifications/NotificationOuter.jsx"
 
 import user_icon from "../../images/auth/person.svg"
 import group_icon from "../../images/auth/group.svg"
@@ -18,67 +18,65 @@ import { useThemeStore } from "../../store/themeStore"
 import { useUiStore } from "../../store/uiStore"
 import { useAuthStore } from "../../store/authStore"
 
-
 export const AuthForm = ({ type }) => {
-  const {darkTheme} = useThemeStore()
+  const { darkTheme } = useThemeStore()
   const fetchUser = useAuthStore((state) => state.fetchUser)
   const navigate = useNavigate()
 
-  
-  
   const validateUsername = async (value) => {
     const username = value.trim()
-    
+
     if (username.length < validationPreferences.username.minLength) {
       return `имя должно содержать минимум ${validationPreferences.username.minLength} символа`
     }
-    
+
     if (username.length > validationPreferences.username.maxLength) {
       return `имя не должно превышать ${validationPreferences.username.maxLength} символов`
     }
-    
+
     if (!validationPreferences.username.pattern.test(username)) {
       return "разрешены только буквы, пробелы, точки и дефисы."
     }
-    
-    
+
     if (/\s{2,}/.test(username)) {
       return "нельзя использовать несколько пробелов подряд."
     }
-    
+
     return true
   }
 
   const validatePassword = (pwd) => {
-    if (type === 'sign-in') return true // чтоб не бесили уведы про валидацию когда входишь в акк
-    
+    if (type === "sign-in") return true // чтоб не бесили уведы про валидацию когда входишь в акк
+
     const password = pwd.trim()
 
-    if (password.length < validationPreferences.password.minLength) return 'пароль должен содержать минимум 8 символов.'
-    
+    if (password.length < validationPreferences.password.minLength)
+      return "пароль должен содержать минимум 8 символов."
+
     if (!/[A-ZА-Я]/.test(password)) {
       return "пароль должен содержать хотя бы одну заглавную букву"
     }
-    
+
     if (!/[a-zа-я]/.test(password)) {
       return "пароль должен содержать хотя бы одну строчную букву."
     }
-    
+
     if (!/[0-9]/.test(password)) {
       return "пароль должен содержать хотя бы одну цифру."
     }
-    
+
     if (!/[#?!@$%^&*-]/.test(password)) {
       return "пароль должен содержать хотя бы один специальный символ."
     }
-    
+
     return true
   }
-  
-  let authType = "" , authTitle = ""
-  
-  const [submitMessageType, setSubmitMessageType] = useState('success')
-  
+
+  let authType = "",
+    authTitle = ""
+
+  const [submitMessageType, setSubmitMessageType] = useState("success")
+
   if (type === "sign-up") {
     authType = "зарегистироваться"
     authTitle = "регистрация"
@@ -87,46 +85,49 @@ export const AuthForm = ({ type }) => {
     authTitle = "добро пожаловать!"
   }
 
-  
   const form = useForm()
   const { register, control, handleSubmit, formState } = form
   const { errors } = formState
-  
+
   const debounceTimerRef = useRef(null)
 
-  const setNotificationOuterActive = useUiStore((state) => state.setNotificationOuterActive)
-  const setNotificationOuterMessage = useUiStore((state) => state.setNotificationOuterMessage)
-  
+  const setNotificationOuterActive = useUiStore(
+    (state) => state.setNotificationOuterActive
+  )
+  const setNotificationOuterMessage = useUiStore(
+    (state) => state.setNotificationOuterMessage
+  )
+
   const handleAuth = (resp) => {
     setNotificationOuterMessage(resp.detail)
-    if (resp.status === 'ok') {
-      setSubmitMessageType('success') 
-      if (resp.type === 'sign-in') {
+    if (resp.status === "ok") {
+      setSubmitMessageType("success")
+      if (resp.type === "sign-in") {
         fetchUser()
-        navigate('/', {replace: true}) // редирект на расписание если логин  
-      }  
-      else navigate('/sign-in', {replace: true}) // редирект на логин если успешно зарегался
+        navigate("/", { replace: true }) // редирект на расписание если логин
+      } else navigate("/sign-in", { replace: true }) // редирект на логин если успешно зарегался
 
-      setTimeout( async () => { 
+      setTimeout(async () => {
         setNotificationOuterActive(true)
       }, 100)
-      
     } else {
-      setSubmitMessageType('error')
+      setSubmitMessageType("error")
       setNotificationOuterActive(true)
     }
   }
 
-  const onSubmit = ({email, password, username, group}) => {
-    if (type === 'sign-up') {
-      homeworkAPI.sendRegisterData(email, password, username, group).then(
-        resp => handleAuth(resp)
-      )
-    } else if (type === 'sign-in') {
-      homeworkAPI.sendLoginData(email, password).then(
-        resp => handleAuth(resp)
-      )
-    } 
+  const onSubmit = (data) => {
+    if (type === "sign-up") {
+      const { email, password, username, group, acceptPd, acceptTerms } = data
+      homeworkAPI
+        .sendRegisterData(email, password, username, group, acceptPd, acceptTerms)
+        .then((resp) => handleAuth(resp))
+    } else if (type === "sign-in") {
+      const { email, password } = data
+      homeworkAPI
+        .sendLoginData(email, password)
+        .then((resp) => handleAuth(resp))
+    }
   }
 
   const groupAttemptsRef = useRef(0)
@@ -136,26 +137,21 @@ export const AuthForm = ({ type }) => {
     if (!value || value.trim() === "") {
       return true
     }
-    
+
     try {
       const groups = await homeworkAPI.getAllGroups()
-      const groupExists = groups.some(
-        (elem) => {
-          const groupNumber = elem['group_number'] 
-          return (
-            groupNumber === value || 
-            groupNumber === latinToCyrillic(value))
-        }  
+      const groupExists = groups.some((elem) => {
+        const groupNumber = elem["group_number"]
+        return groupNumber === value || groupNumber === latinToCyrillic(value)
+      })
 
-      )
-      
       if (!groupExists) {
         groupAttemptsRef.current++
         return groupAttemptsRef.current < 5
           ? `группа не найдена, либо не существует.`
           : "введите группу в точности, как на официальном сайте расписания."
       }
-      
+
       return true
     } catch (error) {
       console.error("Ошибка при проверке группы:", error)
@@ -183,21 +179,21 @@ export const AuthForm = ({ type }) => {
         }
       }, 100)
     })
-  } 
+  }
 
   useEffect(() => {
-    return () => { // cleanup при размонтировании
+    return () => {
+      // cleanup при размонтировании
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current)
       }
     }
   }, [])
-  
-  const requireText = 'это поле надо бы заполнить.'
 
-  const darkOrNot = useRef('')
-  darkOrNot.current = darkTheme? ' dark' : ''
+  const requireText = "это поле надо бы заполнить."
 
+  const darkOrNot = useRef("")
+  darkOrNot.current = darkTheme ? " dark" : ""
 
   const usernameInputRef = useRef(null)
   const groupInputRef = useRef(null)
@@ -209,42 +205,41 @@ export const AuthForm = ({ type }) => {
       inputRef.current.focus()
     }
   }
-  // ДЛЯ ТОГО ЧТОБЫ ФОКУС СРАБАТЫВАЛ НЕ ТОЛЬКО ПРИ КЛИКЕ НЕПОСРЕДСТВЕННО НА INPUT: 
+  // ДЛЯ ТОГО ЧТОБЫ ФОКУС СРАБАТЫВАЛ НЕ ТОЛЬКО ПРИ КЛИКЕ НЕПОСРЕДСТВЕННО НА INPUT:
   // сохраняем register поля, чтобы привязать ref и к react-hook-form форме, и к нашим refs
-  // в usernameField, groupField, emailField, passwordField будет сохранен обьект вида 
+  // в usernameField, groupField, emailField, passwordField будет сохранен обьект вида
   // { onChange, onBlur, ref, name, ... }
 
-  let usernameField = null, groupField = null
+  let usernameField = null,
+    groupField = null
 
   if (type === "sign-up") {
     usernameField = register("username", {
-      required: requireText, 
+      required: requireText,
       validate: {
-        validFormat: async (value) => validateUsername(value)
-      }
-    }) 
+        validFormat: async (value) => validateUsername(value),
+      },
+    })
     groupField = register("group", {
       validate: {
-        validateGroup: (value) => validateGroup(value)
-      }
-    }) 
-  } 
-
+        validateGroup: (value) => validateGroup(value),
+      },
+    })
+  }
 
   const emailField = register("email", {
-    required: requireText, 
+    required: requireText,
     pattern: {
       value: validationPreferences.email.pattern,
-      message: "неправильный формат электронной почты."
-    }, 
+      message: "неправильный формат электронной почты.",
+    },
   })
 
   const passwordField = register("password", {
     required: requireText,
-    validate: (value) => validatePassword(value)
+    validate: (value) => validatePassword(value),
   })
 
- 
   return (
     <div className={`auth${darkOrNot.current}`}>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -259,7 +254,7 @@ export const AuthForm = ({ type }) => {
                 onClick={() => focusInput(usernameInputRef)}
               >
                 <img src={user_icon} alt="user icon" />
-                <input 
+                <input
                   {...usernameField}
                   ref={(el) => {
                     usernameField.ref(el)
@@ -271,7 +266,7 @@ export const AuthForm = ({ type }) => {
                   placeholder="имя"
                   autoComplete="username"
                 />
-                <p className='auth__error'>{errors.username?.message}</p>
+                <p className="auth__error">{errors.username?.message}</p>
               </div>
               <div
                 className={`input-div${darkOrNot.current}`}
@@ -290,7 +285,7 @@ export const AuthForm = ({ type }) => {
                   placeholder="группа (необяз.)"
                   autoComplete="group"
                 />
-              <p className='auth__error'>{errors.group?.message}</p>
+                <p className="auth__error">{errors.group?.message}</p>
               </div>
             </>
           )}
@@ -311,7 +306,7 @@ export const AuthForm = ({ type }) => {
               placeholder="эл. почта"
               autoComplete="email"
             />
-              <p className='auth__error'>{errors.email?.message}</p>
+            <p className="auth__error">{errors.email?.message}</p>
           </div>
           <div className="pwd-block">
             <div
@@ -331,17 +326,76 @@ export const AuthForm = ({ type }) => {
                 placeholder="пароль"
                 autoComplete="password"
               />
-              <p className='auth__error'>{errors.password?.message}</p>
+              <p className="auth__error">{errors.password?.message}</p>
             </div>
-            {type === "sign-in" && (
+            {/* {type === "sign-in" && (
               <div className="forgot-password">
                 <span>забыли пароль?</span>
               </div>
-            )}
+            )} */}
+
+
+
+
+            
           </div>
+
+          {type === "sign-up" && (
+            <div className={`checkbox-block${darkOrNot.current}`}>
+              {/* Чекбокс 1 */}
+              <div className="checkbox-block__checkbox">
+                <label className="checkbox-block__checkbox__label">
+                  <input
+                    type="checkbox"
+                    {...register("acceptPd", {
+                      required: "Необходимо дать согласие на обработку ПД",
+                    })}
+                  />
+                  <span className="checkbox__text">
+                    Я даю{" "}
+                    <a href="/pd-consent" target="_blank">
+                      согласие на обработку персональных данных
+                    </a>
+                  </span>
+                </label>
+                {errors.acceptPd && (
+                  <p className="checkbox-block__checkbox__error">{errors.acceptPd.message}</p>
+                )}
+              </div>
+
+              {/* Чекбокс 2 */}
+              <div className="checkbox-block__checkbox">
+                <label className="checkbox-block__checkbox__label">
+                  <input
+                    type="checkbox"
+                    {...register("acceptTerms", {
+                      required:
+                        "Необходимо принять пользовательское соглашение",
+                    })}
+                  />
+                  <span className="checkbox-block__checkbox__text">
+                    Я принимаю{" "}
+                    <a href="/terms" target="_blank">
+                      пользовательское соглашение
+                    </a>{" "}
+                    и
+                    <a href="/privacy" target="_blank">
+                      {" "}
+                      политику конфиденциальности
+                    </a>
+                  </span>
+                </label>
+                {errors.acceptTerms && (
+                  <p className="checkbox-block__checkbox__error">{errors.acceptTerms.message}</p>
+                )}
+              </div>
+            </div>
+          )}
         </div>
         <div className="auth__submit">
-          <button className={`auth__submit__btn${darkOrNot.current}`}>{authType}</button>
+          <button className={`auth__submit__btn${darkOrNot.current}`}>
+            {authType}
+          </button>
         </div>
         {type === "sign-in" ? (
           <Link to="/sign-up">
@@ -357,9 +411,7 @@ export const AuthForm = ({ type }) => {
           </Link>
         )}
       </form>
-      <NotificationOuter 
-      type={submitMessageType}
-      />
+      <NotificationOuter type={submitMessageType} />
       <DevTool control={control} />
     </div>
   )

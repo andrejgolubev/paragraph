@@ -1,14 +1,13 @@
-from signal import default_int_handler
-from urllib.parse import unquote
 from sqlalchemy.orm import mapped_column as mc, Mapped, relationship
 from sqlalchemy import (
+    DateTime,
     ForeignKey,
     String,
     Integer,
 )
 from api.db.database import Base
-from datetime import datetime
-from sqlalchemy import func
+from datetime import UTC, datetime
+
 
 class User(Base):
     __tablename__ = "users"
@@ -20,15 +19,33 @@ class User(Base):
     role: Mapped[str] = mc(nullable=False, default="student")
     sign_up_date: Mapped[datetime] = mc(nullable=False, default=datetime.now())
     active: Mapped[bool] = mc(nullable=False, default=True)
-    
 
     group_id: Mapped[int] = mc(ForeignKey("groups.id"), nullable=True)
 
     group: Mapped["Group"] = relationship(back_populates="users")
     
+    consents: Mapped[list['UserConsent']] = relationship(back_populates="user", cascade="all, delete-orphan")
 
 
-"""MANY TO MANY RELATION - GROUPS <-> parse_dates"""
+
+class UserConsent(Base):
+    """terms подразумевает пользовательское соглашение и политику конфиденциальности"""
+    __tablename__ = "user_consents"
+    
+    id: Mapped[int] = mc(primary_key=True, index=True)
+    user_id: Mapped[int] = mc(ForeignKey("users.id", ondelete='CASCADE'))
+    consent_type: Mapped[str] = mc(String(50))  # "terms", "pd"
+    accepted_at: Mapped[datetime] = mc(DateTime(timezone=True), default=datetime.now(UTC))
+    ip: Mapped[str] = mc()
+
+    user: Mapped["User"] = relationship(back_populates='consents')
+
+
+
+
+
+
+
 
 
 class GroupDateAssociation(Base):
@@ -73,6 +90,5 @@ class Date(Base):
     )
 
 
-"""MANY TO MANY RELATION - GROUPS <-> parse_dates"""
 
 

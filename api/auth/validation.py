@@ -3,6 +3,7 @@ import jwt
 from jwt import exceptions
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 from api.settings import settings
 from api.auth import utils as auth_utils
 from api.db.models import Group, User
@@ -92,23 +93,25 @@ async def get_current_auth_user(
     db: AsyncSession = Depends(get_db),
 ) -> User:
     """returns user by payload NO MATTER HE IS ACTIVE OR NOT 
-    (should be used as dependency in get_current_active_auth_user)"""
+    (should be used as dependency in get_current_active_auth_user_data)"""
     email: str = payload.get('sub')
 
-    user_result = await db.scalars(select(User).where(User.email == email))
+    user_result = await db.scalars(select(User).where(User.email == email).options(
+        selectinload(User.consents)
+    ))
 
     if not (user := user_result.first()): 
         raise HTTPException(status_code=404, detail='user not found')
 
     if not user.active: 
         raise HTTPException(status_code=403, detail='user inactive ')
-        
+    
         
     return user
     
     
 
-async def get_current_active_auth_user(
+async def get_current_active_auth_user_data(
     user: User = Depends(get_current_auth_user),
     db: AsyncSession = Depends(get_db),
 ) -> dict:
@@ -125,5 +128,6 @@ async def get_current_active_auth_user(
         "email": user.email,
         "role": user.role,
         "group": group_number,  
+        'consents': user.consents
     }
 

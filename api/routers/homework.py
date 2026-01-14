@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Request, HTTPException, Body, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from api.auth.validation import get_current_active_auth_user
+from api.auth.validation import get_current_active_auth_user_data
 from api.db.database import get_db
 from api.db.models import Group, Date, GroupDateAssociation
 from datetime import datetime
@@ -14,7 +14,7 @@ router = homework_router = APIRouter(tags=["Homework"], prefix="/homework")
 @router.post("/save")
 async def save_homework(
     response: Response,
-    user: dict = Depends(get_current_active_auth_user),
+    user: dict = Depends(get_current_active_auth_user_data),
     homework_request: HomeworkRequest = Body(),
     db: AsyncSession = Depends(get_db),
 ):
