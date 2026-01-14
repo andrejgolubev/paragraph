@@ -2,8 +2,8 @@ import time
 from fastapi import FastAPI, HTTPException, Response, Request
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
-from api.auth.validation import get_access_token_payload
-from api.settings import settings
+# from api.auth.validation import get_access_token_payload
+# from api.settings import settings
 
 ALLOW_ORIGINS = [
         "http://localhost:5173",
@@ -34,40 +34,40 @@ class ProcessTimeHeaderMiddleware(BaseHTTPMiddleware):
         return response
 
 
-class RefreshToken(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
+# class RefreshToken(BaseHTTPMiddleware):
+#     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
 
-        if request.method == "OPTIONS":
-            return await call_next(request)
+#         if request.method == "OPTIONS":
+#             return await call_next(request)
 
-        excluded_paths = ['/favicon.ico', '/openapi.json', '/redoc', '/static/', '/user/login', '/user/logout', '/homework/get']
-        if any(request.url.path.startswith(path) for path in excluded_paths):
-            return await call_next(request)
+#         excluded_paths = ['/favicon.ico', '/openapi.json', '/redoc', '/static/', '/user/login', '/user/logout', '/homework/get']
+#         if any(request.url.path.startswith(path) for path in excluded_paths):
+#             return await call_next(request)
 
-        try:
-            payload = await get_access_token_payload(request=request, response=response)
+#         try:
+#             payload = await get_access_token_payload(request=request, response=response)
             
             
-            response = await call_next(request)
+#             response = await call_next(request)
             
-            response.set_cookie(
-                key='access_token',
-                value=payload,
-                httponly=True,
-                secure=True,  # но можно False для localhost
-                samesite='none', # обязательно 'lax' для продакшна 
-                max_age=settings.auth_jwt.access_token_expire_minutes * 60
-            )
+#             response.set_cookie(
+#                 key='access_token',
+#                 value=payload,
+#                 httponly=True,
+#                 secure=True,  # но можно False для localhost
+#                 samesite='none', # обязательно 'lax' для продакшна 
+#                 max_age=settings.auth_jwt.access_token_expire_minutes * 60
+#             )
             
-            return response
+#             return response
             
-        except HTTPException:
-            # ели нет валидного refresh token, просто пропускаем обновление
-            # НЕ выбрасываем исключение, а продолжаем цепочку
-            return await call_next(request)
-        except Exception:
-            # любая другая ошибка - тоже пропускаем
-            return await call_next(request)
+#         except HTTPException:
+#             # ели нет валидного refresh token, просто пропускаем обновление
+#             # НЕ выбрасываем исключение, а продолжаем цепочку
+#             return await call_next(request)
+#         except Exception:
+#             # любая другая ошибка - тоже пропускаем
+#             return await call_next(request)
 
 
 def register_middlewares(app: FastAPI):
@@ -82,6 +82,6 @@ def register_middlewares(app: FastAPI):
         expose_headers=["*"],  # Позволяет фронтенду видеть Set-Cookie
     )
 
-    app.add_middleware(RefreshToken)
+    # app.add_middleware(RefreshToken)
 
     app.add_middleware(ProcessTimeHeaderMiddleware)
