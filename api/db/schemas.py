@@ -35,12 +35,11 @@ class UserLogin(BaseModel):
 class FullUserResponse(BaseModel):
     email: str
     name: str 
-    group_id: int 
+    group_id: int | None
     role: str 
     active: bool 
     sign_up_date: datetime 
     consents: list
-
 
     model_config = ConfigDict(from_attributes=True)
     

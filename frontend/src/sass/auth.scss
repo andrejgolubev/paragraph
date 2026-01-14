@@ -26,7 +26,7 @@
     width: 520px;
     @media (max-width: 600px) {
         width: 80%;
-        .input-div, input {
+        .input-div, input:not([type='checkbox']) {
             width: 80% !important;
             font-size: 14px !important;
         }
@@ -142,7 +142,6 @@
             margin-left: 4%;
             color: $grey1;
             font-size: 16px;
-            
         }
         @media (max-width: 600px) {
             .forgot-password {
@@ -211,6 +210,56 @@
         @media (max-width: 600px) {
             font-size: 10px;
         }
+    }
+
+    .checkbox-block {
+        display: flex;
+        flex-direction: column;
+        align-content: left;
+        margin: auto;
+        width: 480px; 
+        height: 70px;
+
+        &__checkbox {
+            padding: 4px 0;
+            input{
+                accent-color: $great-blue;
+            }
+
+            text-align: left !important;
+
+            &__label {
+                display: inline-flex;
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+        span {
+            margin-left: 4px;
+            color: $grey1;
+            font-size: 14px;
+        }
+        a{ 
+            color: $deep-blue;
+        }
+
+        &.dark span {
+            color: $light-white1;
+        }
+
+        @media (max-width: 600px) {
+              width: 80%;
+              height: auto;
+              gap: 4px;
+              span {
+                font-size: 12px;
+                display: inline-block;
+                word-break: break-word;
+                margin-left: 0;
+              }
+            }
+
+        
     }
     
 }

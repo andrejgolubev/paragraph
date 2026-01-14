@@ -305,18 +305,18 @@ def auth_user_check_self_info(user_data: dict = Depends(get_current_active_auth_
 
 @router.get('/get-full-info', response_model=FullUserResponse)
 async def get_full_user_info(
-    user_id: int, 
+    user_email: str, 
     db: AsyncSession = Depends(get_db), 
 ) -> FullUserResponse:
     """can be mostly used to check if user agrees with terms of use etc."""
-    result = await db.scalars(select(User).where(User.id == user_id)
+    result = await db.scalars(select(User).where(User.email == user_email)
     .options(selectinload(User.consents)))
 
     if (user := result.first()):  
         user_response = FullUserResponse( 
             email=user.email, 
             name=user.name, 
-            group_id=user.group_id, 
+            group_id=user.group_id if user.group_id else None, 
             role=user.role,
             active=user.active, 
             sign_up_date=user.sign_up_date,
