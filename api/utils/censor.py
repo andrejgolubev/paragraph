@@ -70,7 +70,8 @@ replacement_dict: dict[str, list[str]] = {
 
 def normalize_text(text: str) -> str:
     """Нормализует текст: заменяет символы, приводит к нижнему регистру"""
-    result = text.replace("-", "").replace(" ", "").replace('.', '').lower()
+    # result = text.replace("-", "").replace(" ", "").replace('.', '').lower()
+    result = text.replace("-", "").replace('.', '').lower()
 
     # тут убираем любые повторения буквы длиной >= 3 в одну
     result = re.sub(r"(.)\1{2,}", r"\1", result)
@@ -115,5 +116,14 @@ async def has_cursive_words(
                     return True
     return False
 
+
+if __name__ == '__main__': 
+    asyncio.run(
+        has_cursive_words(
+            # phrase='',
+            filepath=FILEPATH,
+            temperature=0.24
+            )
+    )
 
 

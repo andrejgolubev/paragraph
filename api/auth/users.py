@@ -6,7 +6,7 @@ from api.auth.validation import (
 from api.db.database import get_db
 from api.db.models import Group, User, UserConsent
 from api.db.schemas import UserRegistration, UserLogin, UserUpdate
-from api import settings
+from api.settings import settings
 from api.auth.utils import (
     hash_password,
     validate_password,
@@ -168,9 +168,9 @@ async def login(
     }
     for key, value in secure_cookies.items():
         if key == 'access_token': 
-            lifetime_seconds = settings.settings.auth_jwt.access_token_expire_minutes*60 
+            lifetime_seconds = settings.auth_jwt.access_token_expire_minutes*60 
         if key == 'refresh_token': 
-            lifetime_seconds = settings.settings.auth_jwt.refresh_token_expire_days*24*60*60
+            lifetime_seconds = settings.auth_jwt.refresh_token_expire_days*24*60*60
         response.set_cookie(
             key=key,
             value=value,
@@ -303,7 +303,11 @@ def auth_user_check_self_info(user_data: dict = Depends(get_current_active_auth_
     }
 
 
-@router.get('/get-full-info', response_model=FullUserResponse)
+@router.get(
+    '/get-full-info', 
+    response_model=FullUserResponse, 
+    dependencies=[Depends(verify_admin_api_key)],
+)
 async def get_full_user_info(
     user_email: str, 
     db: AsyncSession = Depends(get_db), 
@@ -338,7 +342,10 @@ async def get_full_user_info(
 
 
 
-@router.post("/refresh-token")
+@router.post(
+    "/refresh-token",
+    dependencies=[Depends(verify_admin_api_key)],
+)
 async def refresh_token(
     response: Response,
     payload: dict = Depends(get_refresh_token_payload), 
@@ -355,7 +362,23 @@ async def refresh_token(
             httponly=True,
             secure=True,  # для htpps
             samesite='none', # обязательно 'lax' для продакшна  
-            max_age=settings.settings.auth_jwt.access_token_expire_minutes*60
+            max_age=settings.auth_jwt.access_token_expire_minutes*60
         )  
 
     return {"message": 'токен успешно обновлен'}
+
+
+@router.post(
+    '/delete', 
+    dependencies=[Depends(verify_admin_api_key)]
+)
+async def delete_user_by_email(email: str, db: AsyncSession = Depends(get_db)): 
+    result = await db.scalars(select(User).where(User.email == email))
+    if not (user := result.first()) : 
+        raise HTTPException(
+            status_code=404,
+            detail='пользователь с таким email не найден'
+        )
+    db.delete(user)
+    await db.commit()
+    return {'message': 'удаление успешно'}
