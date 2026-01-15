@@ -17,15 +17,22 @@ class User(Base):
     email: Mapped[str] = mc(nullable=False, unique=True)
     password: Mapped[str] = mc(nullable=False)
     role: Mapped[str] = mc(nullable=False, default="student")
-    sign_up_date: Mapped[datetime] = mc(nullable=False, default=datetime.now())
+    sign_up_date: Mapped[datetime] = mc(DateTime(timezone=True), default=datetime.now(UTC))
     active: Mapped[bool] = mc(nullable=False, default=True)
 
     group_id: Mapped[int] = mc(ForeignKey("groups.id"), nullable=True)
 
     group: Mapped["Group"] = relationship(back_populates="users")
     
-    consents: Mapped[list['UserConsent']] = relationship(back_populates="user", cascade="all, delete-orphan")
+    consents: Mapped[list['UserConsent']] = relationship(
+        back_populates="user", 
+        cascade="all, delete-orphan",
+    )
 
+    homeworks: Mapped[list['Homework']] = relationship(
+        back_populates='user', 
+        cascade="all, delete-orphan" 
+    )
 
 
 class UserConsent(Base):
@@ -44,22 +51,24 @@ class UserConsent(Base):
 
 
 
-
-
-
-
-class GroupDateAssociation(Base):
-    __tablename__ = "group_date_association"
+class Homework(Base):
+    __tablename__ = "homework"
     
 
     id: Mapped[int] = mc(primary_key=True)
-    group_id: Mapped[int] = mc(ForeignKey("groups.id"), nullable=False)
-    dates_id: Mapped[str] = mc(ForeignKey("dates.id"), nullable=False)
+    group_id: Mapped[int] = mc(ForeignKey("groups.id", ondelete="CASCADE"))
+    dates_id: Mapped[int] = mc(ForeignKey("dates.id", ondelete="CASCADE"))
+    user_id: Mapped[int] = mc(ForeignKey("users.id", ondelete="CASCADE"))
     lesson: Mapped[int] = mc(nullable=True)
 
     homework: Mapped[str] = mc(nullable=True)
 
     updated: Mapped[datetime] = mc(nullable=True)
+
+    user: Mapped["User"] = relationship(
+        back_populates='homeworks'
+    )
+    
 
 
 class Group(Base):
@@ -74,7 +83,8 @@ class Group(Base):
     )  # one to many rel with users
 
     dates: Mapped[list["Date"]] = relationship(
-        secondary="group_date_association", back_populates="groups"
+        secondary="homework", 
+        back_populates="groups", 
     )
 
 
@@ -86,7 +96,8 @@ class Date(Base):
     data_value: Mapped[str] = mc()
 
     groups: Mapped[list["Group"]] = relationship(
-        secondary="group_date_association", back_populates="dates"
+        secondary="homework", 
+        back_populates="dates", 
     )
 
 

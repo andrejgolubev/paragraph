@@ -23,6 +23,7 @@ const ScheduleContainer = () => {
   const [showDialog, setShowDialog] = useState(false)
   const [homeworkText, setHomeworkText] = useState("")
   const [homeworkUpdated, setHomeworkUpdated] = useState("")
+  const [homeworkAuthor, setHomeworkAuthor] = useState('')
   const [year, setYear] = useState(new Date().getFullYear())
   const [currentLessonInfo, setCurrentLessonInfo] = useState({})
   const [mobileLesson, setMobileLesson] = useState(0)
@@ -108,12 +109,12 @@ const ScheduleContainer = () => {
     homeworkAPI
       .loadHomeworkData(groupDataValue, scheduleDateDataValue, lessonIndex)
       .then((resp) => {
-        const { homework, updated } = resp
+        const { homework, updated, username } = resp
         setHomeworkUpdated(updated)
         setHomeworkText(homework)
+        setHomeworkAuthor(username)
       }).catch( (err) => {
         console.log('err from ScheduleCont :>> ', err);
-        setHomeworkUpdated('')
       }
       )
 
@@ -450,10 +451,9 @@ const ScheduleContainer = () => {
           lessonInfo={currentLessonInfo}
           homeworkText={homeworkText}
           homeworkUpdated={homeworkUpdated}
-          setHomeworkUpdated={setHomeworkUpdated}
           showDialog={showDialog}
           setShowDialog={setShowDialog}
-
+          homeworkAuthor={homeworkAuthor}
         />
       )}
     </>

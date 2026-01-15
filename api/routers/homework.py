@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, Request, HTTPException, Body, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from api.auth.validation import get_current_active_auth_user_data
 from api.db.database import get_db
-from api.db.models import Group, Date, GroupDateAssociation
-from datetime import datetime
+from api.db.models import Group, Date, Homework
+from datetime import UTC, datetime
 from api.db.schemas import HomeworkRequest
 from api.utils.converters import latin_to_cyrillic
 
@@ -14,22 +15,22 @@ router = homework_router = APIRouter(tags=["Homework"], prefix="/homework")
 @router.post("/save")
 async def save_homework(
     response: Response,
-    user: dict = Depends(get_current_active_auth_user_data),
+    user_data: dict = Depends(get_current_active_auth_user_data),
     homework_request: HomeworkRequest = Body(),
     db: AsyncSession = Depends(get_db),
 ):
-    if not user:
+    if not user_data:
         raise HTTPException(status_code=401, detail="пожалуйста, войдите в аккаунт")
 
-    if "admin" not in (role := user["role"]):
+    if "admin" not in (role := user_data["role"]):
         raise HTTPException(status_code=403, detail="недостаточно прав для управления этим д/з.")
 
     group_data_value = homework_request.group_data_value
     date_data_value = homework_request.date_data_value
     lesson_index = homework_request.lesson_index
-    homework = homework_request.homework
+    homework_text = homework_request.homework
 
-    if not homework:
+    if not homework_text:
         raise HTTPException(status_code=400, detail="д/з не может быть пустым")
 
     moderated_group_numbers = [latin_to_cyrillic(gr) for gr in role.split(".")[1:] if gr] 
@@ -56,50 +57,50 @@ async def save_homework(
             raise HTTPException(status_code=404, detail="Date not found")
 
         # находим или создаем связь
-        association_result = await db.scalars(
-            select(GroupDateAssociation).where(
-                GroupDateAssociation.group_id == int(group.id),
-                GroupDateAssociation.dates_id == date.id,
-                GroupDateAssociation.lesson == lesson_index,
+        hmw_result = await db.scalars(
+            select(Homework).where(
+                Homework.group_id == group.id,
+                Homework.dates_id == date.id,
+                Homework.lesson == lesson_index,
             )
         )
-        association = association_result.first()
+        homework = hmw_result.first()
 
-        if not association:
-            association = GroupDateAssociation(
+        if not homework:
+            homework = Homework(
                 group_id=group.id,
                 dates_id=date.id,
+                user_id=user_data.get('id'),
                 lesson=lesson_index,
-                homework=homework,
+                homework=homework_text,
                 updated=datetime.now(),
             )
-            db.add(association)
+            db.add(homework)
         else:
-            association.homework = homework or ""
-            association.updated = datetime.now()
+            homework.homework = homework_text or ""
+            homework.updated = datetime.now()
 
 
         await db.commit()
 
-        return {"detail": "saved", "user": user}
+        return {"detail": "saved", "username": user_data.get('username')}
 
     except Exception:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"ошибка сохранения д/з.")
+        raise HTTPException(status_code=500, detail="ошибка сохранения д/з.")
 
 
 async def get_group_datavalue(
     group_number: str,
     db: AsyncSession = Depends(get_db),
 ):
-    print(f' ИЗ get_group_datavalue: {group_number = }')
+    """отдает group_datavalue по group_number"""
     group_result = await db.scalars(
         select(Group).where(Group.group_number == group_number)
     )
-
     
     group_data_value = group_result.first().data_value
-    print(f'{group_data_value = }')
+
     return group_data_value
 
 
@@ -138,7 +139,7 @@ async def convert_from_datavalue(
     date_data_value: str | None = None,
     db: AsyncSession = Depends(get_db),
 ):
-    """ПЕРЕВОДИТ группы и даты из data_value-формата"""
+    """ПЕРЕВОДИТ группы и даты ИЗ data_value-формата в человеческий"""
     group_result = await db.scalars(
         select(Group).where(Group.data_value == group_data_value)
     )
@@ -162,7 +163,6 @@ async def get_homework(
     group_data_value: str,
     date_data_value: str,
     lesson_index: int,
-    request: Request,
     db: AsyncSession = Depends(get_db),
 ):
     try:
@@ -176,25 +176,26 @@ async def get_homework(
             select(Date).where(Date.data_value == date_data_value)
         )
         date = date_result.first()
-        print('group, date, ', group, date, )
-        if not group or not date:
-            return {"failure": "group or date not selected or not found"}
 
-        association_result = await db.scalars(
-            select(GroupDateAssociation).where(
-                GroupDateAssociation.group_id == group.id,
-                GroupDateAssociation.dates_id == date.id,
-                GroupDateAssociation.lesson == lesson_index,
-            )
+        if not group or not date:
+            return {"detail": "группа или дата не выбраны или не найдены"}
+
+        hmw_result = await db.scalars(
+            select(Homework).where(
+                Homework.group_id == group.id,
+                Homework.dates_id == date.id,
+                Homework.lesson == lesson_index,
+            ).options(selectinload(Homework.user))
         )
-        association = association_result.first()
-        print(f'{association = }')
+        homework = hmw_result.first()
+
         return {
-            "homework": association.homework if association else "",
+            "homework": homework.homework if homework else "",
             "updated": (
-                association.updated if association else ""
-            ),  # type:ignore
+                homework.updated if homework else ""
+            ),  
+            'username': homework.user.name
         }
 
-    except Exception as e:
-        return {"homework": "", "exception": e}
+    except Exception:
+        return {"homework": ""}

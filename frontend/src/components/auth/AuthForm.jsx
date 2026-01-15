@@ -359,7 +359,9 @@ export const AuthForm = ({ type }) => {
                   </span>
                 </label>
                 {errors.acceptPd && (
-                  <p className="checkbox-block__checkbox__error">{errors.acceptPd.message}</p>
+                  <p className="checkbox-block__checkbox__error">
+                    <span>{errors.acceptPd.message}</span>
+                  </p>
                 )}
               </div>
 
@@ -386,7 +388,9 @@ export const AuthForm = ({ type }) => {
                   </span>
                 </label>
                 {errors.acceptTerms && (
-                  <p className="checkbox-block__checkbox__error">{errors.acceptTerms.message}</p>
+                  <p className="checkbox-block__checkbox__error">
+                    <span>{errors.acceptTerms.message}</span>
+                  </p>
                 )}
               </div>
             </div>

@@ -124,6 +124,7 @@ async def get_current_active_auth_user_data(
         group_number = group.group_number
 
     return {
+        'id': user.id,
         "username": user.name,
         "email": user.email,
         "role": user.role,

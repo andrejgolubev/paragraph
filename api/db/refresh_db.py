@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import and_, delete, select
-from api.db.models import Group, Date, GroupDateAssociation
+from api.db.models import Group, Date, Homework
 from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -48,7 +48,6 @@ async def clean_up_date(date_input: str, db: AsyncSession):
         )
         existing_date = result.first()
         if existing_date:
-            await db.execute(delete(GroupDateAssociation).where(GroupDateAssociation.dates_id == existing_date.id))
             await db.execute(delete(Date).where(Date.id == existing_date.id))
             await db.commit()
             return {"message": "Очистка выполнена успешно"}
@@ -66,7 +65,6 @@ async def clean_up_dates(dates_amount: int, db: AsyncSession):
         )
         dates = dates_result.all()
         for date in dates:
-            await db.execute(delete(GroupDateAssociation).where(GroupDateAssociation.dates_id == date.id))
             await db.execute(delete(Date).where(Date.id == date.id))
 
         await db.commit()

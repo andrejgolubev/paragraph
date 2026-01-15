@@ -222,7 +222,7 @@
 
         &__checkbox {
             padding: 4px 0;
-            input{
+            input {
                 accent-color: $great-blue;
             }
 
@@ -233,12 +233,20 @@
                 flex-direction: row;
                 align-items: center;
             }
+
+            &__error {
+                margin: -8px 0;
+                span {
+                    color: #c42d2dcc !important;
+                }
+            }
         }
         span {
             margin-left: 4px;
             color: $grey1;
             font-size: 14px;
         }
+
         a{ 
             color: $deep-blue;
         }

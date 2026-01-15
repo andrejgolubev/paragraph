@@ -13,6 +13,7 @@ const HomeworkModal = ({
   lessonInfo,
   homeworkText,
   homeworkUpdated,
+  homeworkAuthor
 }) => {
   const {darkTheme} = useThemeStore()
   const {width} = useWindowSize()
@@ -21,7 +22,6 @@ const HomeworkModal = ({
   const [inputValue, setInputValue] = useState("")
   const [notificationInnerActive, setNotificationInnerActive] = useState(false)
   const [lastUpdate, setLastUpdate] = useState("")
-  const showErrorTimerRef = useRef(null)
 
   const showError = () => {
     setNotificationInnerActive(true)
@@ -63,7 +63,10 @@ const HomeworkModal = ({
           const hmwDate = convertDate(hmwUpdatedTime[0])
           const hmwTime = hmwUpdatedTime[1].slice(0, 5)
   
-          setLastUpdate("последнее изменение: " + hmwDate + ", " + hmwTime)
+          setLastUpdate(
+            "последнее изменение: " + hmwDate + ", " + hmwTime + 
+            ` (изменено: ${homeworkAuthor})`
+          )
         }
         
         dialog.showModal() // используем нативный метод

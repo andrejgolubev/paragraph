@@ -47,11 +47,11 @@ const homeworkAPI = {
   },
 
 
-  loadHomeworkData: async function loadHomeworkData(
+  loadHomeworkData: async (
     groupDataValue,
     dateDataValue,
     lessonIndex
-  ) {
+  ) => {
     const params = new URLSearchParams({
       group_data_value: String(groupDataValue),
       date_data_value: dateDataValue,
@@ -67,6 +67,7 @@ const homeworkAPI = {
         console.error('err from loadHomeworkData: ', err)
       })
   },
+
 
   loadGroups: async () => {
     return fetch(`${BASE_URL}/schedule/get-all-groups`)
