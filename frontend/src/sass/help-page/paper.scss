@@ -1,0 +1,37 @@
+@use '../variables.scss' as *;
+
+.paper {
+  font-family: 'Manrope', serif;
+  padding-inline: 25px;
+  color: $dark4;
+  &.dark {
+    color: $light-white1;
+  }
+
+  @media (max-width: 1000px) {
+    padding-inline: 15px;
+  }
+  
+
+  &__header {
+    text-align: center;
+    font-weight: 500;
+    font-size: 28px;
+  }
+
+  &__content {
+    &__item {
+      &__header {
+        font-size: 18px;
+        font-weight: 500;
+        padding: 12px 0;
+        text-align: center;
+      }
+
+      &__content {
+        font-size: 16px;
+        
+      }
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import Accordion from "./Accordion.jsx"
+import { Link } from "react-router-dom"
 
 const Help = () => {
   const email = "paragraphfeedback@gmail.com"
@@ -71,6 +72,16 @@ const Help = () => {
         </>
       ),
     },
+    {
+      q: 'Юридические документы',
+      a: (
+        <>
+          <p><Link target='_blank' to="/terms">- Пользовательское соглашение</Link></p>
+          <p><Link target='_blank' to="/privacy">- Политика конфиденциальности</Link></p>
+          <p><Link target='_blank' to="/pd">- Согласие на обработку персональных данных</Link></p>
+        </>
+      )
+    }
 
   ]
 

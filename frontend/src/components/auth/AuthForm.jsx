@@ -35,7 +35,7 @@ export const AuthForm = ({ type }) => {
     }
 
     if (!validationPreferences.username.pattern.test(username)) {
-      return "разрешены только буквы, пробелы, точки и дефисы."
+      return "используйте кириллицу, пробелы, точки и дефисы."
     }
 
     if (/\s{2,}/.test(username)) {
@@ -149,7 +149,7 @@ export const AuthForm = ({ type }) => {
         groupAttemptsRef.current++
         return groupAttemptsRef.current < 5
           ? `группа не найдена, либо не существует.`
-          : "введите группу в точности, как на официальном сайте расписания."
+          : "введите ее так, как на официальном сайте расписания."
       }
 
       return true
@@ -353,9 +353,9 @@ export const AuthForm = ({ type }) => {
                   />
                   <span className="checkbox__text">
                     Я даю{" "}
-                    <a href="/pd-consent" target="_blank">
+                    <Link to="/pd" target="_blank">
                       согласие на обработку персональных данных
-                    </a>
+                    </Link>
                   </span>
                 </label>
                 {errors.acceptPd && (
@@ -372,19 +372,19 @@ export const AuthForm = ({ type }) => {
                     type="checkbox"
                     {...register("acceptTerms", {
                       required:
-                        "Необходимо принять пользовательское соглашение",
+                        "Необходимо принять пользовательское соглашение и политику конфиденциальности",
                     })}
                   />
                   <span className="checkbox-block__checkbox__text">
                     Я принимаю{" "}
-                    <a href="/terms" target="_blank">
+                    <Link to="/terms" target="_blank">
                       пользовательское соглашение
-                    </a>{" "}
+                    </Link>{" "}
                     и
-                    <a href="/privacy" target="_blank">
+                    <Link to="/privacy" target="_blank">
                       {" "}
                       политику конфиденциальности
-                    </a>
+                    </Link>
                   </span>
                 </label>
                 {errors.acceptTerms && (

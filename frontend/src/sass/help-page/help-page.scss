@@ -1,16 +1,18 @@
-@use './variables.scss' as *;
+@use '../variables.scss' as *;
 
 .accordion {
   display: flex;
   flex-direction: column;
-  &__link {
+  &__link, a {
     font-weight: 500;
     color: $dark4;
     &:hover {
       text-decoration: underline;
     }
   }
-  &.dark &__link {
+  
+  &.dark &__link, 
+  &.dark a {
     color: $light-white1;
   }
 

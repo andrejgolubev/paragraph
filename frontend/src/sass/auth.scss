@@ -7,6 +7,9 @@
         .auth__header__text {
             color: $light-white1 !important;
         }
+        input {
+            accent-color: $deep-blue !important;
+        }
     }
 
     img {
@@ -22,8 +25,10 @@
     gap: 10px;
     margin: auto;
     background: $table-white;
-
     width: 520px;
+    padding-bottom: 30px;
+    border-radius: 8px;
+    border: 1px solid $light-blue;
     @media (max-width: 600px) {
         width: 80%;
         .input-div, input:not([type='checkbox']) {
@@ -37,15 +42,6 @@
 
     } 
     
-
-
-    padding-bottom: 30px;
-    
-    border-radius: 8px;
-    border: 1px solid $light-blue;
-
-    
-    
     &__header {
         display: flex;
         flex-direction: column;
@@ -53,6 +49,10 @@
         gap: 10px;
         width: 100%;
         margin-top: 30px;
+        @media (max-width: 600px) {
+            margin-top: 20px;
+            margin-bottom: -12px;
+        }
         &__text {
             color: $dark1 !important;
             font-size: 32px;
@@ -133,6 +133,7 @@
             
         }
     }
+
     .pwd-block {
         display: flex;
         flex-direction: column;
@@ -188,6 +189,7 @@
             @media (max-width: 600px) {
                 font-size: 20px !important;
                 width: 80%;
+                margin-top: 0px;
                 @media (max-width: 500px) {
                     font-size: 16px;
                 }
@@ -224,6 +226,7 @@
             padding: 4px 0;
             input {
                 accent-color: $great-blue;
+                margin-right: 4px;
             }
 
             text-align: left !important;
@@ -236,18 +239,20 @@
 
             &__error {
                 margin: -8px 0;
+                &:last-child{
+                    margin-top: -4px;
+                }
                 span {
                     color: #c42d2dcc !important;
                 }
             }
         }
         span {
-            margin-left: 4px;
             color: $grey1;
             font-size: 14px;
         }
 
-        a{ 
+        a { 
             color: $deep-blue;
         }
 
