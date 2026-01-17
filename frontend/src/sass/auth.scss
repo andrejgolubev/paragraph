@@ -239,10 +239,11 @@
 
             &__error {
                 margin: -8px 0;
-                &:last-child{
+                &:last-child{ // для мобильных устр-в 
                     margin-top: -4px;
                 }
                 span {
+                    display: block;
                     color: #c42d2dcc !important;
                 }
             }

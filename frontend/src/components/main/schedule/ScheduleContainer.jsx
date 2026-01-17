@@ -221,7 +221,6 @@ const ScheduleContainer = () => {
                   <td
                     key={`${timeIndex}-${dayIndex}`}
                     data-date={dataDate}
-                    data-index={currentLessonIndex}
                   >
                     {dayLessons.length > 0 ? (
                       dayLessons.map((

@@ -372,7 +372,7 @@ export const AuthForm = ({ type }) => {
                     type="checkbox"
                     {...register("acceptTerms", {
                       required:
-                        "Необходимо принять пользовательское соглашение и политику конфиденциальности",
+                        "Необходимо принять вышеуказанные документы",
                     })}
                   />
                   <span className="checkbox-block__checkbox__text">

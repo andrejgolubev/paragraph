@@ -12,19 +12,29 @@
     padding-inline: 15px;
   }
   
-
   &__header {
     text-align: center;
     font-weight: 500;
     font-size: 28px;
   }
 
+  &__last-update {
+    text-align: center;
+    font-size: 16px;
+    color: $light-grey1;
+  }
+
   &__content {
+    
+    &__intro {
+      padding-top: 12px;
+    }
+    
     &__item {
       &__header {
+        padding: 12px 0;
         font-size: 18px;
         font-weight: 500;
-        padding: 12px 0;
         text-align: center;
       }
 
