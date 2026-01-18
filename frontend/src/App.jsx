@@ -7,7 +7,7 @@ import { Route, Routes } from "react-router-dom"
 import { AuthForm } from "./components/auth/AuthForm"
 import News from "./components/News"
 import { ProtectedRoute } from "./components/ProtectedRoute"
-
+import { Paper } from "./components/help-page/Paper"
 
 function App() {
   
@@ -29,6 +29,10 @@ function App() {
         <Route path='/profile' element={
           <ProtectedRoute type='profile'> <Profile /> </ProtectedRoute>
           } />
+
+        <Route path='/terms' element={<Paper type={'terms'}/>} />
+        <Route path='/privacy' element={<Paper type={'privacy'}/>} />
+        <Route path="/pd" element={<Paper type={'pd'}/>} /> 
       </Routes>
     </Provider>
   )

@@ -1,7 +1,7 @@
 import { create } from 'zustand'  
 import Cookies from 'js-cookie'
 
-const COOKIE_EXPIRES = 365 // 1 год
+const COOKIE_EXPIRES = 30 // 30 дней
 
 
 export const useDropdownStore = create((set) => ({

@@ -47,11 +47,11 @@ const homeworkAPI = {
   },
 
 
-  loadHomeworkData: async function loadHomeworkData(
+  loadHomeworkData: async (
     groupDataValue,
     dateDataValue,
     lessonIndex
-  ) {
+  ) => {
     const params = new URLSearchParams({
       group_data_value: String(groupDataValue),
       date_data_value: dateDataValue,
@@ -67,6 +67,7 @@ const homeworkAPI = {
         console.error('err from loadHomeworkData: ', err)
       })
   },
+
 
   loadGroups: async () => {
     return fetch(`${BASE_URL}/schedule/get-all-groups`)
@@ -125,7 +126,7 @@ const homeworkAPI = {
     ).catch(err => console.log(err))
   },
 
-  sendRegisterData: async (email, password, username, group) => {
+  sendRegisterData: async (email, password, username, group, acceptPd, acceptTerms ) => {
     const response = await fetch(`${BASE_URL}/user/register`, {
       method: "POST",
       headers,
@@ -135,6 +136,8 @@ const homeworkAPI = {
         email,
         password,
         group_number: group,
+        accept_pd: acceptPd,        // новый 
+        accept_terms: acceptTerms   // новый 
       }), 
     })
     const responseData = await response.json() 

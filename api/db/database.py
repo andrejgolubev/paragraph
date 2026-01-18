@@ -9,6 +9,7 @@ from api.settings import settings
 
 class Base(DeclarativeBase): ...
 
+
 engine: AsyncEngine = create_async_engine(
     settings.db.url,
     future=settings.db.future,
@@ -17,11 +18,9 @@ engine: AsyncEngine = create_async_engine(
     max_overflow=settings.db.max_overflow,
 )
 
-
 AsyncSessionLocal = async_sessionmaker(
     engine, class_=AsyncSession, expire_on_commit=False
 )
-
 
 
 async def get_db():

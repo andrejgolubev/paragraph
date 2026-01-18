@@ -30,56 +30,57 @@ def levenstein_distance(a, b):
     return current_row[n]
 
 
-replacement_dict: dict[str, list[str]] = {
-    "а": ["а", "a", "@"],
-    "б": ["б", "6", "b"],
-    "в": ["в", "b", "v"],
-    "г": ["г", "r", "g"],
-    "д": ["д", "d", "g"],
-    "е": ["е", "e"],
-    "ё": ["ё", "e"],
-    "ж": ["ж", "zh", "*"],
-    "з": ["з", "3", "z"],
-    "и": ["и", "u", "i"],
-    "й": ["й", "u", "i"],
-    "к": ["к", "k", "i{", "|{"],
-    "л": ["л", "l", "ji"],
-    "м": ["м", "m"],
-    "н": ["н", "h", "n"],
-    "о": ["о", "o", "0"],
-    "п": ["п", "n", "p"],
-    "р": ["р", "r", "p"],
-    "с": ["с", "c", "s"],
-    "т": ["т", "m", "t"],
-    "у": ["у", "y", "u"],
-    "ф": ["ф", "f"],
-    "х": ["х", "x", "h", "}{"],
-    "ц": ["ц", "c", "u,"],
-    "ч": ["ч", "ch"],
-    "ш": ["ш", "sh"],
-    "щ": ["щ", "sch"],
-    "ь": ["ь", "b"],
-    "ы": ["ы", "bi"],
-    "ъ": ["ъ"],
-    "э": ["э", "e"],
-    "ю": ["ю", "io"],
-    "я": ["я", "ya"],
-}
+# replacement_dict: dict[str, list[str]] = {
+#     "а": ["а", "a", "@"],
+#     "б": ["б", "6", "b"],
+#     "в": ["в", "b", "v"],
+#     "г": ["г", "r", "g"],
+#     "д": ["д", "d", "g"],
+#     "е": ["е", "e"],
+#     "ё": ["ё", "e"],
+#     "ж": ["ж", "zh", "*"],
+#     "з": ["з", "3", "z"],
+#     "и": ["и", "u", "i"],
+#     "й": ["й", "u", "i"],
+#     "к": ["к", "k", "i{", "|{"],
+#     "л": ["л", "l", "ji"],
+#     "м": ["м", "m"],
+#     "н": ["н", "h", "n"],
+#     "о": ["о", "o", "0"],
+#     "п": ["п", "n", "p"],
+#     "р": ["р", "r", "p"],
+#     "с": ["с", "c", "s"],
+#     "т": ["т", "m", "t"],
+#     "у": ["у", "y", "u"],
+#     "ф": ["ф", "f"],
+#     "х": ["х", "x", "h", "}{"],
+#     "ц": ["ц", "c", "u,"],
+#     "ч": ["ч", "ch"],
+#     "ш": ["ш", "sh"],
+#     "щ": ["щ", "sch"],
+#     "ь": ["ь", "b"],
+#     "ы": ["ы", "bi"],
+#     "ъ": ["ъ"],
+#     "э": ["э", "e"],
+#     "ю": ["ю", "io"],
+#     "я": ["я", "ya"],
+# }
 
 
 
 def normalize_text(text: str) -> str:
     """Нормализует текст: заменяет символы, приводит к нижнему регистру"""
-    result = text.replace("-", "").replace(" ", "").replace('.', '').lower()
+    # result = text.replace("-", "").replace(" ", "").replace('.', '').lower()
+    result = text.replace("-", "").replace('.', '').lower()
 
     # тут убираем любые повторения буквы длиной >= 3 в одну
     result = re.sub(r"(.)\1{2,}", r"\1", result)
     # теперь чистим двойные повторения
     result = re.sub(r"(.)\1+", r"\1", result)
 
-    for standard_char, variations in replacement_dict.items():
-        for variation in variations:
-            result = result.replace(variation, standard_char)
+    # for standard_char, variations in replacement_dict.items():
+        # for variation in variations:
+            # result = result.replace(variation, standard_char)
     return result
 
 
@@ -109,11 +110,20 @@ async def has_cursive_words(
 
             for part in range(len(normalized_phrase) - len(word) + 1):
                 fragment = normalized_phrase[part : part + len(word)]
-                print(f'fragment: {fragment}', f'word: {word}', sep='\n')
+                # print(f'fragment: {fragment}', f'word: {word}', sep='\n')
                 if fragment and levenstein_distance(fragment, word) <= max_distance:
-                    print(f'Найдено {fragment}', f'Похоже на {word}', sep='\n') # для дебага
+                    # print(f'Найдено {fragment}', f'Похоже на {word}', sep='\n') # для дебага
                     return True
     return False
 
+
+if __name__ == '__main__': 
+    asyncio.run(
+        has_cursive_words(
+            # phrase='',
+            filepath=FILEPATH,
+            temperature=0.24
+            )
+    )
 
 

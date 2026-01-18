@@ -4,7 +4,7 @@ import { useThemeStore } from "../../store/themeStore"
 
 export const Accordion = ({ faqList }) => {
   const darkTheme = useThemeStore(state => state.darkTheme)
-
+  
   const [openId, setOpenId] = useState(null)
 
   return (

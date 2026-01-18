@@ -1,12 +1,12 @@
-from string import ascii_letters
+from sqlalchemy.orm import selectinload
 from api.auth.validation import (
     get_refresh_token_payload,
-    get_current_active_auth_user,
+    get_current_active_auth_user_data,
 )
 from api.db.database import get_db
-from api.db.models import Group, User
+from api.db.models import Group, User, UserConsent
 from api.db.schemas import UserRegistration, UserLogin, UserUpdate
-from api import settings
+from api.settings import settings
 from api.auth.utils import (
     hash_password,
     validate_password,
@@ -14,7 +14,7 @@ from api.auth.utils import (
 )
 from api.auth.helpers import get_refreshed_access_token
 
-from fastapi import Body, Depends, HTTPException, Response, status, APIRouter, Query
+from fastapi import Body, Depends, HTTPException, Request, Response, status, APIRouter, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from .helpers import create_access_token, create_refresh_token
@@ -22,6 +22,7 @@ from api.utils.censor import has_cursive_words
 from random import choice
 from pathlib import Path
 from api.utils.converters import latin_to_cyrillic
+from api.db.schemas import FullUserResponse
 
 
 router = APIRouter(
@@ -37,6 +38,7 @@ def username_is_cyrillic_only(username: str) -> bool:
 
 @router.post("/register")
 async def register(
+    request: Request,
     register_data: UserRegistration = Body(),
     db: AsyncSession = Depends(get_db),
 ):
@@ -45,6 +47,21 @@ async def register(
     email = register_data.email
     password = register_data.password
     group_number = register_data.group_number
+
+    # ПРОВЕРКА ЧЕКБОКСОВ
+    if not register_data.accept_pd:
+        raise HTTPException(
+            status_code=403, 
+            detail="Необходимо дать согласие на обработку ПД",
+        )
+    
+    if not register_data.accept_terms:
+        raise HTTPException(
+            status_code=403, 
+            detail="Необходимо принять пользовательское соглашение и политику конфиденциальности",
+        )
+
+    
 
     if not username_is_cyrillic_only(username):
         raise HTTPException(status_code=400, detail="имя может содержать только кириллицу.")
@@ -86,6 +103,23 @@ async def register(
     db.add(db_user)
     await db.commit()
     await db.refresh(db_user)
+
+    ip = request.client.host if request.client else None 
+
+    pd_consent = UserConsent(
+        user_id=db_user.id, 
+        consent_type='pd',
+        ip=ip
+    )
+
+    terms_consent = UserConsent(
+        user_id=db_user.id, 
+        consent_type='terms',
+        ip=ip
+    )
+    db.add_all([terms_consent, pd_consent])
+
+    await db.commit()
 
     return dict(
         id=db_user.id,
@@ -134,9 +168,9 @@ async def login(
     }
     for key, value in secure_cookies.items():
         if key == 'access_token': 
-            lifetime_seconds = settings.settings.auth_jwt.access_token_expire_minutes*60 
+            lifetime_seconds = settings.auth_jwt.access_token_expire_minutes*60 
         if key == 'refresh_token': 
-            lifetime_seconds = settings.settings.auth_jwt.refresh_token_expire_days*24*60*60
+            lifetime_seconds = settings.auth_jwt.refresh_token_expire_days*24*60*60
         response.set_cookie(
             key=key,
             value=value,
@@ -257,19 +291,61 @@ async def update_profile(
 
 
 @router.get("/me")
-def auth_user_check_self_info(user: dict = Depends(get_current_active_auth_user)):
+def auth_user_check_self_info(user_data: dict = Depends(get_current_active_auth_user_data)):
     """для возрвата данных на фронтенд в раздел 'профиль'"""
 
     return {
-        "username": user.get("username"),
-        "email": user.get("email"),
-        "role": user.get("role"),
-        "group": user.get("group"),
+        "username": user_data.get("username"),
+        "email": user_data.get("email"),
+        "role": user_data.get("role"),
+        "group": user_data.get("group"),
+        # "consents": user_data.get("consents")
     }
 
 
+@router.get(
+    '/get-full-info', 
+    response_model=FullUserResponse, 
+    dependencies=[Depends(verify_admin_api_key)],
+)
+async def get_full_user_info(
+    user_email: str, 
+    db: AsyncSession = Depends(get_db), 
+) -> FullUserResponse:
+    """can be mostly used to check if user agrees with terms of use etc."""
+    result = await db.scalars(select(User).where(User.email == user_email)
+    .options(selectinload(User.consents)))
 
-@router.post("/refresh-token")
+    if (user := result.first()):  
+        user_response = FullUserResponse( 
+            email=user.email, 
+            name=user.name, 
+            group_id=user.group_id if user.group_id else None, 
+            role=user.role,
+            active=user.active, 
+            sign_up_date=user.sign_up_date,
+            consents = [
+                {
+                    'consent_type': consent.consent_type, 
+                    'accepted_at': consent.accepted_at,
+                }
+                for consent in user.consents
+            ]
+        )
+        return user_response
+        
+    else: 
+        raise HTTPException(
+            status_code=404,
+            detail='пользователь не найден'
+        )
+
+
+
+@router.post(
+    "/refresh-token",
+    dependencies=[Depends(verify_admin_api_key)],
+)
 async def refresh_token(
     response: Response,
     payload: dict = Depends(get_refresh_token_payload), 
@@ -286,7 +362,23 @@ async def refresh_token(
             httponly=True,
             secure=True,  # для htpps
             samesite='none', # обязательно 'lax' для продакшна  
-            max_age=settings.settings.auth_jwt.access_token_expire_minutes*60
+            max_age=settings.auth_jwt.access_token_expire_minutes*60
         )  
 
     return {"message": 'токен успешно обновлен'}
+
+
+@router.post(
+    '/delete', 
+    dependencies=[Depends(verify_admin_api_key)]
+)
+async def delete_user_by_email(email: str, db: AsyncSession = Depends(get_db)): 
+    result = await db.scalars(select(User).where(User.email == email))
+    if not (user := result.first()) : 
+        raise HTTPException(
+            status_code=404,
+            detail='пользователь с таким email не найден'
+        )
+    db.delete(user)
+    await db.commit()
+    return {'message': 'удаление успешно'}

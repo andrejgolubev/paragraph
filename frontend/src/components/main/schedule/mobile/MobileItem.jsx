@@ -27,7 +27,7 @@ const MobileItem = ({ time, lessonId, onClick, texts = [], types = [] }) => {
 
   
   return (
-    <div data-index={lessonId} className="mobile-schedule__content__item">
+    <div className="mobile-schedule__content__item">
       <div className="mobile-schedule__content__item__time" onClick={onClick}>
         <p>{time}</p>
         <img src={darkTheme ? paperclipDark : paperclip} alt="paperclip" />

@@ -57,6 +57,10 @@ class CookiesConfig(BaseModel):
     samesite: Literal['lax', 'samesite', 'none'] = 'lax'  
 
 
+# class ConsentConfig(BaseModel): 
+    
+
+
 class Settings(BaseSettings): 
     db: DatabaseConfig = DatabaseConfig()
     auth_jwt: AuthJWT = AuthJWT() 

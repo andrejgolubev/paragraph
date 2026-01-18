@@ -1,4 +1,6 @@
+from datetime import datetime
 from pydantic import BaseModel,  EmailStr,  ConfigDict
+
 
 
 class UserUpdate(BaseModel):
@@ -19,7 +21,9 @@ class UserRegistration(BaseModel):
     username: str
     email: EmailStr 
     password: str 
-    group_number: str
+    group_number: str | None = None
+    accept_pd: bool = False 
+    accept_terms: bool = False 
    
 
 
@@ -28,15 +32,18 @@ class UserLogin(BaseModel):
     password: str
     
 
-class UserResponse(BaseModel):
+class FullUserResponse(BaseModel):
+    email: str
+    name: str 
+    group_id: int | None
+    role: str 
+    active: bool 
+    sign_up_date: datetime 
+    consents: list
+
     model_config = ConfigDict(from_attributes=True)
     
-    id: int
-    email: str
-    name: str
-    role: str
-    active: bool
-    group_id: int | None = None
+    
 
     
 
@@ -46,14 +53,7 @@ class GroupCreate(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-class GroupResponse(BaseModel):
-    id: int
-    users: list["UserResponse"]| None  = None
 
-    model_config = ConfigDict(from_attributes=True)
-
-
-    date: str
 
 
 class OnlyDateResponse(BaseModel): 
