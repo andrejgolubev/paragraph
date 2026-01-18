@@ -110,9 +110,9 @@ async def has_cursive_words(
 
             for part in range(len(normalized_phrase) - len(word) + 1):
                 fragment = normalized_phrase[part : part + len(word)]
-                print(f'fragment: {fragment}', f'word: {word}', sep='\n')
+                # print(f'fragment: {fragment}', f'word: {word}', sep='\n')
                 if fragment and levenstein_distance(fragment, word) <= max_distance:
-                    print(f'Найдено {fragment}', f'Похоже на {word}', sep='\n') # для дебага
+                    # print(f'Найдено {fragment}', f'Похоже на {word}', sep='\n') # для дебага
                     return True
     return False
 

@@ -8,9 +8,10 @@ services:
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=pg
     ports:
-      - "5433:5432" #ПОРТ_ОС(куда я делаю запрос):ПОРТ_КОНТЕЙНЕРА
+      - "5434:5432" #ПОРТ_ОС(куда я делаю запрос):ПОРТ_КОНТЕЙНЕРА
     networks:
       - custom
+
 networks:
-  custom: 
+  custom:
     driver: bridge

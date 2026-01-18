@@ -19,13 +19,7 @@ def latin_to_cyrillic(input_str: str) -> str:
     
     return result 
 
-if __name__ == "__main__":
-    print(latin_to_cyrillic("543м"))
-    print(latin_to_cyrillic("543O"))
-    print(latin_to_cyrillic("543P"))
-    print(latin_to_cyrillic("543T"))
-    print(latin_to_cyrillic("543X"))
-    print(latin_to_cyrillic("543Y"))
+
 
 
 
