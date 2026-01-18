@@ -1,17 +1,50 @@
 services:
   db:
-    container_name: "db"
+    container_name: db
     image: postgres:17
-    restart: always
+    restart: unless-stopped
     environment:
-      - POSTGRES_USER=pg
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=pg
+      POSTGRES_USER: pg
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: pg
     ports:
-      - "5434:5432" #ПОРТ_ОС(куда я делаю запрос):ПОРТ_КОНТЕЙНЕРА
+      - "5434:5432" # локальный порт:порт контейнера
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - custom
+
+  redis:
+    container_name: redis_local
+    image: redis:7
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-paragraph}
+    command:
+      - redis-server
+      - --requirepass
+      - ${REDIS_PASSWORD:-paragraph}
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - custom
+
+  redis_gui:
+    image: redis/redisinsight:latest
+    restart: unless-stopped
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
     networks:
       - custom
 
 networks:
   custom:
     driver: bridge
+
+volumes:
+  db-data:
+  redis-data:

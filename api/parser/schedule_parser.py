@@ -6,7 +6,7 @@ def garb_remove(string: str):
     return ' '.join(string.split())
 
 
-def parse_schedule(url: str): 
+def parse_schedule(url: str) -> dict[str, list]: 
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'lxml')
     table = soup.find('table')
