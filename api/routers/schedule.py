@@ -1,5 +1,3 @@
-import json
-
 from fastapi import Response, HTTPException, APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
 from api.db.database import get_db
@@ -9,15 +7,16 @@ from api.db.schemas import GroupSelection
 from api.services.data_service import data_service
 from api.settings import settings
 
-router = schedule_router = APIRouter(tags=['Schedule'], prefix='/schedule')
+from redis.asyncio import Redis
+import json
 
-SCHEDULE_CACHE_TTL = 60 * 10  # 10 min
+router = schedule_router = APIRouter(tags=['schedule'], prefix='/schedule')
 
 
-def _build_cache_key(group: str | None, date: str | None) -> str:
-    group_part = group or "default"
-    date_part = date or "current"
-    return f"schedule:{group_part}:{date_part}"
+def _build_cache_key(group_data_value: str | None, date_data_value: str | None) -> str:
+    group_dv = group_data_value or "default"
+    date_dv = date_data_value or "current"
+    return f"schedule:{group_dv}:{date_dv}"
 
 
 @router.get("/get-schedule")
@@ -31,7 +30,7 @@ async def get_schedule(
         f"&group={group_data_value}&date={date_data_value or ''}"
     )
 
-    redis_client = getattr(request.app.state, "redis", None)
+    redis_client: Redis | None = getattr(request.app.state, "redis", None)
     cache_key = _build_cache_key(group_data_value, date_data_value)
     if redis_client:
         cached = await redis_client.get(cache_key)
@@ -41,12 +40,14 @@ async def get_schedule(
     try:
         schedule_data = await parse_schedule_from_url(url, function=parse_schedule)
         if redis_client:
-            await redis_client.set(cache_key, json.dumps(schedule_data), ex=SCHEDULE_CACHE_TTL)
+            await redis_client.set(
+                cache_key, 
+                json.dumps(schedule_data), 
+                ex=settings.redis.schedule_cache_ttl
+            )
         return schedule_data
     except Exception:
         raise HTTPException(status_code=500, detail=f"Error parsing schedule.")
-
-
 
 
 @router.post("/select-group")

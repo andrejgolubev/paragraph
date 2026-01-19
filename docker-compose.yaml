@@ -7,12 +7,26 @@ services:
       POSTGRES_USER: pg
       POSTGRES_PASSWORD: root
       POSTGRES_DB: pg
+      # Оптимизация для продакшена:
+      POSTGRES_SHARED_BUFFERS: 512MB
+      POSTGRES_EFFECTIVE_CACHE_SIZE: 1536MB
+      POSTGRES_MAINTENANCE_WORK_MEM: 128MB
+      POSTGRES_WORK_MEM: 8MB
+      POSTGRES_MAX_CONNECTIONS: "200"
     ports:
       - "5434:5432" # локальный порт:порт контейнера
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
       - custom
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   redis:
     container_name: redis_local
@@ -30,16 +44,14 @@ services:
       - redis-data:/data
     networks:
       - custom
-
-  redis_gui:
-    image: redis/redisinsight:latest
-    restart: unless-stopped
-    ports:
-      - "5540:5540"
-    depends_on:
-      - redis
-    networks:
-      - custom
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
 
 networks:
   custom:
