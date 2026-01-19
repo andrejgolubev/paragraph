@@ -2,7 +2,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from api.parser.parser_conf import init
 
 
 def _parse_group(driver: webdriver.Chrome): 
@@ -18,7 +17,7 @@ def _parse_group(driver: webdriver.Chrome):
         EC.presence_of_element_located((By.CSS_SELECTOR, "ul[role='listbox']"))
     ) # options_list это ul со всеми группами
     
-    # Парсим все доступные группы
+        
     groups_dict = {}
     group_options = options_list.find_elements(By.TAG_NAME, "li")
 
@@ -35,12 +34,9 @@ def _parse_group(driver: webdriver.Chrome):
 def parse_groups():
     """parses all groups.
     group_number:data-value pairs"""
-    driver = init()
+
+    driver = webdriver.Chrome()
+    driver.get('https://rasp.rsreu.ru')
+
     gr = _parse_group(driver=driver)
     return gr
-
-
-
-if __name__ == '__main__': 
-    print(f'{parse_groups() = }')
-

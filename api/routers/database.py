@@ -3,7 +3,7 @@ from api.db.refresh_db import clean_up_date, clean_up_dates, load_groups_and_dat
 from api.db.database import get_db
 from api.parser.group_parser import parse_groups
 from api.parser.date_parser import parse_dates
-from api.parser.utils import convert_date
+from api.utils.converters import convert_date
 from api.auth.utils import verify_admin_api_key
 from api.db.models import Group, Date
 

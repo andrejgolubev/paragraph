@@ -1,6 +1,7 @@
 # paragraph 
 
-# Локальный стек ("-p paragraph" - создает все ресурсы с префиксом "paragraph_)
+# Локальный стек 
+"-p paragraph" - создает все ресурсы с префиксом "paragraph_"
 - сборка и поднятие:
   ```shell
   docker compose -p paragraph up -d
@@ -20,10 +21,12 @@
 
 
 # Продакшен-профиль 
-Чтобы поднять тот же стек, но с «продакшеновыми» лимитами, перечисленными в `docker-compose.prod.yaml`, добавь файл сверху (это расширит лимиты):
+- Тот же стек, но с «продакшеновыми» лимитами, перечисленными в `docker-compose.prod.yaml`:
 ```shell
 docker compose -f docker-compose.yaml -f docker-compose.prod.yaml -p paragraph up -d
 ```
+
+
 
 
 

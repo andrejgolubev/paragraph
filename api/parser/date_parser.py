@@ -2,7 +2,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from api.parser.parser_conf import init
 
 
 
@@ -42,7 +41,7 @@ def parse_dates():
     """parses all dates.
     user_date:data_value"""
     
-    driver = init()
+    driver = webdriver.Chrome()
     driver.get('https://rasp.rsreu.ru/schedule-frame/group?faculty=1&group=1640&date=')
 
     dates = _parse_date(driver=driver)
