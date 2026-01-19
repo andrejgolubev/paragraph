@@ -44,10 +44,8 @@ def parse_dates():
     driver = webdriver.Chrome()
     driver.get('https://rasp.rsreu.ru/schedule-frame/group?faculty=1&group=1640&date=')
 
-    dates = _parse_date(driver=driver)
+    dates = _parse_date(driver)
     return dates 
 
 
 
-if __name__ == '__main__': 
-    print(f'{parse_dates() = }')

@@ -1,8 +1,6 @@
-from api.db.refresh_db import clean_up_date, clean_up_dates, load_groups_and_dates
-
+# to work with db - admin only
+from api.db.refresh_db import clean_up_date, clean_up_dates
 from api.db.database import get_db
-from api.parser.group_parser import parse_groups
-from api.parser.date_parser import parse_dates
 from api.utils.converters import convert_date
 from api.auth.utils import verify_admin_api_key
 from api.db.models import Group, Date
@@ -12,19 +10,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
-router = database_router = APIRouter(tags=['Database'], prefix='/database')
-
-@router.post("/initial", dependencies=[Depends(verify_admin_api_key)])
-async def load_initial_groups_and_dates(
-    refresh: bool = Query(False, description="полностью обновить базу данных?"), 
-    db: AsyncSession = Depends(get_db)
-):
-    """Начальная загрузка групп и дат в базу данных."""
-    await load_groups_and_dates(groups=parse_groups(), dates=parse_dates(), db=db, refresh=refresh)
-    return {"status": "Data loaded successfully"}
+router = database_router = APIRouter(
+    tags=['Database'], 
+    prefix='/database', 
+    dependencies=[Depends(verify_admin_api_key)],
+)
 
 
-@router.post("/cleanup-date", dependencies=[Depends(verify_admin_api_key)])
+@router.post("/cleanup-date")
 async def cleanup_date(
     date_input: str = Query(..., description="Дата (yyyy-mm-dd)"),
     db: AsyncSession = Depends(get_db)
@@ -33,7 +26,8 @@ async def cleanup_date(
 
     return await clean_up_date(date_input=date_input, db=db)
 
-@router.post("/cleanup-dates", dependencies=[Depends(verify_admin_api_key)])
+
+@router.post("/cleanup-dates")
 async def cleanup_dates(
     dates_amount: int = Query(..., description="Количество дат для очистки"),
     db: AsyncSession = Depends(get_db)
@@ -43,7 +37,7 @@ async def cleanup_dates(
     return await clean_up_dates(dates_amount=dates_amount, db=db)
 
 
-@router.get('/get-all-dates-related-to-group', dependencies=[Depends(verify_admin_api_key)])
+@router.get('/get-all-dates-related-to-group')
 async def get_all_dates_related_to_group(
     group_number: str = Query(..., description="Фактическая группа"), 
     db: AsyncSession = Depends(get_db)
@@ -64,7 +58,7 @@ async def get_all_dates_related_to_group(
     }   
 
 
-@router.get('/get-all-groups-related-to-date', dependencies=[Depends(verify_admin_api_key)])
+@router.get('/get-all-groups-related-to-date')
 async def get_all_groups_related_to_date(
     date_input: str = Query(..., description="Дата (dd.mm.yyyy или yyyy-mm-dd)"), 
     db: AsyncSession = Depends(get_db)
