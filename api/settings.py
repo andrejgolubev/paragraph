@@ -57,7 +57,8 @@ class CookiesConfig(BaseModel):
     samesite: Literal['lax', 'samesite', 'none'] = 'lax'  
 
 
-# class ConsentConfig(BaseModel): 
+class RedisConfig(BaseModel): 
+    schedule_cache_ttl: int = 60 * 5 # 5 minutes
     
 
 
@@ -66,7 +67,7 @@ class Settings(BaseSettings):
     auth_jwt: AuthJWT = AuthJWT() 
     logging: LoggingConfig = LoggingConfig()
     cookie: CookiesConfig = CookiesConfig() 
-
+    redis: RedisConfig = RedisConfig() 
 
     
 settings = Settings()
