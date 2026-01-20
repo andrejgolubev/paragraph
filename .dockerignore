@@ -1,8 +1,0 @@
-.env 
-.git
-.dockerignore
-pytest.ini
-package-lock.json 
-package.json 
-certs/
-ideas/

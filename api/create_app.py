@@ -2,8 +2,10 @@ import os
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from .middleware import register_middlewares
+from api.middleware.register import register_middlewares
 from redis.asyncio import Redis
+from api.settings import settings
+
 
 load_dotenv()
 
@@ -39,7 +41,8 @@ def create_app() -> FastAPI:
         # webhooks=...
     )
 
-    register_middlewares(app)
+    
+    register_middlewares(app, settings)
     return app
 
 

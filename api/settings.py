@@ -6,7 +6,7 @@ from envparse import Env
 from dotenv import load_dotenv
 import os
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings
 
 env = Env()
@@ -44,10 +44,11 @@ class LoggingConfig(BaseModel):
         return logging.getLevelNamesMapping()[self.log_level.upper()]
 
 
-class DatabaseConfig(BaseModel): 
+class DatabaseConfig(BaseSettings): 
+    # url: str = Field('DATABASE_URL', env='DATABASE_URL')
     url: str = DATABASE_URL
     future: bool = True
-    echo: bool = True
+    echo: bool = False
     pool_size: int = 5
     max_overflow: int = 10
 
@@ -59,7 +60,12 @@ class CookiesConfig(BaseModel):
 
 class RedisConfig(BaseModel): 
     schedule_cache_ttl: int = 60 * 5 # 5 minutes
-    
+
+
+class RateLimitSettings(BaseSettings):
+    window_seconds: int = 5
+    max_requests: int = 60
+    cooldown_seconds: int = 60 * 5  # 5 min
 
 
 class Settings(BaseSettings): 
@@ -68,6 +74,7 @@ class Settings(BaseSettings):
     logging: LoggingConfig = LoggingConfig()
     cookie: CookiesConfig = CookiesConfig() 
     redis: RedisConfig = RedisConfig() 
+    rate_limit: RateLimitSettings = RateLimitSettings()
 
     
 settings = Settings()
