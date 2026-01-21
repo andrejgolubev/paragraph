@@ -21,12 +21,12 @@ export const getHandledResponseData = async (response) => {
   if (response.status === 429) {
     const body = await response.json().catch(() => ({}))
     const errorDetail = body.detail
-    showNotification(errorDetail || "Превышен лимит запросов", "error")
+    showNotification(errorDetail, "error")
   }
-  if (!response.ok) {
+  if (!response.ok && response.status !== 401) {
     const body = await response.json().catch(() => ({}))
     const errorDetail = body.detail
-    showNotification(errorDetail || "Ошибка сети :(", "error")
+    showNotification(errorDetail, "error")
   }
 
   return await response.json()
