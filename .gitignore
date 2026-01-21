@@ -117,6 +117,9 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
+# cpython
+*.pyc
+
 # Pyre type checker
 .pyre/
 
@@ -127,4 +130,9 @@ certs/
 node_modules/
 ideas/
 misc/
-alembic.ini
+
+
+# tests 
+app.egg-info
+.coverage
+htmlcov

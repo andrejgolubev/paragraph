@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from api.db.models import Group, Date
+from backend.api.db.models import Group, Date
 
 class DataService:
     @staticmethod

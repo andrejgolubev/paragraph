@@ -1,9 +1,9 @@
 # to work with db - admin only
-from api.db.refresh_db import clean_up_date, clean_up_dates
-from api.db.database import get_db
-from api.utils.converters import convert_date
-from api.auth.utils import verify_admin_api_key
-from api.db.models import Group, Date
+from backend.api.db.refresh_db import clean_up_date, clean_up_dates
+from backend.api.db.database import get_db
+from backend.api.utils.converters import convert_date
+from backend.api.auth.utils import verify_admin_api_key
+from backend.api.db.models import Group, Date
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession

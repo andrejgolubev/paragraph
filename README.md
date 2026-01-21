@@ -31,6 +31,15 @@ poetry install
 docker compose -f docker-compose.yaml -f docker-compose.prod.yaml -p paragraph up -d
 ```
 
+# Admin scripts
+Для команд управления аккаунтами через `/admin/*` (они уже прикрыты `API-Key`) можно просто запускать curl на сервере:
+
+```bash
+./scripts/make-admin.sh user@example.com "543,5413" "$ADMIN_API_KEY" "https://paragraph.example.com"
+./scripts/delete-user.sh user@example.com "$ADMIN_API_KEY" "https://paragraph.example.com"
+```
+
+
 # Обновление групп и дат
 этот процеесс поднимает `chromedriver`/`Google Chrome for testing` => он должен запускаться в изолированном процессе (по SSH или cron).
 
@@ -41,12 +50,12 @@ docker compose -f docker-compose.yaml -f docker-compose.prod.yaml -p paragraph u
    ```
 2. Запустите обновление через Poetry:
    ```shell
-   poetry run python -m api.scripts.reload_db
+   poetry run python -m backend.api.scripts.reload_db
    ```
    Добавьте `--refresh`, если хотите очистить базу перед загрузкой.
 3. Шорткат: `make reload-db`.
 
-Можно поставить cron или systemd timer, чтобы запускать `poetry run python -m api.scripts.reload_db` регулярно 
+Можно поставить cron или systemd timer, чтобы запускать `poetry run python -m backend.api.scripts.reload_db` регулярно 
 
 
 

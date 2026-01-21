@@ -5,7 +5,7 @@ from sqlalchemy import (
     String,
     Integer,
 )
-from api.db.database import Base
+from backend.api.db.database import Base
 from datetime import UTC, datetime
 
 

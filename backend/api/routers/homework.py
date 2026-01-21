@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends, Request, HTTPException, Body, Response, 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
-from api.auth.validation import get_current_active_auth_user_data
-from api.db.database import get_db
-from api.db.models import Group, Date, Homework
+from backend.api.auth.validation import get_current_active_auth_user_data
+from backend.api.db.database import get_db
+from backend.api.db.models import Group, Date, Homework
 from datetime import UTC, datetime
-from api.db.schemas import HomeworkRequest
-from api.utils.converters import latin_to_cyrillic
+from backend.api.db.schemas import HomeworkRequest
+from backend.api.utils.converters import latin_to_cyrillic
 
 router = homework_router = APIRouter(tags=["Homework"], prefix="/homework")
 

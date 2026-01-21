@@ -1,5 +1,5 @@
 import jwt
-from api.settings import settings
+from backend.api.core.config import settings
 import bcrypt
 from datetime import UTC, datetime, timedelta 
 from fastapi import HTTPException, status, Header

@@ -7,8 +7,14 @@ from alembic import context
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
-from api.db.models import Group, Homework, User, Date, Base
+from backend.api.db.models import Group, Homework, User, Date, Base
 config = context.config
+
+
+# override sqlalchemy.url in alembic.ini with .env value 
+from backend.api.core.config import settings
+config.set_main_option("sqlalchemy.url", settings.db.url)
+
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

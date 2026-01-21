@@ -1,14 +1,13 @@
 from fastapi import Depends, HTTPException, Request, Response, status
 import jwt
-from jwt import exceptions
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from api.settings import settings
-from api.auth import utils as auth_utils
-from api.db.models import Group, User
-from api.db.database import AsyncSessionLocal, get_db
-from api.auth.helpers import get_refreshed_access_token
+from backend.api.core.config import settings
+from backend.api.auth import utils as auth_utils
+from backend.api.db.models import Group, User
+from backend.api.db.database import AsyncSessionLocal, get_db
+from backend.api.auth.helpers import get_refreshed_access_token
 
 
 async def get_access_token_payload(

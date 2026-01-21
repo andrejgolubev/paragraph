@@ -12,7 +12,10 @@ from pydantic_settings import BaseSettings
 env = Env()
 load_dotenv() 
 
-BASE_DIR = Path(__file__).parent
+BASE_DIR = Path(__file__).parent.parent
+
+
+
 
 DATABASE_URL = os.getenv('DATABASE_URL')
 SECRET_KEY = os.getenv('SECRET_KEY')
@@ -64,7 +67,7 @@ class RedisConfig(BaseModel):
 
 class RateLimitSettings(BaseSettings):
     window_seconds: int = 5
-    max_requests: int = 60
+    max_requests: int = 80
     cooldown_seconds: int = 60 * 5  # 5 min
 
 
@@ -77,4 +80,5 @@ class Settings(BaseSettings):
     rate_limit: RateLimitSettings = RateLimitSettings()
 
     
-settings = Settings()
+settings = Settings() 
+

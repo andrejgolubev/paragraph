@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.middleware.process_time import ProcessTimeHeaderMiddleware
-from api.middleware.rate_limit import RateLimitMiddleware
+from backend.api.middleware.process_time import ProcessTimeHeaderMiddleware
+from backend.api.middleware.rate_limit import RateLimitMiddleware
 
 
 ALLOW_ORIGINS = [

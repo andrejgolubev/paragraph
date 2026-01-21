@@ -3,7 +3,7 @@ import time
 from fastapi import Request, HTTPException, status
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
-from api.settings import Settings
+from backend.api.core.config import Settings
 from redis.asyncio import Redis
 
 

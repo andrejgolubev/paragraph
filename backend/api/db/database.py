@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
 )
 from sqlalchemy.orm import DeclarativeBase
-from api.settings import settings
+from backend.api.core.config import settings
 
 class Base(DeclarativeBase): ...
 

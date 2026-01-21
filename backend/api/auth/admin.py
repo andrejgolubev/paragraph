@@ -1,14 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from api.auth.helpers import get_refreshed_access_token
-from api.auth.utils import verify_admin_api_key
-from api.auth.validation import get_refresh_token_payload
-from api.db.database import get_db
-from api.db.models import User
-from api.db.schemas import FullUserResponse
-from api.settings import settings
+from backend.api.auth.utils import verify_admin_api_key
+from backend.api.db.database import get_db
+from backend.api.db.models import User
+from backend.api.db.schemas import FullUserResponse
 
 
 router = APIRouter(
@@ -101,29 +98,3 @@ async def delete_user_by_email(email: str, db: AsyncSession = Depends(get_db)):
     await db.commit()
     return {'message': 'удаление успешно'}
 
-
-
-
-# @router.post(
-#     "/refresh-token",
-# )
-# async def refresh_token(
-#     response: Response,
-#     payload: dict = Depends(get_refresh_token_payload), 
-#     db: AsyncSession = Depends(get_db)):
-#     """
-#     Обновляет access_token с помощью refresh_token.
-#     """
-
-#     access_token = await get_refreshed_access_token(payload=payload, db=db)
-
-#     response.set_cookie(
-#             key='access_token',
-#             value=access_token,
-#             httponly=True,
-#             secure=True,  # для htpps
-#             samesite='none', # обязательно 'lax' для продакшна  
-#             max_age=settings.auth_jwt.access_token_expire_minutes*60
-#         )  
-
-#     return {"message": 'токен успешно обновлен'}

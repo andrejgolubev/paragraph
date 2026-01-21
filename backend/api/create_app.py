@@ -2,9 +2,9 @@ import os
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from api.middleware.register import register_middlewares
+from backend.api.middleware.register import register_middlewares
 from redis.asyncio import Redis
-from api.settings import settings
+from backend.api.core.config import settings
 
 
 load_dotenv()

@@ -1,9 +1,9 @@
 import logging
 from fastapi import FastAPI
-from api.routers import schedule, homework, database
-from api.auth.users import router as user_router
-from api.auth.admin import router as admin_router
-from api.create_app import create_app
+from backend.api.routers import schedule, homework, database
+from backend.api.auth.users import router as user_router
+from backend.api.auth.admin import router as admin_router
+from backend.api.create_app import create_app
 
 # logging.basicConfig(
 #     level=settings.logging.log_level_value,
