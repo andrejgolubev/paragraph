@@ -3,7 +3,6 @@ from fastapi.responses import JSONResponse
 from api.db.database import get_db
 from api.parser.schedule_parser import parse_schedule_from_url, parse_schedule  
 from sqlalchemy.ext.asyncio import AsyncSession
-from api.db.schemas import GroupSelection
 from api.services.data_service import data_service
 from api.settings import settings
 
@@ -48,25 +47,6 @@ async def get_schedule(
         return schedule_data
     except Exception:
         raise HTTPException(status_code=500, detail=f"Error parsing schedule.")
-
-
-@router.post("/select-group")
-async def select_group(
-    group_data: GroupSelection,
-    response: Response,
-):
-    # Сохраняем в cookie на 30 дней
-    response.set_cookie(
-        key="selected_group",
-        value=group_data.group_data_value,
-        max_age=30*24*60*60,  # 30 дней
-        httponly=True,
-        samesite='none', # обязательно 'lax' для продакшна
-        secure=True  
-    )
-    
-    return {"status": "success", "selected_group": group_data.group_data_value} 
-
 
 
 @router.get('/get-all-groups', response_class=JSONResponse)

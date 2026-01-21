@@ -7,6 +7,8 @@ export const useUiStore = create((set) => ({
   }),
   notificationOuterMessage: '',
   setNotificationOuterMessage: (message) => set({ notificationOuterMessage: message }),
+  notificationOuterType: 'success',
+  setNotificationOuterType: (type) => set({ notificationOuterType: type }),
   notificationOuterActive: false,
   setNotificationOuterActive: (isActive) => set({ notificationOuterActive: isActive }),
   tipActive: false,

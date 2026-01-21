@@ -47,8 +47,12 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             logger.info("IP %s currently blocked for cooldown", ip)
             return JSONResponse(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-                content={"detail": "превышен лимит запросов. подождите и попробуйте снова."},
+                content={
+                    "status": "429",
+                    "detail": "превышен лимит запросов. подождите и попробуйте снова."
+                },
             )
+            
 
         # ключ на основе временного окна
         rate_key = f"rate:{ip}"
@@ -68,8 +72,12 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
                            ip, current, window, self.settings.rate_limit.cooldown_seconds)
             return JSONResponse(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-                content={"detail": "превышен лимит запросов."},
+                content={
+                    "status": "429",
+                    "detail": "превышен лимит запросов."
+                },
             )
+            
         
         
         response = await call_next(request)

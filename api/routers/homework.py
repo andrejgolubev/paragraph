@@ -47,14 +47,14 @@ async def save_homework(
         )
 
         if not (group := group_result.first()):
-            raise HTTPException(status_code=404, detail="Group not found")
+            raise HTTPException(status_code=404, detail="Группа не найдена")
 
         date_result = await db.scalars(
             select(Date).where(Date.data_value == date_data_value)
         )
 
         if not (date := date_result.first()):
-            raise HTTPException(status_code=404, detail="Date not found")
+            raise HTTPException(status_code=404, detail="Дата не выбрана или не найдена")
 
         # находим или создаем связь
         hmw_result = await db.scalars(
@@ -83,7 +83,7 @@ async def save_homework(
 
         await db.commit()
 
-        return {"detail": "saved", "username": user_data.get('username')}
+        return {"status": 'ok', "detail": "saved", "username": user_data.get('username')}
 
     except Exception:
         await db.rollback()

@@ -1,6 +1,4 @@
-from sqlalchemy.orm import selectinload
 from api.auth.validation import (
-    get_refresh_token_payload,
     get_current_active_auth_user_data,
 )
 from api.db.database import get_db
@@ -10,9 +8,7 @@ from api.settings import settings
 from api.auth.utils import (
     hash_password,
     validate_password,
-    verify_admin_api_key,
 )
-from api.auth.helpers import get_refreshed_access_token
 
 from fastapi import Body, Depends, HTTPException, Request, Response, status, APIRouter, Query
 from sqlalchemy import select
@@ -22,7 +18,6 @@ from api.utils.censor import has_cursive_words
 from random import choice
 from pathlib import Path
 from api.utils.converters import latin_to_cyrillic
-from api.db.schemas import FullUserResponse
 
 
 router = APIRouter(
@@ -181,6 +176,7 @@ async def login(
         )   
     
     return {
+        "status": "ok",
         "detail": f"Вы вошли как {user.name}",
         'username': user.name,
         'role': user.role,
@@ -193,7 +189,7 @@ async def logout(response: Response):
     response.delete_cookie('access_token', samesite='none', secure=True)
     response.delete_cookie('refresh_token', samesite='none', secure=True)
 
-    return {"detail": "Вы вышли из аккаунта"}
+    return {"status": "ok", "detail": "Вы вышли из аккаунта"}
 
 
 
@@ -254,6 +250,7 @@ async def update_profile(
 
     
     return {
+        "status": "ok",
         "detail": "профиль обновлен успешно",
         "username": user.name,
         "email": user.email,
@@ -267,6 +264,7 @@ def auth_user_check_self_info(user_data: dict = Depends(get_current_active_auth_
     """для возрвата данных на фронтенд в раздел 'профиль'"""
 
     return {
+        "status": "ok",
         "username": user_data.get("username"),
         "email": user_data.get("email"),
         "role": user_data.get("role"),

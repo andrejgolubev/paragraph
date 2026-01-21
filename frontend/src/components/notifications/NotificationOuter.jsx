@@ -2,10 +2,20 @@ import { useEffect } from "react"
 import { useUiStore } from "../../store/uiStore"
 
 
-const NotificationOuter = ({type='success'}) => {
-  const {notificationOuterActive, setNotificationOuterActive, notificationOuterMessage, setNotificationOuterMessage} = useUiStore()
+const NotificationOuter = ({type}) => {
+  const {
+    notificationOuterActive,
+    setNotificationOuterActive,
+    notificationOuterMessage,
+    setNotificationOuterMessage,
+    notificationOuterType,
+  } = useUiStore()
   
-
+  console.log('NotificationOuter:')
+  console.log('notificationOuterActive :>> ', notificationOuterActive);
+  console.log('notificationOuterMessage :>> ', notificationOuterMessage);
+  console.log('notificationOuterType :>> ', notificationOuterType )
+  
   useEffect(() => {
     const timer = setTimeout( async () => {
       setNotificationOuterActive(false)
@@ -18,11 +28,13 @@ const NotificationOuter = ({type='success'}) => {
   useEffect( () => {
     return () => setNotificationOuterActive(false) // если компонент размонтирован, скрываем его
   }, [])
+  const visualType = type || notificationOuterType 
+
   return (
     <div
       className={`notification outer ${
         notificationOuterActive ? "active" : ""
-      }  ${type}`}
+      }  ${visualType}`}
     >
       {notificationOuterMessage}
     </div>

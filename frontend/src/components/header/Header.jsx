@@ -20,7 +20,7 @@ import { useUiStore } from "../../store/uiStore"
 const Header = () => {
   const { linksActive, setLinksActive } = useUiStore()
   const { darkTheme } = useThemeStore()
-  const user = useAuthStore((state) => state.user)
+  const {user, fetchUser} = useAuthStore.getState()
 
   const [displayProfile, setDisplayProfile] = useState(false)
   const dropdownRef = useRef(null)
@@ -96,6 +96,7 @@ const Header = () => {
                     onClick={(e) => {
                       e.preventDefault()
                       setDisplayProfile((prev) => !prev)
+                      fetchUser()
                     }}
                     alt="Profile"
                   />

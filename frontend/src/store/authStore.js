@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import homeworkAPI from '../api/homeworkAPI'
+import API from '../api/API'
 
 
 export const useAuthStore = create((set) => ({
@@ -8,7 +8,7 @@ export const useAuthStore = create((set) => ({
   fetchUser: async () => {
     set({ loading: true })
     try {
-      const resp = await homeworkAPI.getUserData()
+      const resp = await API.getUserData()
       if (resp?.status === 'ok') {
         set({
           user: {
@@ -28,7 +28,7 @@ export const useAuthStore = create((set) => ({
   },
   
   logout: async () => {
-    await homeworkAPI.logout()
+    await API.logout()
     set({ user: null })
   }
 })) 

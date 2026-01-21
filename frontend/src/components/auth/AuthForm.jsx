@@ -3,7 +3,8 @@ import { Link, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { DevTool } from "@hookform/devtools"
 
-import homeworkAPI from "../../api/homeworkAPI"
+import API from "../../api/API"
+import authAPI from "../../api/authAPI"
 import { latinToCyrillic } from "../../utils/converters.js"
 import NotificationOuter from "../notifications/NotificationOuter.jsx"
 
@@ -17,6 +18,8 @@ import { validationPreferences } from "../../config/settings.js"
 import { useThemeStore } from "../../store/themeStore"
 import { useUiStore } from "../../store/uiStore"
 import { useAuthStore } from "../../store/authStore"
+
+
 
 export const AuthForm = ({ type }) => {
   const { darkTheme } = useThemeStore()
@@ -75,7 +78,7 @@ export const AuthForm = ({ type }) => {
   let authType = "",
     authTitle = ""
 
-  const [submitMessageType, setSubmitMessageType] = useState("success")
+  const [submitMessageType, setSubmitMessageType] = useState("")
 
   if (type === "sign-up") {
     authType = "зарегистироваться"
@@ -91,14 +94,15 @@ export const AuthForm = ({ type }) => {
 
   const debounceTimerRef = useRef(null)
 
-  const setNotificationOuterActive = useUiStore(
-    (state) => state.setNotificationOuterActive
-  )
-  const setNotificationOuterMessage = useUiStore(
-    (state) => state.setNotificationOuterMessage
-  )
+  
+
+  const {
+    setNotificationOuterActive,
+    setNotificationOuterMessage
+  } = useUiStore.getState()
 
   const handleAuth = (resp) => {
+    console.log('resp :>> ', resp);
     setNotificationOuterMessage(resp.detail)
     if (resp.status === "ok") {
       setSubmitMessageType("success")
@@ -119,12 +123,12 @@ export const AuthForm = ({ type }) => {
   const onSubmit = (data) => {
     if (type === "sign-up") {
       const { email, password, username, group, acceptPd, acceptTerms } = data
-      homeworkAPI
+      authAPI
         .sendRegisterData(email, password, username, group, acceptPd, acceptTerms)
         .then((resp) => handleAuth(resp))
     } else if (type === "sign-in") {
       const { email, password } = data
-      homeworkAPI
+      authAPI
         .sendLoginData(email, password)
         .then((resp) => handleAuth(resp))
     }
@@ -139,7 +143,7 @@ export const AuthForm = ({ type }) => {
     }
 
     try {
-      const groups = await homeworkAPI.getAllGroups()
+      const groups = await API.getAllGroups()
       const groupExists = groups.some((elem) => {
         const groupNumber = elem["group_number"]
         return groupNumber === value || groupNumber === latinToCyrillic(value)

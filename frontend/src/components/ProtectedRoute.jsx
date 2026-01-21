@@ -6,9 +6,7 @@ import { useEffect } from 'react'
 
 export const ProtectedRoute = ({ children, type }) => {
   const darkTheme = useThemeStore( (state) => state.darkTheme)
-  const user = useAuthStore((state) => state.user)
-  const fetchUser = useAuthStore((state) => state.fetchUser)
-  const loading = useAuthStore((state) => state.loading)
+  const {user, fetchUser, loading} = useAuthStore.getState()
   const location = useLocation()
   
   useEffect(() => {

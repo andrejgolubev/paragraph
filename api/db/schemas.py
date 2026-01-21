@@ -1,74 +1,17 @@
 from datetime import datetime
-from pydantic import BaseModel,  EmailStr,  ConfigDict
+from pydantic import BaseModel, EmailStr, ConfigDict
 
 
 
-class UserUpdate(BaseModel):
-    username: str | None = None
-    email: EmailStr
-    group_number: str | None = None
-    password: str | None = None
 
+#homework
 
 class HomeworkRequest(BaseModel):
     group_data_value: str
     date_data_value: str
     lesson_index: int
     homework: str
-
-
-class UserRegistration(BaseModel):
-    username: str
-    email: EmailStr 
-    password: str 
-    group_number: str | None = None
-    accept_pd: bool = False 
-    accept_terms: bool = False 
-   
-
-
-class UserLogin(BaseModel): 
-    email: EmailStr 
-    password: str
     
-
-class FullUserResponse(BaseModel):
-    email: str
-    name: str 
-    group_id: int | None
-    role: str 
-    active: bool 
-    sign_up_date: datetime 
-    consents: list
-
-    model_config = ConfigDict(from_attributes=True)
-    
-    
-
-    
-
-class GroupCreate(BaseModel): 
-    data_value: str
-    group_number: str
-
-    model_config = ConfigDict(from_attributes=True)
-
-
-
-
-class OnlyDateResponse(BaseModel): 
-    id: int
-    group_number: str
-    data_value: str
-
-    class Config:
-        from_attributes = True
-    
-
-class GroupSelection(BaseModel):
-    group_data_value: str
-
-
 # users 
 
 class UserSchema(BaseModel): 
@@ -91,8 +34,36 @@ class UserSchema(BaseModel):
         
     #     return name.strip()
 
+class UserUpdate(BaseModel):
+    username: str | None = None
+    email: EmailStr
+    group_number: str | None = None
+    password: str | None = None
 
-class TokenInfo(BaseModel): 
-    access_token: str 
-    token_type: str
+class UserRegistration(BaseModel):
+    username: str
+    email: EmailStr 
+    password: str 
+    group_number: str | None = None
+    accept_pd: bool = False 
+    accept_terms: bool = False 
+   
+
+class UserLogin(BaseModel): 
+    email: EmailStr 
+    password: str
+    
+
+class FullUserResponse(BaseModel):
+    email: str
+    name: str 
+    group_id: int | None
+    role: str 
+    active: bool 
+    sign_up_date: datetime 
+    consents: list
+
+    model_config = ConfigDict(from_attributes=True)
+
+
     

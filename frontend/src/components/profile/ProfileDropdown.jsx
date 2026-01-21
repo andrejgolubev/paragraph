@@ -7,7 +7,7 @@ import profileIcon from "../../images/profile/profile-dropdown/profile-icon.svg"
 
 
 import { Link, useNavigate, useLocation } from "react-router-dom"
-import homeworkAPI from "../../api/homeworkAPI"
+import API from "../../api/API"
 import { useModeratedGroups } from "../../hooks/useModeratedGroups"
 import { useWindowSize } from "../../hooks/useWindowSize"
 import { useAuthStore } from "../../store/authStore"
@@ -25,8 +25,10 @@ export const ProfileDropdown = (props) => {
   const isMobile = width < 1001
 
   const {darkTheme} = useThemeStore()
-  const setNotificationOuterActive = useUiStore((state) => state.setNotificationOuterActive)
-  const setNotificationOuterMessage = useUiStore((state) => state.setNotificationOuterMessage)
+  const {
+    setNotificationOuterActive, 
+    setNotificationOuterMessage
+  } = useUiStore.getState()
   const fetchUser = useAuthStore((state) => state.fetchUser)
 
   const disappearOnClick = () => setDisplayProfile(false)
@@ -39,7 +41,7 @@ export const ProfileDropdown = (props) => {
     if (path === 'profile') {
       navigate('/sign-in')
     }
-    homeworkAPI.logout().then( resp => {
+    API.logout().then( resp => {
       setNotificationOuterMessage(resp.detail)
       setNotificationOuterActive(true)
       fetchUser()

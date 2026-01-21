@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import NotificationInner from "../notifications/NotificationInner"
-import homeworkAPI from "../../api/homeworkAPI"
+import API from "../../api/API"
 import { convertDate } from "../../utils/converters"
 import { useWindowSize } from "../../hooks/useWindowSize"
 import { useModeratedGroups } from "../../hooks/useModeratedGroups"
@@ -82,7 +82,7 @@ const HomeworkModal = ({
     const { moderatedGroups } = useModeratedGroups()
 
     useEffect( () => {
-      homeworkAPI.convertFromDataValue({groupDataValue}).then( (resp) => {
+      API.convertFromDataValue({groupDataValue}).then( (resp) => {
         const currentGroupNumber = resp?.group_number
         if (moderatedGroups.some( num => num === currentGroupNumber )) {
           setReadOnly(false)
@@ -109,7 +109,7 @@ const HomeworkModal = ({
      
       const homeworkTextClean = inputValue.trim()
 
-      homeworkAPI.saveHomework(
+      API.saveHomework(
         groupDataValue,
         dateDataValue,
         lessonIndex,

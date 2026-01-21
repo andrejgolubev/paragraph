@@ -63,7 +63,7 @@ const MainContent = () => {
           )}
       </div>
 
-      <NotificationOuter message={"домашнее задание сохранено."} type={'success'} />
+      <NotificationOuter/>
     </div>
   )
 }

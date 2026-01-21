@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import HomeworkModal from "../HomeworkModal" 
 import paperclip from "../../../images/homework/paperclip.svg"
 import paperclipDark from "../../../images/homework/paperclip-dark.svg"
-import homeworkAPI from "../../../api/homeworkAPI"
+import API from "../../../api/API"
 import { Mosaic } from "react-loading-indicators"
 import { getDateValueFromDisplay} from "../../../utils/converters"
 import { useWindowSize } from "../../../hooks/useWindowSize"
@@ -80,7 +80,7 @@ const ScheduleContainer = () => {
     // try {
       setLoading(true)
       
-      homeworkAPI.getScheduleData({groupDataValue, dateDataValue}).then((data) => {
+      API.getScheduleData({groupDataValue, dateDataValue}).then((data) => {
         setScheduleData(data)
         setError(null)
       }).catch((err) => {
@@ -106,7 +106,7 @@ const ScheduleContainer = () => {
       lessonName,
     } = lessInfo
 
-    homeworkAPI
+    API
       .loadHomeworkData(groupDataValue, scheduleDateDataValue, lessonIndex)
       .then((resp) => {
         const { homework, updated, username } = resp
@@ -114,6 +114,7 @@ const ScheduleContainer = () => {
         setHomeworkText(homework)
         setHomeworkAuthor(username)
       }).catch( (err) => {
+        setHomeworkText('')
         console.log('err from ScheduleCont :>> ', err);
       }
       )

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import homeworkAPI from "../api/homeworkAPI"
+import API from "../api/API"
 import { useAuthStore } from "../store/authStore"
 
 export const useModeratedGroups = () => {
@@ -15,7 +15,7 @@ export const useModeratedGroups = () => {
 
   // чтобы избежать лишних ререндеров
   useEffect(() => {
-    homeworkAPI.getUserData().then( ({role}) => {
+    API.getUserData().then( ({role}) => {
       if (role?.includes('admin')) {
         const moderatedGroups = role.split('.').slice(1,)
         console.log('moderatedGroups из useModeratedGroups:>> ', moderatedGroups);

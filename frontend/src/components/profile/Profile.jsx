@@ -3,7 +3,7 @@ import React, { useRef, useEffect, useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { useForm } from "react-hook-form"
 
-import homeworkAPI from "../../api/homeworkAPI"
+import API from "../../api/API"
 import {latinToCyrillic} from '../../utils/converters.js'
 import pencilIcon from "../../images/profile/profile-page/pencil.svg"
 import pencilIconActive from "../../images/profile/profile-page/pencil-active.svg"
@@ -23,8 +23,7 @@ const Profile = () => {
   
 
   const { darkTheme } = useThemeStore()
-  const user = useAuthStore((state) => state.user)
-  const fetchUser = useAuthStore((state) => state.fetchUser)
+  const {user, fetchUser} = useAuthStore.getState()
 
   if (!user) return <div className="profile"><p>пожалуйста, авторизуйтесь. перенаправляю на страницу входа...</p></div>
 
@@ -83,12 +82,15 @@ const Profile = () => {
   
   const debounceTimerRef = useRef(null)
 
-  const setNotificationOuterActive = useUiStore((state) => state.setNotificationOuterActive)
-  const setNotificationOuterMessage = useUiStore((state) => state.setNotificationOuterMessage)
+  
 
+  const {
+    setNotificationOuterActive, 
+    setNotificationOuterMessage
+  } = useUiStore.getState()
   
   const onSubmit = ({password, username, group}) => {
-    homeworkAPI.updateUserData({email: user?.email, password, username, group}).then(
+    API.updateUserData({email: user?.email, password, username, group}).then(
       resp => {
         setNotificationOuterMessage(resp.detail)
         if (resp.status === 'ok') {
@@ -115,7 +117,7 @@ const Profile = () => {
     }
     
     try {
-      const groups = await homeworkAPI.getAllGroups()
+      const groups = await API.getAllGroups()
       const groupExists = groups.some(
         (elem) => {
           const groupNumber = elem['group_number'] 
@@ -254,7 +256,7 @@ const Profile = () => {
     if (path === 'profile') {
       navigate('/sign-in')
     }
-    homeworkAPI.logout().then( resp => {
+    API.logout().then( resp => {
       setNotificationOuterActive(true)// чтобы вызвалась проверка access_token (т.к. в Provider такая dependency)
       setNotificationOuterMessage(resp.detail)
       fetchUser()
