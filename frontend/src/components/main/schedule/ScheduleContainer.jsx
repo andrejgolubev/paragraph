@@ -182,8 +182,10 @@ const ScheduleContainer = () => {
     )
   }
 
-  const lessonIndexRef = useRef(1)
+  
   // Рендер расписания
+  const lessonIndexRef = useRef(1)
+  
   const renderDesktopSchedule = (scheduleData) => {
     if (!scheduleData) return null
 

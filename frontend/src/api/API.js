@@ -18,14 +18,15 @@ export const fetchUrl = async (url, options = {}) => {
 }
 
 export const getHandledResponseData = async (response) => {
-  // if (response.status === 429) {
-  //   const body = await response.json().catch(() => ({}))
-  //   showNotification(body.detail || "Превышен лимит", "error")
-  //   throw { type: "rate_limit", detail: body.detail || "Превышен лимит" }
-  // }
+  if (response.status === 429) {
+    const body = await response.json().catch(() => ({}))
+    const errorDetail = body.detail
+    showNotification(errorDetail || "Превышен лимит запросов", "error")
+  }
   if (!response.ok) {
     const body = await response.json().catch(() => ({}))
-    // throw { type: "http_error", status: response.status, detail: body.detail }
+    const errorDetail = body.detail
+    showNotification(errorDetail || "Ошибка сети :(", "error")
   }
 
   return await response.json()
