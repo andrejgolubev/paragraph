@@ -2,8 +2,6 @@ from datetime import datetime
 from pydantic import BaseModel, EmailStr, ConfigDict
 
 
-
-
 #homework
 
 class HomeworkRequest(BaseModel):

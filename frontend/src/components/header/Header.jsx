@@ -20,7 +20,7 @@ import { useUiStore } from "../../store/uiStore"
 const Header = () => {
   const { linksActive, setLinksActive } = useUiStore()
   const { darkTheme } = useThemeStore()
-  const {user, fetchUser} = useAuthStore.getState()
+  const user = useAuthStore((state) => state.user)
 
   const [displayProfile, setDisplayProfile] = useState(false)
   const dropdownRef = useRef(null)
@@ -35,7 +35,7 @@ const Header = () => {
   const isMobile = width < 1001
   
   const [isClosing, setIsClosing] = useState(false)
-
+  
   const openMenu = () => {
     setIsClosing(false)
     setLinksActive(true)
@@ -96,7 +96,6 @@ const Header = () => {
                     onClick={(e) => {
                       e.preventDefault()
                       setDisplayProfile((prev) => !prev)
-                      fetchUser()
                     }}
                     alt="Profile"
                   />

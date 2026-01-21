@@ -19,21 +19,15 @@ import { useAuthStore } from "../../store/authStore"
 
 
 const Profile = () => {
-
-  
-
   const { darkTheme } = useThemeStore()
-  const {user, fetchUser} = useAuthStore.getState()
+  const {user, fetchUser} = useAuthStore()
 
   if (!user) return <div className="profile"><p>пожалуйста, авторизуйтесь. перенаправляю на страницу входа...</p></div>
 
   const {width} = useWindowSize()
   
-  
   const { moderatedGroups, displayRole } = useModeratedGroups()
-  
 
-  
   
   const validateUsername = async (value) => {
     const username = value.trim()

@@ -18,7 +18,12 @@ const HomeworkModal = ({
   const {darkTheme} = useThemeStore()
   const {width} = useWindowSize()
 
-  const { setNotificationOuterActive, setNotificationOuterMessage } = useUiStore()
+  const { 
+    setNotificationOuterActive, 
+    setNotificationOuterMessage, 
+    setNotificationOuterType,
+   } = useUiStore.getState()
+
   const [inputValue, setInputValue] = useState("")
   const [notificationInnerActive, setNotificationInnerActive] = useState(false)
   const [lastUpdate, setLastUpdate] = useState("")
@@ -123,7 +128,7 @@ const HomeworkModal = ({
         } else { 
           // если сохранена домашка, то:
           setShowDialog(false) // просто убираем компонент из ScheduleContainer
-          
+          setNotificationOuterType('success')
           setLastUpdate('')
           setNotificationOuterMessage('домашнее задание сохранено.')
           setNotificationOuterActive(true)
