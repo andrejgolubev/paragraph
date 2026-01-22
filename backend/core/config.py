@@ -32,7 +32,7 @@ class LoggingConfig(BaseModel):
 
     @property
     def log_level_value(self) -> int:
-        # DEBUG -> 10 ; INFO -> 20 ; ...
+        # DEBUG -> 10 , INFO -> 20 , ...
         return logging.getLevelNamesMapping()[self.log_level.upper()]
 
 

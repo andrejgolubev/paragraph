@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from backend.api.auth.utils import verify_admin_api_key
-from backend.api.db.database import get_db
-from backend.api.db.models import User
-from backend.api.db.schemas import FullUserResponse
+from ..auth.utils import verify_admin_api_key
+from ..db.database import get_db
+from ..db.models import User
+from ..db.schemas import FullUserResponse
 
 
 router = APIRouter(

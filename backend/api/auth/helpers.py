@@ -5,8 +5,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.core.config import settings
-from backend.api.auth import utils as auth_utils
-from backend.api.db.models import User
+from ..auth import utils as auth_utils
+from ..db.models import User
 
 TOKEN_TYPE_FIELD = "type"
 ACCESS_TOKEN_TYPE = "access"

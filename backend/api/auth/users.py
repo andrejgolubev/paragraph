@@ -1,11 +1,11 @@
-from backend.api.auth.validation import (
+from ..auth.validation import (
     get_current_active_auth_user_data,
 )
-from backend.api.db.database import get_db
-from backend.api.db.models import Group, User, UserConsent
-from backend.api.db.schemas import UserRegistration, UserLogin, UserUpdate
+from ..db.database import get_db
+from ..db.models import Group, User, UserConsent
+from ..db.schemas import UserRegistration, UserLogin, UserUpdate
 from backend.core.config import settings
-from backend.api.auth.utils import (
+from ..auth.utils import (
     hash_password,
     validate_password,
 )
@@ -14,10 +14,10 @@ from fastapi import Body, Depends, HTTPException, Request, Response, status, API
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from .helpers import create_access_token, create_refresh_token
-from backend.api.utils.censor import has_cursive_words
+from ..utils.censor import has_cursive_words
 from random import choice
 from pathlib import Path
-from backend.api.utils.converters import latin_to_cyrillic
+from ..utils.converters import latin_to_cyrillic
 
 
 router = APIRouter(

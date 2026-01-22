@@ -2,10 +2,10 @@
 import argparse
 import asyncio
 
-from backend.api.db.refresh_db import load_groups_and_dates
-from backend.api.db.database import AsyncSessionLocal
-from backend.api.parser.group_parser import parse_groups
-from backend.api.parser.date_parser import parse_dates
+from ..db.refresh_db import load_groups_and_dates
+from ..db.database import AsyncSessionLocal
+from ..parser.group_parser import parse_groups
+from ..parser.date_parser import parse_dates
 
 
 async def _reload_db(refresh: bool) -> None:

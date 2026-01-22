@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.api.middleware.process_time import ProcessTimeHeaderMiddleware
-from backend.api.middleware.rate_limit import RateLimitMiddleware
+from starlette import middleware
+
+from backend.api.middleware.log import LogMiddleware
+from ..middleware.rate_limit import RateLimitMiddleware
 
 
 ALLOW_ORIGINS = [
@@ -32,5 +34,5 @@ def register_middlewares(app: FastAPI, settings):
         expose_headers=["*"],  # Позволяет фронтенду видеть Set-Cookie
     )
 
-    app.add_middleware(ProcessTimeHeaderMiddleware)
     app.add_middleware(RateLimitMiddleware, settings=settings)
+    app.add_middleware(LogMiddleware)

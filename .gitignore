@@ -95,6 +95,7 @@ celerybeat.pid
 
 # Environments
 .env*
+!.env.example
 .venv
 env/
 venv/
@@ -136,3 +137,6 @@ consents/
 app.egg-info
 .coverage
 htmlcov
+
+# logs 
+*.log

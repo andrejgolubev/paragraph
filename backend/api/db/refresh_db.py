@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import and_, delete, select
-from backend.api.db.models import Group, Date, Homework
+from ..db.models import Group, Date, Homework
 from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 

@@ -4,10 +4,10 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from backend.core.config import settings
-from backend.api.auth import utils as auth_utils
-from backend.api.db.models import Group, User
-from backend.api.db.database import AsyncSessionLocal, get_db
-from backend.api.auth.helpers import get_refreshed_access_token
+from ..auth import utils as auth_utils
+from ..db.models import Group, User
+from ..db.database import AsyncSessionLocal, get_db
+from ..auth.helpers import get_refreshed_access_token
 
 
 async def get_access_token_payload(

@@ -1,9 +1,9 @@
 from fastapi import Response, HTTPException, APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
-from backend.api.db.database import get_db
-from backend.api.parser.schedule_parser import parse_schedule_from_url, parse_schedule  
+from ..db.database import get_db
+from ..parser.schedule_parser import parse_schedule_from_url, parse_schedule  
 from sqlalchemy.ext.asyncio import AsyncSession
-from backend.api.services.data_service import data_service
+from ..services.data_service import data_service
 from backend.core.config import settings
 
 from redis.asyncio import Redis

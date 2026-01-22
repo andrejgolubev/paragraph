@@ -1,20 +1,12 @@
-import logging
-from fastapi import FastAPI
-from backend.api.routers import schedule, homework, database
-from backend.api.auth.users import router as user_router
-from backend.api.auth.admin import router as admin_router
-from backend.api.create_app import create_app
-from backend.core.config import settings
-
-logging.basicConfig(
-    level=settings.logging.log_level_value,
-    format=settings.logging.log_format,
-)
-
-log = logging.getLogger(__name__)
+from .routers import schedule, homework, database
+from .auth.users import router as user_router
+from .auth.admin import router as admin_router
+from .create_app import create_app
+from .logger import log
 
 
-app: FastAPI = create_app()
+
+app = create_app()
 
 for router in (
     user_router,

@@ -28,7 +28,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         
         # каждый window_key живет ровно window_seconds секунд
         current: int = await redis_client.incr(window_key)
-        print(f'{current = }')
+        
         # установим expire только если это первый incr для этого окна
         if current == 1:
             await redis_client.expire(window_key, window_seconds)
