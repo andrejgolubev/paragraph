@@ -94,7 +94,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+.env*
 .venv
 env/
 venv/
@@ -130,7 +130,7 @@ certs/
 node_modules/
 ideas/
 misc/
-
+consents/
 
 # tests 
 app.egg-info

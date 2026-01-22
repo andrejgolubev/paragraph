@@ -4,7 +4,7 @@ from backend.api.db.database import get_db
 from backend.api.parser.schedule_parser import parse_schedule_from_url, parse_schedule  
 from sqlalchemy.ext.asyncio import AsyncSession
 from backend.api.services.data_service import data_service
-from backend.api.core.config import settings
+from backend.core.config import settings
 
 from redis.asyncio import Redis
 import json

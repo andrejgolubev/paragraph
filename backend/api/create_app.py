@@ -1,20 +1,17 @@
-import os
-from contextlib import asynccontextmanager
-from dotenv import load_dotenv
+import logging
 from fastapi import FastAPI
-from backend.api.middleware.register import register_middlewares
+from contextlib import asynccontextmanager
 from redis.asyncio import Redis
-from backend.api.core.config import settings
+from backend.api.middleware.register import register_middlewares
+from backend.core.config import settings
 
-
-load_dotenv()
-
+log = logging.getLogger(__name__)
 
 def _build_redis_url() -> str:
-    host = os.getenv("REDIS_HOST")
-    port = os.getenv("REDIS_PORT", "6380")
-    db = os.getenv("REDIS_DB", "0")
-    password = os.getenv("REDIS_PASSWORD")
+    host = settings.redis.host
+    port = settings.redis.port
+    db = settings.redis.db
+    password = settings.redis.password
     if password:
         return f"redis://:{password}@{host}:{port}/{db}"
     return f"redis://{host}:{port}/{db}"
@@ -27,11 +24,13 @@ async def lifespan(app: FastAPI):
     redis_client = Redis.from_url(redis_url, decode_responses=True)
 
     await redis_client.ping()
-    print("Redis работает")
+    log.info('Redis работает')
+    
     app.state.redis = redis_client
     yield
+
     await redis_client.close()
-    print("Redis отключен")
+    log.info('Redis отключен')
 
 
 def create_app() -> FastAPI:
@@ -40,7 +39,6 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
         # webhooks=...
     )
-
     
     register_middlewares(app, settings)
     return app

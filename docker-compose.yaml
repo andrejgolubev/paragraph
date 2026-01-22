@@ -33,6 +33,7 @@ services:
     image: redis:7
     restart: unless-stopped
     environment:
+      REDIS_HOST: redis
       REDIS_PASSWORD: ${REDIS_PASSWORD:-paragraph}
     command:
       - redis-server

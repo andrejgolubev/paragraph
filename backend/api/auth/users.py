@@ -4,7 +4,7 @@ from backend.api.auth.validation import (
 from backend.api.db.database import get_db
 from backend.api.db.models import Group, User, UserConsent
 from backend.api.db.schemas import UserRegistration, UserLogin, UserUpdate
-from backend.api.core.config import settings
+from backend.core.config import settings
 from backend.api.auth.utils import (
     hash_password,
     validate_password,

@@ -5,13 +5,19 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
 )
 from sqlalchemy.orm import DeclarativeBase
-from backend.api.core.config import settings
+from backend.core.config import settings
 
 class Base(DeclarativeBase): ...
 
 
+db_url = (
+    f"{settings.db.scheme}://{settings.db.user}:{settings.db.password}"
+    f"@{settings.db.host}:{settings.db.port}/{settings.db.name}"
+)
+
+
 engine: AsyncEngine = create_async_engine(
-    settings.db.url,
+    db_url,
     future=settings.db.future,
     echo=settings.db.echo,
     pool_size=settings.db.pool_size,
