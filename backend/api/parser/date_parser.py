@@ -58,6 +58,7 @@ def parse_dates():
         return dates 
     finally:
         driver.quit()
+        log.info("Dates parsing successful.")
 
 
 

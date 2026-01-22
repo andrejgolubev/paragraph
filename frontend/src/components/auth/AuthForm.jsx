@@ -4,8 +4,6 @@ import { useForm } from "react-hook-form"
 import { DevTool } from "@hookform/devtools"
 
 import API from "../../api/API"
-import authAPI from "../../api/authAPI"
-import { latinToCyrillic } from "../../utils/converters.js"
 import NotificationOuter from "../notifications/NotificationOuter.jsx"
 
 import user_icon from "../../images/auth/person.svg"
@@ -98,24 +96,28 @@ export const AuthForm = ({ type }) => {
 
   const {
     setNotificationOuterActive,
-    setNotificationOuterMessage
+    setNotificationOuterMessage,
+    setNotificationOuterType
   } = useUiStore.getState()
 
   const handleAuth = (resp) => {
-    console.log('resp :>> ', resp);
     setNotificationOuterMessage(resp.detail)
     if (resp.status === "ok") {
       setSubmitMessageType("success")
+      setNotificationOuterType('success')
       if (resp.type === "sign-in") {
         fetchUser()
         navigate("/", { replace: true }) // редирект на расписание если логин
-      } else navigate("/sign-in", { replace: true }) // редирект на логин если успешно зарегался
+      } 
+      else navigate("/sign-in", { replace: true }) // редирект на логин если успешно зарегался
 
       setTimeout(async () => {
         setNotificationOuterActive(true)
       }, 100)
-    } else {
+    } 
+    else {
       setSubmitMessageType("error")
+      setNotificationOuterType('error')
       setNotificationOuterActive(true)
     }
   }
@@ -123,66 +125,19 @@ export const AuthForm = ({ type }) => {
   const onSubmit = (data) => {
     if (type === "sign-up") {
       const { email, password, username, group, acceptPd, acceptTerms } = data
-      authAPI
+      API
         .sendRegisterData(email, password, username, group, acceptPd, acceptTerms)
         .then((resp) => handleAuth(resp))
     } else if (type === "sign-in") {
       const { email, password } = data
-      authAPI
+      API
         .sendLoginData(email, password)
         .then((resp) => handleAuth(resp))
     }
   }
 
-  const groupAttemptsRef = useRef(0)
-
-  const groupValidator = async (value) => {
-    // если поле пустое, валидация проходит (поле опционально)
-    if (!value || value.trim() === "") {
-      return true
-    }
-
-    try {
-      const groups = await API.getAllGroups()
-      const groupExists = groups.some((elem) => {
-        const groupNumber = elem["group_number"]
-        return groupNumber === value || groupNumber === latinToCyrillic(value)
-      })
-
-      if (!groupExists) {
-        groupAttemptsRef.current++
-        return groupAttemptsRef.current < 5
-          ? `группа не найдена, либо не существует.`
-          : "введите ее так, как на официальном сайте расписания."
-      }
-
-      return true
-    } catch (error) {
-      console.error("Ошибка при проверке группы:", error)
-      return "ошибка при проверке группы"
-    }
-  }
-
   const validateGroup = (value) => {
-    if (!value?.trim()) {
-      return true
-    }
-
-    // очищаем предыдущий таймер
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current)
-    }
-
-    return new Promise((resolve) => {
-      debounceTimerRef.current = setTimeout(async () => {
-        try {
-          const result = await groupValidator(value)
-          resolve(result)
-        } catch (error) {
-          resolve("ошибка при проверке группы")
-        }
-      }, 100)
-    })
+    if (!value?.trim()) return true
   }
 
   useEffect(() => {

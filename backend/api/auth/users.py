@@ -77,14 +77,21 @@ async def register(
 
     # серверная валидация группы, чтобы если пользователь не введет группу или введет что-то не то, 
     # то группа была null
-    group_result = await db.scalars(
-        select(Group).where(Group.group_number == latin_to_cyrillic(group_number))
-    )
 
-    if not (group := group_result.first()): 
+    if not group_number:
         group_id = None
     else: 
-        group_id = group.id
+        group_result = await db.scalars(
+            select(Group).where(Group.group_number == latin_to_cyrillic(group_number))
+        )
+        if not (group := group_result.first()): 
+            answers: dict[str] = [
+                'введённая группа не найдена :(', 
+                'введите группу так, как на сайте расписания',
+            ]
+            raise HTTPException(status_code=400, detail=choice(answers))
+        else: 
+            group_id = group.id
 
 
     db_user = User(
@@ -118,14 +125,13 @@ async def register(
     await db.commit()
 
     log.info(
-        'New user (%s , %s) signed up!', 
-        db_user_name:=db_user.name, 
+        'New user (%s) signed up!', 
         db_user_email:=db_user.email
     )
 
     return dict(
         id=db_user.id,
-        name=db_user_name,
+        name=db_user.name,
         email=db_user_email,
         role=db_user.role,
         active=db_user.active,

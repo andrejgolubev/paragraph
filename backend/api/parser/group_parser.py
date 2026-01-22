@@ -48,3 +48,4 @@ def parse_groups():
         return groups
     finally:
         driver.quit()
+        log.info("Groups parsing successful.")

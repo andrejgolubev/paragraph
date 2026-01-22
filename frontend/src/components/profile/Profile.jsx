@@ -4,7 +4,6 @@ import { useNavigate, useLocation } from "react-router-dom"
 import { useForm } from "react-hook-form"
 
 import API from "../../api/API"
-import {latinToCyrillic} from '../../utils/converters.js'
 import pencilIcon from "../../images/profile/profile-page/pencil.svg"
 import pencilIconActive from "../../images/profile/profile-page/pencil-active.svg"
 import pencilIconDark from "../../images/profile/profile-page/pencil-dark.svg"
@@ -80,7 +79,8 @@ const Profile = () => {
 
   const {
     setNotificationOuterActive, 
-    setNotificationOuterMessage
+    setNotificationOuterMessage,
+    setNotificationOuterType
   } = useUiStore.getState()
   
   const onSubmit = ({password, username, group}) => {
@@ -102,62 +102,10 @@ const Profile = () => {
     )
   }
 
-  const groupAttemptsRef = useRef(0)
-
-  const validateGroup = async (value) => {
-    // если поле пустое, валидация проходит (поле опционально)
-    if (!value || value.trim() === "") {
-      return true
-    }
-    
-    try {
-      const groups = await API.getAllGroups()
-      const groupExists = groups.some(
-        (elem) => {
-          const groupNumber = elem['group_number'] 
-          return (
-            groupNumber === value || 
-            groupNumber === latinToCyrillic(value))
-        }  
-
-      )
-      
-      if (!groupExists) {
-        groupAttemptsRef.current++
-        return groupAttemptsRef.current < 5
-          ? `группа не найдена, либо не существует.`
-          : "введите ее так, как на официальном сайте расписания."
-      }
-      
-      return true
-    } catch (error) {
-      console.error("Ошибка при проверке группы:", error)
-      return "ошибка при проверке группы"
-    }
-  }
-
   
-  const groupValidator = (value) => {
-    if (!value?.trim()) {
-      return true
-    }
-
-    // очищаем предыдущий таймер
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current)
-    }
-
-    return new Promise((resolve) => {
-      debounceTimerRef.current = setTimeout(async () => {
-        try {
-          const result = await validateGroup(value)
-          resolve(result)
-        } catch (error) {
-          resolve("ошибка при проверке группы")
-        }
-      }, 100)
-    })
-  } 
+  const validateGroup = (value) => {
+    if (!value?.trim()) return true
+  }
 
   useEffect(() => {
     return () => { // cleanup при размонтировании
@@ -200,7 +148,7 @@ const Profile = () => {
   const groupField = register("group", {
     required: false,
       validate: {
-        validateGroup: (value) => groupValidator(value)
+        validateGroup: (value) => validateGroup(value)
       }, 
     }) 
 
@@ -218,6 +166,7 @@ const Profile = () => {
     if (isEditable) focusInput(usernameInputRef)
     else form.reset()
   }, [isEditable])
+
 
   const handleImmutableFieldClick = (message) => {
     if (!isEditable) return
@@ -253,6 +202,7 @@ const Profile = () => {
     API.logout().then( resp => {
       setNotificationOuterActive(true)// чтобы вызвалась проверка access_token (т.к. в Provider такая dependency)
       setNotificationOuterMessage(resp.detail)
+      setNotificationOuterType('error')
       fetchUser()
     })
   }
