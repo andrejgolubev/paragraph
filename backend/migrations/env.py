@@ -12,10 +12,9 @@ config = context.config
 
 
 # override sqlalchemy.url in alembic.ini with .env value 
-from backend.api.db.database import db_url
-if __name__ == '__main__':
-    print(f'{db_url = }')
-config.set_main_option("sqlalchemy.url", db_url)
+from backend.api.db.database import DB_URL
+
+config.set_main_option("sqlalchemy.url", DB_URL)
 
 
 # Interpret the config file for Python logging.
@@ -65,6 +64,7 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
+    print(f'{config.get_section(config.config_ini_section, {}) = }')
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",

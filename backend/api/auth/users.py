@@ -1,3 +1,10 @@
+from fastapi import Body, Depends, HTTPException, Request, Response, status, APIRouter, Query
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from random import choice
+from pathlib import Path
+
+
 from ..auth.validation import (
     get_current_active_auth_user_data,
 )
@@ -9,15 +16,10 @@ from ..auth.utils import (
     hash_password,
     validate_password,
 )
-
-from fastapi import Body, Depends, HTTPException, Request, Response, status, APIRouter, Query
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 from .helpers import create_access_token, create_refresh_token
 from ..utils.censor import has_cursive_words
-from random import choice
-from pathlib import Path
 from ..utils.converters import latin_to_cyrillic
+from ..logger import log
 
 
 router = APIRouter(
@@ -56,7 +58,6 @@ async def register(
             detail="Необходимо принять пользовательское соглашение и политику конфиденциальности",
         )
 
-    
 
     if not username_is_cyrillic_only(username):
         raise HTTPException(status_code=400, detail="имя может содержать только кириллицу.")
@@ -116,10 +117,16 @@ async def register(
 
     await db.commit()
 
+    log.info(
+        'New user (%s , %s) signed up!', 
+        db_user_name:=db_user.name, 
+        db_user_email:=db_user.email
+    )
+
     return dict(
         id=db_user.id,
-        name=db_user.name,
-        email=db_user.email,
+        name=db_user_name,
+        email=db_user_email,
         role=db_user.role,
         active=db_user.active,
         group_id=db_user.group_id,
@@ -161,6 +168,7 @@ async def login(
         'access_token': access_token, 
         'refresh_token': refresh_token,
     }
+    
     for key, value in secure_cookies.items():
         if key == 'access_token': 
             lifetime_seconds = settings.auth_jwt.access_token_expire_minutes*60 
@@ -174,11 +182,17 @@ async def login(
             samesite='none', # обязательно 'lax' для продакшна
             max_age=lifetime_seconds
         )   
+
+    log.info(
+        'User (%s , %s) signed in!', 
+        user_name:=user.name, 
+        user.email
+    )
     
     return {
         "status": "ok",
         "detail": f"Вы вошли как {user.name}",
-        'username': user.name,
+        'username': user_name,
         'role': user.role,
     }
 

@@ -1,5 +1,6 @@
 import logging
-from ..core.config import settings
+from pathlib import Path
+from backend.core.config import settings
 
 log = logging.getLogger(__name__)
 
@@ -8,7 +9,9 @@ logging.basicConfig(
     format=(FORMAT := settings.logging.log_format),
 )
 
-file_handler = logging.FileHandler('backend/app.log')
+
+log_path = Path(__file__).parent / "app.log"
+file_handler = logging.FileHandler(log_path)
 file_handler.setLevel(LEVEL)
 file_handler.setFormatter(logging.Formatter(FORMAT))
 

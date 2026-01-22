@@ -8,6 +8,7 @@ from backend.core.config import settings
 
 from redis.asyncio import Redis
 import json
+from ..logger import log
 
 router = schedule_router = APIRouter(tags=['schedule'], prefix='/schedule')
 
@@ -51,16 +52,24 @@ async def get_schedule(
 
 @router.get('/get-all-groups', response_class=JSONResponse)
 async def get_all_groups(db: AsyncSession = Depends(get_db)): 
-    return await data_service.get_all_groups(db)
+    try: 
+        return await data_service.get_all_groups(db)
+    except Exception as e: 
+        log.error('Error getting all groups: %s', e)
+        
 
 
 @router.get('/get-all-dates', response_class=JSONResponse)
 async def get_all_dates(db: AsyncSession = Depends(get_db)): 
-    dates = await data_service.get_all_dates(db) 
-    return [
-        {
-            "date": date.date,
-            'data_value': date.data_value,
-        }
-        for date in dates
-    ]
+    try:
+        dates = await data_service.get_all_dates(db) 
+        return [
+            {
+                "date": date.date,
+                'data_value': date.data_value,
+            }
+            for date in dates
+        ]
+    except Exception as e: 
+        log.error('Error getting all dates: %s', e)
+        raise HTTPException(status_code=500, detail=f"Error getting all dates.")

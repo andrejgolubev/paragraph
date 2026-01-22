@@ -1,9 +1,9 @@
-import json
 import time
 import uuid
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from ..logger import log
+
 
 class LogMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint):
@@ -20,7 +20,7 @@ class LogMiddleware(BaseHTTPMiddleware):
             'user_agent': request.headers.get('user-agent'),
         }
         
-        log.info("Request %s sent: %s", request_id, json.dumps(log_dict), extra=log_dict)
+        log.info("Request %s sent: %s", request_id, str(log_dict))
         
         try:
             response = await call_next(request)
@@ -34,10 +34,19 @@ class LogMiddleware(BaseHTTPMiddleware):
                 'response_size': response.headers.get('content-length'),
             }
             
-            if response.status_code >= 400:
-                log.warning("Request %s completed: %s", request_id, json.dumps(log_dict), extra=log_dict)
+            status = response.status_code
+
+            
+            if 100 <= status < 200: 
+                log.info("Request %s completed (informational): %s", request_id, status)
+            if 200 <= status < 300: 
+                log.info("Request %s completed with a success: %s", request_id, status)
+            if 300 <= status < 400: 
+                log.warning("Request %s completed with a redirect: %s", request_id, status)
+            elif 400 <= status < 500:
+                log.error("Request %s completed with a client error: %s", request_id, status)
             else: 
-                log.info("Request %s completed: %s", request_id, json.dumps(log_dict), extra=log_dict)
+                log.error("Request %s completed with a server error: %s", request_id, status)
 
             response.headers['X-Request-ID'] = request_id
             
@@ -50,5 +59,5 @@ class LogMiddleware(BaseHTTPMiddleware):
                 'error': str(exc),
                 'error_type': type(exc).__name__,
             }
-            log.error("Request %s failed", request_id, extra=log_dict, exc_info=True)
+            log.error("Request %s failed", request_id, exc_info=True)
             raise

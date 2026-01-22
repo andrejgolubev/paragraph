@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from backend.core.config import settings
 from ..auth import utils as auth_utils
 from ..db.models import User
+from ..logger import log
 
 TOKEN_TYPE_FIELD = "type"
 ACCESS_TOKEN_TYPE = "access"
@@ -53,7 +54,8 @@ async def get_refreshed_access_token(
         email: str = payload.get("sub")
         if not email:
             raise credentials_exception
-    except Exception:
+    except Exception as e:
+        log.error('Error getting refreshed access token: %s', e)
         raise credentials_exception
 
     user_result = await db.scalars(select(User).where(User.email == email))

@@ -1,14 +1,16 @@
 # to work with db - admin only
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
+
 from ..db.refresh_db import clean_up_date, clean_up_dates
 from ..db.database import get_db
 from ..utils.converters import convert_date
 from ..auth.utils import verify_admin_api_key
 from ..db.models import Group, Date
+from ..logger import log
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from sqlalchemy.orm import selectinload
 
 router = database_router = APIRouter(
     tags=['Database'], 
@@ -23,8 +25,11 @@ async def cleanup_date(
     db: AsyncSession = Depends(get_db)
 ):
     """Очистка даты из базы данных."""
-
-    return await clean_up_date(date_input=date_input, db=db)
+    try: 
+        return await clean_up_date(date_input=date_input, db=db)
+    except Exception as e: 
+        log.error('Error cleaning up date: %s', e)
+        raise HTTPException(status_code=500, detail='Error cleaning up date')
 
 
 @router.post("/cleanup-dates")
@@ -33,8 +38,11 @@ async def cleanup_dates(
     db: AsyncSession = Depends(get_db)
 ):
     """Очистка дат из базы данных."""
-
-    return await clean_up_dates(dates_amount=dates_amount, db=db)
+    try: 
+        return await clean_up_dates(dates_amount=dates_amount, db=db)
+    except Exception as e: 
+        log.error('Error cleaning up dates: %s', e)
+        raise HTTPException(status_code=500, detail=f"Error cleaning up dates.")
 
 
 @router.get('/get-all-dates-related-to-group')
