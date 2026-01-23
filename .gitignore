@@ -140,3 +140,7 @@ htmlcov
 
 # logs 
 *.log
+
+# censor
+censor/
+names-list

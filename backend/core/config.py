@@ -27,7 +27,7 @@ class LoggingConfig(BaseModel):
         "warning",
         "error",
         "critical",
-    ] = "info"
+    ] = "debug"
     log_format: str = LOG_DEFAULT_FORMAT
 
     @property
@@ -69,6 +69,7 @@ class RateLimitConfig(BaseModel):
     cooldown_seconds: int = 60 * 5  # 5 min
 
 
+
 class Settings(BaseSettings): 
     model_config = SettingsConfigDict(
         env_file=(
@@ -90,8 +91,5 @@ class Settings(BaseSettings):
     
 settings = Settings() 
 
-if __name__ == '__main__': 
-    print(BASE_DIR) 
-    print(settings.db)
-    print(settings.redis)
+
 

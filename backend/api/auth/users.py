@@ -17,7 +17,7 @@ from ..auth.utils import (
     validate_password,
 )
 from .helpers import create_access_token, create_refresh_token
-from ..utils.censor import has_cursive_words
+from .censor.censor import has_cursive_words
 from ..utils.converters import latin_to_cyrillic
 from ..logger import log
 
@@ -62,8 +62,7 @@ async def register(
     if not username_is_cyrillic_only(username):
         raise HTTPException(status_code=400, detail="имя может содержать только кириллицу.")
 
-    cursive_words_path = Path(__file__).parent / 'misc' / 'cursive_words.txt'
-    if await has_cursive_words(filepath=cursive_words_path, phrase=username): 
+    if await has_cursive_words(phrase=username): 
         answers: dict[str] = ['введённое имя недопустимо :(', 'такое имя неприемлимо :(', 'введённое имя не прошло валидацию :(']
         raise HTTPException(status_code=400, detail=choice(answers))    
 
@@ -232,8 +231,7 @@ async def update_profile(
     user_result = await db.scalars(select(User).where(User.email == email))
     user = user_result.first()
     
-    cursive_words_path = Path(__file__).parent / 'misc' / 'cursive_words.txt'
-    if await has_cursive_words(filepath=cursive_words_path, phrase=username): 
+    if await has_cursive_words(phrase=username): 
         answers: dict[str] = ['введённое имя недопустимо :(', 'такое имя неприемлимо :(', 'введённое имя не прошло валидацию :(']
         raise HTTPException(status_code=400, detail=choice(answers))  
     

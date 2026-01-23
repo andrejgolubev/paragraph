@@ -10,10 +10,12 @@ logging.basicConfig(
 )
 
 
-log_path = Path(__file__).parent / "app.log"
+log.setLevel(LEVEL) # обязательно
+
+log_path = Path(__file__).parent.parent / "app.log"
 file_handler = logging.FileHandler(log_path)
 file_handler.setLevel(LEVEL)
 file_handler.setFormatter(logging.Formatter(FORMAT))
-
+file_handler.encoding = 'utf-8'
 
 log.handlers = [file_handler]
