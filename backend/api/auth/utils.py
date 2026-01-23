@@ -4,7 +4,7 @@ import bcrypt
 from datetime import UTC, datetime, timedelta 
 from fastapi import HTTPException, status, Header
 import os
-
+from backend.core.config import settings
 
 def encode_jwt(
     payload: dict,
@@ -54,10 +54,11 @@ def validate_password(
 
 
 
-API_KEY = os.getenv("ADMIN_API_KEY", 'secret-key')
+# API_KEY = os.getenv("ADMIN__API_KEY", 'secret-key')
+
 
 async def verify_admin_api_key(api_key: str = Header(alias="API-Key")):
-    if api_key != API_KEY:
+    if api_key != settings.admin.api_key:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Invalid API Key"

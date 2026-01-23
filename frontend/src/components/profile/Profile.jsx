@@ -86,18 +86,24 @@ const Profile = () => {
   const onSubmit = ({password, username, group}) => {
     API.updateUserData({email: user?.email, password, username, group}).then(
       resp => {
-        setNotificationOuterMessage(resp.detail)
         if (resp.status === 'ok') {
           fetchUser()
           setIsEditable(false)
+
+          setNotificationOuterType('error')
+          setNotificationOuterMessage(resp.detail)
+          
           setSubmitMessageType('success') 
           setTimeout( async () => { 
             setNotificationOuterActive(true)
           }, 100)
         } else {
           setSubmitMessageType('error')
-          setNotificationOuterActive(true)
+
+          setNotificationOuterType('error')
+          setNotificationOuterMessage(resp.detail)
         }
+        setNotificationOuterActive(true)
       }
     )
   }

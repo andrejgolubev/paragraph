@@ -128,8 +128,8 @@ const HomeworkModal = ({
         } else { 
           // если сохранена домашка, то:
           setShowDialog(false) // просто убираем компонент из ScheduleContainer
-          setNotificationOuterType('success')
           setLastUpdate('')
+          setNotificationOuterType('success')
           setNotificationOuterMessage('домашнее задание сохранено.')
           setNotificationOuterActive(true)
         }

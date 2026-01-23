@@ -11,59 +11,65 @@ export const fetchUrl = async (url, options = {}) => {
   } catch (err) {
     if (err.message === 'Failed to fetch') {
       const message = "Ошибка сети :("
-      showNotification(message, "error")
+      showNotificationOuter(message, "error")
       throw { type: "network_error", detail: message }
     }
   }
 }
 
-export const getHandledResponseData = async (response) => {
-  if (response.status === 429) {
-    const body = await response.json().catch(() => ({}))
+export const getHandledResponseData = async (response, msgTypeIfResponseOk) => {
+  const body = await response.json().catch(() => ({}))
+  if (response.status >= 400 && response.status !== 401) {
     const errorDetail = body.detail
-    showNotification(errorDetail, "error")
-  }
-  if (!response.ok && response.status !== 401) {
-    const body = await response.json().catch(() => ({}))
-    const errorDetail = body.detail
-    showNotification(errorDetail, "error")
+    showNotificationOuter(errorDetail, "error")
+  } else {
+    // отображаем ТОЛЬКО ЕСЛИ передана ПЕРЕМЕННАЯ, иначе отображение уведомления
+    // будет конфликтовать с логикой отображения, описанной в компонентах 
+    // (два сообщения сразу и т.д.)
+    if (msgTypeIfResponseOk) {   
+      showNotificationOuter(response.detail, msgTypeIfResponseOk)
+    }
   }
 
-  return await response.json()
+  return body
+
 }
 
 
-async function apiFetch(url, options = {}) {
-    const response = await fetchUrl(url, options)
-    
-    const responseData = await getHandledResponseData(response)
+async function apiFetch(url, options = {}, msgTypeIfResponseOk) {
+  const response = await fetchUrl(url, options)
   
-    return responseData
+  const responseData = await getHandledResponseData(
+    response, msgTypeIfResponseOk
+  )
+
+  return responseData
 }
 
 
 async function authApiFetch(url, options = {}, additional = {}) {
   const response = await fetchUrl(url, options)
 
-  const responseData = await getHandledResponseData(response)
+  const responseData = await getHandledResponseData(
+    response
+  )
 
   return { ...responseData, ...additional }
 }
 
 
-export function showNotification(message, type = "error") {
+export function showNotificationOuter(message, type) {
   const { 
     setNotificationOuterMessage, 
     setNotificationOuterActive, 
     setNotificationOuterType, 
   } = useUiStore.getState()
 
-  console.log('showNotification called')
+  console.log('showNotificationOuter called')
 
   setNotificationOuterType(type)
   setNotificationOuterMessage(message)
   setNotificationOuterActive(true)
-
 }
 
 const API = {
@@ -91,7 +97,7 @@ const API = {
       method: "POST",
       headers,
       body: JSON.stringify(payload),
-    })
+    }, )
   },
 
   loadHomeworkData: async (groupDataValue, dateDataValue, lessonIndex) => {
@@ -197,7 +203,8 @@ const API = {
   logout: async () => {
     return apiFetch(
       `${BASE_URL}/user/logout`, 
-      { method: "POST", headers }
+      { method: "POST", headers }, 
+      'error'
     )
   },
 

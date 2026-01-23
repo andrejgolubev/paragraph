@@ -69,6 +69,11 @@ class RateLimitConfig(BaseModel):
     cooldown_seconds: int = 60 * 5  # 5 min
 
 
+class AdminConfig(BaseModel): 
+    api_key: str = Field('secret_key', env="ADMIN__API_KEY")
+
+
+
 
 class Settings(BaseSettings): 
     model_config = SettingsConfigDict(
@@ -81,6 +86,7 @@ class Settings(BaseSettings):
         extra='ignore' 
     )
 
+    admin: AdminConfig = AdminConfig()
     db: DatabaseConfig = DatabaseConfig()
     auth_jwt: AuthJWT = AuthJWT() 
     logging: LoggingConfig = LoggingConfig()
@@ -88,8 +94,12 @@ class Settings(BaseSettings):
     redis: RedisConfig = RedisConfig() 
     rate_limit: RateLimitConfig = RateLimitConfig()
 
+
     
 settings = Settings() 
+
+if __name__ == '__main__': 
+    print(settings.admin.api_key)
 
 
 

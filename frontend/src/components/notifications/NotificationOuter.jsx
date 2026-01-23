@@ -11,10 +11,6 @@ const NotificationOuter = ({type}) => {
     notificationOuterType,
   } = useUiStore()
   
-  console.log('NotificationOuter:')
-  console.log('notificationOuterActive :>> ', notificationOuterActive);
-  console.log('notificationOuterMessage :>> ', notificationOuterMessage);
-  console.log('notificationOuterType :>> ', notificationOuterType )
   
   useEffect(() => {
     const timer = setTimeout( async () => {
@@ -25,9 +21,10 @@ const NotificationOuter = ({type}) => {
   } , [notificationOuterActive])
 
 
-  useEffect( () => {
+  useEffect(() => {
     return () => setNotificationOuterActive(false) // если компонент размонтирован, скрываем его
   }, [])
+
   const visualType = type || notificationOuterType 
 
   return (
@@ -39,8 +36,6 @@ const NotificationOuter = ({type}) => {
       {notificationOuterMessage}
     </div>
   )
-
-
 }
 
 export default NotificationOuter
