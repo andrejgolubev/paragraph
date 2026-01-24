@@ -348,9 +348,14 @@
         }
       }
 
-      @media (max-width: 400px) { 
-        textarea, .modal-buttons, h3 {
+      @media (max-width: 410px) { 
+        textarea, .modal-buttons, h3, .updated-at {
           width: 85%;
+        }
+        @media (max-width: 345px) {
+          textarea, .modal-buttons, h3, .updated-at {
+            width: 75%;
+          }
         }
       }
     }

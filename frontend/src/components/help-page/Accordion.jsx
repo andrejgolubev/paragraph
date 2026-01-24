@@ -7,6 +7,10 @@ export const Accordion = ({ faqList }) => {
   
   const [openId, setOpenId] = useState(null)
 
+  const onClickAccordionItem = (id) => {
+    id === openId ? setOpenId(null) : setOpenId(id)
+  }
+
   return (
     <ul className={`accordion ${darkTheme? 'dark' : ''}`}>
       {faqList.map((faqItem, id) => {
@@ -14,8 +18,10 @@ export const Accordion = ({ faqList }) => {
           <AccordionItem
             faqItem={faqItem}
             isOpen={id === openId}
-            onClick={() => id === openId ? setOpenId(null) : setOpenId(id)}
-            
+            onClick={(e) => {
+                e.preventDefault()
+                onClickAccordionItem(id)
+              }}
             key={id}
           />
         )

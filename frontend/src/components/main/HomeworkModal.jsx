@@ -28,7 +28,6 @@ const HomeworkModal = ({
     setTimeout(() => {
       setNotificationInnerActive(false)
     }, 3100) // 3100 a не 3000 чтобы локальный isActive сработал и плавно ушла кнопка 
-
   }
 
   if (lessonInfo) {
@@ -95,7 +94,9 @@ const HomeworkModal = ({
     }, [moderatedGroups])
 
 
-    const handleTextInputClick = (event) => {
+    const handleTextAreaClick = (event) => {
+      setNotificationInnerActive(false) // потому что иногда срабатывает чёт)0))
+      event.preventDefault()
       event.target.focus()
     }
 
@@ -174,8 +175,8 @@ const HomeworkModal = ({
           <textarea
             ref={textareaRef}
             value={inputValue}
-            onPointerDown={handleTextInputClick}
-            onClick={handleTextInputClick}
+            onPointerDown={handleTextAreaClick}
+            onClick={handleTextAreaClick}
             onInput={onInput}
             name="text-input"
             id="text-input"

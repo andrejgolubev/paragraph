@@ -2,11 +2,11 @@
 
 
 .news-container {
-  margin-top: 16px;
   padding-inline: 25px;
   @media (max-width: 1000px) {
     padding-inline: 15px;
   }
+  margin-top: 16px;
   padding-bottom: 8px;
   display: flex;
   align-items: center;
@@ -14,7 +14,6 @@
   font-family: 'Manrope', serif;
   color: $dark4;
 
-  
   &.dark {
     color: $light-white1;
   }
@@ -22,7 +21,7 @@
   img {
     min-width: 24px; 
     @media (max-width: 600px) {
-      scale: 1.5;
+      scale: 1.25;
       margin-inline: 8px;
     }
   }
