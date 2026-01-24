@@ -9,9 +9,7 @@ import News from "./components/News"
 import { ProtectedRoute } from "./components/ProtectedRoute"
 import { Paper } from "./components/help-page/Paper"
 
-function App() {
-  
-
+export default function App() {
   return (
     <Provider>
       <Header />
@@ -38,4 +36,3 @@ function App() {
   )
 }
 
-export default App

@@ -1,9 +1,9 @@
-import React, { useRef, useEffect, useState } from "react"
+import React, { useRef, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
-import { DevTool } from "@hookform/devtools"
+// import { DevTool } from "@hookform/devtools"
 
-import API from "../../api/API"
+import API, {showNotificationOuter} from "../../api/API"
 import NotificationOuter from "../notifications/NotificationOuter.jsx"
 
 import user_icon from "../../images/auth/person.svg"
@@ -14,7 +14,6 @@ import email_icon from "../../images/auth/email.svg"
 import { validationPreferences } from "../../config/settings.js"
 
 import { useThemeStore } from "../../store/themeStore"
-import { useUiStore } from "../../store/uiStore"
 import { useAuthStore } from "../../store/authStore"
 
 
@@ -36,7 +35,7 @@ export const AuthForm = ({ type }) => {
     }
 
     if (!validationPreferences.username.pattern.test(username)) {
-      return "используйте кириллицу, пробелы, точки и дефисы."
+      return "имя содержит недопустимые символы."
     }
 
     if (/\s{2,}/.test(username)) {
@@ -76,7 +75,6 @@ export const AuthForm = ({ type }) => {
   let authType = "",
     authTitle = ""
 
-  const [submitMessageType, setSubmitMessageType] = useState("")
 
   if (type === "sign-up") {
     authType = "зарегистироваться"
@@ -87,38 +85,26 @@ export const AuthForm = ({ type }) => {
   }
 
   const form = useForm()
-  const { register, control, handleSubmit, formState } = form
+  const { 
+    register, 
+    // control, 
+    handleSubmit, 
+    formState 
+  } = form
   const { errors } = formState
 
   const debounceTimerRef = useRef(null)
 
-  
-
-  const {
-    setNotificationOuterActive,
-    setNotificationOuterMessage,
-    setNotificationOuterType
-  } = useUiStore.getState()
-
   const handleAuth = (resp) => {
-    setNotificationOuterMessage(resp.detail)
-    if (resp.status === "ok") {
-      setSubmitMessageType("success")
-      setNotificationOuterType('success')
+    if (!resp.status === "ok") {
+      showNotificationOuter(resp.detail, 'error')
+    } else { 
       if (resp.type === "sign-in") {
         fetchUser()
         navigate("/", { replace: true }) // редирект на расписание если логин
       } 
       else navigate("/sign-in", { replace: true }) // редирект на логин если успешно зарегался
-
-      setTimeout(async () => {
-        setNotificationOuterActive(true)
-      }, 100)
-    } 
-    else {
-      setSubmitMessageType("error")
-      setNotificationOuterType('error')
-      setNotificationOuterActive(true)
+      showNotificationOuter(resp.detail, 'success')
     }
   }
 
@@ -292,10 +278,6 @@ export const AuthForm = ({ type }) => {
                 <span>забыли пароль?</span>
               </div>
             )} */}
-
-
-
-
             
           </div>
 
@@ -374,8 +356,8 @@ export const AuthForm = ({ type }) => {
           </Link>
         )}
       </form>
-      <NotificationOuter type={submitMessageType} />
-      <DevTool control={control} />
+      <NotificationOuter />
+      {/* <DevTool control={control} /> */}
     </div>
   )
 }

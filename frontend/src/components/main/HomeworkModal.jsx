@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react"
 import NotificationInner from "../notifications/NotificationInner"
-import API from "../../api/API"
+import API, {showNotificationOuter}  from "../../api/API"
 import { convertDate } from "../../utils/converters"
 import { useWindowSize } from "../../hooks/useWindowSize"
 import { useModeratedGroups } from "../../hooks/useModeratedGroups"
 import { useThemeStore } from "../../store/themeStore"
-import { useUiStore } from "../../store/uiStore"
 
 const HomeworkModal = ({
   // showDialog,
@@ -18,12 +17,7 @@ const HomeworkModal = ({
   const {darkTheme} = useThemeStore()
   const {width} = useWindowSize()
 
-  const { 
-    setNotificationOuterActive, 
-    setNotificationOuterMessage, 
-    setNotificationOuterType,
-   } = useUiStore.getState()
-
+ 
   const [inputValue, setInputValue] = useState("")
   const [notificationInnerActive, setNotificationInnerActive] = useState(false)
   const [lastUpdate, setLastUpdate] = useState("")
@@ -129,9 +123,7 @@ const HomeworkModal = ({
           // если сохранена домашка, то:
           setShowDialog(false) // просто убираем компонент из ScheduleContainer
           setLastUpdate('')
-          setNotificationOuterType('success')
-          setNotificationOuterMessage('домашнее задание сохранено.')
-          setNotificationOuterActive(true)
+          showNotificationOuter(resp.message , 'success')
         }
       })
 

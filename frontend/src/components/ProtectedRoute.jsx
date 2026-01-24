@@ -1,8 +1,8 @@
 import { Navigate, useLocation } from 'react-router-dom'
-import { useAuthStore } from '../store/authStore'
+import { useEffect } from 'react'
 import { Mosaic } from 'react-loading-indicators'
 import { useThemeStore } from '../store/themeStore'
-import { useEffect } from 'react'
+import { useAuthStore } from '../store/authStore'
 
 export const ProtectedRoute = ({ children, type }) => {
   const darkTheme = useThemeStore( (state) => state.darkTheme)

@@ -1,19 +1,19 @@
-import { useModeratedGroups } from "../../hooks/useModeratedGroups"
 import React, { useRef, useEffect, useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { useForm } from "react-hook-form"
 
-import API from "../../api/API"
+import { useModeratedGroups } from "../../hooks/useModeratedGroups"
+import API, {showNotificationOuter} from "../../api/API"
+import NotificationOuter from "../notifications/NotificationOuter.jsx"
+
 import pencilIcon from "../../images/profile/profile-page/pencil.svg"
 import pencilIconActive from "../../images/profile/profile-page/pencil-active.svg"
 import pencilIconDark from "../../images/profile/profile-page/pencil-dark.svg"
 import pencilIconActiveDark from "../../images/profile/profile-page/pencil-dark-active.svg"
 
-import NotificationOuter from "../notifications/NotificationOuter.jsx"
 import { useWindowSize } from "../../hooks/useWindowSize"
 import { validationPreferences } from "../../config/settings.js"
 import { useThemeStore } from "../../store/themeStore"
-import { useUiStore } from "../../store/uiStore"
 import { useAuthStore } from "../../store/authStore"
 
 
@@ -40,9 +40,8 @@ const Profile = () => {
     }
     
     if (!validationPreferences.username.pattern.test(username)) {
-      return "разрешены только буквы, пробелы и дефисы."
+      return "имя содержит недопустимые символы."
     }
-    
     
     if (/\s{2,}/.test(username)) {
       return "нельзя использовать несколько пробелов подряд."
@@ -51,8 +50,6 @@ const Profile = () => {
     return true
   }
 
-  
-  const [submitMessageType, setSubmitMessageType] = useState('success')
   
   
   const form = useForm({
@@ -74,14 +71,7 @@ const Profile = () => {
   const { errors } = formState
   
   const debounceTimerRef = useRef(null)
-
   
-
-  const {
-    setNotificationOuterActive, 
-    setNotificationOuterMessage,
-    setNotificationOuterType
-  } = useUiStore.getState()
   
   const onSubmit = ({password, username, group}) => {
     API.updateUserData({email: user?.email, password, username, group}).then(
@@ -89,21 +79,10 @@ const Profile = () => {
         if (resp.status === 'ok') {
           fetchUser()
           setIsEditable(false)
-
-          setNotificationOuterType('error')
-          setNotificationOuterMessage(resp.detail)
-          
-          setSubmitMessageType('success') 
-          setTimeout( async () => { 
-            setNotificationOuterActive(true)
-          }, 100)
+          showNotificationOuter(resp.detail , 'success')
         } else {
-          setSubmitMessageType('error')
-
-          setNotificationOuterType('error')
-          setNotificationOuterMessage(resp.detail)
+          showNotificationOuter(resp.detail , 'error')
         }
-        setNotificationOuterActive(true)
       }
     )
   }
@@ -176,9 +155,7 @@ const Profile = () => {
 
   const handleImmutableFieldClick = (message) => {
     if (!isEditable) return
-    setSubmitMessageType('error')
-    setNotificationOuterActive(true)
-    setNotificationOuterMessage(message)
+    showNotificationOuter(message , 'error')    
   }
 
   // если isEditable был false (т.е. нажали на кнопку редактировать), 
@@ -206,9 +183,7 @@ const Profile = () => {
       navigate('/sign-in')
     }
     API.logout().then( resp => {
-      setNotificationOuterActive(true)// чтобы вызвалась проверка access_token (т.к. в Provider такая dependency)
-      setNotificationOuterMessage(resp.detail)
-      setNotificationOuterType('error')
+      showNotificationOuter(resp.detail, 'error')
       fetchUser()
     })
   }
@@ -333,7 +308,7 @@ const Profile = () => {
           </div>
 
         </div>
-        <NotificationOuter type={submitMessageType} />
+        <NotificationOuter />
         
       </form>
     </div>

@@ -48,18 +48,6 @@ const ScheduleContainer = () => {
   }, [windowSize.width])
 
 
-
-  useEffect(() => {
-    // setGroupDataValueCookies('groupDataValue', groupDataValue, {maxAge: 60*60*24*14}) // чтобы сразу загружалась нужная группа 
-    // setDateDataValueCookies('dateDataValue', dateDataValue, {maxAge: 60*60*24*14}) // чтобы сразу загружалась нужная дата
-
-    console.log("ScheduleContainer - текущие значения:", {
-      groupDataValue,
-      dateDataValue,
-    })
-
-  }, [groupDataValue, dateDataValue])
-
   useEffect( () => {
     if (dateDataValue) {
       setYear(dateDataValue.slice(0, 4))
@@ -70,25 +58,21 @@ const ScheduleContainer = () => {
     scheduleData?.days?.[0]?.date || "" , 
     year
   )
-  
-  
-  // ДЛЯ ИСПОЛЬЗОВАНИЯ как dateDataValue для сохранения конкретной домашки, т.к. домашка прикрепляется к неделе,
-  // а не к конкретной дате т.е. 2025-12-22, 2025-12-29, 2026-01-05 и т.д.
+ 
 
   // Загрузка расписания
   const loadSchedule = useCallback(async () => {
-    // try {
-      setLoading(true)
-      
-      API.getScheduleData({groupDataValue, dateDataValue}).then((data) => {
-        setScheduleData(data)
-        setError(null)
-      }).catch((err) => {
-        console.error("Error loading schedule:", err)
-        setError(err.message)
-      }).finally(() => {
-        setLoading(false)
-      })
+    setLoading(true)
+    
+    API.getScheduleData({groupDataValue, dateDataValue}).then((data) => {
+      setScheduleData(data)
+      setError(null)
+    }).catch((err) => {
+      console.error("Error loading schedule:", err)
+      setError(err.message)
+    }).finally(() => {
+      setLoading(false)
+    })
    
   }, [groupDataValue, dateDataValue])
 
@@ -157,7 +141,6 @@ const ScheduleContainer = () => {
     return isCurrentWeekday && isCurrentDate ? "active-day" : ""
   }
 
-  
 
   // Форматирование текста занятия
   const formatLessonText = (lesson) => {
@@ -190,7 +173,6 @@ const ScheduleContainer = () => {
     if (!scheduleData) return null
 
     const datesArr = scheduleData.days.map((day) => day.date)
-    
     lessonIndexRef.current = 1
 
     return (
@@ -300,7 +282,6 @@ const ScheduleContainer = () => {
     )
   }
 
-  
 
   const renderMobileSchedule = (scheduleData) => {
     if (!scheduleData) return null 
@@ -346,8 +327,6 @@ const ScheduleContainer = () => {
       }
       return mobileItem
     }
-
-
 
     return (
       <div className="mobile-schedule">

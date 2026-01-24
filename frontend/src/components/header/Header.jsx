@@ -8,7 +8,7 @@ import burgerButtonDark from '../../images/mobile/burger-button-dark.svg'
 import { ProfileDropdown } from "../profile/ProfileDropdown"
 import { useState, useRef } from "react"
 import { useClickOutside } from "../../hooks/useClickOutside"
-import { Link, useLocation } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useWindowSize } from "../../hooks/useWindowSize"
 import { Toggle } from "./Toggle"
 import { NavItem } from "./NavItem"
@@ -21,11 +21,12 @@ const Header = () => {
   const { linksActive, setLinksActive } = useUiStore()
   const { darkTheme } = useThemeStore()
   const user = useAuthStore((state) => state.user)
+  const fetchUser = useAuthStore((state) => state.fetchUser)
 
   const [displayProfile, setDisplayProfile] = useState(false)
   const dropdownRef = useRef(null)
   const profileRef = useRef(null)
-  const location = useLocation()
+
   
   useClickOutside([dropdownRef, profileRef], () => {
     setDisplayProfile(false)
@@ -96,6 +97,7 @@ const Header = () => {
                     onClick={(e) => {
                       e.preventDefault()
                       setDisplayProfile((prev) => !prev)
+                      fetchUser()
                     }}
                     alt="Profile"
                   />

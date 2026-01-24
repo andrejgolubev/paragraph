@@ -1,5 +1,3 @@
-
-
 import chel from '../../images/tip/chel.svg'
 import chelDark from '../../images/tip/chel-dark.svg'
 import tipBg from '../../images/tip/tip-bg.png'

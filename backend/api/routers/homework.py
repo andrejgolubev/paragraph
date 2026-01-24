@@ -83,7 +83,12 @@ async def save_homework(
 
         await db.commit()
 
-        return {"status": 'ok', "detail": "saved", "username": user_data.get('username')}
+        return {
+            "status": 'ok', 
+            "detail": "saved", 
+            "message": 'Домашнее задание сохранено',
+            "username": user_data.get('username')
+        }
 
     except Exception:
         await db.rollback()

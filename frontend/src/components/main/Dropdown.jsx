@@ -34,8 +34,6 @@ const Dropdown = (props) => {
     }
   }, [])
 
-   
-
 
   useClickOutside([dropdownRef], () => {
     setActiveSearch(false)
@@ -50,7 +48,6 @@ const Dropdown = (props) => {
   useEffect(() => {
     setFilteredData(
       data?.filter((elem) => {
-        
         const element = elem[elemKey]
 
         return (
@@ -82,12 +79,8 @@ const Dropdown = (props) => {
 
 
   const handleClick = () => {
-    if (name === "group") {
-      loadGroups()
-    } else if (name === "week") {
-      loadDates()
-    }
-
+    if (name === "group") loadGroups()
+    else if (name === "week") loadDates()
     setActiveSearch((prev) => !prev)
   }
 

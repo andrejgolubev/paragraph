@@ -1,11 +1,10 @@
 import { useUiStore } from "../store/uiStore"
 
-export const BASE_URL = "https://192.168.0.108:8000"
+const BASE_URL = "https://192.168.0.108:8000"
+const headers = { "Content-Type": "application/json"}
 
-export const headers = { "Content-Type": "application/json"}
 
-
-export const fetchUrl = async (url, options = {}) => {
+const fetchUrl = async (url, options = {}) => {
   try {
     return await fetch(url, { credentials: "include", ...options })
   } catch (err) {
@@ -17,43 +16,25 @@ export const fetchUrl = async (url, options = {}) => {
   }
 }
 
-export const getHandledResponseData = async (response, msgTypeIfResponseOk) => {
+const getHandledResponseData = async (response) => {
   const body = await response.json().catch(() => ({}))
-  if (response.status >= 400 && response.status !== 401) {
-    const errorDetail = body.detail
-    showNotificationOuter(errorDetail, "error")
-  } else {
-    // отображаем ТОЛЬКО ЕСЛИ передана ПЕРЕМЕННАЯ, иначе отображение уведомления
-    // будет конфликтовать с логикой отображения, описанной в компонентах 
-    // (два сообщения сразу и т.д.)
-    if (msgTypeIfResponseOk) {   
-      showNotificationOuter(response.detail, msgTypeIfResponseOk)
-    }
+  if (response.status > 403) {
+    showNotificationOuter(body.detail, "error")
   }
-
   return body
-
 }
 
 
-async function apiFetch(url, options = {}, msgTypeIfResponseOk) {
+async function apiFetch(url, options = {}) {
   const response = await fetchUrl(url, options)
-  
-  const responseData = await getHandledResponseData(
-    response, msgTypeIfResponseOk
-  )
-
+  const responseData = await getHandledResponseData(response)
   return responseData
 }
 
 
 async function authApiFetch(url, options = {}, additional = {}) {
   const response = await fetchUrl(url, options)
-
-  const responseData = await getHandledResponseData(
-    response
-  )
-
+  const responseData = await getHandledResponseData(response)
   return { ...responseData, ...additional }
 }
 
@@ -65,11 +46,11 @@ export function showNotificationOuter(message, type) {
     setNotificationOuterType, 
   } = useUiStore.getState()
 
-  console.log('showNotificationOuter called')
-
-  setNotificationOuterType(type)
   setNotificationOuterMessage(message)
-  setNotificationOuterActive(true)
+  setNotificationOuterType(type)
+  setTimeout( async () => {
+    setNotificationOuterActive(true)
+  }, 50) 
 }
 
 const API = {
@@ -204,7 +185,6 @@ const API = {
     return apiFetch(
       `${BASE_URL}/user/logout`, 
       { method: "POST", headers }, 
-      'error'
     )
   },
 

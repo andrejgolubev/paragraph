@@ -7,19 +7,13 @@ import { useWindowSize } from "../../hooks/useWindowSize"
 import { useDropdownStore } from "../../store/dropdownStore"
 import { useThemeStore } from "../../store/themeStore"
 import { useUiStore } from "../../store/uiStore"
-import { useAuthStore } from "../../store/authStore"
+
 
 const MainContent = () => {
   const { groupDataValue, dateDataValue, } = useDropdownStore()
   const { darkTheme } = useThemeStore()
   const { tipActive, setTipActive } = useUiStore()
     
-  const {width} = useWindowSize() 
-  const isMobile = width < 1001
-  
-  
-
-
   useEffect( () => {
     if (groupDataValue) {
       setTipActive(false)
@@ -28,6 +22,9 @@ const MainContent = () => {
     }
   }, [groupDataValue])
 
+
+  const {width} = useWindowSize() 
+  const isMobile = width < 1001
 
 
   return (

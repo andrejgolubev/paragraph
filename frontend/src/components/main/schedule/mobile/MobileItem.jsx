@@ -1,6 +1,5 @@
 import paperclip from "../../../../images/homework/paperclip.svg"
 import paperclipDark from "../../../../images/homework/paperclip-dark.svg"
-
 import { useThemeStore } from "../../../../store/themeStore"
 
 
