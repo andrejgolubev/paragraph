@@ -5,31 +5,68 @@ from selenium.webdriver.support import expected_conditions as EC
 from ..logger import log
 
 
-def _parse_date(driver: webdriver.Chrome): 
+# def _parse_date(driver: webdriver.Chrome): 
+#     """ПАРСИТ ВСЕ актуальные ДАТЫ из выпадающего меню """
+    
+#     try: 
+#         log.info('Parsing dates...')
+#         wait = WebDriverWait(driver, 0.1)
+#         css_selector = '.column[style*="width: 220px"] .select-wrap' 
+#         log.debug('CSS selector: %s', css_selector)
+#         option_box = driver.find_element(By.CSS_SELECTOR, css_selector)
+#         option_box.click()    
+#         log.debug('Option box clicked')
+#         # Ждем появления списка опций ul
+#         options_list = wait.until(
+#             EC.presence_of_element_located((By.CSS_SELECTOR, css_selector))
+#         ) 
+#         log.debug('Options list found')
+#         # Парсим все доступные группы
+#         dates_dict = {}
+#         dates_options = options_list.find_elements(By.TAG_NAME, "option")
+#         log.debug('Dates options found: %s', len(dates_options))
+#         for date in dates_options:
+            
+#             data_value = date.get_attribute("value")
+#             date = date.text.strip()
+#             log.debug('Current date: %s', date)
+#             for word in ['(текущая)', 'знам.', 'числ.']:
+#                 date = date.replace(word, '').strip(' ,')
+
+#             if data_value and date:
+#                 dates_dict[date] = data_value 
+
+#         return dates_dict
+
+#     except Exception as e: 
+#         log.error('Error parsing dates: %s', e)
+#         raise 
+
+
+def _parse_date_v2(driver: webdriver.Chrome): 
     """ПАРСИТ ВСЕ актуальные ДАТЫ из выпадающего меню """
     
     try: 
         log.info('Parsing dates...')
-        wait = WebDriverWait(driver, 0.1)
-        css_selector = '.column[style*="width: 220px"] .select-wrap' 
+
+        css_selector = 'select[name="date"]'
         log.debug('CSS selector: %s', css_selector)
-        option_box = driver.find_element(By.CSS_SELECTOR, css_selector)
+        option_boxes = driver.find_elements(By.CSS_SELECTOR, css_selector)
+
+        log.debug('option_boxes: %s', option_boxes)
+        option_box = option_boxes[-1]
         option_box.click()    
         log.debug('Option box clicked')
-        # Ждем появления списка опций ul
-        options_list = wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, css_selector))
-        ) 
-        log.debug('Options list found')
+        
         # Парсим все доступные группы
         dates_dict = {}
-        dates_options = options_list.find_elements(By.TAG_NAME, "option")
+
+        dates_options = option_box.find_elements(By.TAG_NAME, "option")
         log.debug('Dates options found: %s', len(dates_options))
         for date in dates_options:
             
             data_value = date.get_attribute("value")
             date = date.text.strip()
-            log.debug('Current date: %s', date)
             for word in ['(текущая)', 'знам.', 'числ.']:
                 date = date.replace(word, '').strip(' ,')
 
@@ -41,6 +78,7 @@ def _parse_date(driver: webdriver.Chrome):
     except Exception as e: 
         log.error('Error parsing dates: %s', e)
         raise 
+    
 
 
 def parse_dates():
@@ -49,11 +87,12 @@ def parse_dates():
 
     log.info("Starting date parser")
 
-
     driver = webdriver.Chrome()
+
+    # ссылка с уже выбранной "абы какой" группой, иначе не будут отображаться даты 
     driver.get('https://rasp.rsreu.ru/schedule-frame/group?faculty=1&group=1640&date=')
     try:
-        dates = _parse_date(driver)
+        dates = _parse_date_v2(driver)
         log.info("Parsed %d dates", len(dates))
         return dates 
     finally:

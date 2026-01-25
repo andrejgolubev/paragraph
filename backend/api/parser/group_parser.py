@@ -13,26 +13,31 @@ def _parse_group(driver: webdriver.Chrome):
 
         icon = driver.find_element(By.CSS_SELECTOR, "i.mdi")
         icon.click()    
+        log.debug('Icon clicked')
 
-        # Ждем появления списка опций ul
+        # Ждем появления
         options_list = wait.until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "ul[role='listbox']"))
         ) # options_list это ul со всеми группами
 
         groups_dict = {}
         group_options = options_list.find_elements(By.TAG_NAME, "li")
+        log.debug('Found %d elements in groups_list', len(group_options))
 
         for option in group_options:
             data_value = option.get_attribute("data-value")
             group_number = option.text.strip()
-
             if data_value!='0' and group_number:
                 groups_dict[group_number] = data_value 
 
+        log.debug('Added %d groups within their datavalue', len(groups_dict))
         return groups_dict
     except Exception as exc:
         log.error("Error parsing groups: %s", exc, exc_info=True)
         raise
+
+
+
 
 
 def parse_groups():
