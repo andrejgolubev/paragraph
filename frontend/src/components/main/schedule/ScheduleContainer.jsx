@@ -39,7 +39,6 @@ const ScheduleContainer = () => {
     widthDebounceRef.current = setTimeout(() => {
       setDebouncedWidth(windowSize.width)
     }, 30)
-    console.log('debouncedWidth :>>', debouncedWidth);
     return () => {
       if (widthDebounceRef.current) {
         clearTimeout(widthDebounceRef.current)
@@ -68,7 +67,6 @@ const ScheduleContainer = () => {
       setScheduleData(data)
       setError(null)
     }).catch((err) => {
-      console.error("Error loading schedule:", err)
       setError(err.message)
     }).finally(() => {
       setLoading(false)
@@ -99,7 +97,6 @@ const ScheduleContainer = () => {
         setHomeworkAuthor(username)
       }).catch( (err) => {
         setHomeworkText('')
-        console.log('err from ScheduleCont :>> ', err);
       }
       )
 
@@ -129,10 +126,10 @@ const ScheduleContainer = () => {
     }
 
     const currentDate = new Date()
+    // getDay() = 0 для воскресенья, 1 для понедельника, ..., 6 для субботы
     const currentWeekDay = currentDate.getDay()
     const currentDayOfMonth = currentDate.getDate()
 
-    // В JavaScript getDay() возвращает 0 для воскресенья, 1 для понедельника и т.д.
     const adjustedWeekDay = currentWeekDay === 0 ? 7 : currentWeekDay
 
     const isCurrentWeekday = weekDaysMap[dayName] === adjustedWeekDay
@@ -166,7 +163,7 @@ const ScheduleContainer = () => {
   }
 
   
-  // Рендер расписания
+  // Рендер десктоп расписания
   const lessonIndexRef = useRef(1)
   
   const renderDesktopSchedule = (scheduleData) => {
@@ -282,11 +279,9 @@ const ScheduleContainer = () => {
     )
   }
 
-
+  // рендер мобильного расписания
   const renderMobileSchedule = (scheduleData) => {
     if (!scheduleData) return null 
-
-    console.log('scheduleData :>> ', scheduleData);
 
     const weekdays = ["Пн","Вт","Ср","Чт","Пт","Сб"]
     const daysArr = weekdays.map((day, dayIndex) => (
