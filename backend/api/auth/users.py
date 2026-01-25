@@ -269,7 +269,7 @@ async def update_profile(
     
     return {
         "status": "ok",
-        "detail": "профиль обновлен успешно",
+        "detail": "Профиль обновлен успешно",
         "username": user.name,
         "email": user.email,
         "role": user.role,

@@ -182,7 +182,7 @@ async def get_homework(
         date = date_result.first()
 
         if not group or not date:
-            return {"detail": "группа или дата не выбраны или не найдены"}
+            return {"detail": "Группа или дата не выбраны или не найдены"}
 
         hmw_result = await db.scalars(
             select(Homework).where(

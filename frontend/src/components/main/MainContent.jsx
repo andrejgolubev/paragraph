@@ -20,7 +20,7 @@ const MainContent = () => {
     } else {
       setTipActive(true)
     }
-  }, [groupDataValue])
+  }, [groupDataValue, tipActive])
 
 
   const {width} = useWindowSize() 

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import HomeworkModal from "../HomeworkModal" 
 import paperclip from "../../../images/homework/paperclip.svg"
 import paperclipDark from "../../../images/homework/paperclip-dark.svg"
-import API from "../../../api/API"
+import API, { showNotificationOuter } from "../../../api/API"
 import { Mosaic } from "react-loading-indicators"
 import { getDateValueFromDisplay} from "../../../utils/converters"
 import { useWindowSize } from "../../../hooks/useWindowSize"
@@ -95,8 +95,9 @@ const ScheduleContainer = () => {
         setHomeworkUpdated(updated)
         setHomeworkText(homework)
         setHomeworkAuthor(username)
-      }).catch( (err) => {
+      }).catch( (error) => {
         setHomeworkText('')
+        showNotificationOuter(error.message, 'error')
       }
       )
 
@@ -302,7 +303,6 @@ const ScheduleContainer = () => {
         time={`${start}-${end}`} 
         texts={lesson?.map(sublesson => (sublesson.text))} 
         types={lesson?.map(sublesson => (sublesson.type))}  
-        lessonId={lessonId}
 
         onClick={() => handleHomeworkClick({
           groupDataValue: groupDataValue,
