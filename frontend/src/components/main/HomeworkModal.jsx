@@ -105,7 +105,7 @@ const HomeworkModal = ({
 
     const handleHomeworkSubmit = (event) => {
       event.preventDefault()
-     
+      
       const homeworkTextClean = inputValue.trim()
       if (homeworkTextClean.length >= 350) {
         setRespText('превышена максмально допустимая длина д/з :(')
@@ -130,13 +130,6 @@ const HomeworkModal = ({
           showNotificationOuter(resp.message , 'success')
         }
       })
-
-      
-      if (!homeworkTextClean) {
-        setRespText('д/з не может быть пустым')
-        showError()
-        return
-      }
     }
 
     const handleCancel = (event) => {
