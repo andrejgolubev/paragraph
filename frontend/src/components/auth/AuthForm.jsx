@@ -129,18 +129,18 @@ export const AuthForm = ({ type }) => {
   }
 
   useEffect(() => {
+    const timer = debounceTimerRef.current
     return () => {
       // cleanup при размонтировании
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current)
+      if (timer) {
+        clearTimeout(timer)
       }
     }
   }, [])
 
   const requireText = "это поле надо бы заполнить."
 
-  const darkOrNot = useRef("")
-  darkOrNot.current = darkTheme ? " dark" : ""
+  const darkClass = darkTheme ? " dark" : ""
 
   const usernameInputRef = useRef(null)
   const groupInputRef = useRef(null)
@@ -188,7 +188,7 @@ export const AuthForm = ({ type }) => {
   })
 
   return (
-    <div className={`auth${darkOrNot.current}`}>
+    <div className={`auth${darkClass}`}>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="auth__header">
           <div className="auth__header__text">{authTitle}</div>
@@ -197,7 +197,7 @@ export const AuthForm = ({ type }) => {
           {type === "sign-up" && usernameField && groupField && (
             <>
               <div
-                className={`input-div${darkOrNot.current}`}
+                className={`input-div${darkClass}`}
                 onClick={() => focusInput(usernameInputRef)}
               >
                 <img src={user_icon} alt="user icon" />
@@ -207,7 +207,7 @@ export const AuthForm = ({ type }) => {
                     usernameField.ref(el)
                     usernameInputRef.current = el
                   }}
-                  className={`input${darkOrNot.current}`}
+                className={`input${darkClass}`}
                   type="text"
                   id="username"
                   placeholder="имя"
@@ -216,7 +216,7 @@ export const AuthForm = ({ type }) => {
                 <p className="auth__error">{errors.username?.message}</p>
               </div>
               <div
-                className={`input-div${darkOrNot.current}`}
+                className={`input-div${darkClass}`}
                 onClick={() => focusInput(groupInputRef)}
               >
                 <img src={group_icon} alt="user icon" />
@@ -226,7 +226,7 @@ export const AuthForm = ({ type }) => {
                     groupField.ref(el)
                     groupInputRef.current = el
                   }}
-                  className={`input${darkOrNot.current}`}
+                  className={`input${darkClass}`}
                   type="text"
                   id="group"
                   placeholder="группа (необяз.)"
@@ -237,17 +237,17 @@ export const AuthForm = ({ type }) => {
             </>
           )}
           <div
-            className={`input-div${darkOrNot.current} email-input`}
+            className={`input-div${darkClass} email-input`}
             onClick={() => focusInput(emailInputRef)}
           >
             <img src={email_icon} alt="email icon" />
-            <input
-              {...emailField}
-              ref={(el) => {
-                emailField.ref(el)
-                emailInputRef.current = el
-              }}
-              className={`input${darkOrNot.current}`}
+              <input
+                {...emailField}
+                ref={(el) => {
+                  emailField.ref(el)
+                  emailInputRef.current = el
+                }}
+                className={`input${darkClass}`}
               type="email"
               id="email"
               placeholder="эл. почта"
@@ -257,7 +257,7 @@ export const AuthForm = ({ type }) => {
           </div>
           <div className="pwd-block">
             <div
-              className={`input-div${darkOrNot.current} pwd-input`}
+              className={`input-div${darkClass} pwd-input`}
               onClick={() => focusInput(passwordInputRef)}
             >
               <img src={password_icon} alt="password icon" />
@@ -267,7 +267,7 @@ export const AuthForm = ({ type }) => {
                   passwordField.ref(el)
                   passwordInputRef.current = el
                 }}
-                className={`input${darkOrNot.current}`}
+                className={`input${darkClass}`}
                 type="password"
                 id="password"
                 placeholder="пароль"
@@ -284,7 +284,7 @@ export const AuthForm = ({ type }) => {
           </div>
 
           {type === "sign-up" && (
-            <div className={`checkbox-block${darkOrNot.current}`}>
+            <div className={`checkbox-block${darkClass}`}>
               {/* Чекбокс 1 */}
               <div className="checkbox-block__checkbox">
                 <label className="checkbox-block__checkbox__label">
@@ -340,7 +340,7 @@ export const AuthForm = ({ type }) => {
           )}
         </div>
         <div className="auth__submit">
-          <button className={`auth__submit__btn${darkOrNot.current}`}>
+          <button className={`auth__submit__btn${darkClass}`}>
             {authType}
           </button>
         </div>

@@ -1,8 +1,7 @@
-import { createContext, useEffect} from "react"
+import { useEffect} from "react"
 import { useAuthStore } from "../store/authStore"
 import { useThemeStore } from "../store/themeStore"
-
-export const Context = createContext({})
+import { Context } from "./AppContext"
 
 export const Provider = ({ children }) => {
 
@@ -11,8 +10,12 @@ export const Provider = ({ children }) => {
 
   useEffect( () => {
     fetchUser()
-    document.body.classList.add(darkTheme? 'dark' : 'light')
   }, []) // срабатывает при обновлении страницы 
+  
+  useEffect(() => {
+    document.body.classList.toggle("dark", darkTheme)
+    document.body.classList.toggle("light", !darkTheme)
+  }, [darkTheme])
 
 
   return (

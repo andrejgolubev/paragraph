@@ -165,13 +165,11 @@ const ScheduleContainer = () => {
 
   
   // Рендер десктоп расписания
-  const lessonIndexRef = useRef(1)
-  
   const renderDesktopSchedule = (scheduleData) => {
     if (!scheduleData) return null
 
     const datesArr = scheduleData.days.map((day) => day.date)
-    lessonIndexRef.current = 1
+    let currentLessonIndex = 0
 
     return (
       <table
@@ -198,7 +196,7 @@ const ScheduleContainer = () => {
               </td>
               {timeSlot.lessons.map((dayLessons, dayIndex) => {
                 const dataDate = datesArr[dayIndex]
-                const currentLessonIndex = lessonIndexRef.current++
+                currentLessonIndex++
 
                 return (
                   <td

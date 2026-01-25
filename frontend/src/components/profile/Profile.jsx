@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom"
 import { useForm } from "react-hook-form"
 
 import { useModeratedGroups } from "../../hooks/useModeratedGroups"
-import API, {showNotificationOuter} from "../../api/API"
+import API, { showNotificationOuter } from "../../api/API"
 import NotificationOuter from "../notifications/NotificationOuter.jsx"
 
 import pencilIcon from "../../images/profile/profile-page/pencil.svg"
@@ -16,98 +16,93 @@ import { validationPreferences } from "../../config/settings.js"
 import { useThemeStore } from "../../store/themeStore"
 import { useAuthStore } from "../../store/authStore"
 
-
 const Profile = () => {
-  const { darkTheme } = useThemeStore()
-  const {user, fetchUser} = useAuthStore()
-
-  if (!user) return <div className="profile"><p>пожалуйста, авторизуйтесь. перенаправляю на страницу входа...</p></div>
-
-  const {width} = useWindowSize()
-  
+  const darkTheme = useThemeStore((state) => state.darkTheme)
+  const { user, fetchUser } = useAuthStore()
+  const { width } = useWindowSize()
   const { moderatedGroups, displayRole } = useModeratedGroups()
 
-  
-  const validateUsername = async (value) => {
-    const username = value.trim()
-    
-    if (username.length < validationPreferences.username.minLength) {
-      return `имя должно содержать минимум ${validationPreferences.username.minLength} символа`
-    }
-    
-    if (username.length > validationPreferences.username.maxLength) {
-      return `имя не должно превышать ${validationPreferences.username.maxLength} символов`
-    }
-    
-    if (!validationPreferences.username.pattern.test(username)) {
-      return "имя содержит недопустимые символы."
-    }
-    
-    if (/\s{2,}/.test(username)) {
-      return "нельзя использовать несколько пробелов подряд."
-    }
-    
-    return true
-  }
 
-  
-  
   const form = useForm({
     defaultValues: {
       username: user?.username,
       group: user?.group,
       email: user?.email,
-      password: '***********',
-    },
-    values: {
-      username: user?.username,
-      group: user?.group,
-      email: user?.email,
-      password: '***********',
+      password: "***********",
     },
   })
 
   const { register, handleSubmit, formState } = form
   const { errors } = formState
-  
+
+
+  useEffect(() => {
+    if (user) {
+      form.reset({
+        username: user.username,
+        group: user.group,
+        email: user.email,
+      })
+    }
+  }, [user, form])
+
+  const validateUsername = async (value) => {
+    const username = value.trim()
+
+    if (username.length < validationPreferences.username.minLength) {
+      return `имя должно содержать минимум ${validationPreferences.username.minLength} символа`
+    }
+
+    if (username.length > validationPreferences.username.maxLength) {
+      return `имя не должно превышать ${validationPreferences.username.maxLength} символов`
+    }
+
+    if (!validationPreferences.username.pattern.test(username)) {
+      return "имя содержит недопустимые символы."
+    }
+
+    if (/\s{2,}/.test(username)) {
+      return "нельзя использовать несколько пробелов подряд."
+    }
+
+    return true
+  }
+
+
+
   const debounceTimerRef = useRef(null)
-  
-  
-  const onSubmit = ({password, username, group}) => {
-    API.updateUserData({email: user?.email, password, username, group}).then(
-      resp => {
-        if (resp.status === 'ok') {
+
+  const onSubmit = ({ password, username, group }) => {
+    API.updateUserData({ email: user?.email, password, username, group }).then(
+      (resp) => {
+        if (resp.status === "ok") {
           fetchUser()
           setIsEditable(false)
-          showNotificationOuter(resp.detail , 'success')
+          showNotificationOuter(resp.detail, "success")
         } else {
-          showNotificationOuter(resp.detail , 'error')
+          showNotificationOuter(resp.detail, "error")
         }
       }
     )
   }
 
-  
   const validateGroup = (value) => {
     if (!value?.trim()) return true
   }
 
   useEffect(() => {
-    return () => { // cleanup при размонтировании
+    return () => {
+      // cleanup при размонтировании
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current)
       }
     }
   }, [])
-  
 
-  const darkOrNot = useRef('')
-  darkOrNot.current = darkTheme? ' dark' : ''
-
+  const darkClass = darkTheme ? " dark" : ""
 
   const usernameInputRef = useRef(null)
   const groupInputRef = useRef(null)
-  const emailInputRef = useRef(null)
   const passwordInputRef = useRef(null)
 
   const focusInput = (inputRef) => {
@@ -119,31 +114,28 @@ const Profile = () => {
     } else return
   }
 
-  // ДЛЯ ТОГО ЧТОБЫ ФОКУС СРАБАТЫВАЛ НЕ ТОЛЬКО ПРИ КЛИКЕ НЕПОСРЕДСТВЕННО НА input: 
+  // ДЛЯ ТОГО ЧТОБЫ ФОКУС СРАБАТЫВАЛ НЕ ТОЛЬКО ПРИ КЛИКЕ НЕПОСРЕДСТВЕННО НА input:
   // сохраняем register поля, чтобы привязать ref и к react-hook-form форме, и к нашим refs
-  // в usernameField, groupField, passwordField будет сохранен обьект вида 
+  // в usernameField, groupField, passwordField будет сохранен обьект вида
   // { onChange, onBlur, ref, name, ... }
   const usernameField = register("username", {
-      required: false, 
-      validate: {
-        validFormat: async (value) => validateUsername(value)
-      },
-    }) 
+    required: false,
+    validate: {
+      validFormat: async (value) => validateUsername(value),
+    },
+  })
 
   const groupField = register("group", {
     required: false,
-      validate: {
-        validateGroup: (value) => validateGroup(value)
-      }, 
-    }) 
+    validate: {
+      validateGroup: (value) => validateGroup(value),
+    },
+  })
 
   const passwordField = register("password", {
     required: true,
-    // // не нужно validate, так как не обновляем пароль, а только проверяем его 
+    // не нужно validate, так как не обновляем пароль, а только проверяем его
   })
-
-  
-
 
   const [isEditable, setIsEditable] = useState(false)
 
@@ -152,62 +144,80 @@ const Profile = () => {
     else form.reset()
   }, [isEditable])
 
-
   const handleImmutableFieldClick = (message) => {
     if (!isEditable) return
-    showNotificationOuter(message , 'error')    
+    showNotificationOuter(message, "error")
   }
 
-  // если isEditable был false (т.е. нажали на кнопку редактировать), 
+  // если isEditable был false (т.е. нажали на кнопку редактировать),
   // то скроллим вниз на кнопку сохранить (для десктопа), а затем меняем его на true
+  const saveButtonRef = useRef(null)
+
   const handleToggleEditing = () => {
     setIsEditable((prev) => {
-      if (!prev) { 
-        passwordInputRef.current.value = ''
+      if (!prev) {
+        passwordInputRef.current.value = ""
         setTimeout(() => {
           // только для десктопа, чтобы скролл не сработал на мобилке. на мобилке только фокус на поле ввода.
-          if (width > 1100) saveButtonRef.current?.scrollIntoView({ behavior: 'smooth' })
+          if (width > 1100)
+            saveButtonRef.current?.scrollIntoView({ behavior: "smooth" })
         }, 100)
-      } 
+      }
       return !prev
     })
   }
 
-
   const navigate = useNavigate()
   const location = useLocation()
-  const path = location.pathname.split('/').pop()
+  const path = location.pathname.split("/").pop()
 
   const handleLogout = () => {
-    if (path === 'profile') {
-      navigate('/sign-in')
+    if (path === "profile") {
+      navigate("/sign-in")
     }
-    API.logout().then( resp => {
-      showNotificationOuter(resp.detail, 'error')
+    API.logout().then((resp) => {
+      showNotificationOuter(resp.detail, "error")
       fetchUser()
     })
   }
 
-  const saveButtonRef = useRef(null)
+  if (!user) {
+    return (
+      <div className="profile">
+        <p>пожалуйста, авторизуйтесь. перенаправляю на страницу входа...</p>
+      </div>
+    )
+  }
 
   return (
-    <div className={`profile${darkOrNot.current} ${isEditable? 'editing' : ''}`}>
+    <div className={`profile${darkClass} ${isEditable ? "editing" : ""}`}>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="profile__header">
           <div className="profile__header__text">профиль</div>
-          <div className="profile__header__pencil" onClick={handleToggleEditing}>
+          <div
+            className="profile__header__pencil"
+            onClick={handleToggleEditing}
+          >
             <img
               className="profile__header__pencil__icon"
-              src={darkTheme? (isEditable? pencilIconActiveDark : pencilIconDark) : (isEditable? pencilIconActive : pencilIcon)}
+              src={
+                darkTheme
+                  ? isEditable
+                    ? pencilIconActiveDark
+                    : pencilIconDark
+                  : isEditable
+                  ? pencilIconActive
+                  : pencilIcon
+              }
               title="редактировать профиль"
             />
           </div>
         </div>
         <div className="profile__inputs">
-          <div className="username-block" >
+          <div className="username-block">
             <label htmlFor="username">имя</label>
             <div
-              className={`input-div${darkOrNot.current}`}
+              className={`input-div${darkClass}`}
               onClick={() => focusInput(usernameInputRef)}
             >
               <input
@@ -216,19 +226,19 @@ const Profile = () => {
                   usernameField.ref(el)
                   usernameInputRef.current = el
                 }}
-                className={`input${darkOrNot.current}`}
+                className={`input${darkClass}`}
                 type="text"
                 id="username"
                 readOnly={!isEditable}
               />
-              <p className='profile__error'>{errors.username?.message}</p>
+              <p className="profile__error">{errors.username?.message}</p>
             </div>
           </div>
 
           <div className="group-block">
             <label htmlFor="group">группа</label>
             <div
-              className={`input-div${darkOrNot.current}`}
+              className={`input-div${darkClass}`}
               onClick={() => focusInput(groupInputRef)}
             >
               <input
@@ -237,40 +247,48 @@ const Profile = () => {
                   groupField.ref(el)
                   groupInputRef.current = el
                 }}
-                className={`input${darkOrNot.current}`}
+                className={`input${darkClass}`}
                 type="text"
                 id="group"
                 placeholder="не указана"
                 readOnly={!isEditable}
               />
-            <p className='profile__error'>{errors.group?.message}</p>
+              <p className="profile__error">{errors.group?.message}</p>
             </div>
           </div>
 
-          <div className="role-block" onClick={() => handleImmutableFieldClick('самому себе роль изменять нельзя :(')}>
+          <div
+            className="role-block"
+            onClick={() =>
+              handleImmutableFieldClick("самому себе роль изменять нельзя :(")
+            }
+          >
             <label htmlFor="role">роль</label>
-            <div 
-              className={`input-div${darkOrNot.current} immutable-field`}
-            >
-              {displayRole.toLowerCase() === 'администратор'
-                  ? <p>{`${displayRole} (${moderatedGroups})`}</p> 
-                  : <p>{displayRole}</p>}
+            <div className={`input-div${darkClass} immutable-field`}>
+              {displayRole.toLowerCase() === "администратор" ? (
+                <p>{`${displayRole} (${moderatedGroups})`}</p>
+              ) : (
+                <p>{displayRole}</p>
+              )}
             </div>
           </div>
 
-          <div className="email-block" onClick={() => handleImmutableFieldClick('электронную почту изменять нельзя :(')}>
+          <div
+            className="email-block"
+            onClick={() =>
+              handleImmutableFieldClick("электронную почту изменять нельзя :(")
+            }
+          >
             <label htmlFor="role">эл. почта</label>
-            <div
-              className={`input-div${darkOrNot.current} immutable-field`}
-            >
+            <div className={`input-div${darkClass} immutable-field`}>
               <p>{user?.email}</p>
             </div>
           </div>
-          
+
           <div className="pwd-block">
             <label htmlFor="password">пароль</label>
             <div
-              className={`input-div${darkOrNot.current} pwd-input`}
+              className={`input-div${darkClass} pwd-input`}
               onClick={() => focusInput(passwordInputRef)}
             >
               <input
@@ -279,25 +297,36 @@ const Profile = () => {
                   passwordField.ref(el)
                   passwordInputRef.current = el
                 }}
-                className={`input${darkOrNot.current}`}
+                className={`input${darkClass}`}
                 type="password"
                 id="password"
                 placeholder="для применения правок..."
                 readOnly={!isEditable}
               />
-              <p className='profile__error'>{errors.password?.message}</p>
+              <p className="profile__error">{errors.password?.message}</p>
             </div>
-            { isEditable ? (
-            <div className="profile__submit">
-              <button className={`profile__submit__cancel__btn${darkOrNot.current}`} onClick={handleToggleEditing}>отмена</button>
-              <button className={`profile__submit__save__btn${darkOrNot.current}`} type="submit" ref={saveButtonRef}>сохранить</button>
-            </div>
-            ):(
+            {isEditable ? (
+              <div className="profile__submit">
+                <button
+                  className={`profile__submit__cancel__btn${darkClass}`}
+                  onClick={handleToggleEditing}
+                >
+                  отмена
+                </button>
+                <button
+                  className={`profile__submit__save__btn${darkClass}`}
+                  type="submit"
+                  ref={saveButtonRef}
+                >
+                  сохранить
+                </button>
+              </div>
+            ) : (
               <div className="profile__submit">
                 <div className="profile__submit__logout-wrap">
                   <button
                     type="button"
-                    className={`profile__submit__logout__btn${darkOrNot.current}`}
+                    className={`profile__submit__logout__btn${darkClass}`}
                     onClick={handleLogout}
                   >
                     выйти из аккаунта
@@ -306,13 +335,10 @@ const Profile = () => {
               </div>
             )}
           </div>
-
         </div>
         <NotificationOuter />
-        
       </form>
     </div>
-  
   )
 }
 
