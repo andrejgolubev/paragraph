@@ -40,7 +40,6 @@ const HomeworkModal = ({
     } = lessonInfo
 
     const [respText, setRespText] = useState(
-      // 'д/з не может быть пустым' 
       'недостаточно прав для управления этим д/з'
     )
 
@@ -108,6 +107,11 @@ const HomeworkModal = ({
       event.preventDefault()
      
       const homeworkTextClean = inputValue.trim()
+      if (homeworkTextClean.length >= 350) {
+        setRespText('превышена максмально допустимая длина д/з :(')
+        showError()
+        return
+      }
 
       API.saveHomework(
         groupDataValue,
@@ -117,7 +121,6 @@ const HomeworkModal = ({
       ).then( resp => {
         if (!(resp.detail === 'saved')) { // FastAPI возвращает 'saved' если домашка сохранена успешно
           setRespText(resp.detail)
-          console.log('resp.detail из handleHomeworkSubmit:>> ', resp.detail);
           showError()
           return
         } else { 

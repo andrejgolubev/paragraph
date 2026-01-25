@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends, Request, HTTPException, Body, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from ..auth.validation import get_current_active_auth_user_data
 from ..db.database import get_db
 from ..db.models import Group, Date, Homework
-from datetime import UTC, datetime
+from datetime import datetime
 from ..db.schemas import HomeworkRequest
 from ..utils.converters import latin_to_cyrillic
 
@@ -14,7 +14,6 @@ router = homework_router = APIRouter(tags=["Homework"], prefix="/homework")
 
 @router.post("/save")
 async def save_homework(
-    response: Response,
     user_data: dict = Depends(get_current_active_auth_user_data),
     homework_request: HomeworkRequest = Body(),
     db: AsyncSession = Depends(get_db),
@@ -28,7 +27,7 @@ async def save_homework(
     group_data_value = homework_request.group_data_value
     date_data_value = homework_request.date_data_value
     lesson_index = homework_request.lesson_index
-    homework_text = homework_request.homework
+    homework_text = homework_request.homework[:350]
 
     if not homework_text:
         raise HTTPException(status_code=400, detail="д/з не может быть пустым")

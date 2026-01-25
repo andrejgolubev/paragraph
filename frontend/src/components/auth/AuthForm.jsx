@@ -95,16 +95,18 @@ export const AuthForm = ({ type }) => {
 
   const debounceTimerRef = useRef(null)
 
+
   const handleAuth = (resp) => {
-    if (!resp.status === "ok") {
-      showNotificationOuter(resp.detail, 'error')
-    } else { 
+    if (resp.status === "ok") {
       if (resp.type === "sign-in") {
         fetchUser()
         navigate("/", { replace: true }) // редирект на расписание если логин
       } 
       else navigate("/sign-in", { replace: true }) // редирект на логин если успешно зарегался
       showNotificationOuter(resp.detail, 'success')
+    
+    } else { 
+      showNotificationOuter(resp.detail, 'error')
     }
   }
 
