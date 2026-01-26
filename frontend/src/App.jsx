@@ -9,6 +9,7 @@ import News from "./components/News"
 import { ProtectedRoute } from "./components/ProtectedRoute"
 import { Paper } from "./components/help-page/Paper"
 import NotificationOuter from "./components/notifications/NotificationOuter"
+import { PageNotFound } from "./components/PageNotFound"
 
 
 export default function App() {
@@ -38,6 +39,8 @@ export default function App() {
         <Route path='/terms' element={<Paper type={'terms'}/>} />
         <Route path='/privacy' element={<Paper type={'privacy'}/>} />
         <Route path="/pd" element={<Paper type={'pd'}/>} /> 
+
+        <Route path="*" element={<PageNotFound />} /> 
       </Routes>
 
       <NotificationOuter />

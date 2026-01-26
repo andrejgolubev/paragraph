@@ -13,6 +13,7 @@
 @use './profile/profile.scss';
 @use './schedule/mobile-schedule.scss';
 @use './news.scss';
+@use './page-not-found.scss';
 
 body {
   max-width: 100%;
@@ -25,6 +26,14 @@ body {
     .corpuses {
       p {
         color: $dark7 !important;
+      }
+    }
+    .not-found {
+      p {
+        color: $light-white1 !important;
+      }
+      a {
+        color: $light-white1 !important;
       }
     }
   }

@@ -1,0 +1,23 @@
+@use './variables.scss' as *;
+
+.not-found {
+	padding-inline: 25px;
+	@media (max-width: 1000px) {
+		padding-inline: 15px;
+	}
+
+	padding-top: 27vh;
+	text-align: center;
+
+	p {
+		color: $dark1;
+		font-family: 'Manrope', serif;
+		font-size: 24px;
+	}
+
+	a {
+		cursor: pointer;
+		color: $light-white2;
+		text-decoration: underline;
+	}
+}
