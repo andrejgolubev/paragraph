@@ -2,6 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+
+from backend.api.logger import log
 from ..auth.utils import verify_admin_api_key
 from ..db.database import get_db
 from ..db.models import User
@@ -17,16 +19,35 @@ router = APIRouter(
 
 @router.post("/make-admin/")
 async def make_admin(
-    email: str = Query(alias="почта того, кого сделать админом"),
-    groups_to_admin: str = Query(
-        alias="Например: 543, 5413. Можно указать несколько через запятую."
-    ),
+    email: str = Query(alias="почта пользователя"),
+    groups_to_admin: str | None = None,
     db: AsyncSession = Depends(get_db),
 ):
-    """делает админом :O"""
+    """
+        Дает права администратора - возможность редактировать ДЗ. Не добавляет 
+    вводмиые группы к существующим администрируемым группам, а перезаписывает 
+    старый список администрируемых групп. 
+
+        Чтобы указать несколько групп, перечислите их через запятую.
+
+        Для лишения пользователя прав администратора оставьте groups_to_admin 
+    пустой строкой. """
+
+        
 
     user_result = await db.scalars(select(User).where(User.email == email))
     user = user_result.first()
+
+    log.debug('groups_to_admin: %s', groups_to_admin)
+
+    if not groups_to_admin: 
+        if 'admin' in user.role: 
+            user.role = 'student'
+        return {
+            "message": f"{user.name}`s role is now: {user.role}",
+            "role": user.role,
+        }
+
     if not user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -55,7 +76,11 @@ async def get_full_user_info(
     user_email: str, 
     db: AsyncSession = Depends(get_db), 
 ) -> FullUserResponse:
-    """can be mostly used to check if user agrees with terms of use etc."""
+    """
+    Возвращает полную информацию по пользователю (email, имя, группа, роль,
+    активность, дата регистрации, подтверждённые соглашения) по переданному email.
+    HTTP 404 если пользователь не найден.
+    """
     result = await db.scalars(select(User).where(User.email == user_email)
     .options(selectinload(User.consents)))
 
@@ -88,6 +113,10 @@ async def get_full_user_info(
     '/delete', 
 )
 async def delete_user_by_email(email: str, db: AsyncSession = Depends(get_db)): 
+    """
+    Удаляет пользователя по email. Если запись найдена — удаляет и возвращает
+    подтверждение, иначе бросает 404.
+    """
     result = await db.scalars(select(User).where(User.email == email))
     if not (user := result.first()) : 
         raise HTTPException(
