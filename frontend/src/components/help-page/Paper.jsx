@@ -4,16 +4,19 @@ import { PaperItem } from "./PaperItem"
 export const Paper = ({ type }) => {
   const darkTheme = useThemeStore((state) => state.darkTheme)
 
-  const paperTitles = {
-    privacy: "Политика конфиденциальности",
-    terms: "Пользовательское соглашение",
-    pd: "Согласие на обработку персональных данных",
-  }
-
-  const paperLastUpdate = {
-    privacy: '17.01.2026',
-    terms: '18.01.2026',
-    pd: '19.01.2026',
+  const paperInfo = {
+    privacy: {
+      title: "Политика конфиденциальности",
+      lastUpdate: '17.01.2026', 
+    },
+    terms: {
+      title: "Пользовательское соглашение",
+      lastUpdate: '18.01.2026', 
+    },
+    pd: {
+      title: "Согласие на обработку персональных данных",
+      lastUpdate: '19.01.2026', 
+    },
   }
 
   const privacyIntro = `В Политике конфиденциальности (далее — Политика) указан перечень персональных 
@@ -21,7 +24,7 @@ export const Paper = ({ type }) => {
   на веб-сайте, расположенном по адресу https://paragraph-schedule.ru (далее — Сайт), а также способы обработки таких данных.
   Политика применяется также к информации, которую Голубев Андрей Александрович (далее — Оператор) 
   получил в результате эксплуатации Сайта Пользователем.`
-
+  
   const paperContent = {
     privacy: {
       headers: [
@@ -241,10 +244,10 @@ export const Paper = ({ type }) => {
   return (
     <div className={`paper ${darkTheme ? "dark" : ""}`}>
       <div className="paper__header">
-        {paperTitles[type]}
+        {paperInfo[type].title}
       </div>
       <div className="paper__last-update">
-        {`редакция от ${paperLastUpdate[type]}`}
+        {`редакция от ${paperInfo[type].lastUpdate}`}
       </div>
       <div className="paper__content">
         {type === 'privacy' && 

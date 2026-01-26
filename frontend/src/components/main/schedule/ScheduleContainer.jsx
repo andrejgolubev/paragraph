@@ -12,7 +12,6 @@ import { useDropdownStore } from "../../../store/dropdownStore"
 import { useThemeStore } from "../../../store/themeStore"
 
 
-
 const ScheduleContainer = () => {
   const darkTheme = useThemeStore(state => state.darkTheme)
 

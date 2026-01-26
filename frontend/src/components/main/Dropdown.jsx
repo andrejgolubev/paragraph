@@ -7,12 +7,12 @@ import { useDebounce } from "../../hooks/useDebouce"
 import { useDropdownStore } from "../../store/dropdownStore"
 import { useThemeStore } from "../../store/themeStore"
 
+
 const Dropdown = ({ name, func, placeholder, readOnly}) => {
   const darkTheme = useThemeStore(state => state.darkTheme)
   
   const [inputText, setInputText] = useState("")
   const [data, setData] = useState([])
-  // const [filteredData, setFilteredData] = useState([])
   const [elemKey, setElemKey] = useState("")
   const [activeSearch, setActiveSearch] = useState(false)
 

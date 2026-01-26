@@ -16,6 +16,7 @@ export const AccordionItem = ({ faqItem, onClick, isOpen }) => {
     setItemHeight(current.scrollHeight)
   }, [isOpen])
   
+  
   return (
     <li className="accordion__item">
       <button onClick={onClick} className="accordion__header">

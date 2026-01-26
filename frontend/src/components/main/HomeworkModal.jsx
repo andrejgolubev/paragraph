@@ -6,6 +6,7 @@ import { useWindowSize } from "../../hooks/useWindowSize"
 import { useModeratedGroups } from "../../hooks/useModeratedGroups"
 import { useThemeStore } from "../../store/themeStore"
 
+
 const HomeworkModal = ({
   setShowDialog,
   lessonInfo,
@@ -13,7 +14,6 @@ const HomeworkModal = ({
   homeworkUpdated,
   homeworkAuthor
 }) => {
-
   const {
     groupDataValue,
     dateDataValue,
@@ -25,7 +25,6 @@ const HomeworkModal = ({
   const darkTheme = useThemeStore(state => state.darkTheme)
   const { width } = useWindowSize()
 
- 
   const [inputValue, setInputValue] = useState("")
   const [lastUpdate, setLastUpdate] = useState("")
   const [notificationInnerActive, setNotificationInnerActive] = useState(false)
@@ -217,6 +216,5 @@ const HomeworkModal = ({
       </form>
     </dialog>
   )
-  
 }
 export default HomeworkModal
