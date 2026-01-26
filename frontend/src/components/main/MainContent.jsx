@@ -2,7 +2,6 @@ import ScheduleContainer from "./schedule/ScheduleContainer"
 import Dropdown from "./Dropdown"
 import Tip from "./Tip"
 import { useEffect } from "react"
-import NotificationOuter from "../notifications/NotificationOuter"
 import { useWindowSize } from "../../hooks/useWindowSize"
 import { useDropdownStore } from "../../store/dropdownStore"
 import { useThemeStore } from "../../store/themeStore"
@@ -47,7 +46,6 @@ const MainContent = () => {
             <p>C - Центральный корпус⠀⠀⠀⠀B - Бизнес-инкубатор</p>
             <p>L - Лабораторный корпус ⠀⠀⠀F - Первый корпус</p>
           </div>
-        
         </div>
         {!groupDataValue && (
           <Tip active={tipActive} />
@@ -59,8 +57,6 @@ const MainContent = () => {
             />
           )}
       </div>
-
-      <NotificationOuter/>
     </div>
   )
 }

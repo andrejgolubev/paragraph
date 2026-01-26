@@ -220,19 +220,21 @@ async def update_profile(
     db: AsyncSession = Depends(get_db),
 ): 
         
-    email = update_data.email
-    username = update_data.username
-    group_number = update_data.group_number
-    password = update_data.password
+    if not (password:=update_data.password): 
+        raise HTTPException(status_code=400, detail="для применения правок введите пароль.")
 
-    if not username_is_cyrillic_only(username):
+    if not username_is_cyrillic_only(username:=update_data.username):
         raise HTTPException(status_code=400, detail="имя может содержать только кириллицу.")
 
-    user_result = await db.scalars(select(User).where(User.email == email))
+    user_result = await db.scalars(select(User).where(User.email == update_data.email))
     user = user_result.first()
     
     if await has_cursive_words(phrase=username): 
-        answers: dict[str] = ['введённое имя недопустимо :(', 'такое имя неприемлимо :(', 'введённое имя не прошло валидацию :(']
+        answers: dict[str] = [
+            'введённое имя недопустимо :(', 
+            'такое имя неприемлимо :(', 
+            'введённое имя не прошло валидацию :('
+        ]
         raise HTTPException(status_code=400, detail=choice(answers))  
     
     if not validate_password(password, user.password):
@@ -250,7 +252,7 @@ async def update_profile(
 
     if username:
         user.name = username
-    if group_number:
+    if (group_number:=update_data.group_number):
         group_result = await db.scalars(select(Group).where(Group.group_number == latin_to_cyrillic(group_number)))
         group = group_result.first()
         if group:

@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom"
 import { useForm } from "react-hook-form"
 
 import API, { showNotificationOuter } from "../../api/API"
-import NotificationOuter from "../notifications/NotificationOuter.jsx"
 
 import pencilIcon from "../../images/profile/profile-page/pencil.svg"
 import pencilIconActive from "../../images/profile/profile-page/pencil-active.svg"
@@ -24,6 +23,12 @@ const Profile = () => {
 
 
   const form = useForm({
+    values: {
+      username: user?.username,
+      group: user?.group,
+      email: user?.email,
+      password: "***********",
+    },
     defaultValues: {
       username: user?.username,
       group: user?.group,
@@ -42,6 +47,7 @@ const Profile = () => {
         username: user.username,
         group: user.group,
         email: user.email,
+        password: "***********"
       })
     }
   }, [user, form])
@@ -141,7 +147,10 @@ const Profile = () => {
   useEffect(() => {
     if (isEditable) focusInput(usernameInputRef)
     else form.reset()
-  }, [isEditable, form])
+    // при добавлении form в dependencies логика ломается: при отмене 
+    // редактирования, редактируемые поля становится пустыми.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditable])
 
   const handleImmutableFieldClick = (message) => {
     if (!isEditable) return
@@ -335,7 +344,6 @@ const Profile = () => {
             )}
           </div>
         </div>
-        <NotificationOuter />
       </form>
     </div>
   )

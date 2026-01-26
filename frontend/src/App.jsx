@@ -8,6 +8,8 @@ import { AuthForm } from "./components/auth/AuthForm"
 import News from "./components/News"
 import { ProtectedRoute } from "./components/ProtectedRoute"
 import { Paper } from "./components/help-page/Paper"
+import NotificationOuter from "./components/notifications/NotificationOuter"
+
 
 export default function App() {
   return (
@@ -19,19 +21,26 @@ export default function App() {
         <Route path="/news" element={<News />} />
         <Route path="/help" element={<Help />} />
         <Route path='/sign-in' element={
-          <ProtectedRoute type='auth'> <AuthForm type='sign-in' /> </ProtectedRoute>
-          } />
+          <ProtectedRoute type='auth'> 
+            <AuthForm type='sign-in' /> 
+          </ProtectedRoute>
+        }/>
         <Route path='/sign-up' element={
-          <ProtectedRoute type='auth'> <AuthForm type='sign-up'/> </ProtectedRoute>
-          } />
+          <ProtectedRoute type='auth'> 
+            <AuthForm type='sign-up'/> 
+          </ProtectedRoute>
+        }/>
         <Route path='/profile' element={
-          <ProtectedRoute type='profile'> <Profile /> </ProtectedRoute>
-          } />
-
+          <ProtectedRoute type='profile'> 
+            <Profile /> 
+          </ProtectedRoute>
+        }/>
         <Route path='/terms' element={<Paper type={'terms'}/>} />
         <Route path='/privacy' element={<Paper type={'privacy'}/>} />
         <Route path="/pd" element={<Paper type={'pd'}/>} /> 
       </Routes>
+
+      <NotificationOuter />
     </Provider>
   )
 }

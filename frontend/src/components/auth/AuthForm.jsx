@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form"
 // import { DevTool } from "@hookform/devtools"
 
 import API, {showNotificationOuter} from "../../api/API"
-import NotificationOuter from "../notifications/NotificationOuter.jsx"
 
 import user_icon from "../../images/auth/person.svg"
 import group_icon from "../../images/auth/group.svg"
@@ -358,7 +357,6 @@ export const AuthForm = ({ type }) => {
           </Link>
         )}
       </form>
-      <NotificationOuter />
       {/* <DevTool control={control} /> */}
     </div>
   )
