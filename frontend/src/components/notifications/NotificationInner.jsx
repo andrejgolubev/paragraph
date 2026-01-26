@@ -1,7 +1,13 @@
 import { useEffect } from "react"
 
+
 const NotificationInner = (props) => {
-  const { message, type, notificationInnerActive, setNotificationInnerActive } = props
+  const {
+    notificationInnerMessage,
+    notificationInnerActive,
+    setNotificationInnerActive,
+  } = props
+
 
   useEffect(() => {
     if (notificationInnerActive) {
@@ -10,21 +16,20 @@ const NotificationInner = (props) => {
       const timer = setTimeout(async () => {
         setNotificationInnerActive(false)
       }, 3000)
-      
+
       return () => {
         clearTimeout(timer)
-      } //отменяем ожидание если элемент notification inner больше не вмонтирован в разметку
+      } // отменяем ожидание если элемент notification inner больше не вмонтирован в разметку
     }
-  }, [notificationInnerActive])
-
+  }, [notificationInnerActive, setNotificationInnerActive])
 
   return (
     <div
       className={`notification inner 
         ${notificationInnerActive ? "active" : ""}
-        ${type}`}
+        ${"error"}`}
     >
-      <p>{message}</p>
+      <p>{notificationInnerMessage}</p>
     </div>
   )
 }

@@ -35,7 +35,8 @@ const Dropdown = ({ name, func, placeholder, readOnly}) => {
         inputRef.current.value = resp?.date ?? "" 
       })
     }
-  }, [groupDataValue, dateDataValue])
+    
+  }, [groupDataValue, dateDataValue, func])
 
 
   useClickOutside([dropdownRef], () => {
@@ -55,7 +56,7 @@ const Dropdown = ({ name, func, placeholder, readOnly}) => {
         return element && element.toLowerCase().trim().includes(cleanText)
       }) ?? []
     )
-  }, [data, elemKey, debouncedInputText])
+  }, [data, elemKey, debouncedInputText, func])
 
 
   const handleEnterKey = async (event, inputText) => {

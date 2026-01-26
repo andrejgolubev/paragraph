@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { useForm } from "react-hook-form"
 
-import { useModeratedGroups } from "../../hooks/useModeratedGroups"
 import API, { showNotificationOuter } from "../../api/API"
 import NotificationOuter from "../notifications/NotificationOuter.jsx"
 
@@ -11,6 +10,7 @@ import pencilIconActive from "../../images/profile/profile-page/pencil-active.sv
 import pencilIconDark from "../../images/profile/profile-page/pencil-dark.svg"
 import pencilIconActiveDark from "../../images/profile/profile-page/pencil-dark-active.svg"
 
+import { useModeratedGroups } from "../../hooks/useModeratedGroups"
 import { useWindowSize } from "../../hooks/useWindowSize"
 import { validationPreferences } from "../../config/settings.js"
 import { useThemeStore } from "../../store/themeStore"
@@ -91,10 +91,11 @@ const Profile = () => {
   }
 
   useEffect(() => {
+    const timer = debounceTimerRef.current 
     return () => {
       // cleanup при размонтировании
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current)
+      if (timer) {
+        clearTimeout(timer)
       }
     }
   }, [])
@@ -109,8 +110,6 @@ const Profile = () => {
     if (inputRef?.current) {
       const currentInput = inputRef.current
       currentInput.focus()
-      // const len = currentInput.value.length
-      // currentInput.setSelectionRange(len, len)
     } else return
   }
 
@@ -142,7 +141,7 @@ const Profile = () => {
   useEffect(() => {
     if (isEditable) focusInput(usernameInputRef)
     else form.reset()
-  }, [isEditable])
+  }, [isEditable, form])
 
   const handleImmutableFieldClick = (message) => {
     if (!isEditable) return

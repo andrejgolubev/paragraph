@@ -27,15 +27,16 @@ const HomeworkModal = ({
 
  
   const [inputValue, setInputValue] = useState("")
-  const [notificationInnerActive, setNotificationInnerActive] = useState(false)
   const [lastUpdate, setLastUpdate] = useState("")
-  const [respText, setRespText] = useState(
+  const [notificationInnerActive, setNotificationInnerActive] = useState(false)
+  const [notificationInnerMessage, setNotificationInnerMessage] = useState(
     "недостаточно прав для управления этим д/з"
   )
   const [readOnly , setReadOnly] = useState(false) 
 
 
-  const showError = () => {
+  const showNotificationInner = (msg) => {
+    setNotificationInnerMessage(msg)
     setNotificationInnerActive(true)
     
     setTimeout(() => {
@@ -54,7 +55,6 @@ const HomeworkModal = ({
       if (!homeworkUpdated) {
         setLastUpdate("")
       } else {
-
         const hmwUpdatedTime = homeworkUpdated.split("T")
         const hmwDate = convertDate(hmwUpdatedTime[0])
         const hmwTime = hmwUpdatedTime[1].slice(0, 5)
@@ -69,7 +69,9 @@ const HomeworkModal = ({
     
       return () => {
         dialog.close()
+        // eslint-disable-next-line react-hooks/exhaustive-deps 
         homeworkText = ""
+        // игнорим линтер т.к. homeworkText не надо хранить при ре-рендерах
       }
     }
   }, [dialog, homeworkUpdated])
@@ -88,8 +90,7 @@ const HomeworkModal = ({
     })
 
     return () => setReadOnly(true)
-
-  }, [moderatedGroups])
+  }, [moderatedGroups, groupDataValue])
 
 
   const handleTextAreaClick = (event) => {
@@ -107,8 +108,7 @@ const HomeworkModal = ({
     
     const homeworkTextClean = inputValue.trim()
     if (homeworkTextClean.length >= 350) {
-      setRespText('превышена максмально допустимая длина д/з :(')
-      showError()
+      showNotificationInner('превышена максмально допустимая длина д/з :(')
       return
     }
 
@@ -119,8 +119,7 @@ const HomeworkModal = ({
       homeworkTextClean
     ).then( resp => {
       if (!(resp.detail === 'saved')) { // FastAPI возвращает 'saved' если домашка сохранена успешно
-        setRespText(resp.detail)
-        showError()
+        showNotificationInner(resp.detail)
         return
       } else { 
         // если сохранена домашка, то:
@@ -188,8 +187,7 @@ const HomeworkModal = ({
                   отмена
                 </button>
                 <NotificationInner
-                  message={respText}
-                  type={"error"}
+                  notificationInnerMessage={notificationInnerMessage}
                   notificationInnerActive={notificationInnerActive}
                   setNotificationInnerActive={setNotificationInnerActive}
                 /> 
@@ -207,8 +205,7 @@ const HomeworkModal = ({
               </button>
               {notificationInnerActive && 
               (<NotificationInner
-                message={respText}
-                type={"error"}
+                notificationInnerMessage={notificationInnerMessage}
                 notificationInnerActive={notificationInnerActive}
                 setNotificationInnerActive={setNotificationInnerActive}
               /> )
