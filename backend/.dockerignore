@@ -11,4 +11,3 @@ htmlcov
 .env
 .env.prod 
 app.log
-chrome-linux64.zip
