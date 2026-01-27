@@ -15,13 +15,14 @@ COPY pyproject.toml poetry.lock ./
 
 RUN poetry config virtualenvs.create false 
 
-COPY . .
 
 COPY ./chromedriver-linux64.zip /backend/
 
 RUN unzip /backend/chromedriver-linux64.zip -d /backend/ \
-    && rm /backend/chromedriver-linux64.zip
+&& rm /backend/chromedriver-linux64.zip
 
+
+COPY . .
 
 # RUN poetry install --only main --no-interaction --no-ansi
 # Хорошо для CI/CD, но не для первоначального поднятия контейнера.
