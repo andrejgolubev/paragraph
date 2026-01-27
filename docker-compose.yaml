@@ -1,8 +1,10 @@
 services:
   backend: 
     depends_on:
-      - db
-      - redis
+      pg: 
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     ports:
       - "8001:8000"
     build: 
@@ -13,10 +15,11 @@ services:
     environment:
       REDIS__HOST: redis
       REDIS__PORT: 6379
-      DB__HOST: db
+      DB__HOST: pg
       DB__PORT: 5432
     volumes:
-      - ./backend-data:/data
+      - ./backend/chrome-linux64.zip:/backend/chrome-linux64.zip:ro
+      - ./backend/chromebrowser-linux64.zip:/backend/chromebrowser-linux64.zip:ro
     deploy:
       resources:
         limits:
@@ -27,15 +30,15 @@ services:
           memory: 256M
     networks:
       - custom
-  db:
+  pg:
     image: postgres:17
     restart: unless-stopped
     env_file:
       - .env
     environment:
       POSTGRES_USER: ${DB__USER}
-      POSTGRES_PASSWORD: ${DB__PASSWORD}
       POSTGRES_DB: ${DB__NAME}
+      POSTGRES_PASSWORD: ${DB__PASSWORD}
       # Оптимизация для продакшена:
       POSTGRES_SHARED_BUFFERS: 128MB
       POSTGRES_EFFECTIVE_CACHE_SIZE: 512MB
@@ -45,7 +48,7 @@ services:
     ports:
       - "5434:5432" # локальный порт:порт контейнера
     volumes:
-      - db-data:/data
+      - pg-data:/var/lib/postgresql/data
     networks:
       - custom
     deploy:
@@ -56,6 +59,12 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
   redis:
     image: redis:7
@@ -83,12 +92,17 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 networks:
   custom:
     driver: bridge
 
 volumes:
-  db-data:
+  pg-data:
   redis-data:
-  backend-data:

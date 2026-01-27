@@ -15,13 +15,12 @@ COPY pyproject.toml poetry.lock ./
 
 RUN poetry config virtualenvs.create false 
 
-
 COPY . .
 
+COPY ./chromedriver-linux64.zip /backend/
 
-# Unzip Chromedriver (Unzipping Chrome for testing in ./prestart.sh)
 RUN unzip /backend/chromedriver-linux64.zip -d /backend/ \
-&& rm /backend/chromedriver-linux64.zip
+    && rm /backend/chromedriver-linux64.zip
 
 
 # RUN poetry install --only main --no-interaction --no-ansi
@@ -30,9 +29,10 @@ RUN unzip /backend/chromedriver-linux64.zip -d /backend/ \
 RUN poetry install --no-root
     
     
-RUN chmod +x prestart.sh
-RUN chmod +x start.sh
+# Chrome for testing install
+RUN chmod +x scripts/prestart.sh
+RUN chmod +x scripts/start.sh
 
-ENTRYPOINT ["./prestart.sh"]
+ENTRYPOINT ["./scripts/prestart.sh"]
 
-CMD ["./start.sh"]
+CMD ["./scripts/start.sh"]
