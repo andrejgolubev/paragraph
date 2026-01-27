@@ -3,7 +3,7 @@ import jwt
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from backend.core.config import settings
+from ...core.config import settings
 from ..auth import utils as auth_utils
 from ..db.models import Group, User
 from ..db.database import AsyncSessionLocal, get_db

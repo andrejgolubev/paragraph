@@ -1,10 +1,9 @@
 import jwt
-from backend.core.config import settings
+from ...core.config import settings
 import bcrypt
 from datetime import UTC, datetime, timedelta 
 from fastapi import HTTPException, status, Header
-import os
-from backend.core.config import settings
+from ...core.config import settings
 
 def encode_jwt(
     payload: dict,

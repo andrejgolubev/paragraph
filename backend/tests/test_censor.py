@@ -1,5 +1,5 @@
 import pytest
-from backend.api.auth.censor.censor import TEST_WORDS_PATH, has_cursive_words, ALLOWED_WORDS_PATHS
+from ..api.auth.censor.censor import TEST_WORDS_PATH, has_cursive_words, ALLOWED_WORDS_PATHS
 
 
 @pytest.mark.asyncio

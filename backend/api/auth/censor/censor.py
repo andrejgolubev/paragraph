@@ -1,7 +1,7 @@
 from functools import lru_cache
 from pathlib import Path
 import re
-from backend.api.logger import log
+from ....api.logger import log
 
 BASE_DIR = Path(__file__).parent.parent.parent.parent
 

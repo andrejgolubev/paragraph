@@ -1,8 +1,14 @@
 # Python
 __pycache__
+.pytest_cache
 app.egg-info
 *.pyc
 .mypy_cache
 .coverage
 htmlcov
 .venv
+
+.env
+.env.prod 
+app.log
+chrome-linux64.zip

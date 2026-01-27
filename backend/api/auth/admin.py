@@ -3,7 +3,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from backend.api.logger import log
+from ...api.logger import log
 from ..auth.utils import verify_admin_api_key
 from ..db.database import get_db
 from ..db.models import User

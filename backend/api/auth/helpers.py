@@ -4,7 +4,7 @@ import jwt
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.core.config import settings
+from ...core.config import settings
 from ..auth import utils as auth_utils
 from ..db.models import User
 from ..logger import log

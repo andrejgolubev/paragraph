@@ -11,7 +11,7 @@ from ..auth.validation import (
 from ..db.database import get_db
 from ..db.models import Group, User, UserConsent
 from ..db.schemas import UserRegistration, UserLogin, UserUpdate
-from backend.core.config import settings
+from ...core.config import settings
 from ..auth.utils import (
     hash_password,
     validate_password,

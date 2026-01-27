@@ -5,8 +5,8 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
 )
 from sqlalchemy.orm import DeclarativeBase
-from ...api.logger import log
-from backend.core.config import settings
+from ..logger import log
+from ...core.config import settings
 
 class Base(DeclarativeBase): ...
 

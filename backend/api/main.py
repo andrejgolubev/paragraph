@@ -1,5 +1,5 @@
-from .routers import schedule, homework, database
-from .auth.users import router as user_router
+from ..api.routers import schedule, homework, database
+from ..api.auth.users import router as user_router
 from .auth.admin import router as admin_router
 from .create_app import create_app
 from .logger import log

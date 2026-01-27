@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from backend.core.config import settings
+from ..core.config import settings
 
 
 LOG_FORMATTER = logging.Formatter(settings.logging.log_format)

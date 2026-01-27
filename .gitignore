@@ -140,3 +140,6 @@ htmlcov
 
 # logs 
 *.log
+
+# chromium 
+chrome-linux64.zip
