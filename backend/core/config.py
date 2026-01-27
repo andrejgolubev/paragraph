@@ -80,7 +80,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=(
             ROOT_DIR / ".env",
-            ROOT_DIR / ".env.prod",
+            # ROOT_DIR / ".env.prod",
         ),
         env_nested_delimiter='__',
         case_sensitive=False,

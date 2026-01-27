@@ -7,8 +7,16 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 
+#####################################
+import os, sys # new 
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__))) # new
+if project_root not in sys.path: # new
+    sys.path.insert(0, project_root) # new
+#####################################
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
+
 from backend.api.db.models import Group, Homework, User, Date, Base
 config = context.config
 

@@ -9,7 +9,7 @@ services:
       context: backend
       dockerfile: Dockerfile
     env_file:
-      - ./backend/.env
+      - .env
     environment:
       REDIS__HOST: redis
       REDIS__PORT: 6379
@@ -26,11 +26,13 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
+    networks:
+      - custom
   db:
     image: postgres:17
     restart: unless-stopped
     env_file:
-      - ./backend/.env
+      - .env
     environment:
       POSTGRES_USER: ${DB__USER}
       POSTGRES_PASSWORD: ${DB__PASSWORD}
@@ -60,7 +62,7 @@ services:
     image: redis:7
     restart: unless-stopped
     env_file:
-      - ./backend/.env
+      - .env
     environment:
       REDIS_HOST: redis
       REDIS_PASSWORD: ${REDIS__PASSWORD}

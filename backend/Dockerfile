@@ -24,9 +24,9 @@ RUN poetry install --no-root
     
     
 # Chrome for testing install
-RUN chmod +x scripts/prestart.sh
-RUN chmod +x scripts/start.sh
+RUN chmod +x prestart.sh
+RUN chmod +x start.sh
 
-ENTRYPOINT ["./scripts/prestart.sh"]
+ENTRYPOINT ["./prestart.sh"]
 
-CMD ["./scripts/start.sh"]
+CMD ["./start.sh"]
