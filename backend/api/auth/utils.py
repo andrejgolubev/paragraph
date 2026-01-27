@@ -5,6 +5,7 @@ from datetime import UTC, datetime, timedelta
 from fastapi import HTTPException, status, Header
 from ...core.config import settings
 
+
 def encode_jwt(
     payload: dict,
     private_key: str = settings.auth_jwt.private_key_path.read_text(),
@@ -46,14 +47,6 @@ def validate_password(
         password=password.encode('utf-8'),
         hashed_password=hashed_password.encode('utf-8'),
     )
-
-
-
-
-
-
-
-# API_KEY = os.getenv("ADMIN__API_KEY", 'secret-key')
 
 
 async def verify_admin_api_key(api_key: str = Header(alias="API-Key")):

@@ -211,9 +211,6 @@ async def logout(response: Response):
     return {"status": "ok", "detail": "Вы вышли из аккаунта"}
 
 
-
-
-
 @router.patch('/update-profile')
 async def update_profile(
     update_data: UserUpdate = Body(),
@@ -281,7 +278,8 @@ async def update_profile(
 
 @router.get("/me")
 def auth_user_check_self_info(user_data: dict = Depends(get_current_active_auth_user_data)):
-    """для возрвата данных на фронтенд в раздел 'профиль'"""
+    """Возвращает нечувствительные данные об авторизованном пользователе.
+    Преимущественно для возрвата данных на фронтенд """
 
     return {
         "status": "ok",
@@ -289,7 +287,6 @@ def auth_user_check_self_info(user_data: dict = Depends(get_current_active_auth_
         "email": user_data.get("email"),
         "role": user_data.get("role"),
         "group": user_data.get("group"),
-        # "consents": user_data.get("consents")
     }
 
 
