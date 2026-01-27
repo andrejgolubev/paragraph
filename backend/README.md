@@ -2,6 +2,7 @@
 
 - 1. Скачиваем официальную сборку Chrome 144.0.7559.96 для Linux с 
 https://googlechromelabs.github.io/chrome-for-testing/
+(для docker compose заранее скачиваем и монтируем том)
 ```bash
 curl -L -o chrome-linux64.zip https://storage.googleapis.com/chrome-for-testing-public/144.0.7559.96/linux64/chrome-linux64.zip
 ``` 

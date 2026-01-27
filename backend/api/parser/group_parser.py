@@ -2,6 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+from backend.api.parser.config import create_driver
 from ..logger import log
 
 
@@ -44,7 +46,8 @@ def parse_groups():
     """parses all groups.
     group_number:data-value pairs"""
     log.info("Starting group parser")
-    driver = webdriver.Chrome()
+    # driver = webdriver.Chrome()
+    driver = create_driver()
     driver.get('https://rasp.rsreu.ru')
 
     try:
