@@ -1,6 +1,13 @@
 import { useUiStore } from "../store/uiStore"
 
-const BASE_URL = "https://192.168.0.108:8000"
+const BASE_URL =
+    __VITE_DEV__  === "true"
+    ? "https://192.168.0.108:8000"
+    : __VITE_API_HOST__
+
+// BASE_URL = "https://192.168.0.108:8000"
+console.log('BASE_URL :>> ', BASE_URL);
+
 const headers = { "Content-Type": "application/json"}
 
 
