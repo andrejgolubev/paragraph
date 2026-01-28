@@ -28,8 +28,10 @@ class LoggingConfig(BaseModel):
         "warning",
         "error",
         "critical",
-    ] = "info"
+    ] = "debug"
     log_format: str = LOG_DEFAULT_FORMAT
+    max_file_size_mb: int = 5
+    backup_files: int = 3
 
     @property
     def log_level_value(self) -> int:
