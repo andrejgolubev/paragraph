@@ -183,8 +183,8 @@ async def login(
             key=key,
             value=value,
             httponly=True,
-            secure=True,  # True только для htpps
-            samesite='none', # обязательно 'lax' для продакшна
+            samesite='none', 
+            secure=True, 
             max_age=lifetime_seconds
         )   
 
@@ -205,8 +205,8 @@ async def login(
 
 @router.post('/logout') 
 async def logout(response: Response): 
-    response.delete_cookie('access_token', samesite='none', secure=True)
-    response.delete_cookie('refresh_token', samesite='none', secure=True)
+    response.delete_cookie('access_token', secure=True)
+    response.delete_cookie('refresh_token', secure=True)
 
     return {"status": "ok", "detail": "Вы вышли из аккаунта"}
 

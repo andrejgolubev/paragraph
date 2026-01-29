@@ -56,8 +56,8 @@ async def get_current_access_token_payload(
         key="access_token",
         value=new_access_token,
         httponly=True,
-        secure=True,  # для локалки можно False
-        samesite="none",  # для продакшена скорее всего 'lax'
+        samesite="none",  
+        secure=True,  
         max_age=settings.auth_jwt.access_token_expire_minutes * 60,
     )
 

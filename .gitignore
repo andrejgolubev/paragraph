@@ -110,9 +110,6 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
-# mkdocs documentation
-/site
-
 # mypy
 .mypy_cache/
 .dmypy.json
@@ -143,3 +140,7 @@ htmlcov
 
 # chrome 
 chrome-linux64.zip
+
+
+letsencrypt/
+certbot/
