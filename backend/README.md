@@ -43,13 +43,13 @@ curl -L -o chromedriver-linux64.zip https://storage.googleapis.com/chrome-for-te
 необходимости - файл легковесный, можно и просто Dockerfile COPY)
 
 - 4. Конфигирируем парсер с selenium по примеру из api/parser/config.py. 
-При запуске контейнера Chrome/Chromedriver могут тупить 10-15 секунд и выдавать
-ошибку, надо просто подождать. 
+При запуске контейнера backend, Chrome/Chromedriver могут долго качаться/тупить 10-15 секунд и выдавать ошибку, надо просто подождать. В логах все будет
 
+- 5. Готово! Можно запускать `make reload-db` (см. `./Makefile`)
 
 
 # Установка Python-зависимостей - "CI/CD профиль" 
-- 1. Вместо poetry install запускаем: 
+- 1. Вместо `poetry install` запускаем: 
 ```Dockerfile
 RUN poetry install --only main --no-interaction --no-ansi
 ```

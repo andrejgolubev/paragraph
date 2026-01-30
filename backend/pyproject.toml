@@ -5,8 +5,8 @@ description = "paragraph dependencies"
 authors = [
     {name = "андрей голубев",email = "you@example.com"}
 ]
-license = {text = "Proprietary"}
-readme = "README.md"
+license = {file = "../LICENSE"}
+readme = "../README.md"
 requires-python = ">=3.12"
 dependencies = [
     "aiofiles (==25.1.0)",

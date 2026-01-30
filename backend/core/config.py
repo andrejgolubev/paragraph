@@ -77,7 +77,7 @@ class AdminConfig(BaseModel):
 
 
 class DocsConfig(BaseModel): 
-    enabled: bool = Field(False, env='DOCS__ENABLED') # Pydantic приводит к bool env value
+    enabled: bool = Field(True, env='DOCS__ENABLED') # Pydantic приводит к bool env value
 
 
 

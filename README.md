@@ -1,61 +1,72 @@
 # paragraph
-Запуск сервиса и фронтенда -> см. `Makefile`.
+Приветствую в репозитории электронный дневника "параграф"! 
+[Дневник](https://paragraph-schedule.ru) - веб-сайт, где живёт "параграф".
 
-# Установка Python-зависимостей
+Ниже представлено краткое руководство по локальному запуску, если Вам такое надо.
+
+# Локальный запуск 
+Запуск бекенда и фронтенда локально -> см. `Makefile` в корне проекта. Там команды 
+для запуска backend по https, для этого нужен mkcert: 
+https://github.com/FiloSottile/mkcert
+
+Можно запускать и по http, написав свой шорткат, или любым другим способом.
+
+## Установка Backend-зависимостей
 ```shell
-poetry install
+cd backend && poetry install
 ```
 
-# Локальный стек (легкие лимиты)
-"-p paragraph" создаёт все ресурсы с префиксом `paragraph_`.
+## Миграции в базу данных. БД можно поднять в docker.
+```shell 
+alembic upgrade head 
+```
+
+## Аутентификация
+Для работы системы аутентификации понадобится поработать с ключами.
+Перейдите в `backend/api/auth/README.md`, там находятся команды для генерации 
+ключей. Создайте директорию `backend/api/certs` , перейдите в нее, и там выполните 
+эти команды. Создастся пара ключей: приватный и публичный. Готово!
+
+## Установка Frontend-зависимостей 
+```shell 
+cd frontend && npm install 
+```
+
+## Локальный стек 
 - сборка и поднятие:
   ```shell
-  docker compose -p paragraph up -d
+  docker compose up -d
   ```
 - остановка:
   ```shell
-  docker compose -p paragraph down
-  ```
-- удаление томов:
-  ```shell
-  docker compose -p paragraph down --volumes
+  docker compose down
   ```
 - статус:
   ```shell
-  docker compose -p paragraph ps
+  docker compose ps -a
   ```
 
-# Продакшен-профиль (тяжёлые лимиты)
-Тот же стек, но с `docker-compose.prod.yaml`, добавляющим увеличенные лимиты:
-```shell
-docker compose -f docker-compose.yaml -f docker-compose.prod.yaml -p paragraph up -d
-```
+## Обновление групп и дат
+см. `backend/README.md`
 
-# Admin scripts
-Для команд управления аккаунтами через `/admin/*` (они уже прикрыты `API-Key`) можно просто запускать curl на сервере:
+## Админские shell-скрипты
+Для команд управления аккаунтами через `/admin/*` (прикрыты `API-Key`) можно просто запускать curl на сервере:
 
 ```bash
-./scripts/make-admin.sh user@example.com "543,5413" "$ADMIN_API_KEY" "https://paragraph.example.com"
-./scripts/delete-user.sh user@example.com "$ADMIN_API_KEY" "https://paragraph.example.com"
+./backend/scripts/make-admin.sh user@example.com 543,5413 "$ADMIN_API_KEY" "https://api.paragraph-schedule.ru"
+./backend/scripts/delete-user.sh user@example.com "$ADMIN_API_KEY" "https://api.paragraph-schedule.ru"
 ```
+И так далее, см. backend/scripts для других скриптов. Локально проще использовать
+интерактивную документацию /docs или /redoc. 
+Изначально у Вас локально она будет включена (см. `backend/core/config.py`), 
+но ее можно выключить, прописав `DOCS__ENABLED=false` в .env в корне проекта. 
 
-
-# Обновление групп и дат
-этот процеесс поднимает `chromedriver`/`Google Chrome for testing` => он должен запускаться в изолированном процессе (по SSH или cron).
-
-1. Установите браузер/драйвер на сервере (Ubuntu):
-   ```shell
-   sudo apt update
-   sudo apt install -y chromium-browser chromium-chromedriver
-   ```
-2. Запустите обновление через Poetry:
-   ```shell
-   poetry run python -m backend.api.scripts.reload_db
-   ```
-   Добавьте `--refresh`, если хотите очистить базу перед загрузкой.
-3. Шорткат: `make reload-db`.
-
-Можно поставить cron или systemd timer, чтобы запускать `poetry run python -m backend.api.scripts.reload_db` регулярно 
+## Переменные окружения 
+Почти все переменные окружения можно выставить, основываясь на docker-compose.yaml
+в корне проекта, `backend/core/config.py` и `frontend/vite.config.js`. 
+Примечание: 
+backend использует переменные окружения из .env в корне, frontend - из .env внутри 
+директории frontend
 
 
 
