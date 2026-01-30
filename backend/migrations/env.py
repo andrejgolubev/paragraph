@@ -8,10 +8,10 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
 #####################################
-import os, sys # new 
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__))) # new
-if project_root not in sys.path: # new
-    sys.path.insert(0, project_root) # new
+import os, sys  
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__))) 
+if project_root not in sys.path: 
+    sys.path.insert(0, project_root) 
 #####################################
 
 # this is the Alembic Config object, which provides
@@ -22,9 +22,9 @@ config = context.config
 
 
 # override sqlalchemy.url in alembic.ini with .env value 
-from backend.api.db.database import DB_URL
+from backend.api.db.database import settings
 
-config.set_main_option("sqlalchemy.url", DB_URL)
+config.set_main_option("sqlalchemy.url", settings.db.url)
 
 
 # Interpret the config file for Python logging.

@@ -84,7 +84,8 @@ dependencies = [
     "websocket-client (==1.9.0)",
     "win32-setctime (==1.2.0)",
     "wsproto (==1.2.0)",
-    "gunicorn (>=24.1.1,<25.0.0)"
+    "gunicorn (>=24.1.1,<25.0.0)",
+    "pytest-dotenv (>=0.5.2,<0.6.0)"
 ]
 
 

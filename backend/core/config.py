@@ -28,7 +28,7 @@ class LoggingConfig(BaseModel):
         "warning",
         "error",
         "critical",
-    ] = "debug"
+    ] = "info"
     log_format: str = LOG_DEFAULT_FORMAT
     max_file_size_mb: int = 5
     backup_files: int = 3
@@ -40,12 +40,19 @@ class LoggingConfig(BaseModel):
 
 
 class DatabaseConfig(BaseSettings): 
-    scheme: str = Field('postgresql+asyncpg', env='DB__URL')
-    user: str = Field('pg', env="DB__USER")
-    password: str = Field('root', env="DB__PASSWORD")
-    host: str = Field('localhost', env="DB__HOST")
-    port: int = Field(5433, env="DB__PORT")
-    name: str = Field('pg', env="DB__NAME")
+    scheme: str = Field('postgresql+asyncpg')
+    user: str = Field('pg')
+    password: str = Field('root')
+    host: str = Field('localhost')
+    port: int = Field(5433)
+    name: str = Field('pg')
+
+    @property
+    def url(self):
+        return (
+            f"{self.scheme}://{self.user}:{self.password}"
+            f"@{self.host}:{self.port}/{self.name}"
+        )
 
     future: bool = True
     echo: bool = False
@@ -55,14 +62,14 @@ class DatabaseConfig(BaseSettings):
 
 class CookiesConfig(BaseModel): 
     secure: bool = True  
-    samesite: Literal['lax', 'samesite', 'none'] = 'lax'  
+    samesite: Literal['lax', 'samesite', 'none'] = 'none'  
 
 
 class RedisConfig(BaseModel): 
-    host: str = Field('localhost', env='REDIS__HOST')
-    port: int = Field(6380, env='REDIS__HOST')
-    password: str = Field('root', env='REDIS__PASSWORD')
-    db: int = Field(0, env='REDIS__DB')
+    host: str = Field('localhost')
+    port: int = Field(6380)
+    password: str = Field('root')
+    db: int = Field(0)
     schedule_cache_ttl: int = 60 * 5 # 5 minutes
 
 
@@ -73,11 +80,11 @@ class RateLimitConfig(BaseModel):
 
 
 class AdminConfig(BaseModel): 
-    api_key: str = Field('api_key', env="ADMIN__API_KEY")
+    api_key: str = Field('ADMIN__API_KEY')
 
 
 class DocsConfig(BaseModel): 
-    enabled: bool = Field(True, env='DOCS__ENABLED') # Pydantic приводит к bool env value
+    enabled: bool = Field(True) # Pydantic приводит к bool env value
 
 
 
@@ -103,7 +110,4 @@ class Settings(BaseSettings):
 
     
 settings = Settings() 
-
-
-
 

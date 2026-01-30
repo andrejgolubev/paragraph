@@ -136,7 +136,7 @@ app.egg-info
 htmlcov
 
 # logs 
-*.log
+*.log*
 
 # chrome 
 chrome-linux64.zip
