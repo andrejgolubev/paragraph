@@ -75,6 +75,7 @@ class RateLimitConfig(BaseModel):
 class AdminConfig(BaseModel): 
     api_key: str = Field('api_key', env="ADMIN__API_KEY")
 
+
 class DocsConfig(BaseModel): 
     enabled: bool = Field(False, env='DOCS__ENABLED') # Pydantic приводит к bool env value
 

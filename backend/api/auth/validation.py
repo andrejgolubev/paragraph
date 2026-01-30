@@ -79,10 +79,10 @@ async def get_current_auth_user(
     ))
 
     if not (user := user_result.first()): 
-        raise HTTPException(status_code=404, detail='user not found')
+        raise HTTPException(status_code=404, detail='Пользователь не найден')
 
     if not user.active: 
-        raise HTTPException(status_code=403, detail='user inactive ')
+        raise HTTPException(status_code=403, detail='Отсутствуют необходимые права')
     
         
     return user
