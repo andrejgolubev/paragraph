@@ -73,8 +73,10 @@ class RateLimitConfig(BaseModel):
 
 
 class AdminConfig(BaseModel): 
-    api_key: str = Field('secret_key', env="ADMIN__API_KEY")
+    api_key: str = Field('api_key', env="ADMIN__API_KEY")
 
+class DocsConfig(BaseModel): 
+    enabled: bool = Field(False, env='DOCS__ENABLED') # Pydantic приводит к bool env value
 
 
 
@@ -96,7 +98,7 @@ class Settings(BaseSettings):
     cookie: CookiesConfig = CookiesConfig() 
     redis: RedisConfig = RedisConfig() 
     rate_limit: RateLimitConfig = RateLimitConfig()
-
+    docs: DocsConfig = DocsConfig()
 
     
 settings = Settings() 

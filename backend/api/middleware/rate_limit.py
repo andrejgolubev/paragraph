@@ -1,13 +1,11 @@
-import logging
 import time
 from fastapi import Request, HTTPException, status
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from backend.core.config import Settings
 from redis.asyncio import Redis
+from ..logger import log
 
-
-logger = logging.getLogger(__name__)
 
 
 class RateLimitMiddleware(BaseHTTPMiddleware):
@@ -44,7 +42,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 
         # проверка блокировки 
         if await redis_client.exists(f"block:{ip}"):
-            logger.info("IP %s currently blocked for cooldown", ip)
+            log.info("IP %s currently blocked for cooldown", ip)
             return JSONResponse(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 content={
@@ -68,7 +66,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
                 value=1, 
                 ex=self.settings.rate_limit.cooldown_seconds
             )
-            logger.warning("IP %s exceeded rate limit (%s reqs in %s sec) -> blocking for %s sec",
+            log.warning("IP %s exceeded rate limit (%s reqs in %s sec) -> blocking for %s sec",
                            ip, current, window, self.settings.rate_limit.cooldown_seconds)
             return JSONResponse(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
@@ -81,5 +79,5 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         
         
         response = await call_next(request)
-        logger.debug("[rate_limit] %s requests from %s in current window", current, ip)
+        log.debug("[rate_limit] %s requests from %s in current window", current, ip)
         return response

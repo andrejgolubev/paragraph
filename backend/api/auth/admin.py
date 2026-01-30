@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -19,7 +19,7 @@ router = APIRouter(
 
 @router.post("/make-admin/")
 async def make_admin(
-    email: str = Query(alias="почта пользователя"),
+    user_email: str,
     groups_to_admin: str | None = None,
     db: AsyncSession = Depends(get_db),
 ):
@@ -34,7 +34,7 @@ async def make_admin(
     """
         
 
-    user_result = await db.scalars(select(User).where(User.email == email))
+    user_result = await db.scalars(select(User).where(User.email == user_email))
     user = user_result.first()
 
     log.debug('groups_to_admin: %s', groups_to_admin)
@@ -108,21 +108,49 @@ async def get_full_user_info(
         )
 
 
-@router.post(
-    '/delete', 
-)
-async def delete_user_by_email(email: str, db: AsyncSession = Depends(get_db)): 
+@router.patch('/set-user-activeness')
+async def set_user_activeness(
+    user_email: str, 
+    user_activeness: bool, 
+    db: AsyncSession = Depends(get_db)
+): 
     """
-    Удаляет пользователя по email. Если запись найдена — удаляет и возвращает
+    Управляет активностью пользователя по email. Если запись найдена — возвращает
     подтверждение, иначе бросает 404.
     """
-    result = await db.scalars(select(User).where(User.email == email))
+    result = await db.scalars(select(User).where(User.email == user_email))
     if not (user := result.first()) : 
         raise HTTPException(
             status_code=404,
             detail='пользователь с таким email не найден'
         )
-    db.delete(user)
-    await db.commit()
-    return {'message': 'удаление успешно'}
 
+    user.active = user_activeness
+    await db.commit()
+    return {
+        "user_activeness": user_activeness,
+        "id": user.id,
+        "email": user.email,
+        "name": user.name,
+    }
+
+
+@router.post('/delete-user')
+async def delete_user(
+    user_email: str, 
+    db: AsyncSession = Depends(get_db)
+): 
+    """
+    Удаляет пользователя по email. Если запись найдена — удаляет и возвращает
+    подтверждение, иначе бросает 404.
+    """
+    result = await db.scalars(select(User).where(User.email == user_email))
+    if not (user := result.first()) : 
+        raise HTTPException(
+            status_code=404,
+            detail='пользователь с таким email не найден'
+        )
+
+    await db.delete(user)
+    await db.commit()
+    return {'deleted': {'id': user.id, 'email': user.email, 'name': user.name}}

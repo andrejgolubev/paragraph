@@ -2,6 +2,7 @@ import time
 import uuid
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
+from backend.core.config import settings
 from ..logger import log
 
 
@@ -42,9 +43,9 @@ class LogMiddleware(BaseHTTPMiddleware):
             if 200 <= status < 300: 
                 log.info("Request %s completed with a success: %s", request_id, status)
             if 300 <= status < 400: 
-                log.warning("Request %s completed with a redirect: %s", request_id, status)
+                log.info("Request %s completed with a redirect: %s", request_id, status)
             elif 400 <= status < 500:
-                log.error("Request %s completed with a client error: %s", request_id, status)
+                log.info("Request %s completed with a client error: %s", request_id, status)
             else: 
                 log.error("Request %s completed with a server error: %s", request_id, status)
 
