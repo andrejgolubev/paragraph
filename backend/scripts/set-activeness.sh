@@ -9,7 +9,7 @@ BASE_URL="${4:-https://api.paragraph-schedule.ru}"
 
 printf 'setting activeness for %s to %s via %s\n' "$USER_EMAIL" "$USER_ACTIVENESS" "$BASE_URL"
 
-curl --fail-with-body --retry 3 --retry-delay 2 -L --insecure \
+curl --fail-with-body --retry 3 --retry-delay 2 -L \
   --request PATCH \
   -H "API-Key: ${API_KEY}" \
   -w "\nHTTP %{http_code}\n" \

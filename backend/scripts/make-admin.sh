@@ -9,7 +9,7 @@ API_KEY="${3?API key required}"
 
 BASE_URL="${4:-https://api.paragraph-schedule.ru}"
 
-curl --fail-with-body --retry 3 --retry-delay 2 -L --insecure \
+curl --fail-with-body --retry 3 --retry-delay 2 -L \
   --request POST \
   -H "API-Key: ${API_KEY}" \
   "${BASE_URL}/admin/make-admin/?user_email=${USER_EMAIL}&groups_to_admin=${GROUPS_TO_ADMIN}"
