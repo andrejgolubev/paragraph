@@ -7,6 +7,10 @@ from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+def get_settings():
+    return Settings()
+
+
 BASE_DIR = Path(__file__).parent.parent
 ROOT_DIR = BASE_DIR.parent
 
@@ -111,3 +115,5 @@ class Settings(BaseSettings):
     
 settings = Settings() 
 
+if __name__ == '__main__': 
+    print(settings.redis.__dict__)
