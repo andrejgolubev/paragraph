@@ -57,6 +57,13 @@ class DatabaseConfig(BaseSettings):
             f"{self.scheme}://{self.user}:{self.password}"
             f"@{self.host}:{self.port}/{self.name}"
         )
+    
+    @property
+    def test_url(self):
+        return (
+            f"{self.scheme}://{self.user}:{self.password}"
+            f"@{self.host}:{self.port + 1}/{self.name}"
+        )
 
     future: bool = True
     echo: bool = False
@@ -91,18 +98,25 @@ class DocsConfig(BaseModel):
     enabled: bool = Field(True) # Pydantic приводит к bool env value
 
 
+class UrlConfig(BaseModel):
+    http: str = 'http://localhost:8000'
+    https: str = 'https://localhost:8000'
+
+
+# class AppConfig(BaseModel): 
+#     mode: Literal['dev', 'prod'] = 'dev'
+
 
 class Settings(BaseSettings): 
     model_config = SettingsConfigDict(
         env_file=(
             ROOT_DIR / ".env",
-            # ROOT_DIR / ".env.prod",
         ),
         env_nested_delimiter='__',
         case_sensitive=False,
         extra='ignore' 
     )
-
+    
     admin: AdminConfig = AdminConfig()
     db: DatabaseConfig = DatabaseConfig()
     auth_jwt: AuthJWT = AuthJWT() 
@@ -111,9 +125,8 @@ class Settings(BaseSettings):
     redis: RedisConfig = RedisConfig() 
     rate_limit: RateLimitConfig = RateLimitConfig()
     docs: DocsConfig = DocsConfig()
-
+    url: UrlConfig = UrlConfig()
+    # app: AppConfig = AppConfig()
+    
     
 settings = Settings() 
-
-if __name__ == '__main__': 
-    print(settings.redis.__dict__)

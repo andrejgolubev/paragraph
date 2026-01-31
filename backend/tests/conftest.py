@@ -1,7 +1,8 @@
 import pytest, subprocess
+
 from backend.api.auth.helpers import create_access_token, create_refresh_token
 from backend.core.config import settings
-
+from backend.api.db.database import AsyncSessionLocal
 
 @pytest.fixture(scope='session', autouse=True)
 def storage_setup():
@@ -14,18 +15,23 @@ def storage_setup():
     subprocess.run(["poetry", "run", "alembic", "upgrade", "head"], check=True)
 
 
+@pytest.fixture(scope='function')
+async def db(): 
+    async with AsyncSessionLocal() as session:
+        yield session
 
-@pytest.fixture(scope='session', autouse=True)
-def get_current_user_tokens():
-    """Возвращает токены абстрактного пользователя"""
 
-    access_token = create_access_token(
-        payload= (sub:={"sub": "user@example.com"}) | {"role": "student", "username": "Олег"} 
-    )
+# @pytest.fixture(scope='session', autouse=True)
+# def get_current_user_tokens():
+#     """Возвращает токены абстрактного пользователя"""
 
-    refresh_token = create_refresh_token(payload=sub)
+#     access_token = create_access_token(
+#         payload= (sub:={"sub": "user@example.com"}) | {"role": "student", "username": "Олег"} 
+#     )
 
-    return {
-        'access_token': access_token,
-        'refresh_token': refresh_token,
-    }
+#     refresh_token = create_refresh_token(payload=sub)
+
+#     return {
+#         'access_token': access_token,
+#         'refresh_token': refresh_token,
+#     }

@@ -2,7 +2,7 @@ import { useUiStore } from "../store/uiStore"
 
 const BASE_URL =
     __VITE_DEV__  === "true"
-    ? "https://192.168.0.108:8000"
+    ? "https://localhost:8000"
     : __VITE_API_HOST__
 
     
