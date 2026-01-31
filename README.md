@@ -1,14 +1,14 @@
-# paragraph
-Приветствую в репозитории электронный дневника "параграф"! 
-[Дневник](https://paragraph-schedule.ru) - веб-сайт, где живёт "параграф".
+# "параграф"
+Приветствую в репозитории электронного дневника "параграф"! 
+[Веб-сайт](https://paragraph-schedule.ru), где живёт "параграф".
 
 Ниже представлено краткое руководство по локальному запуску, если Вам такое надо.
 
 # Локальный запуск 
-Запуск бекенда и фронтенда локально -> см. `Makefile` в корне проекта. Там команды 
-для запуска backend по https, для этого нужен mkcert: 
+Запуск бекенда и фронтенда локально -> см. `Makefile` в корне проекта. 
+Там находятся удобные шорткаты, среди которых команда для запуска backend'а. 
+Для этого нужен mkcert: 
 https://github.com/FiloSottile/mkcert
-
 Можно запускать и по http, написав свой шорткат, или любым другим способом.
 
 ## Установка Backend-зависимостей
@@ -16,7 +16,7 @@ https://github.com/FiloSottile/mkcert
 cd backend && poetry install
 ```
 
-## Миграции в базу данных. БД можно поднять в docker.
+## Миграции в базу данных. БД удобно поднять в docker.
 ```shell 
 alembic upgrade head 
 ```
@@ -35,15 +35,15 @@ cd frontend && npm install
 ## Локальный стек 
 - сборка и поднятие:
   ```shell
-  docker compose up -d
+  docker compose -f docker-compose-local.yaml up -d
   ```
 - остановка:
   ```shell
-  docker compose down
+  docker compose -f docker-compose-local.yaml down
   ```
 - статус:
   ```shell
-  docker compose ps -a
+  docker compose -f docker-compose-local.yaml ps -a
   ```
 
 ## Обновление групп и дат
@@ -62,8 +62,9 @@ cd frontend && npm install
 но ее можно выключить, прописав `DOCS__ENABLED=false` в .env в корне проекта. 
 
 ## Переменные окружения 
-Почти все переменные окружения можно выставить, основываясь на docker-compose.yaml
-в корне проекта, `backend/core/config.py` и `frontend/vite.config.js`. 
+Все переменные окружения можно выставить, основываясь на `docker-compose.yaml`
+в корне проекта, `backend/core/config.py`, `backend/pytest.ini` и 
+`frontend/vite.config.js`
 Примечание: 
 backend использует переменные окружения из .env в корне, frontend - из .env внутри 
 директории frontend
