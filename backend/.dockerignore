@@ -1,8 +1,13 @@
 # Python
-__pycache__
+__pycache__/
+.pytest_cache/
 app.egg-info
 *.pyc
 .mypy_cache
 .coverage
 htmlcov
 .venv
+
+.env
+.env.prod 
+app.log

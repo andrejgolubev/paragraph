@@ -3,33 +3,33 @@ import jwt
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from backend.core.config import settings
+from ...core.config import settings
 from ..auth import utils as auth_utils
 from ..db.models import Group, User
 from ..db.database import AsyncSessionLocal, get_db
 from ..auth.helpers import get_refreshed_access_token
 
 
-async def get_access_token_payload(
+async def get_current_access_token_payload(
     request: Request,
     response: Response,
 ) -> dict:
-    """Возвращает payload access-токена. Если access отсутствует или истёк,
-    пытается обновить его по refresh и сразу ставит новую куку."""
+    """Возвращает payload ТЕКУЩЕГО access-токена. Если access отсутствует 
+    или истёк, пытается обновить его по refresh и, если успешно, то сразу 
+    ставит полученный access_token в cookie."""
 
     unauth_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="пожалуйста, войдите в аккаунт.",
     )
 
-    refresh_token = request.cookies.get("refresh_token")
-    if not refresh_token:
+    # refresh нет - значит время сессии истекло
+    if not (refresh_token:= request.cookies.get("refresh_token")):
         raise unauth_exception
 
-    access_token = request.cookies.get("access_token")
 
     # сначала пробуем действующий access
-    if access_token:
+    if (access_token := request.cookies.get("access_token")):
         try:
             return auth_utils.decode_jwt(token=access_token)
         except jwt.exceptions.ExpiredSignatureError:
@@ -56,8 +56,8 @@ async def get_access_token_payload(
         key="access_token",
         value=new_access_token,
         httponly=True,
-        secure=True,  # для локалки можно False
-        samesite="none",  # для продакшена скорее всего 'lax'
+        samesite="none",  
+        secure=True,  
         max_age=settings.auth_jwt.access_token_expire_minutes * 60,
     )
 
@@ -66,29 +66,8 @@ async def get_access_token_payload(
 
 
 
-def get_refresh_token_payload(
-    request: Request,
-) -> dict:
-    
-    unauth_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="время сессии истекло.",
-    ) # чисто для swagger UI. в middleware отлавливается 
-
-    try:
-        if not (token := request.cookies.get("refresh_token")):
-            raise unauth_exception
-        payload = auth_utils.decode_jwt(token=token)
-
-    except jwt.exceptions.PyJWTError:
-        raise unauth_exception
-
-    return payload
-
-
-
 async def get_current_auth_user(
-    payload: dict = Depends(get_access_token_payload),
+    payload: dict = Depends(get_current_access_token_payload),
     db: AsyncSession = Depends(get_db),
 ) -> User:
     """returns user by payload NO MATTER HE IS ACTIVE OR NOT 
@@ -100,10 +79,10 @@ async def get_current_auth_user(
     ))
 
     if not (user := user_result.first()): 
-        raise HTTPException(status_code=404, detail='user not found')
+        raise HTTPException(status_code=404, detail='Пользователь не найден')
 
     if not user.active: 
-        raise HTTPException(status_code=403, detail='user inactive ')
+        raise HTTPException(status_code=403, detail='Отсутствуют необходимые права')
     
         
     return user
@@ -130,4 +109,5 @@ async def get_current_active_auth_user_data(
         "group": group_number,  
         'consents': user.consents
     }
+
 

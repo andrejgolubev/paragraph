@@ -3,7 +3,7 @@ import paperclipDark from "../../../../images/homework/paperclip-dark.svg"
 import { useThemeStore } from "../../../../store/themeStore"
 
 
-const MobileItem = ({ time, lessonId, onClick, texts = [], types = [] }) => {
+const MobileItem = ({ time, onClick, texts = [], types = [] }) => {
   const darkTheme = useThemeStore(state => state.darkTheme)
 
   if (!texts.length && !types.length) return null

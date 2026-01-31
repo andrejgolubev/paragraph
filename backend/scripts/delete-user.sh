@@ -1,11 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-EMAIL="${1?email required}"
-API_KEY="${2?API key required}"
-URL="${3:-https://localhost:8000}"
+USER_EMAIL="${1?USER_EMAIL required}"
 
-curl --fail --retry 3 --retry-delay 2 \
+API_KEY="${2?API key required}"
+BASE_URL="${3:-https://api.paragraph-schedule.ru}"
+
+
+printf 'deleting %s via %s\n' "$USER_EMAIL" "$BASE_URL"
+
+curl --fail-with-body --retry 3 --retry-delay 2 --show-error \
+  --request POST \
   -H "API-Key: ${API_KEY}" \
-  "${URL}/admin/delete?email=${EMAIL}"
+  "${BASE_URL}/admin/delete-user?user_email=${USER_EMAIL}"
+
+
 

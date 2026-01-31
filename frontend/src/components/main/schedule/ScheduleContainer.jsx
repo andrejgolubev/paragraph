@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import HomeworkModal from "../HomeworkModal" 
 import paperclip from "../../../images/homework/paperclip.svg"
 import paperclipDark from "../../../images/homework/paperclip-dark.svg"
-import API from "../../../api/API"
+import API, { showNotificationOuter } from "../../../api/API"
 import { Mosaic } from "react-loading-indicators"
 import { getDateValueFromDisplay} from "../../../utils/converters"
 import { useWindowSize } from "../../../hooks/useWindowSize"
@@ -10,7 +10,6 @@ import MobileItem from "./mobile/MobileItem"
 import Button from "./mobile/Button"
 import { useDropdownStore } from "../../../store/dropdownStore"
 import { useThemeStore } from "../../../store/themeStore"
-
 
 
 const ScheduleContainer = () => {
@@ -39,7 +38,6 @@ const ScheduleContainer = () => {
     widthDebounceRef.current = setTimeout(() => {
       setDebouncedWidth(windowSize.width)
     }, 30)
-    console.log('debouncedWidth :>>', debouncedWidth);
     return () => {
       if (widthDebounceRef.current) {
         clearTimeout(widthDebounceRef.current)
@@ -68,7 +66,6 @@ const ScheduleContainer = () => {
       setScheduleData(data)
       setError(null)
     }).catch((err) => {
-      console.error("Error loading schedule:", err)
       setError(err.message)
     }).finally(() => {
       setLoading(false)
@@ -97,9 +94,9 @@ const ScheduleContainer = () => {
         setHomeworkUpdated(updated)
         setHomeworkText(homework)
         setHomeworkAuthor(username)
-      }).catch( (err) => {
+      }).catch( (error) => {
         setHomeworkText('')
-        console.log('err from ScheduleCont :>> ', err);
+        showNotificationOuter(error.message, 'error')
       }
       )
 
@@ -129,10 +126,10 @@ const ScheduleContainer = () => {
     }
 
     const currentDate = new Date()
+    // getDay() = 0 для воскресенья, 1 для понедельника, ..., 6 для субботы
     const currentWeekDay = currentDate.getDay()
     const currentDayOfMonth = currentDate.getDate()
 
-    // В JavaScript getDay() возвращает 0 для воскресенья, 1 для понедельника и т.д.
     const adjustedWeekDay = currentWeekDay === 0 ? 7 : currentWeekDay
 
     const isCurrentWeekday = weekDaysMap[dayName] === adjustedWeekDay
@@ -166,14 +163,12 @@ const ScheduleContainer = () => {
   }
 
   
-  // Рендер расписания
-  const lessonIndexRef = useRef(1)
-  
+  // Рендер десктоп расписания
   const renderDesktopSchedule = (scheduleData) => {
     if (!scheduleData) return null
 
     const datesArr = scheduleData.days.map((day) => day.date)
-    lessonIndexRef.current = 1
+    let currentLessonIndex = 0
 
     return (
       <table
@@ -200,7 +195,7 @@ const ScheduleContainer = () => {
               </td>
               {timeSlot.lessons.map((dayLessons, dayIndex) => {
                 const dataDate = datesArr[dayIndex]
-                const currentLessonIndex = lessonIndexRef.current++
+                currentLessonIndex++
 
                 return (
                   <td
@@ -282,11 +277,9 @@ const ScheduleContainer = () => {
     )
   }
 
-
+  // рендер мобильного расписания
   const renderMobileSchedule = (scheduleData) => {
     if (!scheduleData) return null 
-
-    console.log('scheduleData :>> ', scheduleData);
 
     const weekdays = ["Пн","Вт","Ср","Чт","Пт","Сб"]
     const daysArr = weekdays.map((day, dayIndex) => (
@@ -307,7 +300,6 @@ const ScheduleContainer = () => {
         time={`${start}-${end}`} 
         texts={lesson?.map(sublesson => (sublesson.text))} 
         types={lesson?.map(sublesson => (sublesson.type))}  
-        lessonId={lessonId}
 
         onClick={() => handleHomeworkClick({
           groupDataValue: groupDataValue,

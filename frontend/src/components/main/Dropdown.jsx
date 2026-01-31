@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react"
-import API from "../../api/API"
+import { useState, useEffect, useMemo } from "react"
+import API, { showNotificationOuter } from "../../api/API"
 import { useRef } from "react"
 import { useClickOutside } from "../../hooks/useClickOutside"
 import { latinToCyrillic } from "../../utils/converters"
@@ -7,20 +7,23 @@ import { useDebounce } from "../../hooks/useDebouce"
 import { useDropdownStore } from "../../store/dropdownStore"
 import { useThemeStore } from "../../store/themeStore"
 
-const Dropdown = (props) => {
-  const darkTheme = useThemeStore(state => state.darkTheme)
 
-  const { name, func, placeholder, readOnly} = props
+const Dropdown = ({ name, func, placeholder, readOnly}) => {
+  const darkTheme = useThemeStore(state => state.darkTheme)
   
   const [inputText, setInputText] = useState("")
   const [data, setData] = useState([])
-  const [filteredData, setFilteredData] = useState([])
   const [elemKey, setElemKey] = useState("")
   const [activeSearch, setActiveSearch] = useState(false)
 
+  const { groupDataValue, setGroupDataValue, dateDataValue, setDateDataValue } =
+    useDropdownStore()
+
   const dropdownRef = useRef(null)
   const inputRef = useRef("")
+  
 
+  // группы и даты не будут сохраняться при перезаходах на "/" без этого эффекта 
   useEffect( () => {
     if (func === 'search') {
       API.convertFromDataValue({groupDataValue}).then(resp => {
@@ -32,33 +35,28 @@ const Dropdown = (props) => {
         inputRef.current.value = resp?.date ?? "" 
       })
     }
-  }, [])
+    
+  }, [groupDataValue, dateDataValue, func])
 
 
   useClickOutside([dropdownRef], () => {
     setActiveSearch(false)
   })
 
-  const { groupDataValue, setGroupDataValue, dateDataValue, setDateDataValue } =
-    useDropdownStore()
 
   const debouncedInputText = useDebounce(inputText, 100)
 
-  // будет только для "group" ну и для других, где пользователь сам вводит текст
-  useEffect(() => {
-    setFilteredData(
+  // фильтрует только для Dropdown с func === 'search'
+  const filteredData = useMemo(() => {
+    if (!debouncedInputText || func === 'select') return data
+    const cleanText = latinToCyrillic(debouncedInputText).trim().toLowerCase()
+    return (
       data?.filter((elem) => {
         const element = elem[elemKey]
-
-        return (
-          element && (
-            element.toLowerCase().trim()
-            .includes(latinToCyrillic(inputText).trim().toLowerCase())
-          )
-        )
-      })
+        return element && element.toLowerCase().trim().includes(cleanText)
+      }) ?? []
     )
-  }, [debouncedInputText])
+  }, [data, elemKey, debouncedInputText, func])
 
 
   const handleEnterKey = async (event, inputText) => {
@@ -73,7 +71,8 @@ const Dropdown = (props) => {
         setActiveSearch(false)
       }
     } catch (error) {
-      console.error(error)
+      showNotificationOuter(error.message, 'error')
+      setActiveSearch(false)
     }
   }
 
@@ -86,18 +85,15 @@ const Dropdown = (props) => {
 
   const loadGroups = async () => {
     const responseData = await API.loadGroups()
-    console.log('responseData from loadGroups :>> ', responseData);
+
     setData(responseData)
-    // просто setData, т.к. по группам осуществляется ПОИСК и они будут фильтроваться по мере ввода текста, т.е. data -> filteredData
     setElemKey("group_number")
   }
   
   const loadDates = async () => {
     const responseData = await API.loadDates()
-    console.log('responseData from loadDates :>> ', responseData);
-    setData(responseData) 
-    setFilteredData(responseData)
-    // сразу setFilteredData т.к. фильтрация не требуется, выбор даты осуществляткся руками
+
+    setData(responseData)
     setElemKey("date")
   }
 
@@ -116,8 +112,6 @@ const Dropdown = (props) => {
       setDateDataValue(elem["data_value"])
     }
   }
-
-  
 
   return (
     <div 

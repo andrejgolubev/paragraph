@@ -1,0 +1,5 @@
+User-agent: *
+
+Allow: /
+
+Sitemap: https://paragraph-schedule.ru/sitemap.xml

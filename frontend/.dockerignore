@@ -1,0 +1,3 @@
+# # не добавляем .env, чтобы работать с переменными в vite.config.js, + там нет секретов. 
+# .gitignore
+# node_modules/

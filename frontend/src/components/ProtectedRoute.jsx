@@ -11,7 +11,7 @@ export const ProtectedRoute = ({ children, type }) => {
   
   useEffect(() => {
     fetchUser()
-  }, [])
+  }, [fetchUser])
 
   const isAuthenticated = Boolean(user)
   const isChecking = loading

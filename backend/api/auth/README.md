@@ -1,4 +1,4 @@
-# Extract the public key from the key pair which can be use in a certificate
+# Extract the public key from the key pair which can be used in a certificate
 ```shell
 openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
 ```
@@ -8,7 +8,3 @@ openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
 openssl genrsa -out jwt-private.pem 2048
 ```
 
-# Extract the public key from the key pair, which can be used in a certificate
-``` shell
-openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
-```

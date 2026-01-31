@@ -11,7 +11,7 @@ from ..auth.validation import (
 from ..db.database import get_db
 from ..db.models import Group, User, UserConsent
 from ..db.schemas import UserRegistration, UserLogin, UserUpdate
-from backend.core.config import settings
+from ...core.config import settings
 from ..auth.utils import (
     hash_password,
     validate_password,
@@ -183,8 +183,8 @@ async def login(
             key=key,
             value=value,
             httponly=True,
-            secure=True,  # True только для htpps
-            samesite='none', # обязательно 'lax' для продакшна
+            samesite='none', 
+            secure=True, 
             max_age=lifetime_seconds
         )   
 
@@ -205,13 +205,10 @@ async def login(
 
 @router.post('/logout') 
 async def logout(response: Response): 
-    response.delete_cookie('access_token', samesite='none', secure=True)
-    response.delete_cookie('refresh_token', samesite='none', secure=True)
+    response.delete_cookie('access_token', secure=True)
+    response.delete_cookie('refresh_token', secure=True)
 
     return {"status": "ok", "detail": "Вы вышли из аккаунта"}
-
-
-
 
 
 @router.patch('/update-profile')
@@ -220,19 +217,21 @@ async def update_profile(
     db: AsyncSession = Depends(get_db),
 ): 
         
-    email = update_data.email
-    username = update_data.username
-    group_number = update_data.group_number
-    password = update_data.password
+    if not (password:=update_data.password): 
+        raise HTTPException(status_code=400, detail="для применения правок введите пароль.")
 
-    if not username_is_cyrillic_only(username):
+    if not username_is_cyrillic_only(username:=update_data.username):
         raise HTTPException(status_code=400, detail="имя может содержать только кириллицу.")
 
-    user_result = await db.scalars(select(User).where(User.email == email))
+    user_result = await db.scalars(select(User).where(User.email == update_data.email))
     user = user_result.first()
     
     if await has_cursive_words(phrase=username): 
-        answers: dict[str] = ['введённое имя недопустимо :(', 'такое имя неприемлимо :(', 'введённое имя не прошло валидацию :(']
+        answers: dict[str] = [
+            'введённое имя недопустимо :(', 
+            'такое имя неприемлимо :(', 
+            'введённое имя не прошло валидацию :('
+        ]
         raise HTTPException(status_code=400, detail=choice(answers))  
     
     if not validate_password(password, user.password):
@@ -250,7 +249,7 @@ async def update_profile(
 
     if username:
         user.name = username
-    if group_number:
+    if (group_number:=update_data.group_number):
         group_result = await db.scalars(select(Group).where(Group.group_number == latin_to_cyrillic(group_number)))
         group = group_result.first()
         if group:
@@ -269,7 +268,7 @@ async def update_profile(
     
     return {
         "status": "ok",
-        "detail": "профиль обновлен успешно",
+        "detail": "Профиль обновлен успешно",
         "username": user.name,
         "email": user.email,
         "role": user.role,
@@ -279,7 +278,8 @@ async def update_profile(
 
 @router.get("/me")
 def auth_user_check_self_info(user_data: dict = Depends(get_current_active_auth_user_data)):
-    """для возрвата данных на фронтенд в раздел 'профиль'"""
+    """Возвращает нечувствительные данные об авторизованном пользователе.
+    Преимущественно для возрвата данных на фронтенд """
 
     return {
         "status": "ok",
@@ -287,7 +287,6 @@ def auth_user_check_self_info(user_data: dict = Depends(get_current_active_auth_
         "email": user_data.get("email"),
         "role": user_data.get("role"),
         "group": user_data.get("group"),
-        # "consents": user_data.get("consents")
     }
 
 

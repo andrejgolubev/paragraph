@@ -2,6 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+from backend.api.parser.config import create_driver
 from ..logger import log
 
 
@@ -87,7 +89,8 @@ def parse_dates():
 
     log.info("Starting date parser")
 
-    driver = webdriver.Chrome()
+    # driver = webdriver.Chrome()
+    driver = create_driver()
 
     # ссылка с уже выбранной "абы какой" группой, иначе не будут отображаться даты 
     driver.get('https://rasp.rsreu.ru/schedule-frame/group?faculty=1&group=1640&date=')

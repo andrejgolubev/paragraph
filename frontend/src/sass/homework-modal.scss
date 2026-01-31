@@ -63,20 +63,18 @@
     position: relative;
     background: linear-gradient(135deg, #f44336, #e53935);
     border-left: 4px solid #c62828;
-
   }
 }
 
 
 
 .modal {
-
   &.dark {
     background-color: #0d0e0f;
     p {
       color: $light-grey1;
     }
-    .error {
+    .notification {
       p {
         color: $table-white !important;
       }

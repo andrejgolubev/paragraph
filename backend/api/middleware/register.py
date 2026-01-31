@@ -9,11 +9,16 @@ ALLOW_ORIGINS = [
         "http://localhost:8000",
         "http://192.168.0.108:5173",
         "http://192.168.0.108:8000",
-        # для https 
+        # для https локально
         "https://localhost:5173",
         "https://localhost:8000",
         "https://192.168.0.108:5173",
         "https://192.168.0.108:8000",
+
+        "https://paragraph-schedule.ru",
+        "https://www.paragraph-schedule.ru",
+        "https://api.paragraph-schedule.ru",
+        "https://www.api.paragraph-schedule.ru",
     ]
 
 

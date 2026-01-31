@@ -7,7 +7,12 @@ from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+def get_settings():
+    return Settings()
+
+
 BASE_DIR = Path(__file__).parent.parent
+ROOT_DIR = BASE_DIR.parent
 
 LOG_DEFAULT_FORMAT = ("[%(asctime)s.%(msecs)03d] %(module)10s:%(lineno)-3d %(levelname)-7s - %(message)s")
 
@@ -29,6 +34,8 @@ class LoggingConfig(BaseModel):
         "critical",
     ] = "info"
     log_format: str = LOG_DEFAULT_FORMAT
+    max_file_size_mb: int = 5
+    backup_files: int = 3
 
     @property
     def log_level_value(self) -> int:
@@ -37,12 +44,19 @@ class LoggingConfig(BaseModel):
 
 
 class DatabaseConfig(BaseSettings): 
-    scheme: str = Field('postgresql+asyncpg', env='DB__URL')
-    user: str = Field('pg', env="DB__USER")
-    password: str = Field('root', env="DB__PASSWORD")
-    host: str = Field('localhost', env="DB__HOST")
-    port: int = Field(5433, env="DB__PORT")
-    name: str = Field('pg', env="DB__NAME")
+    scheme: str = Field('postgresql+asyncpg')
+    user: str = Field('pg')
+    password: str = Field('root')
+    host: str = Field('localhost')
+    port: int = Field(5433)
+    name: str = Field('pg')
+
+    @property
+    def url(self):
+        return (
+            f"{self.scheme}://{self.user}:{self.password}"
+            f"@{self.host}:{self.port}/{self.name}"
+        )
 
     future: bool = True
     echo: bool = False
@@ -52,14 +66,14 @@ class DatabaseConfig(BaseSettings):
 
 class CookiesConfig(BaseModel): 
     secure: bool = True  
-    samesite: Literal['lax', 'samesite', 'none'] = 'lax'  
+    samesite: Literal['lax', 'samesite', 'none'] = 'none'  
 
 
 class RedisConfig(BaseModel): 
-    host: str = Field('localhost', env='REDIS__HOST')
-    port: int = Field(6380, env='REDIS__HOST')
-    password: str = Field('root', env='REDIS__PASSWORD')
-    db: int = Field(0, env='REDIS__DB')
+    host: str = Field('localhost')
+    port: int = Field(6380)
+    password: str = Field('root')
+    db: int = Field(0)
     schedule_cache_ttl: int = 60 * 5 # 5 minutes
 
 
@@ -70,16 +84,19 @@ class RateLimitConfig(BaseModel):
 
 
 class AdminConfig(BaseModel): 
-    api_key: str = Field('secret_key', env="ADMIN__API_KEY")
+    api_key: str = Field('ADMIN__API_KEY')
 
+
+class DocsConfig(BaseModel): 
+    enabled: bool = Field(True) # Pydantic приводит к bool env value
 
 
 
 class Settings(BaseSettings): 
     model_config = SettingsConfigDict(
         env_file=(
-            BASE_DIR / ".env",
-            BASE_DIR / ".env.prod",
+            ROOT_DIR / ".env",
+            # ROOT_DIR / ".env.prod",
         ),
         env_nested_delimiter='__',
         case_sensitive=False,
@@ -93,13 +110,10 @@ class Settings(BaseSettings):
     cookie: CookiesConfig = CookiesConfig() 
     redis: RedisConfig = RedisConfig() 
     rate_limit: RateLimitConfig = RateLimitConfig()
-
+    docs: DocsConfig = DocsConfig()
 
     
 settings = Settings() 
 
 if __name__ == '__main__': 
-    print(settings.admin.api_key)
-
-
-
+    print(settings.redis.__dict__)

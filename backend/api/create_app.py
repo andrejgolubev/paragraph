@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from redis.asyncio import Redis
 
 from .middleware.register import register_middlewares
-from backend.core.config import settings
+from ..core.config import settings
 from .logger import log
 
 
@@ -37,6 +37,8 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title='параграф',
         lifespan=lifespan,
+        docs_url=None if not settings.docs.enabled else '/docs',
+        redoc_url=None if not settings.docs.enabled else '/redoc',
         # webhooks=..
     )
     

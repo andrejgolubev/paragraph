@@ -16,12 +16,12 @@ const NotificationOuter = () => {
     }, 3000)
 
     return () => clearTimeout(timer) //отменяем ожидание если элемент notification inner больше не вмонтирован в разметку 
-  }, [notificationOuterActive])
+  }, [notificationOuterActive, setNotificationOuterActive])
 
 
   useEffect(() => {
     return () => setNotificationOuterActive(false) // если компонент размонтирован, скрываем его
-  }, [])
+  }, [setNotificationOuterActive])
 
   return (
     <div

@@ -1,34 +1,35 @@
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
+
 
 const NotificationInner = (props) => {
-  const { message, type, notificationInnerActive, setNotificationInnerActive } = props
-  const [isActive, setIsActive] = useState(false)
+  const {
+    notificationInnerMessage,
+    notificationInnerActive,
+    setNotificationInnerActive,
+  } = props
 
-  
+
   useEffect(() => {
     if (notificationInnerActive) {
-      setIsActive(true) // сразу показываем
+      setNotificationInnerActive(true) // сразу показываем
 
       const timer = setTimeout(async () => {
-        setIsActive(false)
+        setNotificationInnerActive(false)
       }, 3000)
-      
+
       return () => {
         clearTimeout(timer)
-      } //отменяем ожидание если элемент notification inner больше не вмонтирован в разметку
+      } // отменяем ожидание если элемент notification inner больше не вмонтирован в разметку
     }
-
-  }, [
-    notificationInnerActive
-  ])
+  }, [notificationInnerActive, setNotificationInnerActive])
 
   return (
     <div
       className={`notification inner 
-        ${isActive ? "active" : ""}
-        ${type}`}
+        ${notificationInnerActive ? "active" : ""}
+        ${"error"}`}
     >
-      <p>{message}</p>
+      <p>{notificationInnerMessage}</p>
     </div>
   )
 }
