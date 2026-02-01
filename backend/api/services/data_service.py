@@ -6,6 +6,7 @@ class DataService:
     @staticmethod
     async def get_all_groups(db: AsyncSession):
         result = await db.scalars(select(Group))
+        global result_all
         if (result_all := result.all()): 
             return result_all
         return []
@@ -21,3 +22,4 @@ class DataService:
         
 
 data_service = DataService() 
+
