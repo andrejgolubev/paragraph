@@ -7,10 +7,6 @@ from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-def get_settings():
-    return Settings()
-
-
 BASE_DIR = Path(__file__).parent.parent
 ROOT_DIR = BASE_DIR.parent
 
@@ -91,20 +87,12 @@ class RateLimitConfig(BaseModel):
 
 
 class AdminConfig(BaseModel): 
-    api_key: str = Field('ADMIN__API_KEY')
+    api_key: str = Field('super_secret_key')
 
 
 class DocsConfig(BaseModel): 
     enabled: bool = Field(True) # Pydantic приводит к bool env value
 
-
-class UrlConfig(BaseModel):
-    http: str = 'http://localhost:8000'
-    https: str = 'https://localhost:8000'
-
-
-# class AppConfig(BaseModel): 
-#     mode: Literal['dev', 'prod'] = 'dev'
 
 
 class Settings(BaseSettings): 
@@ -125,8 +113,6 @@ class Settings(BaseSettings):
     redis: RedisConfig = RedisConfig() 
     rate_limit: RateLimitConfig = RateLimitConfig()
     docs: DocsConfig = DocsConfig()
-    url: UrlConfig = UrlConfig()
-    # app: AppConfig = AppConfig()
     
     
 settings = Settings() 

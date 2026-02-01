@@ -2,35 +2,37 @@ import pytest
 from httpx import AsyncClient, ASGITransport
 from asgi_lifespan import LifespanManager  
 
-from sqlalchemy import select, delete
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.main import app
 from backend.api.db.models import User
 from backend.api.db.schemas import UserRegistration, UserLogin, UserUpdate
 from backend.api.auth.users import hash_password
+from backend.tests.conftest import groups_initial
 
 
 base_url = 'http://test'
+
 
 @pytest.mark.asyncio(loop_scope="session")
 @pytest.mark.parametrize(
     "group, expected",
     [
         (None, 200),
-        ("543", 200),
-        ("5413", 200),
+        (" ", 404),
+        ("164343", 404),
         ("5413M", 200), # латинская 
         ("5413М", 200), # кириллическая
-        ("5423", 200),
-        ("164343", 404),
-        (" ", 404),
+        *[(group, 200) for group in groups_initial.keys()]
     ]
 )
-async def test_register(group: str, expected, db: AsyncSession):
-    # Предварительная очистка БД
-    await db.execute(delete(User))
-    await db.commit()
+async def test_register(
+    group: str, 
+    expected: int, 
+    db: AsyncSession, 
+    clean_users  
+):
     
     register_payload = UserRegistration(
         username="Иванов Иван",
@@ -58,11 +60,9 @@ async def test_register(group: str, expected, db: AsyncSession):
         assert user.role == "student"
 
 
+
 @pytest.mark.asyncio(loop_scope="session")
-async def test_login(db: AsyncSession):
-    # Предварительная очистка БД
-    await db.execute(delete(User))
-    await db.commit()
+async def test_login(db: AsyncSession, clean_users):
     
     user = User(
         name="Иванов Иван",
@@ -90,13 +90,11 @@ async def test_login(db: AsyncSession):
     assert response.status_code == 200
     assert "access_token" in response.cookies
     assert "refresh_token" in response.cookies
-    
+
+
 
 @pytest.mark.asyncio(loop_scope="session")
-async def test_logout(db: AsyncSession):
-    # Предварительная очистка БД
-    await db.execute(delete(User))
-    await db.commit()
+async def test_logout(db: AsyncSession, clean_users):
     
     user = User(
         name="Иванов Иван",
@@ -131,21 +129,22 @@ async def test_logout(db: AsyncSession):
     assert logout_response.status_code == 200
     assert "access_token" not in logout_response.cookies
     assert "refresh_token" not in logout_response.cookies
-    
+
+
 
 @pytest.mark.asyncio(loop_scope="session")
 @pytest.mark.parametrize("new_group, expected", [
     (None, 200),
-    ("543", 200),
-    ("5413", 200),
-    ("5423", 200),
     ("164343", 404),
     (" ", 404),
+    *[(group, 200) for group in groups_initial.keys()]
 ])
-async def test_update_profile(new_group: str, expected, db: AsyncSession): 
-    # Предварительная очистка БД
-    await db.execute(delete(User))
-    await db.commit()
+async def test_update_profile(
+    new_group: str, 
+    expected: int, 
+    db: AsyncSession, 
+    clean_users
+): 
     
     user = User(
         name="Иванов Иван",
@@ -178,4 +177,5 @@ async def test_update_profile(new_group: str, expected, db: AsyncSession):
         assert body["email"] == user.email
         assert body["role"] == user.role
         assert body["group"] == new_group
+    
     
