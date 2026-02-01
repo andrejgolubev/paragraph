@@ -6,7 +6,10 @@ COPY package.json package-lock.json ./
 
 RUN npm install
 
+COPY ./certs /certs
+
 COPY . .
+
 
 RUN npm run build
 

@@ -1,5 +1,71 @@
-# PG и Redis для локального тестирования
+# Для локального тестирования
 services:
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+    networks:
+      - test
+
+  nginx: 
+    image: nginx:stable-alpine
+    depends_on:
+      - frontend
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped
+    volumes:
+      - ./nginx-local.conf:/etc/nginx/nginx.conf
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+      - ./site:/var/www/html/site
+    networks:
+      - test
+      
+  frontend: 
+    depends_on:
+      - backend 
+    ports: 
+      - "3000:3000"
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.local
+    networks:
+      - test
+        
+  backend: 
+    depends_on:
+      - pg_test
+      - redis_test
+    ports:
+      - "8001:8000"
+    restart: unless-stopped
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      REDIS__HOST: redis
+      REDIS__PORT: 6379
+      DB__HOST: pg
+      DB__PORT: 5432
+    volumes:
+      - ./backend/chrome-linux64.zip:/backend/chrome-linux64.zip:ro
+      - ./backend/chromedriver-linux64.zip:/backend/chromedriver-linux64.zip:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    networks:
+      - test
   pg_test:
     image: postgres:17
     restart: unless-stopped
