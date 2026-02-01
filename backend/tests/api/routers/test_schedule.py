@@ -3,7 +3,6 @@ import pytest
 from httpx import ASGITransport, AsyncClient
 from asgi_lifespan import LifespanManager
 
-from redis.typing import ResponseT
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from redis.asyncio import Redis
@@ -70,9 +69,7 @@ async def ensure_schedule_data(db: AsyncSession):
     yield
 
 
-@pytest.fixture
-async def redis_client() -> Redis:
-    return app.state.redis
+
 
 
 @pytest.mark.parametrize(

@@ -6,6 +6,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from backend.api.db.models import User
 from backend.core.config import settings
 from backend.api.db.database import AsyncSessionLocal
+from backend.api.main import app as main_app
+
+from asgi_lifespan import LifespanManager
+from redis.asyncio import Redis
 
 
 @pytest.fixture(scope='session', autouse=True)
@@ -38,6 +42,15 @@ async def clean_users(db: AsyncSession):
     yield
     await db.execute(delete(User))
     await db.commit()
+
+
+@pytest.fixture(scope='function')
+async def redis_client() -> Redis:
+    async with LifespanManager(main_app):
+        redis: Redis = main_app.state.redis
+        await redis.flushall()
+        return redis
+
 
 
 GROUPS_INITIAL = { 

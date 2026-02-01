@@ -78,9 +78,10 @@ def override_admin_identity(admin_user_data):
 @pytest.mark.asyncio(loop_scope="session")
 async def test_save_and_get_homework(
     db: AsyncSession,
+    admin_user_data: dict,
     ensure_homework_data,
     override_admin_identity,
-    admin_user_data: dict,
+    redis_client, # чтобы не было 429
 ):
     """
     Проверяет работу сохранения и получения д/з.
@@ -123,7 +124,8 @@ async def test_save_and_get_homework(
 @pytest.mark.asyncio(loop_scope="session")
 async def test_convert_endpoints(
     db: AsyncSession, 
-    ensure_homework_data
+    ensure_homework_data,
+    redis_client, # чтобы не было 429
 ):
     """
     Проверяет работу эндпоинтов, конвертирующих даты/группы в соответствующие
