@@ -71,17 +71,9 @@ async def ensure_schedule_data(db: AsyncSession):
 
 
 @pytest.fixture
-async def redis_client():
-    redis = Redis(
-        host=settings.redis.host,
-        port=settings.redis.port,
-        password=settings.redis.password,
-        db=settings.redis.db,
-    )
-    # smoke-check connection
-    await redis.ping()
-    yield redis
-    await redis.aclose()
+async def redis_client() -> Redis:
+    return app.state.redis
+
 
 @pytest.mark.parametrize(
     "index", 
@@ -100,7 +92,7 @@ async def test_get_schedule_caches_response(
     если была, значит расписание закешировано не было, если не была - значит было.
     Отследить кол-во вызовов помогает метод __call__ класса ParseScheduleStub.
     """
-    
+
     parse_stub = ParseScheduleStub()
     monkeypatch.setattr(
         schedule_router_module, "parse_schedule_from_url", parse_stub
@@ -132,9 +124,9 @@ async def test_get_schedule_caches_response(
     # проверяем, что расписание берется уже из кэша на втором идентичном запросе
     assert parse_stub.call_count == 1
 
-    cached: ResponseT = await redis_client.get(cache_key)
+    cached = await redis_client.get(cache_key)
     assert cached is not None
-    assert cached.decode() == json.dumps({"from_stub": True})
+    assert cached == json.dumps({"from_stub": True})
 
 
 @pytest.mark.asyncio(loop_scope="session")
