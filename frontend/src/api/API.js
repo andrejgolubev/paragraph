@@ -1,10 +1,15 @@
 import { useUiStore } from "../store/uiStore"
 
+
 const BASE_URL =
-    __VITE_DEV__  === "true"
-    ? "https://localhost:8000"
+    __VITE_DEV__  === "true" && __VITE_LOCAL_NGINX__ === 'true'
+    ? "/api"
+    : __VITE_DEV__ === "true" 
+    ? "https://localhost:8000" 
     : __VITE_API_HOST__
 
+    
+console.log('BASE_URL: ', BASE_URL)
     
 const headers = { "Content-Type": "application/json"}
 

@@ -1,13 +1,5 @@
 # Для локального тестирования
 services:
-  certbot:
-    image: certbot/certbot:latest
-    volumes:
-      - ./certbot/www:/var/www/certbot
-      - ./certbot/conf:/etc/letsencrypt
-    networks:
-      - test
-
   nginx: 
     image: nginx:stable-alpine
     depends_on:
@@ -18,10 +10,8 @@ services:
       - "443:443"
     restart: unless-stopped
     volumes:
+      - ./certs:/etc/nginx/certs
       - ./nginx-local.conf:/etc/nginx/nginx.conf
-      - ./certbot/www:/var/www/certbot
-      - ./certbot/conf:/etc/letsencrypt
-      - ./site:/var/www/html/site
     networks:
       - test
       
