@@ -49,9 +49,9 @@ services:
     env_file:
       - .env
     environment:
-      REDIS__HOST: redis
+      REDIS__HOST: redis_test
       REDIS__PORT: 6379
-      DB__HOST: pg
+      DB__HOST: pg_test
       DB__PORT: 5432
     volumes:
       - ./backend/chrome-linux64.zip:/backend/chrome-linux64.zip:ro
