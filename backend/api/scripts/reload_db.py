@@ -1,17 +1,21 @@
-"""CLI entrypoint to refresh groups and dates outside of FastAPI."""
+"""CLI entrypoint для загрузки и обновления групп и дат в БД """
 import argparse
 import asyncio
 
 from ..db.refresh_db import load_groups_and_dates
-from ..db.database import AsyncSessionLocal
+from ..db.database import AsyncSessionLocal, AsyncSessionLocalTest
 from ..parser.group_parser import parse_groups
 from ..parser.date_parser import parse_dates
 
 
-async def _reload_db(refresh: bool) -> None:
+async def _reload_db(refresh: bool, test: bool) -> None:
     groups = parse_groups()
     dates = parse_dates()
-    async with AsyncSessionLocal() as session:
+    if test:
+        db = AsyncSessionLocalTest()
+    else:
+        db = AsyncSessionLocal()
+    async with db as session:
         await load_groups_and_dates(groups=groups, dates=dates, db=session, refresh=refresh)
 
 
@@ -23,11 +27,20 @@ def main():
     parser.add_argument(
         "--refresh",
         action="store_true",
-        help="Очистить базу перед загрузкой."
+        help="Укажите, чтобы очистить базу перед загрузкой."
+    )
+    parser.add_argument(
+        "--test",
+        action="store_true",
+        help="Укажите, чтобы использовать тестовую БД."
     )
     args = parser.parse_args()
 
-    asyncio.run(_reload_db(refresh=args.refresh))
+    asyncio.run(_reload_db(
+        refresh=args.refresh,
+        test=args.test
+    ))
+
 
 
 if __name__ == "__main__":

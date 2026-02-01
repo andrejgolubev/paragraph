@@ -24,7 +24,19 @@ AsyncSessionLocal = async_sessionmaker(
     engine, class_=AsyncSession, expire_on_commit=False
 )
 
-
 async def get_db():
     async with AsyncSessionLocal() as session:
         yield session
+
+
+test_engine: AsyncEngine = create_async_engine(
+    settings.db.test_url,
+    future=settings.db.future,
+    echo=settings.db.echo,
+    pool_size=settings.db.pool_size,
+    max_overflow=settings.db.max_overflow,
+)
+
+AsyncSessionLocalTest = async_sessionmaker(
+    test_engine, class_=AsyncSession, expire_on_commit=False
+)

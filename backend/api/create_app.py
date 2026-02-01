@@ -29,7 +29,7 @@ async def lifespan(app: FastAPI):
     app.state.redis = redis_client
     yield
 
-    await redis_client.close()
+    await redis_client.aclose()
     log.info('Redis shutdown')
 
 

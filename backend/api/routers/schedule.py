@@ -1,4 +1,4 @@
-from fastapi import Response, HTTPException, APIRouter, Depends, Request
+from fastapi import HTTPException, APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
 from ..db.database import get_db
 from ..parser.schedule_parser import parse_schedule_from_url, parse_schedule  

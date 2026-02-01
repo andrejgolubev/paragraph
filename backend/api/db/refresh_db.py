@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 
 async def load_groups_and_dates(groups: dict, dates: dict, db: AsyncSession, refresh: bool = False): 
+    """Загружает группы и даты в базу данных"""
     try:
         if refresh:
             await db.execute(delete(Date))
@@ -42,6 +43,7 @@ async def load_groups_and_dates(groups: dict, dates: dict, db: AsyncSession, ref
 
 
 async def clean_up_date(date_input: str, db: AsyncSession):
+    """Удаляет дату из базы данных"""
     try: 
         result = await db.scalars(
             select(Date).where(Date.data_value == date_input)
@@ -50,25 +52,30 @@ async def clean_up_date(date_input: str, db: AsyncSession):
         if existing_date:
             await db.execute(delete(Date).where(Date.id == existing_date.id))
             await db.commit()
-            return {"message": "Очистка выполнена успешно"}
+            return {"status": "ok", "message": "Очистка выполнена успешно"}
         else:
-            return {"message": "Дата не найдена"}
+            return {"status": "error", "message": "Дата не найдена"}
     except Exception:
         await db.rollback()
         raise
 
 
 async def clean_up_dates(dates_amount: int, db: AsyncSession):
+    """Удаляет первые dates_amount групп из базы данных"""
     try:
         dates_result = await db.scalars(
             select(Date).order_by(Date.id).limit(dates_amount)
         )
         dates = dates_result.all()
+        if dates_amount > len(dates): 
+            raise IndexError(
+                'dates_amount is greater than length of dates list.'
+            ) 
         for date in dates:
             await db.execute(delete(Date).where(Date.id == date.id))
 
         await db.commit()
-        return {"message": "Очистка выполнена успешно"}
+        return {"status": "ok", "message": "Очистка выполнена успешно"}
     except Exception:
         await db.rollback()
         raise

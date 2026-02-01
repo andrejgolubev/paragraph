@@ -28,6 +28,7 @@ router = APIRouter(
 )
 
 
+
 def username_is_cyrillic_only(username: str) -> bool:
     allowed_chars = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя' + '-' + '.' + ' '
     return all(char.lower() in allowed_chars for char in username)
@@ -84,11 +85,10 @@ async def register(
             select(Group).where(Group.group_number == latin_to_cyrillic(group_number))
         )
         if not (group := group_result.first()): 
-            answers: dict[str] = [
-                'введённая группа не найдена :(', 
-                'введите группу так, как на сайте расписания',
-            ]
-            raise HTTPException(status_code=400, detail=choice(answers))
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, 
+                detail="группа не существует или введена не так, как на официальном сайте университета."
+            )
         else: 
             group_id = group.id
 
@@ -256,7 +256,7 @@ async def update_profile(
             user.group_id = group.id
         else: 
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=status.HTTP_404_NOT_FOUND,
                 detail="группа не существует или введена не так, как на официальном сайте университета.",
             )
         

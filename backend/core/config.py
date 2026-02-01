@@ -7,10 +7,6 @@ from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-def get_settings():
-    return Settings()
-
-
 BASE_DIR = Path(__file__).parent.parent
 ROOT_DIR = BASE_DIR.parent
 
@@ -57,6 +53,13 @@ class DatabaseConfig(BaseSettings):
             f"{self.scheme}://{self.user}:{self.password}"
             f"@{self.host}:{self.port}/{self.name}"
         )
+    
+    @property
+    def test_url(self):
+        return (
+            f"{self.scheme}://{self.user}:{self.password}"
+            f"@{self.host}:{self.port + 1}/{self.name}"
+        )
 
     future: bool = True
     echo: bool = False
@@ -84,7 +87,7 @@ class RateLimitConfig(BaseModel):
 
 
 class AdminConfig(BaseModel): 
-    api_key: str = Field('ADMIN__API_KEY')
+    api_key: str = Field('super_secret_key')
 
 
 class DocsConfig(BaseModel): 
@@ -96,13 +99,12 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=(
             ROOT_DIR / ".env",
-            # ROOT_DIR / ".env.prod",
         ),
         env_nested_delimiter='__',
         case_sensitive=False,
         extra='ignore' 
     )
-
+    
     admin: AdminConfig = AdminConfig()
     db: DatabaseConfig = DatabaseConfig()
     auth_jwt: AuthJWT = AuthJWT() 
@@ -111,9 +113,6 @@ class Settings(BaseSettings):
     redis: RedisConfig = RedisConfig() 
     rate_limit: RateLimitConfig = RateLimitConfig()
     docs: DocsConfig = DocsConfig()
-
+    
     
 settings = Settings() 
-
-if __name__ == '__main__': 
-    print(settings.redis.__dict__)

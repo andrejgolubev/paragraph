@@ -1,7 +1,25 @@
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from backend.api.db.models import Group
+
+
 def convert_date(date: str): 
     """date подаётся в формате в таком, в котором юзер ее выбирает из списка на фронтенде для последующей конвертации 
     в пригодную для вставки в ссылку и парсинга сайта ргрту. т.е. (10.11.2025, числ.) -> 2025-11-10  """
     return '-'.join(reversed(date[:10].split('.'))) 
+
+
+async def get_group_datavalue_by_group_number(
+    group_number: str,
+    db: AsyncSession,
+):
+    """конвертирует group_datavalue в group_number"""
+    group = (await db.scalars(
+        select(Group).where(Group.group_number == group_number)
+    )).first()
+    
+    return group.data_value
 
 
 def latin_to_cyrillic(input_str: str) -> str:
