@@ -12,7 +12,12 @@ from backend.api.db.database import AsyncSessionLocal
 def storage_setup():
     """
     Проверяет, перезаписываются ли переменные окружения на тестовые
-    из .env.test из корня проекта и подгатавливает хранилища к работе
+    из .env.test из корня проекта и накатывает миграции в БД.
+
+    Важно:
+    Если на соответствующих портах не запущены тестовые хранилища - 
+    все тесты упадут, т.к. используется autouse=True. 
+    Также тесты упадут, если запускать `pytest` не из директории backend
     """
     assert settings.db.port == 5435  
     assert settings.redis.port == 6381  
@@ -27,7 +32,7 @@ async def db():
 
 @pytest.fixture
 async def clean_users(db: AsyncSession):
-    """для очистки таблицы users перед и после тестов"""
+    """Очищает таблицу users перед и после тестов"""
     await db.execute(delete(User))
     await db.commit()
     yield

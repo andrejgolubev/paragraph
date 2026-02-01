@@ -7,7 +7,8 @@ from ..db.database import get_db
 from ..db.models import Group, Date, Homework
 from datetime import datetime
 from ..db.schemas import HomeworkRequest
-from ..utils.converters import latin_to_cyrillic
+from ..utils.converters import latin_to_cyrillic, get_group_datavalue_by_group_number
+
 
 router = homework_router = APIRouter(tags=["Homework"], prefix="/homework")
 
@@ -18,11 +19,18 @@ async def save_homework(
     homework_request: HomeworkRequest = Body(),
     db: AsyncSession = Depends(get_db),
 ):
+    """
+    Сохраняет или обновляет домашнее задание для указанной группы/даты 
+    в пределах прав администратора.
+    """
     if not user_data:
         raise HTTPException(status_code=401, detail="пожалуйста, войдите в аккаунт")
 
     if "admin" not in (role := user_data["role"]):
-        raise HTTPException(status_code=403, detail="недостаточно прав для управления этим д/з.")
+        raise HTTPException(
+            status_code=403, 
+            detail="недостаточно прав для управления этим д/з."
+        )
 
     group_data_value = homework_request.group_data_value
     date_data_value = homework_request.date_data_value
@@ -32,12 +40,23 @@ async def save_homework(
     if not homework_text:
         raise HTTPException(status_code=400, detail="д/з не может быть пустым")
 
-    moderated_group_numbers = [latin_to_cyrillic(gr) for gr in role.split(".")[1:] if gr] 
-    moderated_group_datavalues = [await get_group_datavalue(group_number, db=db) for group_number in moderated_group_numbers]
+    moderated_group_numbers = [
+        latin_to_cyrillic(gr) for gr in role.split(".")[1:] if gr
+    ] 
+    moderated_group_datavalues = [
+        await get_group_datavalue_by_group_number(group_number, db=db) 
+        for group_number in moderated_group_numbers
+    ]
 
 
-    if not any([group_dv for group_dv in moderated_group_datavalues if group_data_value == group_dv]): 
-        raise HTTPException(status_code=403, detail="недостаточно прав для управления этим д/з.")
+    if not any(
+        [group_dv for group_dv in moderated_group_datavalues 
+        if group_data_value == group_dv]
+    ): 
+        raise HTTPException(
+            status_code=403, 
+            detail="недостаточно прав для управления этим д/з."
+        )
         
 
     try:
@@ -53,7 +72,10 @@ async def save_homework(
         )
 
         if not (date := date_result.first()):
-            raise HTTPException(status_code=404, detail="Дата не выбрана или не найдена")
+            raise HTTPException(
+                status_code=404, 
+                detail="Дата не выбрана или не найдена"
+            )
 
         # находим или создаем связь
         hmw_result = await db.scalars(
@@ -94,74 +116,6 @@ async def save_homework(
         raise HTTPException(status_code=500, detail="ошибка сохранения д/з.")
 
 
-async def get_group_datavalue(
-    group_number: str,
-    db: AsyncSession = Depends(get_db),
-):
-    """отдает group_datavalue по group_number"""
-    group_result = await db.scalars(
-        select(Group).where(Group.group_number == group_number)
-    )
-    
-    group_data_value = group_result.first().data_value
-
-    return group_data_value
-
-
-@router.get("/convert")
-async def convert_to_datavalue(
-    group_number: str | None = None,
-    date: str | None = None,
-    db: AsyncSession = Depends(get_db),
-):
-    """ПЕРЕВОДИТ группы и даты в data_value-формат"""
-
-    group_result = await db.scalars(
-        select(Group).where(Group.group_number == group_number)
-    )
-    db_group = group_result.first()
-
-    date_result = await db.scalars(select(Date).where(Date.date == date))
-
-    db_date = date_result.first()
-
-    if not db_group and not db_date:
-        raise HTTPException(
-            status_code=404,
-            detail="at least group or date has to be selected (or they were just not found)",
-        )
-
-    return {
-        "date_data_value": db_date.data_value if db_date else "",
-        "group_data_value": db_group.data_value if db_group else "",
-    }
-
-
-@router.get("/convert-back")
-async def convert_from_datavalue(
-    group_data_value: str | None = None,
-    date_data_value: str | None = None,
-    db: AsyncSession = Depends(get_db),
-):
-    """ПЕРЕВОДИТ группы и даты ИЗ data_value-формата в человеческий"""
-    group_result = await db.scalars(
-        select(Group).where(Group.data_value == group_data_value)
-    )
-    db_group = group_result.first()
-
-    date_result = await db.scalars(select(Date).where(Date.data_value == date_data_value))
-
-    db_date = date_result.first()
-
-    if not db_group and not db_date:
-        return {"failure": "group and date not selected or not found"}
-
-    return {
-        "date": db_date.date if db_date else "",
-        "group_number": db_group.group_number if db_group else "",
-    }
-
-
 @router.get("/get")
 async def get_homework(
     group_data_value: str,
@@ -169,6 +123,10 @@ async def get_homework(
     lesson_index: int,
     db: AsyncSession = Depends(get_db),
 ):
+    """
+    Возвращает текст домашнего задания, время и автора для конкретной группы, 
+    даты и урока.
+    """
     try:
         # аналогичная логика поиска связи и возврата homework
         group_result = await db.scalars(
@@ -203,3 +161,62 @@ async def get_homework(
 
     except Exception:
         return {"homework": ""}
+
+
+
+@router.get("/convert")
+async def convert_to_datavalue(
+    group_number: str | None = None,
+    date: str | None = None,
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    По заданному номеру группы и дате возвращает соответствующие значения data_value.
+    """
+
+    group_result = await db.scalars(
+        select(Group).where(Group.group_number == group_number)
+    )
+    db_group = group_result.first()
+
+    date_result = await db.scalars(select(Date).where(Date.date == date))
+
+    db_date = date_result.first()
+
+    if not db_group and not db_date:
+        raise HTTPException(
+            status_code=404,
+            detail="at least group or date has to be selected (or they were just not found)",
+        )
+
+    return {
+        "date_data_value": db_date.data_value if db_date else "",
+        "group_data_value": db_group.data_value if db_group else "",
+    }
+
+
+@router.get("/convert-back")
+async def convert_from_datavalue(
+    group_data_value: str | None = None,
+    date_data_value: str | None = None,
+    db: AsyncSession = Depends(get_db),
+):
+    """По значениям data_value находит читаемые номер группы и дату."""
+    group_result = await db.scalars(
+        select(Group).where(Group.data_value == group_data_value)
+    )
+    db_group = group_result.first()
+
+    date_result = await db.scalars(
+        select(Date).where(Date.data_value == date_data_value)
+    )
+
+    db_date = date_result.first()
+
+    if not db_group and not db_date:
+        return {"failure": "group and date not selected or not found"}
+
+    return {
+        "date": db_date.date if db_date else "",
+        "group_number": db_group.group_number if db_group else "",
+    }
