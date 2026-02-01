@@ -35,7 +35,7 @@ async def clean_users(db: AsyncSession):
     await db.commit()
 
 
-groups_initial = { 
+GROUPS_INITIAL = { 
     "543": "1639", 
     "5413": "1638", 
     "543М": "1640",

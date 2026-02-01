@@ -9,7 +9,7 @@ from backend.api.main import app
 from backend.api.db.models import User
 from backend.api.db.schemas import UserRegistration, UserLogin, UserUpdate
 from backend.api.auth.users import hash_password
-from backend.tests.conftest import groups_initial
+from backend.tests.conftest import GROUPS_INITIAL
 
 
 base_url = 'http://test'
@@ -24,7 +24,7 @@ base_url = 'http://test'
         ("164343", 404),
         ("5413M", 200), # латинская 
         ("5413М", 200), # кириллическая
-        *[(group, 200) for group in groups_initial.keys()]
+        *[(group, 200) for group in GROUPS_INITIAL.keys()]
     ]
 )
 async def test_register(
@@ -137,7 +137,7 @@ async def test_logout(db: AsyncSession, clean_users):
     (None, 200),
     ("164343", 404),
     (" ", 404),
-    *[(group, 200) for group in groups_initial.keys()]
+    *[(group, 200) for group in GROUPS_INITIAL.keys()]
 ])
 async def test_update_profile(
     new_group: str, 
