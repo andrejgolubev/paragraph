@@ -52,6 +52,7 @@ const ScheduleContainer = () => {
     }
   }, [dateDataValue])
 
+  
   const scheduleDateDataValue = getDateValueFromDisplay(
     scheduleData?.days?.[0]?.date || "" , 
     year
@@ -115,27 +116,40 @@ const ScheduleContainer = () => {
   }
 
   // Функция для подсветки текущего дня
-  const getDayClass = (dayName, dateText) => {
-    const weekDaysMap = {
-      Понедельник: 1,
-      Вторник: 2,
-      Среда: 3,
-      Четверг: 4,
-      Пятница: 5,
-      Суббота: 6,
+  const getDayClass = (dateText) => {
+    if (!dateText) return ""
+
+    const monthsMap = {
+      января: 0,
+      февраля: 1,
+      марта: 2,
+      апреля: 3,
+      мая: 4,
+      июня: 5,
+      июля: 6,
+      августа: 7,
+      сентября: 8,
+      октября: 9,
+      ноября: 10,
+      декабря: 11,
+    }
+
+    const normalizedDateText = dateText.trim()
+    const [rawOnlyDay, rawMonth] = normalizedDateText.split(" ")
+    const dayNumber = parseInt(rawOnlyDay.replace(/\D/g, ""), 10)
+    const monthKey = rawMonth?.toLowerCase()
+    const monthIndex = monthKey ? monthsMap[monthKey] : undefined
+
+    if (Number.isNaN(dayNumber) || monthIndex === undefined) {
+      return ""
     }
 
     const currentDate = new Date()
-    // getDay() = 0 для воскресенья, 1 для понедельника, ..., 6 для субботы
-    const currentWeekDay = currentDate.getDay()
-    const currentDayOfMonth = currentDate.getDate()
+    const isCurrentDate =
+      currentDate.getDate() === dayNumber &&
+      currentDate.getMonth() === monthIndex
 
-    const adjustedWeekDay = currentWeekDay === 0 ? 7 : currentWeekDay
-
-    const isCurrentWeekday = weekDaysMap[dayName] === adjustedWeekDay
-    const isCurrentDate = parseInt(dateText) === currentDayOfMonth
-
-    return isCurrentWeekday && isCurrentDate ? "active-day" : ""
+    return isCurrentDate ? "active-day" : ""
   }
 
 
@@ -179,7 +193,7 @@ const ScheduleContainer = () => {
           <tr className="table_row_high">
             <th>время</th>
             {scheduleData.days.map((day, index) => (
-              <th key={index} className={getDayClass(day.day, day.date)}>
+              <th key={index} className={getDayClass(day.date)}>
                 <p id="week-date">{day.date}</p>
                 <p id="week-day">{day.day}</p>
               </th>
