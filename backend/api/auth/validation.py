@@ -56,7 +56,7 @@ async def get_current_access_token_payload(
         key="access_token",
         value=new_access_token,
         httponly=True,
-        samesite="none",  
+        samesite=settings.cookie.samesite,  
         secure=True,  
         max_age=settings.auth_jwt.access_token_expire_minutes * 60,
     )

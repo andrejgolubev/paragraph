@@ -2,11 +2,11 @@ import { useUiStore } from "../store/uiStore"
 
 
 const BASE_URL =
-    __VITE_DEV__  === "true" && __VITE_LOCAL_NGINX__ === 'true'
+    APP__DEV  === "true" && APP__LOCAL_NGINX === 'true'
     ? "/api"
-    : __VITE_DEV__ === "true" 
+    : APP__DEV === "true" 
     ? "https://localhost:8000" 
-    : __VITE_API_HOST__
+    : APP__API_HOST
 
     
 console.log('BASE_URL: ', BASE_URL)

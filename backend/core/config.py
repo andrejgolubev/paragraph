@@ -44,7 +44,7 @@ class DatabaseConfig(BaseSettings):
     user: str = Field('pg')
     password: str = Field('root')
     host: str = Field('localhost')
-    port: int = Field(5433)
+    port: int = Field(5435)
     name: str = Field('pg')
 
     @property
@@ -74,10 +74,22 @@ class CookiesConfig(BaseModel):
 
 class RedisConfig(BaseModel): 
     host: str = Field('localhost')
-    port: int = Field(6380)
+    port: int = Field(6381)
     password: str = Field('root')
     db: int = Field(0)
     schedule_cache_ttl: int = 60 * 5 # 5 minutes
+
+    @property
+    def url(self): 
+        return (
+            f"redis://:{self.password}@{self.host}:{self.port}/{self.db}"
+        )
+
+    @property
+    def test_url(self): 
+        return (
+            f"redis://:{self.password}@{self.host}:{self.port + 1}/{self.db}"
+        )
 
 
 class RateLimitConfig(BaseModel):
@@ -94,11 +106,28 @@ class DocsConfig(BaseModel):
     enabled: bool = Field(True) # Pydantic приводит к bool env value
 
 
+class AppConfig(BaseModel): 
+    """
+    1. Если dev=True, то: 
+    - используются локальные Postgres и Redis (на порте +1) для тестирования
+    - "https://localhost:8000" - по такой ссылке ходит фронтенд к API 
+
+
+    2. Также можно в ./frontend/.env установить APP__LOCAL_NGINX=true ,
+    чтобы использовать локальный реверс-прокси сервер nginx, конфигурации которого 
+    лежат в корне проекта в файле nginx-local.conf. 
+    Для удобства используйте docker-compose-local.yaml, чтобы запустить локальный стэк.
+
+    Переменные окружения конфигурируются в ./frontend/.env """
+
+    dev: bool = Field(True)
+
 
 class Settings(BaseSettings): 
     model_config = SettingsConfigDict(
         env_file=(
             ROOT_DIR / ".env",
+            ROOT_DIR / 'frontend' / '.env',
         ),
         env_nested_delimiter='__',
         case_sensitive=False,
@@ -113,6 +142,7 @@ class Settings(BaseSettings):
     redis: RedisConfig = RedisConfig() 
     rate_limit: RateLimitConfig = RateLimitConfig()
     docs: DocsConfig = DocsConfig()
+    app: AppConfig = AppConfig()
     
-    
+
 settings = Settings() 

@@ -183,7 +183,7 @@ async def login(
             key=key,
             value=value,
             httponly=True,
-            samesite='none', 
+            samesite=settings.cookie.samesite,
             secure=True, 
             max_age=lifetime_seconds
         )   
