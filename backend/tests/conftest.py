@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.db.models import User
 from backend.core.config import settings
-from backend.api.db.database import AsyncSessionLocal
+from backend.api.db.database import AsyncSessionLocalTest
 from backend.api.main import app as main_app
 
 from asgi_lifespan import LifespanManager
@@ -15,22 +15,15 @@ from redis.asyncio import Redis
 @pytest.fixture(scope='session', autouse=True)
 def storage_setup():
     """
-    Проверяет, перезаписываются ли переменные окружения на тестовые
-    из .env.test из корня проекта и накатывает миграции в БД.
-
-    Важно:
-    Если на соответствующих портах не запущены тестовые хранилища - 
-    все тесты упадут, т.к. используется autouse=True. 
-    Также тесты упадут, если запускать `pytest` не из директории backend
+    Подгатавливает Postgres к прогонке тестовых данных. 
     """
-    assert settings.db.port == 5435  
-    assert settings.redis.port == 6381  
+    assert settings.app.dev 
     subprocess.check_call(["poetry", "run", "alembic", "upgrade", "head"])
 
 
 @pytest.fixture
 async def db(): 
-    async with AsyncSessionLocal() as session:
+    async with AsyncSessionLocalTest() as session:
         yield session
 
 
