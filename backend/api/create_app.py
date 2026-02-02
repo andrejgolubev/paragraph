@@ -40,10 +40,8 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title='параграф',
         lifespan=lifespan,
-        # docs_url=None if not settings.docs.enabled else '/docs',
-        # redoc_url=None if not settings.docs.enabled else '/redoc',
-        docs_url='/docs',
-        redoc_url='/redoc',
+        docs_url=None if not settings.docs.enabled else '/docs',
+        redoc_url=None if not settings.docs.enabled else '/redoc',
     )
     
     register_middlewares(app, settings)
