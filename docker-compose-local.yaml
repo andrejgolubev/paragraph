@@ -14,12 +14,24 @@ services:
       - ./nginx-local.conf:/etc/nginx/nginx.conf
     networks:
       - test
+
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      - pg_test
+    environment:
+      - ADMINER_DESIGN=pepa-linha-dark
+    networks:
+      - test
       
   frontend: 
     depends_on:
       - backend 
     ports: 
-      - "3000:3000"
+      - "3000"
     build: 
       context: ./frontend
       dockerfile: Dockerfile.local
@@ -31,7 +43,7 @@ services:
       - pg_test
       - redis_test
     ports:
-      - "8001:8000"
+      - "127.0.0.1:8001:8000"
     restart: unless-stopped
     build: 
       context: ./backend
@@ -60,7 +72,7 @@ services:
     image: postgres:17
     restart: unless-stopped
     ports:
-      - "5435:5432" # локальный порт:порт контейнера
+      - "127.0.0.1:5435:5432" # локальный порт:порт контейнера
     env_file:
       - .env
     environment:
@@ -84,7 +96,7 @@ services:
     image: redis:7
     restart: unless-stopped
     ports:
-      - "6381:6379"
+      - "127.0.0.1:6381:6379"
     env_file:
       - .env
     environment:

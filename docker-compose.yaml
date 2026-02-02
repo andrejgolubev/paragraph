@@ -23,12 +23,24 @@ services:
       - ./site:/var/www/html/site
     networks:
       - custom
+
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      - pg
+    environment:
+      - ADMINER_DESIGN=pepa-linha-dark
+    networks:
+      - custom
       
   frontend: 
     depends_on:
       - backend 
     ports: 
-      - "3000:3000"
+      - "3000"
     build: 
       context: ./frontend
       dockerfile: Dockerfile
@@ -42,7 +54,7 @@ services:
       redis:
         condition: service_healthy
     ports:
-      - "8001:8000"
+      - "127.0.0.1:8001:8000" # доступ вне докер-сети только локально
     restart: unless-stopped
     build: 
       context: ./backend
@@ -71,7 +83,7 @@ services:
     image: postgres:17
     restart: unless-stopped
     ports:
-      - "5434:5432" # локальный порт:порт контейнера
+      - "127.0.0.1:5434:5432" # локальный порт:порт контейнера
     env_file:
       - .env
     environment:
@@ -107,7 +119,7 @@ services:
     image: redis:7
     restart: unless-stopped
     ports:
-      - "6380:6379"
+      - "127.0.0.1:6380:6379"
     env_file:
       - .env
     environment:
