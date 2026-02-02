@@ -118,6 +118,20 @@ services:
           memory: 128M
     networks:
       - test
+  portainer:
+    image: portainer/portainer-ce:latest
+    restart: unless-stopped
+    depends_on:
+      - nginx
+      - pg_test
+      - redis_test
+    ports:
+      - "127.0.0.1:9000:9000" 
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # дает доступ к docker
+      - portainer_data:/data 
+    networks:
+      - test  
 
 networks:
   test:
@@ -126,3 +140,4 @@ networks:
 volumes:
   pg-test-data:
   redis-test-data:
+  portainer_data:
