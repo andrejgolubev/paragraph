@@ -1,4 +1,4 @@
-# Для локального тестирования
+# Для локального тестирования стека (не запускать вместе с docker-compose-light)
 services:
   nginx: 
     image: nginx:stable-alpine

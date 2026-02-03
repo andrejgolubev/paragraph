@@ -11,13 +11,17 @@ from ...core.config import settings
 class Base(DeclarativeBase): ...
 
 
-engine: AsyncEngine = create_async_engine(
-    settings.db.url,
-    future=settings.db.future,
-    echo=settings.db.echo,
-    pool_size=settings.db.pool_size,
-    max_overflow=settings.db.max_overflow,
-)
+def _make_engine(db_url): 
+    return create_async_engine(
+        db_url,
+        future=settings.db.future,
+        echo=settings.db.echo,
+        pool_size=settings.db.pool_size,
+        max_overflow=settings.db.max_overflow,
+    )
+
+
+engine: AsyncEngine = _make_engine(settings.db.url)
 log.info("Postgres engine initialized.")
 
 AsyncSessionLocal = async_sessionmaker(
@@ -25,21 +29,13 @@ AsyncSessionLocal = async_sessionmaker(
 )
 
 
-
-test_engine: AsyncEngine = create_async_engine(
-    settings.db.test_url,
-    future=settings.db.future,
-    echo=settings.db.echo,
-    pool_size=settings.db.pool_size,
-    max_overflow=settings.db.max_overflow,
-)
+test_engine: AsyncEngine = _make_engine(settings.db.test_url)
+log.info("Postgres TEST engine initialized.")
 
 AsyncSessionLocalTest = async_sessionmaker(
     test_engine, class_=AsyncSession, expire_on_commit=False
 )
 
-if settings.app.dev: 
-    AsyncSessionLocal = AsyncSessionLocalTest
 
 
 async def get_db():

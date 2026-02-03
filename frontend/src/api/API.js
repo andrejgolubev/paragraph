@@ -2,7 +2,7 @@ import { useUiStore } from "../store/uiStore"
 
 
 const BASE_URL =
-    APP__DEV  === "true" && APP__LOCAL_NGINX === 'true'
+    APP__LOCAL_STACK === 'true'
     ? "/api"
     : APP__DEV === "true" 
     ? "https://localhost:8000" 

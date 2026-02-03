@@ -8,23 +8,10 @@ from ..core.config import settings
 from .logger import log
 
 
-# def _build_redis_url() -> str:
-#     host = settings.redis.host
-#     port = settings.redis.port
-#     db = settings.redis.db
-#     password = settings.redis.password
-#     if password:
-#         return f"redis://:{password}@{host}:{port}/{db}"
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    if not settings.app.dev: 
-        redis_url = settings.redis.url  
-    else: 
-        redis_url = settings.redis.test_url
-
-    redis_client = Redis.from_url(redis_url, decode_responses=True)
+    redis_client = Redis.from_url(settings.redis.url, decode_responses=True)
 
     await redis_client.ping()
     log.info('Redis startup')

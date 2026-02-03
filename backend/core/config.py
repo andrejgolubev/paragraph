@@ -53,12 +53,13 @@ class DatabaseConfig(BaseSettings):
             f"{self.scheme}://{self.user}:{self.password}"
             f"@{self.host}:{self.port}/{self.name}"
         )
+        
     
     @property
     def test_url(self):
         return (
             f"{self.scheme}://{self.user}:{self.password}"
-            f"@{self.host}:{self.port + 1}/{self.name}"
+            f"@{self.host}:{5435}/{self.name}"
         )
 
     future: bool = True
@@ -88,7 +89,7 @@ class RedisConfig(BaseModel):
     @property
     def test_url(self): 
         return (
-            f"redis://:{self.password}@{self.host}:{self.port + 1}/{self.db}"
+            f"redis://:{self.password}@{self.host}:{6381}/{self.db}"
         )
 
 
@@ -105,22 +106,6 @@ class AdminConfig(BaseModel):
 class DocsConfig(BaseModel): 
     enabled: bool = Field(True) # Pydantic приводит к bool env value
 
-
-class AppConfig(BaseModel): 
-    """
-    1. Если dev=True, то: 
-    - используются локальные Postgres и Redis (на порте +1) для тестирования
-    - "https://localhost:8000" - по такой ссылке ходит фронтенд к API 
-
-
-    2. Также можно в ./frontend/.env установить APP__LOCAL_NGINX=true ,
-    чтобы использовать локальный реверс-прокси сервер nginx, конфигурации которого 
-    лежат в корне проекта в файле nginx-local.conf. 
-    Для удобства используйте docker-compose-local.yaml, чтобы запустить локальный стэк.
-
-    Переменные окружения конфигурируются в ./frontend/.env """
-
-    dev: bool = Field(True)
 
 
 class Settings(BaseSettings): 
@@ -142,7 +127,10 @@ class Settings(BaseSettings):
     redis: RedisConfig = RedisConfig() 
     rate_limit: RateLimitConfig = RateLimitConfig()
     docs: DocsConfig = DocsConfig()
-    app: AppConfig = AppConfig()
     
 
+
 settings = Settings() 
+
+
+

@@ -17,7 +17,8 @@ def storage_setup():
     """
     Подгатавливает Postgres к прогонке тестовых данных. 
     """
-    assert settings.app.dev 
+    assert settings.db.port == 5435
+    assert settings.redis.port == 6381
     subprocess.check_call(["poetry", "run", "alembic", "upgrade", "head"])
 
 

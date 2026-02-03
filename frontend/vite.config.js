@@ -31,7 +31,7 @@ export default defineConfig(({ mode }) => {
       : undefined,
     define: {
       APP__DEV: JSON.stringify(env.APP__DEV ?? "true"),
-      APP__LOCAL_NGINX: JSON.stringify(env.APP__LOCAL_NGINX ?? "true"),
+      APP__LOCAL_STACK: JSON.stringify(env.APP__LOCAL_STACK ?? "true"),
       APP__API_HOST: JSON.stringify(env.APP__API_HOST ?? "CHECK vite.config.js FOR DETAILS"),
     },
   }
