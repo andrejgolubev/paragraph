@@ -35,7 +35,8 @@ jobs:
           if [ -n "$SSH_PORT" ]; then
             SSH_CMD="$SSH_CMD -p $SSH_PORT"
           fi
-          $SSH_CMD "$VPS_USER@$VPS_HOST" "mkdir -p '$VPS_APP_PATH'"
+          $SSH_CMD "$VPS_USER@$VPS_HOST" "sudo mkdir -p '$VPS_APP_PATH'"
+          $SSH_CMD "$VPS_USER@$VPS_HOST" "sudo chown -R $VPS_USER:$VPS_USER '$VPS_APP_PATH'"
 
       - name: Sync sources to VPS
         run: |
