@@ -19,12 +19,17 @@ def create_driver():
     options.add_argument('--no-sandbox') # Откл. песочницу (нужно для запуска от root)
     options.add_argument('--disable-dev-shm-usage') # Откл. /dev/shm (решает проблемы с памятью)
     options.add_argument('--disable-notifications') # Откл. уведомления
+    options.add_argument('--disable-extensions')
+    options.add_argument('--disable-browser-side-navigation')
 
     if os.path.exists(CHROME_BINARY) and os.path.exists(CHROMEDRIVER_BINARY):
         options.binary_location = CHROME_BINARY
         service = Service(CHROMEDRIVER_BINARY)
         driver = webdriver.Chrome(service=service, options=options)
-        driver.set_page_load_timeout(60)
+        
+        timeout = 120
+        driver.set_page_load_timeout(timeout)
+        driver.set_script_timeout(timeout)
 
         log.info('chrome-linux64 driver initialized.')
         return driver

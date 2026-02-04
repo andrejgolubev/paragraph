@@ -11,7 +11,7 @@ def _parse_group(driver: webdriver.Chrome):
     """ПАРСИТ ВСЕ актуальные ГРУППЫ из выпадающего меню """
     try:
         log.info("Parsing groups...")
-        wait = WebDriverWait(driver, 0.1)
+        wait = WebDriverWait(driver, 10)
 
         icon = driver.find_element(By.CSS_SELECTOR, "i.mdi")
         icon.click()    

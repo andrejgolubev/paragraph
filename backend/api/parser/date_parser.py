@@ -50,10 +50,13 @@ def _parse_date_v2(driver: webdriver.Chrome):
     
     try: 
         log.info('Parsing dates...')
+        wait = WebDriverWait(driver, 15)
 
         css_selector = 'select[name="date"]'
         log.debug('CSS selector: %s', css_selector)
-        option_boxes = driver.find_elements(By.CSS_SELECTOR, css_selector)
+        option_boxes = wait.until(
+            EC.presence_of_all_elements_located((By.CSS_SELECTOR, css_selector))
+        )
 
         log.debug('option_boxes: %s', option_boxes)
         option_box = option_boxes[-1]
