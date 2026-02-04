@@ -1,11 +1,11 @@
-# Фактически урезенная версия docker-compose-local.yaml для тестирования без
-# запуска всего стека (не запускать вместе с docker-compose-local)
+# Фактически урезенная версия docker-compose.yaml для тестирования без
+# запуска всего стека (не запускать вместе с docker-compose.yaml)
 services:
   pg_test:
     image: postgres:17
     restart: unless-stopped
     ports:
-      - "5435:5432" # локальный порт:порт контейнера
+      - "5434:5432" # локальный порт:порт контейнера
     env_file:
       - .env
     environment:
@@ -29,7 +29,7 @@ services:
     image: redis:7
     restart: unless-stopped
     ports:
-      - "6381:6379"
+      - "6380:6379"
     env_file:
       - .env
     environment:
@@ -55,3 +55,7 @@ services:
 networks:
   test:
     driver: bridge
+
+volumes:
+  pg-test-data:
+  redis-test-data:
