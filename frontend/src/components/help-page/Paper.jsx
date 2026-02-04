@@ -7,15 +7,15 @@ export const Paper = ({ type }) => {
   const paperInfo = {
     privacy: {
       title: "Политика конфиденциальности",
-      lastUpdate: '01.02.2026', 
+      lastUpdate: '04.02.2026', 
     },
     terms: {
       title: "Пользовательское соглашение",
-      lastUpdate: '01.02.2026', 
+      lastUpdate: '04.02.2026', 
     },
     pd: {
       title: "Согласие на обработку персональных данных",
-      lastUpdate: '01.02.2026', 
+      lastUpdate: '04.02.2026', 
     },
   }
 
