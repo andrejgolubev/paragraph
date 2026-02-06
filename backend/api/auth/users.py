@@ -106,7 +106,11 @@ async def register(
     await db.commit()
     await db.refresh(db_user)
 
-    ip = request.client.host if request.client else None 
+    ip = (
+        request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
+        or request.headers.get("X-Real-IP")
+        or (request.client.host if request.client else None)
+    )
 
     pd_consent = UserConsent(
         user_id=db_user.id, 

@@ -17,7 +17,11 @@ class LogMiddleware(BaseHTTPMiddleware):
         log_dict = {
             'url': str(request.url),
             'method': request.method,
-            'ip': request.client.host if request.client else None,
+            'ip': (
+                request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
+                or request.headers.get("X-Real-IP")
+                or (request.client.host if request.client else None)
+            ),
             'user_agent': request.headers.get('user-agent'),
         }
         

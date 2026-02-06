@@ -34,7 +34,11 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         return current
     
     async def dispatch(self, request: Request, call_next):
-        ip = request.client.host
+        ip = (
+            request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
+            or request.headers.get("X-Real-IP")
+            or (request.client.host if request.client else None)
+        )
         window = self.settings.rate_limit.window_seconds
         redis_client: Redis | None = getattr(request.app.state, "redis", None)
         if redis_client is None:
