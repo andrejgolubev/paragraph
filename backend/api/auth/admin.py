@@ -37,6 +37,12 @@ async def make_admin(
     user_result = await db.scalars(select(User).where(User.email == user_email))
     user = user_result.first()
 
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="пользователя с такой почтой не существует.",
+        )
+
     log.debug('groups_to_admin: %s', groups_to_admin)
 
     if not groups_to_admin: 
@@ -46,12 +52,6 @@ async def make_admin(
             "message": f"{user.name}`s role is now: {user.role}",
             "role": user.role,
         }
-
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="пользователя с такой почтой не существует.",
-        )
 
     user.role = "admin." + ".".join(set(
         [gr.strip() for gr in groups_to_admin.split(",")]

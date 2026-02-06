@@ -26,10 +26,9 @@ def register_middlewares(app: FastAPI, settings):
     app.add_middleware(
         CORSMiddleware,
         allow_origins=ALLOW_ORIGINS,
-        allow_methods=["*"],  # Разрешить все методы (ПОКА ЧТО ДЛЯ РАЗРАБОТКИ)
-        allow_headers=["*"],  # Разрешить все заголовки
-        allow_credentials=True, # использую куки поэтому надо True 
-        expose_headers=["*"],  # Позволяет фронтенду видеть Set-Cookie
+        allow_methods=["*"],  
+        allow_headers=["*"],  
+        allow_credentials=True, 
     )
 
     app.add_middleware(RateLimitMiddleware, settings=settings)

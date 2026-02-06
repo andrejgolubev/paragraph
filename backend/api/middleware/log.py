@@ -44,9 +44,9 @@ class LogMiddleware(BaseHTTPMiddleware):
             
             if 100 <= status < 200: 
                 log.info("Request %s completed (informational): %s", request_id, status)
-            if 200 <= status < 300: 
+            elif 200 <= status < 300: 
                 log.info("Request %s completed with a success: %s", request_id, status)
-            if 300 <= status < 400: 
+            elif 300 <= status < 400: 
                 log.info("Request %s completed with a redirect: %s", request_id, status)
             elif 400 <= status < 500:
                 log.info("Request %s completed with a client error: %s", request_id, status)

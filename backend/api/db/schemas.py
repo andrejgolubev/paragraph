@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel, EmailStr, ConfigDict
+from pydantic import BaseModel, EmailStr, ConfigDict, Field
 
 
 #homework
@@ -29,10 +29,11 @@ class UserUpdate(BaseModel):
     group_number: str | None = None
     password: str | None = None
 
+
 class UserRegistration(BaseModel):
     username: str
     email: EmailStr 
-    password: str 
+    password: str = Field(min_length=8, max_length=40)
     group_number: str | None = None
     accept_pd: bool = False 
     accept_terms: bool = False 

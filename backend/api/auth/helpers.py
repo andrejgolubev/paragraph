@@ -64,9 +64,14 @@ async def get_refreshed_access_token(
     user_result = await db.scalars(select(User).where(User.email == email))
     user = user_result.first()
 
-    if not user or not user.active:
-        raise credentials_exception
+    if not user:
+        raise HTTPException(status_code=404, detail='Пользователь не найден')
+
+    if not user.active: 
+        raise HTTPException(status_code=403, detail='Отсутствуют необходимые права')
 
 
-    return create_access_token(payload)
+    return create_access_token(
+        payload={"sub": user.email, "role": user.role, "username": user.name}
+    )
 

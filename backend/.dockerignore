@@ -11,3 +11,4 @@ htmlcov
 .env
 .env.prod 
 app.log
+app.log.*

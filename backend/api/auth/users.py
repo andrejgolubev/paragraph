@@ -209,17 +209,35 @@ async def login(
 
 @router.post('/logout') 
 async def logout(response: Response): 
-    response.delete_cookie('access_token', secure=True)
-    response.delete_cookie('refresh_token', secure=True)
+    response.delete_cookie(
+        'access_token',
+        samesite=settings.cookie.samesite, 
+        httponly=True, 
+        secure=True,
+    )
+
+    response.delete_cookie(
+        'refresh_token', 
+        samesite=settings.cookie.samesite, 
+        httponly=True, 
+        secure=True,
+    )
 
     return {"status": "ok", "detail": "Вы вышли из аккаунта"}
 
 
 @router.patch('/update-profile')
 async def update_profile(
+    current_user: dict = Depends(get_current_active_auth_user_data),
     update_data: UserUpdate = Body(),
     db: AsyncSession = Depends(get_db),
 ): 
+    # только свой профиль
+    if update_data.email != current_user.get("email"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="нельзя редактировать чужой профиль.",
+        )
         
     if not (password:=update_data.password): 
         raise HTTPException(status_code=400, detail="для применения правок введите пароль.")
@@ -227,9 +245,6 @@ async def update_profile(
     if not username_is_cyrillic_only(username:=update_data.username):
         raise HTTPException(status_code=400, detail="имя может содержать только кириллицу.")
 
-    user_result = await db.scalars(select(User).where(User.email == update_data.email))
-    user = user_result.first()
-    
     if await has_cursive_words(phrase=username): 
         answers: dict[str] = [
             'введённое имя недопустимо :(', 
@@ -237,17 +252,20 @@ async def update_profile(
             'введённое имя не прошло валидацию :('
         ]
         raise HTTPException(status_code=400, detail=choice(answers))  
-    
-    if not validate_password(password, user.password):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="введён неверный пароль",
-        )
+
+    user_result = await db.scalars(select(User).where(User.email == update_data.email))
+    user = user_result.first()
 
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="ошибка при обновлении данных: профиль не найден.",
+        )
+    
+    if not validate_password(password, user.password):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="введён неверный пароль",
         )
     
 

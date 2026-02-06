@@ -3,17 +3,18 @@ from ...core.config import settings
 import bcrypt
 from datetime import UTC, datetime, timedelta 
 from fastapi import HTTPException, status, Header
-from ...core.config import settings
 
 
 def encode_jwt(
     payload: dict,
-    private_key: str = settings.auth_jwt.private_key_path.read_text(),
+    private_key: str | None = None,
     algorithm: str = settings.auth_jwt.algorithm,
     expire_minutes: int = settings.auth_jwt.access_token_expire_minutes,
     expire_timedelta: timedelta | None = None,
 ):
-    
+    if private_key is None:
+        private_key = settings.auth_jwt.private_key_path.read_text()
+
     now = datetime.now(tz=UTC)
     expire = now + expire_timedelta if expire_timedelta else now + timedelta(minutes=expire_minutes)
     payload |= {
@@ -26,9 +27,11 @@ def encode_jwt(
 
 def decode_jwt(
     token: str | bytes,
-    public_key: str = settings.auth_jwt.public_key_path.read_text(),
+    public_key: str | None = None,
     algorithm: str = settings.auth_jwt.algorithm,
 ):
+    if public_key is None:
+        public_key = settings.auth_jwt.public_key_path.read_text()
 
     return jwt.decode(token, public_key, algorithms=[algorithm])
 

@@ -70,21 +70,20 @@ async def get_current_auth_user(
     payload: dict = Depends(get_current_access_token_payload),
     db: AsyncSession = Depends(get_db),
 ) -> User:
-    """returns user by payload NO MATTER HE IS ACTIVE OR NOT 
-    (should be used as dependency in get_current_active_auth_user_data)"""
+    """Возвращает пользователя по access_token payload"""
     email: str = payload.get('sub')
 
     user_result = await db.scalars(select(User).where(User.email == email).options(
         selectinload(User.consents)
     ))
 
-    if not (user := user_result.first()): 
+    if not (user:=user_result.first()):
         raise HTTPException(status_code=404, detail='Пользователь не найден')
 
     if not user.active: 
         raise HTTPException(status_code=403, detail='Отсутствуют необходимые права')
-    
-        
+
+
     return user
     
     
