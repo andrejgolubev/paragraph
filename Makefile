@@ -6,7 +6,14 @@ run-backend:
 
 
 up-local: 
-	docker compose -f docker-compose-local.yaml up -d
+	docker compose -f docker-compose-local.yaml up -d --build
 
 down-local: 
-	docker compose -f docker-compose-local.yaml down
+	docker compose -f docker-compose-local.yaml down 
+
+
+up-light: 
+	docker compose -f docker-compose-light.yaml up -d --build
+
+down-light: 
+	docker compose -f docker-compose-light.yaml down 

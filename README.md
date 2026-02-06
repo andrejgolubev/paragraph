@@ -10,6 +10,9 @@
 https. 
 Для этого нужен mkcert: 
 https://github.com/FiloSottile/mkcert
+Затем вы запускате `make up-light`, `make run-backend`, `make run-frontend`,
+именно в таком порядке. 
+
 Можно запускать и по http (в проекте нужно будет поменять все https на http), написав свой шорткат, или любым другим способом.
 Также есть возможность локального запуска через nginx. Для этого потребуется поднять стэк из `docker-compose-local.yaml` в корне проекта и в `frontend/.env` поставить `APP__LOCAL_STACK=true`, чтобы фронт и бэк знали, что Вы такое задумали.
 
