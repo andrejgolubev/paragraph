@@ -4,13 +4,11 @@ import pytest
 from fastapi import FastAPI
 from httpx import AsyncClient, ASGITransport
 from types import SimpleNamespace
-from asgi_lifespan import LifespanManager
 
 from redis.asyncio import Redis
 
 from backend.api.middleware.rate_limit import RateLimitMiddleware
-from backend.core.config import settings
-from backend.api.main import app as main_app
+
 
 class _TestRateLimitSettings:
     def __init__(self) -> None:
@@ -23,19 +21,6 @@ class _TestRateLimitSettings:
 
 TEST_RATE_LIMIT_SETTINGS = _TestRateLimitSettings()
 
-
-# @pytest.fixture
-# async def redis_client() -> Redis:
-#     async with LifespanManager(main_app):
-#         client: Redis = main_app.state.redis
-        
-
-#     keys = await client.keys("rate:*")
-#     if keys:
-#         await client.delete(*keys)
-#     await client.delete("block:127.0.0.1")
-
-#     return client
 
 @pytest.fixture
 async def local_app(redis_client: Redis) -> FastAPI:

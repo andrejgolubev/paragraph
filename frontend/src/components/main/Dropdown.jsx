@@ -48,7 +48,14 @@ const Dropdown = ({ name, func, placeholder, readOnly}) => {
 
   // фильтрует только для Dropdown с func === 'search'
   const filteredData = useMemo(() => {
-    if (!debouncedInputText || func === 'select') return data
+    if (elemKey === 'date') {
+      console.log(data)
+      return data.sort(
+        (a, b) => new Date(a['data_value']) - new Date(b['data_value'])
+      )
+    } else if (!debouncedInputText || func === 'select') {
+      return data
+    }
     const cleanText = latinToCyrillic(debouncedInputText).trim().toLowerCase()
     return (
       data?.filter((elem) => {
@@ -142,7 +149,7 @@ const Dropdown = ({ name, func, placeholder, readOnly}) => {
             </div>
             {activeSearch && (
               <ul className={func + `-block__elements ${darkTheme? 'dark' : ''}`}>
-                {(Array.isArray(filteredData) ? filteredData : []).map((elem, id) => (
+                {filteredData.map((elem, id) => (
                   <li
                     key={id}
                     onClick={(e) => {
