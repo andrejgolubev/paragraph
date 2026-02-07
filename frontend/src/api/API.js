@@ -9,8 +9,6 @@ const BASE_URL =
     : APP__API_HOST
 
     
-console.log('BASE_URL: ', BASE_URL)
-    
 const headers = { "Content-Type": "application/json"}
 
 

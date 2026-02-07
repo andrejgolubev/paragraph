@@ -31,7 +31,7 @@ const HomeworkModal = ({
   const [notificationInnerMessage, setNotificationInnerMessage] = useState(
     "недостаточно прав для управления этим д/з"
   )
-  const [readOnly , setReadOnly] = useState(false) 
+  const [readOnly , setReadOnly] = useState(true) 
 
 
   const showNotificationInner = (msg) => {
@@ -68,6 +68,7 @@ const HomeworkModal = ({
     
       return () => {
         dialog.close()
+        setReadOnly(true)
         // eslint-disable-next-line react-hooks/exhaustive-deps 
         homeworkText = ""
         // игнорим линтер т.к. homeworkText не надо хранить при ре-рендерах
