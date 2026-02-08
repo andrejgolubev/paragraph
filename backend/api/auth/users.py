@@ -17,9 +17,9 @@ from ..auth.utils import (
     validate_password,
 )
 from .helpers import create_access_token, create_refresh_token
-from .censor.censor import has_cursive_words
 from ..utils.converters import latin_to_cyrillic
 from ..logger import log
+# from .censor.censor import has_cursive_words
 
 
 router = APIRouter(
@@ -46,6 +46,19 @@ async def register(
     password = register_data.password
     group_number = register_data.group_number
 
+    
+    if len(username) > (max_usname_len:=40): 
+        raise HTTPException(
+            status_code=400,
+            detail=f'Длина имени не должна превышать {max_usname_len} символов.'
+        )
+    
+    if len(email) > (max_email_len:=50): 
+        raise HTTPException(
+            status_code=400,
+            detail=f'Длина email не должна превышать {max_email_len} символов.'
+        )
+
     # ПРОВЕРКА ЧЕКБОКСОВ
     if not register_data.accept_pd:
         raise HTTPException(
@@ -63,9 +76,9 @@ async def register(
     if not username_is_cyrillic_only(username):
         raise HTTPException(status_code=400, detail="имя может содержать только кириллицу.")
 
-    if await has_cursive_words(phrase=username): 
-        answers: dict[str] = ['введённое имя недопустимо :(', 'такое имя неприемлимо :(', 'введённое имя не прошло валидацию :(']
-        raise HTTPException(status_code=400, detail=choice(answers))    
+    # if await has_cursive_words(phrase=username): 
+    #     answers: dict[str] = ['введённое имя недопустимо :(', 'такое имя неприемлимо :(', 'введённое имя не прошло валидацию :(']
+    #     raise HTTPException(status_code=400, detail=choice(answers))    
 
     email_result = await db.scalars(select(User).where(User.email == email))
     
@@ -232,26 +245,34 @@ async def update_profile(
     update_data: UserUpdate = Body(),
     db: AsyncSession = Depends(get_db),
 ): 
+
+    if len(username:=update_data.username) > (max_usname_len:=40): 
+        raise HTTPException(
+            status_code=400,
+            detail=f'Длина имени не должна превышать {max_usname_len} символов.'
+        )
+    
     # только свой профиль
     if update_data.email != current_user.get("email"):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="нельзя редактировать чужой профиль.",
         )
+
         
     if not (password:=update_data.password): 
         raise HTTPException(status_code=400, detail="для применения правок введите пароль.")
 
-    if not username_is_cyrillic_only(username:=update_data.username):
+    if not username_is_cyrillic_only(username):
         raise HTTPException(status_code=400, detail="имя может содержать только кириллицу.")
 
-    if await has_cursive_words(phrase=username): 
-        answers: dict[str] = [
-            'введённое имя недопустимо :(', 
-            'такое имя неприемлимо :(', 
-            'введённое имя не прошло валидацию :('
-        ]
-        raise HTTPException(status_code=400, detail=choice(answers))  
+    # if await has_cursive_words(phrase=username): 
+    #     answers: dict[str] = [
+    #         'введённое имя недопустимо :(', 
+    #         'такое имя неприемлимо :(', 
+    #         'введённое имя не прошло валидацию :('
+    #     ]
+    #     raise HTTPException(status_code=400, detail=choice(answers))  
 
     user_result = await db.scalars(select(User).where(User.email == update_data.email))
     user = user_result.first()
