@@ -66,6 +66,7 @@ services:
       REDIS__PORT: 6379
       DB__HOST: pg
       DB__PORT: 5432
+      TZ: Europe/Moscow
     volumes:
       - ./backend/chrome-linux64.zip:/backend/chrome-linux64.zip:ro
       - ./backend/chromedriver-linux64.zip:/backend/chromedriver-linux64.zip:ro
@@ -73,7 +74,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: '0.75'
           memory: 2G
         reservations:
           cpus: '0.5'
