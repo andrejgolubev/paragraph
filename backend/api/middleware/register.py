@@ -31,5 +31,5 @@ def register_middlewares(app: FastAPI, settings):
         allow_credentials=True, 
     )
 
-    app.add_middleware(RateLimitMiddleware, settings=settings)
+    # app.add_middleware(RateLimitMiddleware, settings=settings)
     app.add_middleware(LogMiddleware)
