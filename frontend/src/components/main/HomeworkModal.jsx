@@ -94,8 +94,7 @@ const HomeworkModal = ({
 
 
   const handleTextAreaClick = (event) => {
-    setNotificationInnerActive(false) // потому что иногда срабатывает чёт)0))
-    event.preventDefault()
+    setNotificationInnerActive(false) 
     event.target.focus()
   }
 
