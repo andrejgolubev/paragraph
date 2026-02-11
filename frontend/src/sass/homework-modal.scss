@@ -93,6 +93,7 @@
     }
     textarea {
       color: $light-white1;
+      
     }
   }
 
@@ -154,6 +155,7 @@
       border-radius: 6px;
       resize: vertical;
       font-family: inherit;
+      -webkit-tap-highlight-color: transparent;
 
       &:focus {
         outline: none;

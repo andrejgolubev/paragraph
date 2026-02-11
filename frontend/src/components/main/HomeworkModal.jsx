@@ -168,7 +168,7 @@ const HomeworkModal = ({
         <textarea
           ref={textareaRef}
           value={inputValue}
-          onPointerDown={handleTextAreaClick}
+          // onPointerDown={handleTextAreaClick}
           onClick={handleTextAreaClick}
           onInput={onInput}
           name="text-input"
