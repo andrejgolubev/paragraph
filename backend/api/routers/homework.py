@@ -35,7 +35,10 @@ async def save_homework(
     group_data_value = homework_request.group_data_value
     date_data_value = homework_request.date_data_value
     lesson_index = homework_request.lesson_index
-    homework_text = homework_request.homework[:350]
+    homework_text = homework_request.homework
+
+    if len(homework_text) > (max_homework_length := 750):
+        raise HTTPException(status_code=400, detail=f"д/з не может быть больше {max_homework_length} символов")
 
     if not homework_text:
         raise HTTPException(status_code=400, detail="д/з не может быть пустым")

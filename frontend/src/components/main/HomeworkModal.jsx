@@ -106,10 +106,6 @@ const HomeworkModal = ({
     event.preventDefault()
     
     const homeworkTextClean = inputValue.trim()
-    if (homeworkTextClean.length >= 350) {
-      showNotificationInner('превышена максмально допустимая длина д/з :(')
-      return
-    }
 
     API.saveHomework(
       groupDataValue,
