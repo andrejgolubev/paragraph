@@ -1,15 +1,16 @@
 # "параграф"
 Приветствую в репозитории электронного дневника "параграф"! 
+Проект призван облегчить жизнь студентов РГРТУ, автоматически связав актуальное расписание занятий с домашними заданиями. 
 [Веб-сайт](https://paragraph-schedule.ru), где живёт "параграф".
 
 Ниже представлено краткое руководство по локальному запуску, если Вам такое надо.
 
 # Локальный запуск 
-см. `Makefile` в корне проекта. 
+См. `Makefile` в корне проекта. 
 Там находятся удобные шорткаты, среди которых команда для запуска backend'а по 
 https. 
 Для этого нужен mkcert: 
-https://github.com/FiloSottile/mkcert
+https://github.com/FiloSottile/mkcert , сертификаты от mkcert положите в директорию `certs` в корне   
 Затем вы запускате `make up-light`, `make run-backend`, `make run-frontend`,
 именно в таком порядке. 
 
@@ -68,7 +69,7 @@ cd frontend && npm install
 ./backend/scripts/make-admin.sh user@example.com 543,5413 "$ADMIN_API_KEY" "https://api.paragraph-schedule.ru"
 ./backend/scripts/delete-user.sh user@example.com "$ADMIN_API_KEY" "https://api.paragraph-schedule.ru"
 ```
-И так далее, см. backend/scripts для других скриптов. Локально проще использовать
+И так далее, см. `backend/scripts` для других скриптов. Локально проще использовать
 интерактивную документацию /docs или /redoc. 
 Изначально у Вас локально она будет включена (см. `backend/core/config.py`), 
 но ее можно выключить, прописав `DOCS__ENABLED=false` в .env в корне проекта. 
