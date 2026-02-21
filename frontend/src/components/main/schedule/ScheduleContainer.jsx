@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react"
+import { useState, useEffect, useCallback, useRef, useMemo } from "react"
 import HomeworkModal from "../HomeworkModal" 
 import paperclip from "../../../images/homework/paperclip.svg"
 import paperclipDark from "../../../images/homework/paperclip-dark.svg"
@@ -78,6 +78,42 @@ const ScheduleContainer = () => {
   useEffect(() => {
     loadSchedule()
   }, [loadSchedule])
+
+  const [homeworkExistsMap, setHomeworkExistsMap] = useState({})
+
+  // загружаем информацию о наличии домашек после загрузки расписания
+  const loadAllHomeworkStatus = async () => {
+    if (!scheduleData) return
+    
+    const existsMap = {}
+    
+    for (let timeIndex = 0; timeIndex < scheduleData.schedule.length; timeIndex++) {
+      const timeSlot = scheduleData.schedule[timeIndex]
+      for (let dayIndex = 0; dayIndex < timeSlot.lessons.length; dayIndex++) {
+        const dayLessons = timeSlot.lessons[dayIndex]
+        if (dayLessons.length > 0) {
+          const lessonIndex = timeIndex * 6 + dayIndex + 1
+          try {
+            const { homework } = await API.loadHomeworkData(
+              groupDataValue, 
+              scheduleDateDataValue, 
+              lessonIndex
+            )
+            existsMap[lessonIndex] = !!homework // true если есть домашка
+          } catch {
+            existsMap[lessonIndex] = false
+          }
+        }
+      }
+    }
+    console.log('existsMap:', existsMap )
+    setHomeworkExistsMap(existsMap)
+  }
+
+  useEffect( () => {
+    loadAllHomeworkStatus()
+  }, [scheduleData, groupDataValue, scheduleDateDataValue, showDialog])
+
 
   // Обработчик клика по домашке
   const handleHomeworkClick = (lessInfo) => {
@@ -246,10 +282,11 @@ const ScheduleContainer = () => {
                           lessonDate: dataDate,
                         }
 
+                        const currentHomeworkExists = homeworkExistsMap[currentLessonIndex]
                         return (
                           <div
                             key={lessonIndex}
-                            className="lesson-item"
+                            className={`lesson-item${currentHomeworkExists ? ' active' : ''}`}
                             id={lessonId}
                           >
                             {lesson.type && (
@@ -265,11 +302,12 @@ const ScheduleContainer = () => {
                                 handleHomeworkClick(lessonInfo)
                               }}
                               style={{ cursor: "pointer" }}
-                              title="добавить д/з"
+                              title={currentHomeworkExists ? "изменить д/з" : "добавить д/з"}
                             >
                               <img 
                                 src={darkTheme? paperclipDark : paperclip} 
                                 alt="Homework" 
+                                style={{ opacity: currentHomeworkExists ? 1 : 0.5 }}
                               />
                             </div>
                             <div className="lesson-text">
@@ -290,6 +328,8 @@ const ScheduleContainer = () => {
       </table>
     )
   }
+
+  console.log('homeworkExistsMap:',homeworkExistsMap)
 
   // рендер мобильного расписания
   const renderMobileSchedule = (scheduleData) => {
@@ -323,6 +363,7 @@ const ScheduleContainer = () => {
           lessonDate: datesArr[weekDayIndex],
         })}
 
+        hasHomework={homeworkExistsMap[lessonId]}
       />
       )) 
 
