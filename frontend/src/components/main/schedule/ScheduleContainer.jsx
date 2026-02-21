@@ -87,6 +87,7 @@ const ScheduleContainer = () => {
     if (!scheduleData) return
     
     const existsMap = {}
+    const lessons = []
     
     for (let timeIndex = 0; timeIndex < scheduleData.schedule.length; timeIndex++) {
       const timeSlot = scheduleData.schedule[timeIndex]
@@ -94,19 +95,33 @@ const ScheduleContainer = () => {
         const dayLessons = timeSlot.lessons[dayIndex]
         if (dayLessons.length > 0) {
           const lessonIndex = timeIndex * 6 + dayIndex + 1
-          try {
-            const { homework } = await API.loadHomeworkData(
-              groupDataValue, 
-              scheduleDateDataValue, 
-              lessonIndex
-            )
-            existsMap[lessonIndex] = !!homework // true если есть домашка
-          } catch {
-            existsMap[lessonIndex] = false
-          }
+          lessons.push({ lessonIndex })
         }
       }
     }
+    
+    // грузим последовательно с задержкой
+    for (let i = 0; i < lessons.length; i++) {
+      const { lessonIndex } = lessons[i]
+      
+      try {
+        const { homework } = await API.loadHomeworkData(
+          groupDataValue, 
+          scheduleDateDataValue, 
+          lessonIndex
+        )
+        existsMap[lessonIndex] = !!homework
+      } catch {
+        existsMap[lessonIndex] = false
+      }
+      
+      const requestGapMs = 30
+      // ждём перед следующим запросом (кроме последнего)
+      if (i < lessons.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, requestGapMs))
+      }
+    }
+    
     setHomeworkExistsMap(existsMap)
   }
 
