@@ -5,7 +5,7 @@ const BASE_URL =
     APP__LOCAL_STACK === 'true'
     ? "/api"
     : APP__DEV === "true" 
-    ? "https://192.168.0.108:8000" 
+    ? "https://localhost:8000" 
     : APP__API_HOST
 
     

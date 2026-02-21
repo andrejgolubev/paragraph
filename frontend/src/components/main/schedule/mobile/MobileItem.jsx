@@ -3,7 +3,7 @@ import paperclipDark from "../../../../images/homework/paperclip-dark.svg"
 import { useThemeStore } from "../../../../store/themeStore"
 
 
-const MobileItem = ({ time, onClick, texts = [], types = [] }) => {
+const MobileItem = ({ time, onClick, hasHomework, texts = [], types = [] }) => {
   const darkTheme = useThemeStore(state => state.darkTheme)
 
   if (!texts.length && !types.length) return null
@@ -26,15 +26,22 @@ const MobileItem = ({ time, onClick, texts = [], types = [] }) => {
 
   
   return (
-    <div className="mobile-schedule__content__item">
+    <div className={`mobile-schedule__content__item ${hasHomework ? ' active' : ''} `}>
       <div className="mobile-schedule__content__item__time" onClick={onClick}>
-        <p>{time}</p>
-        <img src={darkTheme ? paperclipDark : paperclip} alt="paperclip" />
+        <p style={{fontWeight: hasHomework? 800 : 500}}>{time}</p>
+        <img 
+          src={darkTheme ? paperclipDark : paperclip} 
+          alt="paperclip" 
+          style={{opacity: hasHomework ? 1 : 0.6}}
+        />
       </div>
       <div className="mobile-schedule__content__item__text">
         {normalized.map(({ text, type, key, typeColor }, index) =>
           text ? (
-            <p key={key}>
+            <p 
+              key={key}
+              
+            >
               {type && <span className={`mobile-schedule__content__item__text__type`} id={typeColor}>{type}</span>}
               {type ? " " : ""}
               {text}

@@ -27,11 +27,12 @@
                     background-color: $dark3 !important;
                     color: $light-white1 !important;
                     border: 1px solid $dark7;
+
+                    
                     &__time {
                         background-color: $dark7;
                         border: 1px solid $dark3;
                         color: $light-grey2;
-                        
                     }
                 }
             }
@@ -104,6 +105,14 @@
             margin: 2px 0;
             border-radius: 8px;
 
+            &.active &__time {
+                filter: contrast(0.9);
+            }
+
+            &.active &__time img {
+                filter: sepia(3); // 42
+            }
+
             &__time {
                 display: inline-flex;
                 align-items: center;
@@ -117,6 +126,7 @@
                 border-radius: 8px;
                 padding: 0px 8px;
                 margin: 6px 0;
+                
 
                 img {
                     scale: 1.1;

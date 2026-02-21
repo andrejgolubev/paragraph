@@ -206,6 +206,10 @@
     display: inline-flex;
     cursor: pointer;
 
+    &.active img {
+      filter: sepia(1);
+    }
+
     img {
       opacity: 0.5;
       left: 3px;
@@ -233,9 +237,9 @@
   padding: 8px;
   border-radius: 4px;
 
-  // &.lesson-type {
-  //   color: #dddddd;
-  // }
+  &.active .lesson-type {
+    filter:brightness(1.1)
+  }
 
   &#lec {
     border-left: 3px solid $lec;
@@ -322,10 +326,7 @@
   font-size: 0.9em;
 }
 
-// .lesson-empty {
-//   text-align: center;
-//   font-style: italic;
-// }
+
 
 .schedule-header {
   padding: 15px;
