@@ -12,7 +12,8 @@ const HomeworkModal = ({
   lessonInfo,
   homeworkText,
   homeworkUpdated,
-  homeworkAuthor
+  homeworkAuthor, 
+  homeworkExistsMap
 }) => {
   const {
     groupDataValue,
@@ -120,6 +121,7 @@ const HomeworkModal = ({
         // если сохранена домашка, то:
         setShowDialog(false) // просто убираем компонент из ScheduleContainer
         setLastUpdate('')
+        homeworkExistsMap[lessonIndex] = true
         showNotificationOuter(resp.message , 'success')
       }
     })

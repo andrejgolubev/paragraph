@@ -49,7 +49,6 @@ const Dropdown = ({ name, func, placeholder, readOnly}) => {
   // фильтрует только для Dropdown с func === 'search'
   const filteredData = useMemo(() => {
     if (elemKey === 'date') {
-      console.log(data)
       return data.sort(
         (a, b) => new Date(a['data_value']) - new Date(b['data_value'])
       )

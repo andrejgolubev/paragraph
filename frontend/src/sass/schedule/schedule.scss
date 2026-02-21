@@ -206,6 +206,10 @@
     display: inline-flex;
     cursor: pointer;
 
+    &.active img {
+      filter: sepia(1);
+    }
+
     img {
       opacity: 0.5;
       left: 3px;

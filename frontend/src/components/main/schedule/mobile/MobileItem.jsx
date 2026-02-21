@@ -28,7 +28,7 @@ const MobileItem = ({ time, onClick, hasHomework, texts = [], types = [] }) => {
   return (
     <div className={`mobile-schedule__content__item ${hasHomework ? ' active' : ''} `}>
       <div className="mobile-schedule__content__item__time" onClick={onClick}>
-        <p style={{fontWeight: hasHomework? 700 : 500}}>{time}</p>
+        <p style={{fontWeight: hasHomework? 800 : 500}}>{time}</p>
         <img 
           src={darkTheme ? paperclipDark : paperclip} 
           alt="paperclip" 

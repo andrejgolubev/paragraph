@@ -31,6 +31,8 @@ const ScheduleContainer = () => {
   const widthDebounceRef = useRef(null)
   const isMobile = debouncedWidth < 1001
 
+  const [homeworkExistsMap, setHomeworkExistsMap] = useState({})
+
   useEffect(() => {
     if (widthDebounceRef.current) {
       clearTimeout(widthDebounceRef.current)
@@ -79,10 +81,9 @@ const ScheduleContainer = () => {
     loadSchedule()
   }, [loadSchedule])
 
-  const [homeworkExistsMap, setHomeworkExistsMap] = useState({})
 
   // загружаем информацию о наличии домашек после загрузки расписания
-  const loadAllHomeworkStatus = async () => {
+  const loadAllHomeworkStatus = async (scheduleData) => {
     if (!scheduleData) return
     
     const existsMap = {}
@@ -106,13 +107,12 @@ const ScheduleContainer = () => {
         }
       }
     }
-    console.log('existsMap:', existsMap )
     setHomeworkExistsMap(existsMap)
   }
 
   useEffect( () => {
-    loadAllHomeworkStatus()
-  }, [scheduleData, groupDataValue, scheduleDateDataValue, showDialog])
+    loadAllHomeworkStatus(scheduleData)
+  }, [scheduleData])
 
 
   // Обработчик клика по домашке
@@ -297,7 +297,7 @@ const ScheduleContainer = () => {
                               </span>
                             )}
                             <div
-                              className="homework"
+                              className={`homework${currentHomeworkExists? ' active' : '' }`}
                               onClick={() => {
                                 handleHomeworkClick(lessonInfo)
                               }}
@@ -307,7 +307,7 @@ const ScheduleContainer = () => {
                               <img 
                                 src={darkTheme? paperclipDark : paperclip} 
                                 alt="Homework" 
-                                style={{ opacity: currentHomeworkExists ? 1 : 0.5 }}
+                                // style={{ opacity: currentHomeworkExists ? 1 : 0.5 }}
                               />
                             </div>
                             <div className="lesson-text">
@@ -328,8 +328,6 @@ const ScheduleContainer = () => {
       </table>
     )
   }
-
-  console.log('homeworkExistsMap:',homeworkExistsMap)
 
   // рендер мобильного расписания
   const renderMobileSchedule = (scheduleData) => {
@@ -482,6 +480,7 @@ const ScheduleContainer = () => {
           showDialog={showDialog}
           setShowDialog={setShowDialog}
           homeworkAuthor={homeworkAuthor}
+          homeworkExistsMap={homeworkExistsMap}
         />
       )}
     </>
