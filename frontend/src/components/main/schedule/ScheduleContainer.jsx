@@ -82,49 +82,22 @@ const ScheduleContainer = () => {
   }, [loadSchedule])
 
 
-  // загружаем информацию о наличии домашек после загрузки расписания
+  // загружает информацию о наличии домашек 
   const loadAllHomeworkStatus = async (scheduleData) => {
     setHomeworkExistsMap({}) // обнуляем при загрузке изначально, чтобы не было ложных подсвечиваний
     if (!scheduleData) return
     
-    const existsMap = {}
-    const lessons = []
-    
-    for (let timeIndex = 0; timeIndex < scheduleData.schedule.length; timeIndex++) {
-      const timeSlot = scheduleData.schedule[timeIndex]
-      for (let dayIndex = 0; dayIndex < timeSlot.lessons.length; dayIndex++) {
-        const dayLessons = timeSlot.lessons[dayIndex]
-        if (dayLessons.length > 0) {
-          const lessonIndex = timeIndex * 6 + dayIndex + 1
-          lessons.push({ lessonIndex })
-        }
-      }
-    }
-    
-    // грузим последовательно с задержкой
-    for (let i = 0; i < lessons.length; i++) {
-      const { lessonIndex } = lessons[i]
-      
-      try {
-        const { homework } = await API.loadHomeworkData(
-          groupDataValue, 
-          scheduleDateDataValue, 
-          lessonIndex
-        )
-        existsMap[lessonIndex] = !!homework
-      } catch {
-        existsMap[lessonIndex] = false
-      }
-      
-      const requestGapMs = 10
-      // ждём перед следующим запросом (кроме последнего)
-      if (i < lessons.length - 1) {
-        await new Promise(resolve => setTimeout(resolve, requestGapMs))
-      }
-    }
-    setHomeworkExistsMap(existsMap)
+    const homeworksMap = await API.getHomeworksMap(
+      groupDataValue,
+      scheduleDateDataValue,
+    ) 
+    setHomeworkExistsMap(homeworksMap)
   }
 
+  const currentHomeworkExists = (currentHomeworkIndex) => {
+    return homeworkExistsMap[currentHomeworkIndex] ?? false
+  }
+  
 
   useEffect( () => {
     loadAllHomeworkStatus(scheduleData)
@@ -267,6 +240,7 @@ const ScheduleContainer = () => {
                   <td
                     key={`${timeIndex}-${dayIndex}`}
                     data-date={dataDate}
+                    data-ind={currentLessonIndex}
                   >
                     {dayLessons.length > 0 ? (
                       dayLessons.map((
@@ -298,11 +272,10 @@ const ScheduleContainer = () => {
                           lessonDate: dataDate,
                         }
 
-                        const currentHomeworkExists = homeworkExistsMap[currentLessonIndex]
                         return (
                           <div
                             key={lessonIndex}
-                            className={`lesson-item${currentHomeworkExists ? ' active' : ''}`}
+                            className={`lesson-item${currentHomeworkExists(currentLessonIndex) ? ' active' : ''}`}
                             id={lessonId}
                           >
                             {lesson.type && (
@@ -313,12 +286,12 @@ const ScheduleContainer = () => {
                               </span>
                             )}
                             <div
-                              className={`homework${currentHomeworkExists? ' active' : '' }`}
+                              className={`homework${currentHomeworkExists(currentLessonIndex) ? ' active' : '' }`}
                               onClick={() => {
                                 handleHomeworkClick(lessonInfo)
                               }}
                               style={{ cursor: "pointer" }}
-                              title={currentHomeworkExists ? "изменить д/з" : "добавить д/з"}
+                              title={currentHomeworkExists(currentLessonIndex) ? "изменить д/з" : "добавить д/з"}
                             >
                               <img 
                                 src={darkTheme? paperclipDark : paperclip} 
@@ -377,7 +350,7 @@ const ScheduleContainer = () => {
           lessonDate: datesArr[weekDayIndex],
         })}
 
-        hasHomework={homeworkExistsMap[lessonId]}
+        hasHomework={currentHomeworkExists(lessonId)}
       />
       )) 
 
