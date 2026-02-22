@@ -166,6 +166,50 @@ async def get_homework(
         return {"homework": ""}
 
 
+@router.get("/get-all")
+async def get_all_homeworks_for_schedule(
+    group_data_value: str,
+    date_data_value: str,
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """
+    Возвращает словарь с индексами домашек и булевыми ключами, 
+    отвечающими за наличие/отсутствие домашки 
+    """
+    try:
+        group_result = await db.scalars(
+            select(Group).where(Group.data_value == group_data_value)
+        )
+        group = group_result.first()
+
+        date_result = await db.scalars(
+            select(Date).where(Date.data_value == date_data_value)
+        )
+        date = date_result.first()
+
+        if not group or not date:
+            return {"detail": "Группа или дата не выбраны или не найдены"}
+
+
+        hmw_result = (await db.scalars(
+            select(Homework).where(
+                Homework.group_id == group.id,
+                Homework.dates_id == date.id,
+            )
+        )).all()
+
+
+        return {
+            hmw.lesson: bool(hmw.homework) # lesson = lesson_id
+            for hmw in hmw_result
+        }
+        
+
+    except Exception:
+        return {}
+
+
+
 
 @router.get("/convert")
 async def convert_to_datavalue(

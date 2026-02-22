@@ -204,6 +204,19 @@ const API = {
         body: JSON.stringify({ email, password, username, group_number: group }),
       })
   },
+
+  getHomeworksMap: async (groupDataValue, dateDataValue) => {
+    const params = new URLSearchParams({
+      group_data_value: String(groupDataValue),
+      date_data_value: dateDataValue ?? "",
+    })
+    return apiFetch(
+      `${BASE_URL}/homework/get-all?${params.toString()}`, {
+        method: "GET",
+        headers,
+      }
+    )
+  }
 }
 
 export default API
