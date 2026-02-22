@@ -84,6 +84,7 @@ const ScheduleContainer = () => {
 
   // загружаем информацию о наличии домашек после загрузки расписания
   const loadAllHomeworkStatus = async (scheduleData) => {
+    setHomeworkExistsMap({}) // обнуляем при загрузке изначально, чтобы не было ложных подсвечиваний
     if (!scheduleData) return
     
     const existsMap = {}
@@ -115,15 +116,15 @@ const ScheduleContainer = () => {
         existsMap[lessonIndex] = false
       }
       
-      const requestGapMs = 30
+      const requestGapMs = 10
       // ждём перед следующим запросом (кроме последнего)
       if (i < lessons.length - 1) {
         await new Promise(resolve => setTimeout(resolve, requestGapMs))
       }
     }
-    
     setHomeworkExistsMap(existsMap)
   }
+
 
   useEffect( () => {
     loadAllHomeworkStatus(scheduleData)
