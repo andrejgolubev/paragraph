@@ -37,12 +37,7 @@ async def save_homework(
     lesson_index = homework_request.lesson_index
     homework_text = homework_request.homework
 
-    if len(homework_text) > (max_homework_length := 750):
-        raise HTTPException(status_code=400, detail=f"д/з не может быть больше {max_homework_length} символов")
-
-    if not homework_text:
-        raise HTTPException(status_code=400, detail="д/з не может быть пустым")
-
+    # проверка прав на редактирование 
     moderated_group_numbers = [
         latin_to_cyrillic(gr) for gr in role.split(".")[1:] if gr
     ] 
@@ -50,7 +45,6 @@ async def save_homework(
         await get_group_datavalue_by_group_number(group_number, db=db) 
         for group_number in moderated_group_numbers
     ]
-
 
     if not any(
         [group_dv for group_dv in moderated_group_datavalues 
@@ -60,6 +54,14 @@ async def save_homework(
             status_code=403, 
             detail="недостаточно прав для управления этим д/з."
         )
+
+    # валидация д/з
+    if len(homework_text) > (max_homework_length := 750):
+        raise HTTPException(status_code=400, detail=f"д/з не может быть больше {max_homework_length} символов")
+
+    if not homework_text:
+        raise HTTPException(status_code=400, detail="д/з не может быть пустым")
+
         
 
     try:
@@ -101,7 +103,8 @@ async def save_homework(
             )
             db.add(homework)
         else:
-            homework.homework = homework_text or ""
+            homework.homework = homework_text 
+            homework.user_id = user_data.get('id')
             homework.updated = datetime.now()
 
 
