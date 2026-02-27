@@ -7,7 +7,7 @@ const MobileItem = ({ time, onClick, hasHomework, texts = [], types = [] }) => {
   const darkTheme = useThemeStore(state => state.darkTheme)
 
   if (!texts.length && !types.length) return null
-
+  
   const normalized = texts.map((text, index) => ({
     text: text?.trim(),
     typeColor: types?.[index] ? types.map(type => (

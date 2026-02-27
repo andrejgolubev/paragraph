@@ -45,7 +45,6 @@ const HomeworkModal = ({
   }
 
     
-  const textareaRef = useRef("")
   const dialogRef = useRef(null)
   const dialog = dialogRef.current  
 
@@ -129,13 +128,13 @@ const HomeworkModal = ({
 
   const handleCancel = (event) => {
     event.preventDefault()
-    textareaRef.current.value = ""
+    setInputValue('')
     setShowDialog(false)
   }
 
   const handleClickOutside = (e) => {
     if (dialog && e.target === dialog) {
-      textareaRef.current.value = ""
+      setInputValue('')
       setShowDialog(false)
     }
   }
@@ -164,9 +163,7 @@ const HomeworkModal = ({
           <p><strong>{lessonName}</strong>, {lessonDate}</p>
         </h3>
         <textarea
-          ref={textareaRef}
           value={inputValue}
-          // onPointerDown={handleTextAreaClick}
           onClick={handleTextAreaClick}
           onInput={onInput}
           name="text-input"

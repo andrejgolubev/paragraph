@@ -236,6 +236,23 @@ const ScheduleContainer = () => {
                 const dataDate = datesArr[dayIndex]
                 currentLessonIndex++
 
+                const lessonInfo = {
+                  groupDataValue: groupDataValue,
+                  dateDataValue: getDateValueFromDisplay(datesArr[dayIndex]),
+                  lessonIndex: currentLessonIndex,
+
+                  // lessonName передается как пропс для HomeworkModal и исп. только там
+                  lessonName: dayLessons.map(
+                    (lesson, index) => {
+                      let currentLessonName = lesson.text.split(", ").slice(0, 2).join(", ") 
+
+                      if (index < dayLessons.length - 1) currentLessonName += ', '
+                      return currentLessonName
+                    }
+                  ),
+                  lessonDate: dataDate,
+                }
+
                 return (
                   <td
                     key={`${timeIndex}-${dayIndex}`}
@@ -262,16 +279,6 @@ const ScheduleContainer = () => {
                             ? "cred"
                             : "default"
 
-                        const lessonInfo = {
-                          groupDataValue: groupDataValue,
-                          dateDataValue: getDateValueFromDisplay(
-                            datesArr[dayIndex]
-                          ),
-                          lessonIndex: currentLessonIndex,
-                          lessonName: lesson.text.split(", ").slice(0, 2).join(", "),
-                          lessonDate: dataDate,
-                        }
-
                         return (
                           <div
                             key={lessonIndex}
@@ -291,12 +298,11 @@ const ScheduleContainer = () => {
                                 handleHomeworkClick(lessonInfo)
                               }}
                               style={{ cursor: "pointer" }}
-                              title={currentHomeworkExists(currentLessonIndex) ? "изменить д/з" : "добавить д/з"}
+                              title={"домашнее задание"}
                             >
                               <img 
                                 src={darkTheme? paperclipDark : paperclip} 
                                 alt="Homework" 
-                                // style={{ opacity: currentHomeworkExists ? 1 : 0.5 }}
                               />
                             </div>
                             <div className="lesson-text">
