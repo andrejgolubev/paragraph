@@ -8,6 +8,6 @@ echo "Migrations applied!"
 
 if [ -d /backend/chrome-linux64 ]; then 
   echo "chrome-linux64 is installed"
-
+fi
 
 exec "$@" # выполняем всё что передано 

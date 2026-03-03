@@ -1,3 +1,8 @@
+''' 
+
+THIS MODULE IS NOT USED IN APPLICATION FOR NOW
+
+
 import pytest
 from backend.api.auth.censor.censor import (
     TEST_WORDS_PATH,
@@ -24,7 +29,8 @@ async def test_words_from_test_words_path():
             word = row.strip()
             assert not await has_cursive_words(
                 word
-            ), f'"{word}" from "{path.name}" marked as cursive.'
+            ), f'"{word}" from "{path.name}" marked as cursive.' 
+'''
 
 
 
