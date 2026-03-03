@@ -22,6 +22,16 @@ RUN unzip /backend/chromedriver-linux64.zip -d /backend/ \
 && rm /backend/chromedriver-linux64.zip
 
 
+COPY ./chrome-linux64.zip /backend/
+
+RUN unzip /backend/chrome-linux64.zip -d /backend \
+    && apt-get update \
+    && while read pkg; do \
+        apt-get satisfy -y --no-install-recommends "${pkg}"; \
+    done < /backend/chrome-linux64/deb.deps \
+    && echo "chrome-linux64 for testing downloaded!" 
+
+
 COPY . .
 
 # RUN poetry install --only main --no-interaction --no-ansi
