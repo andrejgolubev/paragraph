@@ -64,8 +64,8 @@ class DatabaseConfig(BaseSettings):
 
     future: bool = True
     echo: bool = False
-    pool_size: int = 5 # prod:10
-    max_overflow: int = 10 # prod:20
+    pool_size: int = 10 
+    max_overflow: int = 20 
 
 
 class CookiesConfig(BaseModel): 
