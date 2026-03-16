@@ -2,7 +2,7 @@ run-frontend:
 	cd frontend && npx vite 
 
 run-backend:
-	uvicorn backend.api.main:app --host 0.0.0.0 --port 8000 --ssl-certfile=certs/192.168.0.101+2.pem --ssl-keyfile=certs/192.168.0.101+2-key.pem --reload
+	uvicorn backend.api.main:app --host 0.0.0.0 --port 8000 --ssl-certfile=certs/localhost+2.pem --ssl-keyfile=certs/localhost+2-key.pem --reload
 
 
 up-local: 

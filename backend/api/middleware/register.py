@@ -5,31 +5,27 @@ from ..middleware.rate_limit import RateLimitMiddleware
 
 
 ALLOW_ORIGINS = [
-        "http://localhost:5173",
-        "http://localhost:8000",
-        "http://192.168.0.101:5173",
-        "http://192.168.0.101:8000",
-        # для https локально
-        "https://localhost:5173",
-        "https://localhost:8000",
-        "https://192.168.0.101:5173",
-        "https://192.168.0.101:8000",
+    "http://localhost:5173",
+    "http://localhost:8000",
+    # для https локально
+    "https://192.168.0.104:5173",
+    "https://192.168.0.104:8000",
+    "https://paragraph-schedule.ru",
+    "https://www.paragraph-schedule.ru",
+    "https://api.paragraph-schedule.ru",
+    "https://www.api.paragraph-schedule.ru",
+]
 
-        "https://paragraph-schedule.ru",
-        "https://www.paragraph-schedule.ru",
-        "https://api.paragraph-schedule.ru",
-        "https://www.api.paragraph-schedule.ru",
-    ]
 
 
 def register_middlewares(app: FastAPI, settings):
     app.add_middleware(
         CORSMiddleware,
         allow_origins=ALLOW_ORIGINS,
-        allow_methods=["*"],  
-        allow_headers=["*"],  
-        allow_credentials=True, 
+        allow_methods=["*"],
+        allow_headers=["*"],
+        allow_credentials=True,
     )
 
-    # app.add_middleware(RateLimitMiddleware, settings=settings)
+    app.add_middleware(RateLimitMiddleware, settings=settings)
     app.add_middleware(LogMiddleware)

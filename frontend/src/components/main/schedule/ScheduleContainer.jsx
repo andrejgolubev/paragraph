@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import HomeworkModal from "../HomeworkModal" 
 import paperclip from "../../../images/homework/paperclip.svg"
 import paperclipDark from "../../../images/homework/paperclip-dark.svg"
@@ -25,7 +25,7 @@ const ScheduleContainer = () => {
   const [homeworkAuthor, setHomeworkAuthor] = useState('')
   const [year, setYear] = useState(new Date().getFullYear())
   const [currentLessonInfo, setCurrentLessonInfo] = useState({})
-  const [mobileLesson, setMobileLesson] = useState(0)
+  const [mobileLesson, setMobileLesson] = useState((new Date().getDay()-1)%6)
   const windowSize = useWindowSize()
   const [debouncedWidth, setDebouncedWidth] = useState(windowSize.width)
   const widthDebounceRef = useRef(null)
