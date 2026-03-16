@@ -1,0 +1,52 @@
+.toggle,
+.toggle-bg {
+  display: inline-block;
+}
+
+
+.toggle { 
+  position: relative;
+  padding-bottom: 10px;
+  padding-inline: 8px; 
+  margin-top: 24px;
+  &.mobile {
+    top: 0;
+    position: relative;
+    right: 35px;
+  }
+}
+
+
+#toggle-icon,
+#toggle-icon-dark { 
+  position: absolute;
+  transition: all 0.3s ease 0s;
+}
+
+#toggle-icon{
+  top: -4px;
+  right: 23px;
+}
+
+#toggle-icon-dark {
+  top: 1px;
+  right: 13px;
+}
+
+#toggle-icon:hover {
+  transform: translate3d(3px, 0, 20px) rotateY(20deg) perspective(500px);
+}
+#toggle-icon-dark:hover {
+  transform: translate3d(-3px, 0, 20px) rotateY(20deg) perspective(500px);
+}
+
+
+.notes-toggle { 
+  margin-left: auto;
+  cursor: pointer;
+  img {
+
+    transition: all 0.3s ease 0s;
+  }
+}
+
