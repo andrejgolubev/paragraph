@@ -14,9 +14,8 @@ import { showNotificationOuter } from "../../api/API"
 
 const MainContent = () => {
   const { groupDataValue, dateDataValue } = useDropdownStore()
-  const { darkTheme } = useThemeStore()
+  const { darkTheme, notesEnabled, setNotesEnabled } = useThemeStore()
   const { tipActive, setTipActive } = useUiStore()
-  const [notesEnabled, setNotesEnabled] = useState(false)
   const { width } = useWindowSize()
   const isMobile = width < 1001
 
@@ -31,7 +30,7 @@ const MainContent = () => {
 
   const handleNotesIconClick = () => {
     setNotesEnabled(!notesEnabled)
-    showNotificationOuter(`режим заметок ${!notesEnabled? 'включен' : 'выключен'}`, 'success', isMobile)
+    showNotificationOuter(`Режим заметок ${!notesEnabled? 'включен' : 'отключен'}`, 'success', isMobile)
   }
 
   return (

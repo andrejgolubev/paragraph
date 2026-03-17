@@ -23,7 +23,7 @@ const HomeworkModal = ({
     lessonName,
   } = lessonInfo
 
-  const darkTheme = useThemeStore(state => state.darkTheme)
+  const { darkTheme, notesEnabled } = useThemeStore()
   const { width } = useWindowSize()
 
   const [inputValue, setInputValue] = useState("")
@@ -104,7 +104,6 @@ const HomeworkModal = ({
 
   const handleHomeworkSubmit = (event) => {
     event.preventDefault()
-    
     const homeworkTextClean = inputValue.trim()
 
     API.saveHomework(
