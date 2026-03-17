@@ -16,7 +16,7 @@ const MainContent = () => {
   const { groupDataValue, dateDataValue } = useDropdownStore()
   const { darkTheme } = useThemeStore()
   const { tipActive, setTipActive } = useUiStore()
-  const [notesClicked, setNotesClicked] = useState(false)
+  const [notesEnabled, setNotesEnabled] = useState(false)
   const { width } = useWindowSize()
   const isMobile = width < 1001
 
@@ -30,8 +30,8 @@ const MainContent = () => {
 
 
   const handleNotesIconClick = () => {
-    setNotesClicked(!notesClicked)
-    showNotificationOuter(`режим заметок ${!notesClicked? 'включен' : 'выключен'}`, 'success')
+    setNotesEnabled(!notesEnabled)
+    showNotificationOuter(`режим заметок ${!notesEnabled? 'включен' : 'выключен'}`, 'success', isMobile)
   }
 
   return (
@@ -56,17 +56,17 @@ const MainContent = () => {
             <p>C - Центральный корпус⠀⠀⠀⠀B - Бизнес-инкубатор</p>
             <p>L - Лабораторный корпус ⠀⠀⠀F - Первый корпус</p>
           </div>
-          <div className="notes-toggle-container">
+          <div className={`notes-toggle-container${isMobile ? ' mobile' : ''}`}>
             <img
               className="notes-toggle"
               title='Режим заметок'
               onClick={handleNotesIconClick}
               src={
                 darkTheme
-                  ? notesClicked
+                  ? notesEnabled
                     ? notesToggleDarkActive
                     : notesToggleDark
-                  : notesClicked
+                  : notesEnabled
                     ? notesToggleActive
                     : notesToggle
               }

@@ -47,15 +47,17 @@ async function authApiFetch(url, options = {}, additional = {}) {
 }
 
 
-export function showNotificationOuter(message, type) {
+export function showNotificationOuter(message, type, fromLeft=false) {
   const { 
     setNotificationOuterMessage, 
     setNotificationOuterActive, 
     setNotificationOuterType, 
+    setNotificationOuterIsLeft, 
   } = useUiStore.getState()
 
   setNotificationOuterMessage(message)
   setNotificationOuterType(type)
+  setNotificationOuterIsLeft(fromLeft)
   setTimeout( async () => {
     setNotificationOuterActive(true)
   }, 50) 
