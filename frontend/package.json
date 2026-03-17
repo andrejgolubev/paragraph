@@ -12,6 +12,7 @@
   "dependencies": {
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.562.0",
+    "motion": "^12.37.0",
     "naughty-words": "^1.2.0",
     "radix-ui": "^1.4.3",
     "react": "^19.2.0",

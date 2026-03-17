@@ -41,12 +41,15 @@
 }
 
 
-.notes-toggle { 
+.notes-toggle-container { 
   margin-left: auto;
   cursor: pointer;
   img {
-
     transition: all 0.3s ease 0s;
+    &:hover {
+      filter: brightness(1.05);
+      scale: 1.03;
+    }
   }
 }
 
