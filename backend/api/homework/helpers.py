@@ -6,6 +6,7 @@ from backend.api.db.models import Date, Group
 
 class DvConverter: 
     async def convert_to_datavalue(
+        self,
         db: AsyncSession,
         group_number: str | None = None,
         date: str | None = None,
@@ -36,6 +37,7 @@ class DvConverter:
 
 
     async def convert_from_datavalue(
+        self,
         db: AsyncSession,
         group_data_value: str | None = None,
         date_data_value: str | None = None,

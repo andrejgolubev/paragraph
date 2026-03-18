@@ -198,8 +198,8 @@ const API = {
           group_number: group,
           accept_pd: acceptPd,
           accept_terms: acceptTerms,
-        }),
-      },
+        })
+      }
     )
   },
 
@@ -213,24 +213,24 @@ const API = {
         body: JSON.stringify({
           email,
           password,
-        }),
-      },
+        })
+      }
     )
   },
 
   logout: async () => {
     return apiFetch(
       `${BASE_URL}/user/logout`, 
-      { method: "POST", headers }, 
+      { method: "POST", headers }
     )
   },
 
-  updateUserData: async ({ email, password, username, group }) => {
+  updateUserData: async ({ password, username, group }) => {
     return apiFetch(
       `${BASE_URL}/user/update-profile`, {
         method: "PATCH",
         headers,
-        body: JSON.stringify({ email, password, username, group_number: group }),
+        body: JSON.stringify({ password, username, group_number: group }),
       })
   },
 

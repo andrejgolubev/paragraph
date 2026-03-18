@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
-from ..auth.validation import get_current_active_auth_user_data
+from ..auth.validation import get_current_auth_user
 from ..db.database import get_db
-from ..db.models import Group, Date, Homework
+from ..db.models import Group, Date, Homework, User
 from datetime import datetime
-from ..db.schemas import HomeworkRequest
+from ..schemas.homework import HomeworkRequest
 from ..utils.converters import latin_to_cyrillic, get_group_datavalue_by_group_number
 from .helpers import DvConverter
 
@@ -15,7 +15,7 @@ router = APIRouter(tags=["Homework"], prefix="/homework")
 
 @router.post("/save")
 async def save_homework(
-    user_data: dict = Depends(get_current_active_auth_user_data),
+    user: User = Depends(get_current_auth_user),
     homework_request: HomeworkRequest = Body(),
     db: AsyncSession = Depends(get_db),
 ):
@@ -23,10 +23,10 @@ async def save_homework(
     Сохраняет или обновляет домашнее задание для указанной группы/даты
     в пределах прав администратора.
     """
-    if not user_data:
+    if not user.name:
         raise HTTPException(status_code=401, detail="пожалуйста, войдите в аккаунт")
 
-    if "admin" not in (role := user_data["role"]):
+    if "admin" not in (role := user.role):
         raise HTTPException(
             status_code=403, detail="недостаточно прав для управления этим д/з."
         )
@@ -97,7 +97,7 @@ async def save_homework(
             homework = Homework(
                 group_id=group.id,
                 dates_id=date.id,
-                user_id=user_data.get("id"),
+                user_id=user.id,
                 lesson=lesson_index,
                 homework=homework_text,
                 updated=datetime.now(),
@@ -105,7 +105,7 @@ async def save_homework(
             db.add(homework)
         else:
             homework.homework = homework_text
-            homework.user_id = user_data.get("id")
+            homework.user_id = user.id
             homework.updated = datetime.now()
 
         await db.commit()
@@ -114,7 +114,7 @@ async def save_homework(
             "status": "ok",
             "detail": "saved",
             "message": "Домашнее задание сохранено",
-            "username": user_data.get("username"),
+            "username": user.name
         }
 
     except Exception:

@@ -69,12 +69,12 @@ async def get_current_access_token_payload(
 async def get_current_auth_user(
     payload: dict = Depends(get_current_access_token_payload),
     db: AsyncSession = Depends(get_db),
-) -> User:
+):
     """Возвращает пользователя по access_token payload"""
     email: str = payload.get('sub')
 
     user_result = await db.scalars(select(User).where(User.email == email).options(
-        selectinload(User.consents)
+        selectinload(User.consents), selectinload(User.group)
     ))
 
     if not (user:=user_result.first()):

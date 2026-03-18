@@ -11,7 +11,7 @@
 https. 
 Для этого нужен mkcert: 
 https://github.com/FiloSottile/mkcert , сертификаты от mkcert положите в директорию `certs` в корне   
-Затем вы запускате `make up-light`, `make run-backend`, `make run-frontend`,
+Затем вы запускате `make up-lite`, `make run-backend`, `make run-frontend`,
 именно в таком порядке. 
 
 Можно запускать и по http (в проекте нужно будет поменять все https на http), написав свой шорткат, или любым другим способом.
@@ -32,7 +32,7 @@ cd backend && poetry install
 alembic upgrade head 
 ```
 Базу и Редис, необходимые для работы приложения, можно поднять в докере. 
-`docker-compose-light.yaml` - стек для такой задачи (локально, без nginx)
+`docker-compose-lite.yaml` - стек для такой задачи (локально, без nginx)
 
 
 ## Аутентификация
@@ -89,7 +89,7 @@ cd frontend && npm install
 ### Про переменные в `frontend/.env`:
 - Если APP__DEV=true, то
 будет использована конфигурация, подразумевающая запущенный Вами стэк, 
-описанный в docker-compose-light.yaml.
+описанный в docker-compose-lite.yaml.
 "https://localhost:8000" - по такой ссылке будет ходить фронтенд к API 
 (что можно изменить, пойдя в frontend/src/api)
 
@@ -104,7 +104,7 @@ cd frontend && npm install
 ## Тесты 
 Запускать `pytest` нужно именно находясь в директории `backend`, иначе 
 конфигурации `backend/pytest.ini` просто не применятся - выскочит предупреждение, что не прошел ни один тест. Нужно будет: 
-- 1. Поднять тестовые хранилища из `docker-compose-local.yaml` или `docker-compose-light.yaml`
+- 1. Поднять тестовые хранилища через docker-compose
 - 2. Убедиться, что порты хранилищ, и порты, указанные в .env.test совпадают.
 
 Важно: тесты не пройдут, если вы не обновили тестовую БД! 

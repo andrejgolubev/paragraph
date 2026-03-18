@@ -16,11 +16,11 @@ from backend.api.auth.utils import get_user_ip, username_is_cyrillic_only
 
 
 from ..auth.validation import (
-    get_current_active_auth_user_data,
+    get_current_auth_user,
 )
 from ..db.database import get_db
 from ..db.models import Group, User, UserConsent
-from ..db.schemas import UserRegistration, UserLogin, UserUpdate
+from ..schemas.users import UserRegistration, UserLogin, UserUpdate, RegistredUserResponse
 from ...core.config import settings
 from ..auth.utils import (
     hash_password,
@@ -120,17 +120,19 @@ async def register(
         group_id=group_id,  # будет None если группа не нашлась или не введена, и в БД будет null
     )
     db.add(db_user)
+    await db.commit()
+    await db.refresh(db_user)
 
     pd_consent = UserConsent(user_id=db_user.id, consent_type="pd", ip=user_ip)
     terms_consent = UserConsent(user_id=db_user.id, consent_type="terms", ip=user_ip)
     db.add_all([terms_consent, pd_consent])
 
     await db.commit()
-    await db.refresh(db_user)
 
     log.info("New user (%s) signed up!", db_user_email := db_user.email)
 
-    return dict(
+
+    return RegistredUserResponse(
         id=db_user.id,
         name=db_user.name,
         email=db_user_email,
@@ -225,7 +227,7 @@ async def logout(response: Response):
 
 @router.patch("/update-profile")
 async def update_profile(
-    current_user: dict = Depends(get_current_active_auth_user_data),
+    current_user: User = Depends(get_current_auth_user),
     update_data: UserUpdate = Body(),
     db: AsyncSession = Depends(get_db),
 ):
@@ -237,12 +239,6 @@ async def update_profile(
         )
 
     # только свой профиль
-    if update_data.email != current_user.get("email"):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="нельзя редактировать чужой профиль.",
-        )
-
     if not (password := update_data.password):
         raise HTTPException(
             status_code=400, detail="для применения правок введите пароль."
@@ -261,7 +257,7 @@ async def update_profile(
     #     ]
     #     raise HTTPException(status_code=400, detail=choice(answers))
 
-    user_result = await db.scalars(select(User).where(User.email == update_data.email))
+    user_result = await db.scalars(select(User).where(User.email == current_user.email))
     user = user_result.first()
 
     if not user:
@@ -307,15 +303,15 @@ async def update_profile(
 
 @router.get("/me")
 def auth_user_check_self_info(
-    user_data: dict = Depends(get_current_active_auth_user_data),
+    user: User = Depends(get_current_auth_user),
 ):
     """Возвращает нечувствительные данные об авторизованном пользователе.
     Преимущественно для возрвата данных на фронтенд"""
 
     return {
         "status": "ok",
-        "username": user_data.get("username"),
-        "email": user_data.get("email"),
-        "role": user_data.get("role"),
-        "group": user_data.get("group"),
+        "username": user.name,
+        "email": user.email,
+        "role": user.role,
+        "group": user.group.group_number,
     }

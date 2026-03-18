@@ -7,7 +7,7 @@ from ...api.logger import log
 from ..auth.utils import verify_admin_api_key
 from ..db.database import get_db
 from ..db.models import User
-from ..db.schemas import FullUserResponse
+from ..schemas.users import FullUserResponse
 
 
 router = APIRouter(

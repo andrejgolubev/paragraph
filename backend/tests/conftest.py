@@ -1,6 +1,7 @@
+from httpx import ASGITransport, AsyncClient
 import pytest, subprocess
 
-from sqlalchemy import delete
+from sqlalchemy import delete, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.db.models import User
@@ -12,13 +13,13 @@ from asgi_lifespan import LifespanManager
 from redis.asyncio import Redis
 
 
+base_url = 'http://test'
+
 @pytest.fixture(scope='session', autouse=True)
 def storage_setup():
     """
     Подгатавливает Postgres к прогонке тестовых данных. 
     """
-    assert settings.db.port == 5435
-    assert settings.redis.port == 6381
     subprocess.check_call(["poetry", "run", "alembic", "upgrade", "head"])
 
 
@@ -26,7 +27,7 @@ def storage_setup():
 async def db(): 
     async with AsyncSessionLocalTest() as session:
         yield session
-
+        
 
 @pytest.fixture
 async def clean_users(db: AsyncSession):
@@ -43,8 +44,18 @@ async def redis_client() -> Redis:
     async with LifespanManager(main_app):
         redis: Redis = main_app.state.redis
         await redis.flushall()
+        await redis.ping()
         return redis
 
+
+# @pytest.fixture(scope='session')
+# async def current_user() -> User: 
+#     async with AsyncClient(
+#             transport=ASGITransport(app=main_app), 
+#             base_url=base_url
+#         ) as client:
+#             response = await client.post("/user/register", json=register_payload)        
+        
 
 
 GROUPS_INITIAL = { 
@@ -54,3 +65,4 @@ GROUPS_INITIAL = {
     "5413М": "1634",
     "5423": "1638", 
 }
+

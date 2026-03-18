@@ -12,8 +12,15 @@ down-local:
 	docker compose -f docker-compose-local.yaml down 
 
 
-up-light: 
-	docker compose -f docker-compose-light.yaml up -d --build
+up-lite: 
+	docker compose -f docker-compose-lite.yaml up -d --build
 
-down-light: 
-	docker compose -f docker-compose-light.yaml down 
+down-lite: 
+	docker compose -f docker-compose-lite.yaml down 
+
+
+up-test: 
+	docker compose -f docker-compose-test.yaml up -d --build
+
+down-test: 
+	docker compose -f docker-compose-test.yaml down 
