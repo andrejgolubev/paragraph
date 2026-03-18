@@ -63,6 +63,26 @@ export function showNotificationOuter(message, type, fromLeft=false) {
   }, 50) 
 }
 
+class NotesAPI {
+  saveNote = async (
+    userId,
+    lessonIndex,
+    homeworkText
+  ) => {
+    const payload = {
+      user_id: String(userId),
+      lesson_index: Number(lessonIndex),
+      homework: String(homeworkText),
+    }
+
+    return apiFetch(`${BASE_URL}/notes/save`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(payload),
+    }, )
+  }
+}
+
 const API = {
   getScheduleData: async ({ groupDataValue, dateDataValue }) => {
     const url =
@@ -91,7 +111,7 @@ const API = {
     }, )
   },
 
-  loadHomeworkData: async (groupDataValue, dateDataValue, lessonIndex) => {
+  getHomework: async (groupDataValue, dateDataValue, lessonIndex) => {
     const params = new URLSearchParams({
       group_data_value: String(groupDataValue),
       date_data_value: dateDataValue,
@@ -102,6 +122,9 @@ const API = {
       method: "GET",
     })
   },
+
+  notes: new NotesAPI(),
+
 
   loadGroups: async () => {
     return apiFetch(`${BASE_URL}/schedule/get-all-groups`, {

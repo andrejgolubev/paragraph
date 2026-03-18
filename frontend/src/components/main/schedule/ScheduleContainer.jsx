@@ -13,8 +13,7 @@ import { useThemeStore } from "../../../store/themeStore"
 
 
 const ScheduleContainer = () => {
-  const darkTheme = useThemeStore(state => state.darkTheme)
-
+  const {darkTheme, notesEnabled} = useThemeStore()
   const { groupDataValue, dateDataValue } = useDropdownStore()
   const [scheduleData, setScheduleData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -101,7 +100,7 @@ const ScheduleContainer = () => {
 
   useEffect( () => {
     loadAllHomeworkStatus(scheduleData)
-  }, [scheduleData])
+  }, [scheduleData, notesEnabled])
 
 
   // Обработчик клика по домашке
@@ -114,7 +113,7 @@ const ScheduleContainer = () => {
     } = lessInfo
 
     API
-      .loadHomeworkData(groupDataValue, scheduleDateDataValue, lessonIndex)
+      .getHomework(groupDataValue, scheduleDateDataValue, lessonIndex)
       .then((resp) => {
         const { homework, updated, username } = resp
         setHomeworkUpdated(updated)
