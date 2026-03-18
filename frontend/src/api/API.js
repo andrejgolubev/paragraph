@@ -74,6 +74,22 @@ class NotesAPI {
       body: JSON.stringify(payload),
     }, )
   }
+  getNote = async (
+    userId,
+    lessonIndex,
+  ) => {
+    const payload = {
+      user_id: String(userId),
+      lesson_index: Number(lessonIndex),
+      homework: String(homeworkText),
+    }
+
+    return apiFetch(`${BASE_URL}/notes/get`, {
+      method: "GET",
+      headers,
+      body: JSON.stringify(payload),
+    }, )
+  }
 }
 
 const API = {

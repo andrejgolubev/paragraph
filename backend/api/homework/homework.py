@@ -8,9 +8,9 @@ from ..db.models import Group, Date, Homework
 from datetime import datetime
 from ..db.schemas import HomeworkRequest
 from ..utils.converters import latin_to_cyrillic, get_group_datavalue_by_group_number
+from .helpers import DvConverter
 
-
-router = homework_router = APIRouter(tags=["Homework"], prefix="/homework")
+router = APIRouter(tags=["Homework"], prefix="/homework")
 
 
 @router.post("/save")
@@ -20,7 +20,7 @@ async def save_homework(
     db: AsyncSession = Depends(get_db),
 ):
     """
-    Сохраняет или обновляет домашнее задание для указанной группы/даты 
+    Сохраняет или обновляет домашнее задание для указанной группы/даты
     в пределах прав администратора.
     """
     if not user_data:
@@ -28,8 +28,7 @@ async def save_homework(
 
     if "admin" not in (role := user_data["role"]):
         raise HTTPException(
-            status_code=403, 
-            detail="недостаточно прав для управления этим д/з."
+            status_code=403, detail="недостаточно прав для управления этим д/з."
         )
 
     group_data_value = homework_request.group_data_value
@@ -37,32 +36,35 @@ async def save_homework(
     lesson_index = homework_request.lesson_index
     homework_text = homework_request.homework
 
-    # проверка прав на редактирование 
+    # проверка прав на редактирование
     moderated_group_numbers = [
         latin_to_cyrillic(gr) for gr in role.split(".")[1:] if gr
-    ] 
+    ]
     moderated_group_datavalues = [
-        await get_group_datavalue_by_group_number(group_number, db=db) 
+        await get_group_datavalue_by_group_number(group_number, db=db)
         for group_number in moderated_group_numbers
     ]
 
     if not any(
-        [group_dv for group_dv in moderated_group_datavalues 
-        if group_data_value == group_dv]
-    ): 
+        [
+            group_dv
+            for group_dv in moderated_group_datavalues
+            if group_data_value == group_dv
+        ]
+    ):
         raise HTTPException(
-            status_code=403, 
-            detail="недостаточно прав для управления этим д/з."
+            status_code=403, detail="недостаточно прав для управления этим д/з."
         )
 
     # валидация д/з
     if len(homework_text) > (max_homework_length := 750):
-        raise HTTPException(status_code=400, detail=f"д/з не может быть больше {max_homework_length} символов")
+        raise HTTPException(
+            status_code=400,
+            detail=f"д/з не может быть больше {max_homework_length} символов",
+        )
 
     if not homework_text:
         raise HTTPException(status_code=400, detail="д/з не может быть пустым")
-
-        
 
     try:
         group_result = await db.scalars(
@@ -78,8 +80,7 @@ async def save_homework(
 
         if not (date := date_result.first()):
             raise HTTPException(
-                status_code=404, 
-                detail="Дата не выбрана или не найдена"
+                status_code=404, detail="Дата не выбрана или не найдена"
             )
 
         # находим или создаем связь
@@ -96,25 +97,24 @@ async def save_homework(
             homework = Homework(
                 group_id=group.id,
                 dates_id=date.id,
-                user_id=user_data.get('id'),
+                user_id=user_data.get("id"),
                 lesson=lesson_index,
                 homework=homework_text,
                 updated=datetime.now(),
             )
             db.add(homework)
         else:
-            homework.homework = homework_text 
-            homework.user_id = user_data.get('id')
+            homework.homework = homework_text
+            homework.user_id = user_data.get("id")
             homework.updated = datetime.now()
-
 
         await db.commit()
 
         return {
-            "status": 'ok', 
-            "detail": "saved", 
-            "message": 'Домашнее задание сохранено',
-            "username": user_data.get('username')
+            "status": "ok",
+            "detail": "saved",
+            "message": "Домашнее задание сохранено",
+            "username": user_data.get("username"),
         }
 
     except Exception:
@@ -130,7 +130,7 @@ async def get_homework(
     db: AsyncSession = Depends(get_db),
 ):
     """
-    Возвращает текст домашнего задания, время и автора для конкретной группы, 
+    Возвращает текст домашнего задания, время и автора для конкретной группы,
     даты и урока.
     """
     try:
@@ -149,20 +149,20 @@ async def get_homework(
             return {"detail": "Группа или дата не выбраны или не найдены"}
 
         hmw_result = await db.scalars(
-            select(Homework).where(
+            select(Homework)
+            .where(
                 Homework.group_id == group.id,
                 Homework.dates_id == date.id,
                 Homework.lesson == lesson_index,
-            ).options(selectinload(Homework.user))
+            )
+            .options(selectinload(Homework.user))
         )
         homework = hmw_result.first()
 
         return {
             "homework": homework.homework if homework else "",
-            "updated": (
-                homework.updated if homework else ""
-            ),  
-            'username': homework.user.name
+            "updated": (homework.updated if homework else ""),
+            "username": homework.user.name,
         }
 
     except Exception:
@@ -176,8 +176,8 @@ async def get_all_homeworks_for_schedule(
     db: AsyncSession = Depends(get_db),
 ) -> dict:
     """
-    Возвращает словарь с индексами домашек и булевыми ключами, 
-    отвечающими за наличие/отсутствие домашки 
+    Возвращает словарь с индексами домашек и булевыми ключами,
+    отвечающими за наличие/отсутствие домашки
     """
     try:
         group_result = await db.scalars(
@@ -193,25 +193,21 @@ async def get_all_homeworks_for_schedule(
         if not group or not date:
             return {"detail": "Группа или дата не выбраны или не найдены"}
 
-
-        hmw_result = (await db.scalars(
-            select(Homework).where(
-                Homework.group_id == group.id,
-                Homework.dates_id == date.id,
+        hmw_result = (
+            await db.scalars(
+                select(Homework).where(
+                    Homework.group_id == group.id,
+                    Homework.dates_id == date.id,
+                )
             )
-        )).all()
-
+        ).all()
 
         return {
-            hmw.lesson: bool(hmw.homework) # lesson = lesson_id
-            for hmw in hmw_result
+            hmw.lesson: bool(hmw.homework) for hmw in hmw_result  # lesson = lesson_id
         }
-        
 
     except Exception:
         return {}
-
-
 
 
 @router.get("/convert")
@@ -223,26 +219,12 @@ async def convert_to_datavalue(
     """
     По заданному номеру группы и дате возвращает соответствующие значения data_value.
     """
-
-    group_result = await db.scalars(
-        select(Group).where(Group.group_number == group_number)
+    return await DvConverter().convert_to_datavalue(
+        db,
+        group_number,
+        date,
     )
-    db_group = group_result.first()
-
-    date_result = await db.scalars(select(Date).where(Date.date == date))
-
-    db_date = date_result.first()
-
-    if not db_group and not db_date:
-        raise HTTPException(
-            status_code=404,
-            detail="at least group or date has to be selected (or they were just not found)",
-        )
-
-    return {
-        "date_data_value": db_date.data_value if db_date else "",
-        "group_data_value": db_group.data_value if db_group else "",
-    }
+    
 
 
 @router.get("/convert-back")
@@ -252,21 +234,8 @@ async def convert_from_datavalue(
     db: AsyncSession = Depends(get_db),
 ):
     """По значениям data_value находит читаемые номер группы и дату."""
-    group_result = await db.scalars(
-        select(Group).where(Group.data_value == group_data_value)
+    return await DvConverter().convert_from_datavalue(
+        db,
+        group_data_value,
+        date_data_value,
     )
-    db_group = group_result.first()
-
-    date_result = await db.scalars(
-        select(Date).where(Date.data_value == date_data_value)
-    )
-
-    db_date = date_result.first()
-
-    if not db_group and not db_date:
-        return {"failure": "group and date not selected or not found"}
-
-    return {
-        "date": db_date.date if db_date else "",
-        "group_number": db_group.group_number if db_group else "",
-    }
