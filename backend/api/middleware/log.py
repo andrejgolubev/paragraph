@@ -2,8 +2,10 @@ import time
 import uuid
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
+from backend.api.auth.utils import get_user_ip
 from backend.core.config import settings
 from ..logger import log
+
 
 
 class LogMiddleware(BaseHTTPMiddleware):
@@ -17,15 +19,10 @@ class LogMiddleware(BaseHTTPMiddleware):
         log_dict = {
             'url': str(request.url),
             'method': request.method,
-            'ip': (
-                request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
-                or request.headers.get("X-Real-IP")
-                or (request.client.host if request.client else None)
-            ),
+            'ip': (user_ip:=get_user_ip(request)),
             'user_agent': request.headers.get('user-agent'),
         }
-        
-        log.info("Request %s sent: %s", request_id, str(log_dict))
+        log.info("Request %s from %s sent: %s", request_id, user_ip, str(log_dict))
         
         try:
             response = await call_next(request)

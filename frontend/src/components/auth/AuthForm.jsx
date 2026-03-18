@@ -97,6 +97,7 @@ export const AuthForm = ({ type }) => {
 
   const handleAuth = (resp) => {
     if (resp.status === "ok") {
+      console.log(resp)
       if (resp.type === "sign-in") {
         fetchUser()
         navigate("/", { replace: true }) // редирект на расписание если логин

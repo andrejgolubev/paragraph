@@ -40,13 +40,6 @@ async function apiFetch(url, options = {}) {
 }
 
 
-async function authApiFetch(url, options = {}, additional = {}) {
-  const response = await fetchUrl(url, options)
-  const responseData = await getHandledResponseData(response)
-  return { ...responseData, ...additional }
-}
-
-
 export function showNotificationOuter(message, type, fromLeft=false) {
   const { 
     setNotificationOuterMessage, 
@@ -125,7 +118,6 @@ const API = {
 
   notes: new NotesAPI(),
 
-
   loadGroups: async () => {
     return apiFetch(`${BASE_URL}/schedule/get-all-groups`, {
       method: "GET",
@@ -178,7 +170,7 @@ const API = {
     acceptPd,
     acceptTerms
   ) => {
-    return authApiFetch(
+    return apiFetch(
       `${BASE_URL}/user/register`,
       {
         method: "POST",
@@ -192,15 +184,12 @@ const API = {
           accept_terms: acceptTerms,
         }),
       },
-      {
-        type: "sign-up",
-      }
     )
   },
 
   sendLoginData: async (email, password) => {
     const url = `${BASE_URL}/user/login`
-    return authApiFetch(
+    return apiFetch(
       url,
       {
         method: "POST",
@@ -210,7 +199,6 @@ const API = {
           password,
         }),
       },
-      { type: "sign-in" }
     )
   },
 
