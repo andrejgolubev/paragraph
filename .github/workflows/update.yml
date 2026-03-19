@@ -54,8 +54,11 @@ jobs:
           BACKUP_DIR="$BACKUP_PATH/backup-$TIMESTAMP"
           
           echo "Creating backup in $BACKUP_DIR"
-          $SSH_CMD "$VPS_USER@$VPS_HOST" "
-            mkdir -p $BACKUP_DIR && \
+           $SSH_CMD "$VPS_USER@$VPS_HOST" "
+            set -e
+            mkdir -p $BACKUP_DIR
+            
+            echo 'Copying files...'
             rsync -az \
               --exclude '.git' \
               --exclude 'node_modules' \
@@ -64,10 +67,10 @@ jobs:
               --exclude '__pycache__' \
               --exclude '*.log' \
               $VPS_APP_PATH/ $BACKUP_DIR/
-          "
-
-          $SSH_CMD "$VPS_USER@$VPS_HOST" "
+            
+            echo 'Creating symlink...'
             ln -snf $BACKUP_DIR $BACKUP_PATH/latest
+            
             echo 'Backup completed:'
             echo 'Location: $BACKUP_DIR'
             echo 'Size: ' \$(du -sh $BACKUP_DIR | cut -f1)
@@ -96,11 +99,11 @@ jobs:
             ls -lh $BACKUP_PATH | tail -3
           "
 
-      - name: Clean up old backups (keep last 3)
+      - name: Clean up old backups (keep last 5)
         run: |
           $SSH_CMD "$VPS_USER@$VPS_HOST" "
             cd $BACKUP_PATH
-            ls -t | tail -n +4 | xargs -r rm -rf
-            echo 'Kept last 3 backups'
+            ls -t | tail -n +6 | xargs -r rm -rf
+            echo 'Kept last 5 backups'
           "
 
