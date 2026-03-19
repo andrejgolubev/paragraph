@@ -51,21 +51,20 @@ jobs:
       - name: Create timestamped backup with rsync
         run: |
           TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-          BACKUP_DIR="$BACKUP_PATH/pre-deploy-$TIMESTAMP"
+          BACKUP_DIR="$BACKUP_PATH/backup-$TIMESTAMP"
           
           echo "Creating backup in $BACKUP_DIR"
-          
-          rsync -az \
-            --exclude '.git' \
-            --exclude 'node_modules' \
-            --exclude 'backend/.venv' \
-            --exclude '*.pyc' \
-            --exclude '__pycache__' \
-            --exclude '*.log' \
-            --exclude '.env' \
-            -e "$RSYNC_SSH" \
-            "$VPS_USER@$VPS_HOST:$VPS_APP_PATH/" \
-            "$VPS_USER@$VPS_HOST:$BACKUP_DIR/"
+          $SSH_CMD "$VPS_USER@$VPS_HOST" "
+            mkdir -p $BACKUP_DIR && \
+            rsync -az \
+              --exclude '.git' \
+              --exclude 'node_modules' \
+              --exclude 'backend/.venv' \
+              --exclude '*.pyc' \
+              --exclude '__pycache__' \
+              --exclude '*.log' \
+              $VPS_APP_PATH/ $BACKUP_DIR/
+          "
 
           $SSH_CMD "$VPS_USER@$VPS_HOST" "
             ln -snf $BACKUP_DIR $BACKUP_PATH/latest
