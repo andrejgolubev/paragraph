@@ -2,16 +2,6 @@ from datetime import datetime
 from pydantic import BaseModel, EmailStr, ConfigDict, Field
 
 
-#homework
-
-class HomeworkRequest(BaseModel):
-    group_data_value: str
-    date_data_value: str
-    lesson_index: int
-    homework: str
-
-
-# users 
 
 class UserSchema(BaseModel): 
     name: str 
@@ -25,7 +15,6 @@ class UserSchema(BaseModel):
 
 class UserUpdate(BaseModel):
     username: str | None = None
-    email: EmailStr
     group_number: str | None = None
     password: str | None = None
 
@@ -42,18 +31,32 @@ class UserRegistration(BaseModel):
 class UserLogin(BaseModel): 
     email: EmailStr 
     password: str
-    
 
-class FullUserResponse(BaseModel):
+
+class UserResponse(BaseModel):
     email: str
     name: str 
     group_id: int | None
     role: str 
     active: bool 
-    sign_up_date: datetime 
-    consents: list
 
     model_config = ConfigDict(from_attributes=True)
 
 
+class FullUserResponse(UserResponse):
+    sign_up_date: datetime 
+    consents: list
+
+
+
+class RegistredUserResponse(BaseModel):
+    id: int 
+    name: str 
+    email: EmailStr
+    role: str 
+    active: bool 
+    group_id: int | None = None
+    detail: str 
+    status: str 
+    type: str
     

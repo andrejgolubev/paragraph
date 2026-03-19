@@ -14,6 +14,7 @@
 
   &.error {
     padding-top: 10px;
+
     button {
       padding-top: 10px;
       padding-bottom: 10px;
@@ -28,12 +29,13 @@
         border: 2px $dark-grey1 dashed;
       }
     }
+
     p {
       color: $light-grey1;
     }
   }
 
-  p{
+  p {
     font-family: 'Manrope', serif;
   }
 }
@@ -43,6 +45,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -53,29 +56,36 @@
 //стили таблицы
 .table {
   background-color: $table-white;
+
   &.dark {
     background-color: $dark4;
-    p, strong, th {
+
+    p,
+    strong,
+    th {
       color: rgba(231, 231, 231, 0.9);
     }
+
     tr {
       border-bottom: 1px solid $dark-grey1;
     }
+
     thead {
       tr:not(.table) {
         background-color: $dark3;
-  
+
       }
     }
 
     tbody {
-      
-      
+
+
       tr:last-of-type {
         border-bottom: 2px solid $dark1;
-  
+
       }
     }
+
     .active-day {
       p:first-child::after {
         color: #959ec3bf;
@@ -87,7 +97,8 @@
   border-collapse: collapse;
   width: 98.25%;
   border: #bce7ff;
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Manrope',
+  sans-serif;
   box-shadow: 10px 10px 10px 10px rgba(2, 0, 0, 0.1);
 
 
@@ -127,7 +138,7 @@
         font-size: 12px;
       }
     }
-   
+
     tr:not(.table) {
       background-color: rgba(46, 110, 205, 0.2);
       text-align: left;
@@ -136,10 +147,12 @@
 
   th:first-child {
     font-size: 16px;
-    @media (max-width: 1200px){
+
+    @media (max-width: 1200px) {
       font-size: 14px;
     }
-    @media (max-width: 1100px){
+
+    @media (max-width: 1100px) {
       font-size: 12px;
     }
   }
@@ -149,17 +162,18 @@
     padding: 12px 0 12px 10px;
     max-width: 150px;
     min-width: 80px;
+
     @media (max-width: 1100px) {
       min-width: none;
       padding: 3px 0px
     }
-    
-   
+
+
 
     &:first-child {
       text-align: left;
       font-weight: bold;
-      
+
       p:last-child {
         font-weight: normal;
       }
@@ -168,7 +182,7 @@
   }
 
   tbody {
-    
+
     tr {
       border-bottom: 1px solid #dddddd;
       transform: translateX(-30px);
@@ -187,9 +201,11 @@
     font-size: 14px;
     padding: 10px;
     vertical-align: top;
+
     @media (max-width:1100px) {
       font-size: 12px;
     }
+
     @media (max-width:800px) {
       font-size: 10px;
     }
@@ -216,19 +232,11 @@
       top: 1px;
       position: relative;
 
-      @media (min-width: 1100px) {
+      @media (min-width: 1000px) {
         scale: 1.5;
       }
-
-      @media (max-width: 1100px) {
-        top: 3px;
-        left: 1px;
-      }
-
     }
-
   }
-
 }
 
 
@@ -238,7 +246,7 @@
   border-radius: 4px;
 
   &.active .lesson-type {
-    filter:brightness(1.1)
+    filter: brightness(1.1)
   }
 
   &#lec {
@@ -312,7 +320,7 @@
   margin-bottom: 3px;
   line-height: 1.4;
 
-  @media (max-width: 1200px){
+  @media (max-width: 1200px) {
     font-size: 12px;
   }
 
@@ -355,3 +363,24 @@
   /* серый по умолчанию */
 }
 
+
+@keyframes loadingAppear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+
+.loading-indicator {
+  opacity: 0;
+  animation: loadingAppear 0.1s forwards;
+  transition: all 0.1s ease 0s;
+  position: absolute;
+  top: 47%;
+  left: 46.5%;
+  scale: 2;
+}

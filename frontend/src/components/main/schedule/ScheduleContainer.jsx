@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import HomeworkModal from "../HomeworkModal" 
 import paperclip from "../../../images/homework/paperclip.svg"
 import paperclipDark from "../../../images/homework/paperclip-dark.svg"
@@ -13,8 +13,7 @@ import { useThemeStore } from "../../../store/themeStore"
 
 
 const ScheduleContainer = () => {
-  const darkTheme = useThemeStore(state => state.darkTheme)
-
+  const {darkTheme, notesEnabled} = useThemeStore()
   const { groupDataValue, dateDataValue } = useDropdownStore()
   const [scheduleData, setScheduleData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -25,7 +24,7 @@ const ScheduleContainer = () => {
   const [homeworkAuthor, setHomeworkAuthor] = useState('')
   const [year, setYear] = useState(new Date().getFullYear())
   const [currentLessonInfo, setCurrentLessonInfo] = useState({})
-  const [mobileLesson, setMobileLesson] = useState(0)
+  const [mobileLesson, setMobileLesson] = useState((new Date().getDay()-1)%6)
   const windowSize = useWindowSize()
   const [debouncedWidth, setDebouncedWidth] = useState(windowSize.width)
   const widthDebounceRef = useRef(null)
@@ -86,8 +85,9 @@ const ScheduleContainer = () => {
   const loadAllHomeworkStatus = async (scheduleData) => {
     setHomeworkExistsMap({}) // обнуляем при загрузке изначально, чтобы не было ложных подсвечиваний
     if (!scheduleData) return
-    
-    const homeworksMap = await API.getHomeworksMap(
+    const currentAPI = notesEnabled ? API.notes : API.homework
+
+    const homeworksMap = await currentAPI.getPresence(
       groupDataValue,
       scheduleDateDataValue,
     ) 
@@ -101,7 +101,7 @@ const ScheduleContainer = () => {
 
   useEffect( () => {
     loadAllHomeworkStatus(scheduleData)
-  }, [scheduleData])
+  }, [scheduleData, notesEnabled])
 
 
   // Обработчик клика по домашке
@@ -113,12 +113,14 @@ const ScheduleContainer = () => {
       lessonName,
     } = lessInfo
 
-    API
-      .loadHomeworkData(groupDataValue, scheduleDateDataValue, lessonIndex)
+    const currentAPI = notesEnabled? API.notes : API.homework 
+    
+    currentAPI
+      .get(groupDataValue, scheduleDateDataValue, lessonIndex)
       .then((resp) => {
-        const { homework, updated, username } = resp
+        const { homework_text, updated, username } = resp
         setHomeworkUpdated(updated)
-        setHomeworkText(homework)
+        setHomeworkText(homework_text)
         setHomeworkAuthor(username)
       }).catch( (error) => {
         setHomeworkText('')

@@ -8,6 +8,7 @@ const NotificationOuter = () => {
     setNotificationOuterActive,
     notificationOuterMessage,
     notificationOuterType,
+    notificationOuterIsLeft,
   } = useUiStore()
   
   useEffect(() => {
@@ -25,9 +26,10 @@ const NotificationOuter = () => {
 
   return (
     <div
-      className={`notification outer ${
-        notificationOuterActive ? "active" : ""
-      } ${notificationOuterType}`}
+      className={`notification outer 
+      ${ notificationOuterActive ? "active" : ""} 
+      ${ notificationOuterIsLeft ? "from-left" : ""}
+      ${ notificationOuterType }`}
     >
       {notificationOuterMessage}
     </div>

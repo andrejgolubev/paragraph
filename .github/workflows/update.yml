@@ -14,6 +14,7 @@ jobs:
       VPS_USER: ${{ secrets.VPS_USER }}
       VPS_APP_PATH: ${{ secrets.VPS_APP_PATH }}
       SSH_PORT: ${{ secrets.VPS_SSH_PORT }}
+      BACKUP_PATH: "/opt/backups/app"
 
     steps:
       - name: Checkout repository
@@ -29,28 +30,78 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y rsync
 
-      - name: Ensure remote app directory exists
+      - name: Setup SSH command
         run: |
           SSH_CMD="ssh -o StrictHostKeyChecking=no"
-          if [ -n "$SSH_PORT" ]; then
-            SSH_CMD="$SSH_CMD -p $SSH_PORT"
-          fi
-          $SSH_CMD "$VPS_USER@$VPS_HOST" "sudo mkdir -p '$VPS_APP_PATH'"
-          $SSH_CMD "$VPS_USER@$VPS_HOST" "sudo chown -R $VPS_USER:$VPS_USER '$VPS_APP_PATH'"
-
-      - name: Sync sources to VPS
-        run: |
           RSYNC_SSH="ssh -o StrictHostKeyChecking=no"
           if [ -n "$SSH_PORT" ]; then
+            SSH_CMD="$SSH_CMD -p $SSH_PORT"
             RSYNC_SSH="$RSYNC_SSH -p $SSH_PORT"
           fi
+          echo "SSH_CMD=$SSH_CMD" >> $GITHUB_ENV
+          echo "RSYNC_SSH=$RSYNC_SSH" >> $GITHUB_ENV
+
+      - name: Ensure directories exist
+        run: |
+          $SSH_CMD "$VPS_USER@$VPS_HOST" "sudo mkdir -p '$VPS_APP_PATH'"
+          $SSH_CMD "$VPS_USER@$VPS_HOST" "sudo mkdir -p '$BACKUP_PATH'"
+          $SSH_CMD "$VPS_USER@$VPS_HOST" "sudo chown -R $VPS_USER:$VPS_USER '$VPS_APP_PATH'"
+          $SSH_CMD "$VPS_USER@$VPS_HOST" "sudo chown -R $VPS_USER:$VPS_USER '$BACKUP_PATH'"
+
+      - name: Create timestamped backup with rsync
+        run: |
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          BACKUP_DIR="$BACKUP_PATH/pre-deploy-$TIMESTAMP"
+          
+          echo "Creating backup in $BACKUP_DIR"
+          
           rsync -az \
             --exclude '.git' \
             --exclude 'node_modules' \
             --exclude 'backend/.venv' \
             --exclude '*.pyc' \
             --exclude '__pycache__' \
+            --exclude '*.log' \
+            --exclude '.env' \
+            -e "$RSYNC_SSH" \
+            "$VPS_USER@$VPS_HOST:$VPS_APP_PATH/" \
+            "$VPS_USER@$VPS_HOST:$BACKUP_DIR/"
+
+          $SSH_CMD "$VPS_USER@$VPS_HOST" "
+            ln -snf $BACKUP_DIR $BACKUP_PATH/latest
+            echo 'Backup completed:'
+            echo 'Location: $BACKUP_DIR'
+            echo 'Size: ' \$(du -sh $BACKUP_DIR | cut -f1)
+          "
+
+      - name: Sync sources to VPS
+        run: |
+          rsync -az \
+            --exclude '.git' \
+            --exclude 'node_modules' \
+            --exclude 'backend/.venv' \
+            --exclude '*.pyc' \
+            --exclude '*.log' \
+            --exclude '__pycache__' \
             -e "$RSYNC_SSH" ./ "$VPS_USER@$VPS_HOST:$VPS_APP_PATH"
 
-      
+      - name: Verify deployment
+        run: |
+          $SSH_CMD "$VPS_USER@$VPS_HOST" "
+            echo 'Deployment summary:'
+            echo 'Timestamp: $(date)'
+            echo 'App path: $VPS_APP_PATH'
+            echo 'Backup: $BACKUP_PATH/latest'
+            echo ''
+            echo 'Last 3 backups:'
+            ls -lh $BACKUP_PATH | tail -3
+          "
+
+      - name: Clean up old backups (keep last 3)
+        run: |
+          $SSH_CMD "$VPS_USER@$VPS_HOST" "
+            cd $BACKUP_PATH
+            ls -t | tail -n +4 | xargs -r rm -rf
+            echo 'Kept last 3 backups'
+          "
 

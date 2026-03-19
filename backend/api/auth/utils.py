@@ -2,7 +2,7 @@ import jwt
 from ...core.config import settings
 import bcrypt
 from datetime import UTC, datetime, timedelta 
-from fastapi import HTTPException, status, Header
+from fastapi import HTTPException, status, Header, Request
 
 
 def encode_jwt(
@@ -58,3 +58,17 @@ async def verify_admin_api_key(api_key: str = Header(alias="API-Key")):
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Invalid API Key"
         )
+
+
+def username_is_cyrillic_only(username: str) -> bool:
+    allowed_chars = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя" + "-" + "." + " "
+    return all(char.lower() in allowed_chars for char in username)
+
+
+def get_user_ip(request: Request) -> str | None: 
+    ip = (
+        request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
+        or request.headers.get("X-Real-IP")
+        or (request.client.host if request.client else None)
+    )
+    return ip

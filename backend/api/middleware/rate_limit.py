@@ -2,6 +2,7 @@ import time
 from fastapi import Request, HTTPException, status
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
+from backend.api.auth.utils import get_user_ip
 from backend.core.config import Settings
 from redis.asyncio import Redis
 from ..logger import log
@@ -34,11 +35,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         return current
     
     async def dispatch(self, request: Request, call_next):
-        ip = (
-            request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
-            or request.headers.get("X-Real-IP")
-            or (request.client.host if request.client else None)
-        )
+        ip = get_user_ip(request)
         window = self.settings.rate_limit.window_seconds
         redis_client: Redis | None = getattr(request.app.state, "redis", None)
         if redis_client is None:

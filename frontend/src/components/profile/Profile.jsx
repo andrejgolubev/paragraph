@@ -79,7 +79,7 @@ const Profile = () => {
   const debounceTimerRef = useRef(null)
 
   const onSubmit = ({ password, username, group }) => {
-    API.updateUserData({ email: user?.email, password, username, group }).then(
+    API.updateUserData({ password, username, group }).then(
       (resp) => {
         if (resp.status === "ok") {
           fetchUser()

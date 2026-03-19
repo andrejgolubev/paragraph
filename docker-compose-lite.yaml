@@ -1,7 +1,7 @@
 # Фактически урезенная версия docker-compose.yaml для тестирования без
 # запуска всего стека (не запускать вместе с docker-compose.yaml)
 services:
-  pg_test:
+  pg_lite:
     image: postgres:17
     restart: unless-stopped
     ports:
@@ -13,7 +13,7 @@ services:
       POSTGRES_DB: ${DB__NAME}
       POSTGRES_PASSWORD: ${DB__PASSWORD}
     volumes:
-      - pg-test-data:/var/lib/postgresql/data
+      - pg-lite-data:/var/lib/postgresql/data
     deploy:
       resources:
         limits:
@@ -23,9 +23,9 @@ services:
           cpus: '0.25'
           memory: 256M
     networks:
-      - test
+      - lite
 
-  redis_test:
+  redis_lite:
     image: redis:7
     restart: unless-stopped
     ports:
@@ -40,7 +40,7 @@ services:
       - --requirepass
       - ${REDIS__PASSWORD}
     volumes:
-      - redis-test-data:/data
+      - redis-lite-data:/data
     deploy:
       resources:
         limits:
@@ -50,12 +50,12 @@ services:
           cpus: '0.1'
           memory: 128M
     networks:
-      - test
+      - lite
 
 networks:
-  test:
+  lite:
     driver: bridge
 
 volumes:
-  pg-test-data:
-  redis-test-data:
+  pg-lite-data:
+  redis-lite-data:

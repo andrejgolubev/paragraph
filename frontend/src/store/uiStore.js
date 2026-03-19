@@ -13,4 +13,6 @@ export const useUiStore = create((set) => ({
   setNotificationOuterActive: (isActive) => set({ notificationOuterActive: isActive }),
   tipActive: false,
   setTipActive: (isActive) => set({ tipActive: isActive }),
+  notificationOuterIsLeft: false, 
+  setNotificationOuterIsLeft: (isLeft) => set({ notificationOuterIsLeft: isLeft }),
 }))
