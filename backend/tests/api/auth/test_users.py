@@ -7,9 +7,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.main import app
 from backend.api.db.models import User
-from backend.api.schemas.users import UserRegistration, UserLogin, UserUpdate, RegistredUserResponse
+from backend.api.schemas.users import UserRegistration, UserLogin, UserUpdate
 from backend.api.auth.users import hash_password
-from backend.tests.conftest import GROUPS_INITIAL, base_url
+from backend.tests.conftest import ADMIN_PASSWORD, GROUPS_INITIAL, base_url
 
 
 @pytest.mark.asyncio(loop_scope="session")
@@ -139,29 +139,15 @@ async def test_update_profile(
     new_group: str, 
     expected: int, 
     db: AsyncSession, 
-    clean_users
+    clean_users, 
+    admin_user_data, 
+    override_admin_identity
 ): 
     
-    user = User(
-        name="Иванов Иван",
-        email="ivan@example.com",
-        password=hash_password(test_password:='ComplexPass123!'),
-        role="student",
-        active=True,
-        group_id=None,
-    )
-    db.add(user)
-    await db.commit()
-
-    login_payload = UserLogin(
-        email=user.email,
-        password=test_password,
-    ).model_dump()
-
     update_payload = UserUpdate(
         username=(new_username:='Сергеев Сергей'),
         group_number=new_group,
-        password=test_password,
+        password=ADMIN_PASSWORD,
     ).model_dump()
 
     async with LifespanManager(app):
@@ -169,11 +155,12 @@ async def test_update_profile(
             transport=ASGITransport(app=app),
             base_url=base_url,
         ) as client:
-            login_response = await client.post("/user/login", json=login_payload)
             upd_response = await client.patch("/user/update-profile", json=update_payload)
 
     body = upd_response.json()
-    if expected == 200: ...
+    if expected == 200: 
+        assert body["username"] == new_username
+        assert body["group"] == new_group
 
 
     

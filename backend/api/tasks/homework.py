@@ -1,11 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, Body
+from fastapi import APIRouter, Depends, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from ..auth.validation import get_current_auth_user
 from ..db.database import get_db
-from ..db.models import Group, Date, Homework, User
-from datetime import datetime
+from ..db.models import User
 from ..schemas.homework import HomeworkRequest
 from ..utils.converters import latin_to_cyrillic, get_group_datavalue_by_group_number
 from .helpers import DvConverter
