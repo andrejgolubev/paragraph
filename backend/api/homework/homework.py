@@ -34,7 +34,7 @@ async def save_homework(
     group_data_value = homework_request.group_data_value
     date_data_value = homework_request.date_data_value
     lesson_index = homework_request.lesson_index
-    homework_text = homework_request.homework
+    homework_text = homework_request.homework_text
 
     # проверка прав на редактирование
     moderated_group_numbers = [
@@ -88,7 +88,7 @@ async def save_homework(
             select(Homework).where(
                 Homework.group_id == group.id,
                 Homework.dates_id == date.id,
-                Homework.lesson == lesson_index,
+                Homework.lesson_index == lesson_index,
             )
         )
         homework = hmw_result.first()
@@ -98,13 +98,13 @@ async def save_homework(
                 group_id=group.id,
                 dates_id=date.id,
                 user_id=user.id,
-                lesson=lesson_index,
-                homework=homework_text,
+                lesson_index=lesson_index,
+                homework_text=homework_text,
                 updated=datetime.now(),
             )
             db.add(homework)
         else:
-            homework.homework = homework_text
+            homework.homework_text = homework_text
             homework.user_id = user.id
             homework.updated = datetime.now()
 
@@ -153,20 +153,21 @@ async def get_homework(
             .where(
                 Homework.group_id == group.id,
                 Homework.dates_id == date.id,
-                Homework.lesson == lesson_index,
+                Homework.lesson_index == lesson_index,
+                Homework.is_note == False,
             )
             .options(selectinload(Homework.user))
         )
         homework = hmw_result.first()
 
         return {
-            "homework": homework.homework if homework else "",
+            "homework_text": homework.homework_text if homework else "",
             "updated": (homework.updated if homework else ""),
             "username": homework.user.name,
         }
 
     except Exception:
-        return {"homework": ""}
+        return {"homework_text": ""}
 
 
 @router.get("/get-all")
@@ -203,7 +204,7 @@ async def get_all_homeworks_for_schedule(
         ).all()
 
         return {
-            hmw.lesson: bool(hmw.homework) for hmw in hmw_result  # lesson = lesson_id
+            hmw.lesson_index: bool(hmw.homework_text) for hmw in hmw_result  
         }
 
     except Exception:

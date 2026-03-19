@@ -92,7 +92,7 @@ async def test_save_and_get_homework(
         group_data_value= GROUPS_INITIAL[ADMIN_GROUP],
         date_data_value= HOMEWORK_DATE_DV,
         lesson_index= HOMEWORK_LESSON,
-        homework= HOMEWORK_TEXT,
+        homework_text= HOMEWORK_TEXT,
     ).model_dump()
 
     async with LifespanManager(app):
@@ -116,7 +116,7 @@ async def test_save_and_get_homework(
 
     homework = (await db.scalars(select(Homework))).first()
     assert homework is not None
-    assert homework.homework == HOMEWORK_TEXT
+    assert homework.homework_text == HOMEWORK_TEXT
 
     get_body = get_resp.json()
     assert get_body["homework"] == HOMEWORK_TEXT

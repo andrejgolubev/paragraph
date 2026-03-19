@@ -50,7 +50,6 @@ class UserConsent(Base):
 
 
 
-
 class Homework(Base):
     __tablename__ = "homework"
     
@@ -59,10 +58,9 @@ class Homework(Base):
     group_id: Mapped[int] = mc(ForeignKey("groups.id", ondelete="CASCADE"))
     dates_id: Mapped[int] = mc(ForeignKey("dates.id", ondelete="CASCADE"))
     user_id: Mapped[int] = mc(ForeignKey("users.id", ondelete="CASCADE"))
-    lesson: Mapped[int] = mc(nullable=True)
-
-    homework: Mapped[str] = mc(nullable=True)
-
+    lesson_index: Mapped[int] = mc(nullable=True)
+    homework_text: Mapped[str] = mc(nullable=True)
+    is_note: Mapped[bool] = mc(default=False)
     updated: Mapped[datetime] = mc(nullable=True)
 
     user: Mapped["User"] = relationship(

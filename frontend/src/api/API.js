@@ -65,7 +65,7 @@ class NotesAPI {
     const payload = {
       user_id: String(userId),
       lesson_index: Number(lessonIndex),
-      homework: String(homeworkText),
+      homework_text: String(homeworkText),
     }
 
     return apiFetch(`${BASE_URL}/notes/save`, {
@@ -81,7 +81,7 @@ class NotesAPI {
     const payload = {
       user_id: String(userId),
       lesson_index: Number(lessonIndex),
-      homework: String(homeworkText),
+      homework_text: String(homeworkText),
     }
 
     return apiFetch(`${BASE_URL}/notes/get`, {
@@ -110,7 +110,7 @@ const API = {
       group_data_value: String(groupDataValue),
       date_data_value: String(dateDataValue),
       lesson_index: Number(lessonIndex),
-      homework: String(homeworkText),
+      homework_text: String(homeworkText),
     }
 
     return apiFetch(`${BASE_URL}/homework/save`, {

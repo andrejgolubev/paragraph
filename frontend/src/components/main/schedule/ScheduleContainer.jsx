@@ -115,9 +115,9 @@ const ScheduleContainer = () => {
     API
       .getHomework(groupDataValue, scheduleDateDataValue, lessonIndex)
       .then((resp) => {
-        const { homework, updated, username } = resp
+        const { homework_text, updated, username } = resp
         setHomeworkUpdated(updated)
-        setHomeworkText(homework)
+        setHomeworkText(homework_text)
         setHomeworkAuthor(username)
       }).catch( (error) => {
         setHomeworkText('')

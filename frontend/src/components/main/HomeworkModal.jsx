@@ -34,9 +34,6 @@ const HomeworkModal = ({
   const [isReadOnly , setIsReadOnly] = useState(true) 
   const { moderatedGroups } = useModeratedGroups()
 
-  useEffect( () => {
-    setIsReadOnly(!notesEnabled)
-  }, [isReadOnly, notesEnabled]) 
 
   const showNotificationInner = (msg) => {
     setNotificationInnerMessage(msg)
@@ -190,13 +187,13 @@ const HomeworkModal = ({
                   notificationInnerActive={notificationInnerActive}
                   setNotificationInnerActive={setNotificationInnerActive}
                 /> 
-                <button type="submit" className={`btn-${isReadOnly? 'cancel' : 'save'}`}>
+                <button type="submit" className={`btn-${notesEnabled? 'save': isReadOnly? 'cancel' : 'save'}`}>
                   сохранить
                 </button>
               </>
           ) : (
             <>
-              <button type="submit" className={`btn-${isReadOnly? 'cancel' : 'save'}`}>
+              <button type="submit" className={`btn-${notesEnabled? 'save': isReadOnly? 'cancel' : 'save'}`}>
                 сохранить
               </button>
               <button type="button" className="btn-cancel" onClick={handleCancel}>
