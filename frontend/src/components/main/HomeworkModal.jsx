@@ -50,7 +50,6 @@ const HomeworkModal = ({
 
   // срабатывает тогда когда модалка появляется
   useEffect(() => {
-    console.log('lessonInfo:',lessonInfo)
     if (dialog) {
       if (!homeworkUpdated) {
         setLastUpdate("")

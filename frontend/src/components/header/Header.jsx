@@ -52,6 +52,7 @@ const Header = () => {
 
 
   const handleBurgerButtonClick = () => {
+    fetchUser()
     if (linksActive) closeMenu() 
     else openMenu()
   }
