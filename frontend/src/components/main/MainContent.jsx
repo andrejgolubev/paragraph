@@ -27,10 +27,13 @@ const MainContent = () => {
     }
   }, [groupDataValue, setTipActive])
 
-
   const handleNotesIconClick = () => {
     setNotesEnabled(!notesEnabled)
-    showNotificationOuter(`Режим заметок ${!notesEnabled? 'включен' : 'отключен'}`, 'success', isMobile)
+    showNotificationOuter(
+      `Режим заметок ${!notesEnabled ? "включен" : "отключен"}`,
+      "success",
+      isMobile,
+    )
   }
 
   return (
@@ -55,10 +58,12 @@ const MainContent = () => {
             <p>C - Центральный корпус⠀⠀⠀⠀B - Бизнес-инкубатор</p>
             <p>L - Лабораторный корпус ⠀⠀⠀F - Первый корпус</p>
           </div>
-          <div className={`notes-toggle-container${isMobile ? ' mobile' : ''}`}>
+          <div
+            className={`notes-toggle-container${isMobile ? " mobile" : ""}${!tipActive ? " active" : ""}`}
+          >
             <img
               className="notes-toggle"
-              title='Режим заметок'
+              title="Режим заметок"
               onClick={handleNotesIconClick}
               src={
                 darkTheme

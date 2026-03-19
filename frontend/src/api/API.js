@@ -1,3 +1,4 @@
+import { useWindowSize } from "../hooks/useWindowSize"
 import { useUiStore } from "../store/uiStore"
 
 const BASE_URL =
@@ -8,6 +9,8 @@ const BASE_URL =
       : APP__API_HOST
 
 const headers = { "Content-Type": "application/json" }
+
+const isMobile = window.innerWidth < 1001 
 
 const fetchUrl = async (url, options = {}) => {
   try {
@@ -35,7 +38,7 @@ async function apiFetch(url, options = {}) {
   return responseData
 }
 
-export function showNotificationOuter(message, type, fromLeft = false) {
+export function showNotificationOuter(message, type, fromLeft = isMobile) {
   const {
     setNotificationOuterMessage,
     setNotificationOuterActive,

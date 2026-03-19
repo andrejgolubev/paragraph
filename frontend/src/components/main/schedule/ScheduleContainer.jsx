@@ -119,8 +119,6 @@ const ScheduleContainer = () => {
       .get(groupDataValue, scheduleDateDataValue, lessonIndex)
       .then((resp) => {
         const { homework_text, updated, username } = resp
-        console.log('FROM SCHEDULECONT resp :>> ', resp);
-        console.log('FROM SCHEDULECONT currentAPI :>> ', currentAPI);
         setHomeworkUpdated(updated)
         setHomeworkText(homework_text)
         setHomeworkAuthor(username)

@@ -1,14 +1,26 @@
+@mixin display-if-active {
+  &:not(.active) {
+    opacity: 0;
+  }
+
+  &.active {
+    opacity: 1;
+    transition: all 0.3s ease 0s;
+  }
+}
+
 .toggle,
 .toggle-bg {
   display: inline-block;
 }
 
 
-.toggle { 
+.toggle {
   position: relative;
   padding-bottom: 10px;
-  padding-inline: 8px; 
+  padding-inline: 8px;
   margin-top: 24px;
+
   &.mobile {
     top: 0;
     position: relative;
@@ -18,12 +30,12 @@
 
 
 #toggle-icon,
-#toggle-icon-dark { 
+#toggle-icon-dark {
   position: absolute;
   transition: all 0.3s ease 0s;
 }
 
-#toggle-icon{
+#toggle-icon {
   top: -4px;
   right: 23px;
 }
@@ -36,17 +48,21 @@
 #toggle-icon:hover {
   transform: translate3d(3px, 0, 20px) rotateY(20deg) perspective(500px);
 }
+
 #toggle-icon-dark:hover {
   transform: translate3d(-3px, 0, 20px) rotateY(20deg) perspective(500px);
 }
 
 
-.notes-toggle-container { 
+
+.notes-toggle-container {
   margin-left: auto;
   cursor: pointer;
+  @include display-if-active;
 
   img {
     transition: all 0.3s ease 0s;
+
     &:hover {
       filter: brightness(1.05);
       scale: 1.03;
@@ -60,4 +76,3 @@
     right: 4vw;
   }
 }
-

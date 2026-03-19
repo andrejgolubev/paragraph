@@ -33,7 +33,7 @@ const HomeworkModal = ({
   const { darkTheme, notesEnabled } = useThemeStore()
   const [isReadOnly , setIsReadOnly] = useState(true) 
   const { moderatedGroups } = useModeratedGroups()
-
+  const isMobile = width < 1001
 
   const showNotificationInner = (msg) => {
     setNotificationInnerMessage(msg)
@@ -50,7 +50,7 @@ const HomeworkModal = ({
 
   // срабатывает тогда когда модалка появляется
   useEffect(() => {
-    console.log(lessonInfo)
+    console.log('lessonInfo:',lessonInfo)
     if (dialog) {
       if (!homeworkUpdated) {
         setLastUpdate("")
@@ -59,7 +59,6 @@ const HomeworkModal = ({
         const hmwDate = convertDate(hmwUpdatedTime[0])
         const hmwTime = hmwUpdatedTime[1].slice(0, 5)
         
-        const lastUpdateText = 
         setLastUpdate(
           "последнее изменение: " + hmwDate + ", " + hmwTime + (
             homeworkAuthor 
@@ -124,7 +123,7 @@ const HomeworkModal = ({
         setShowDialog(false) // просто убираем компонент из ScheduleContainer
         setLastUpdate('')
         homeworkExistsMap[lessonIndex] = true
-        showNotificationOuter(resp.message , 'success')
+        showNotificationOuter(resp.message , 'success', isMobile)
       }
     })
   }
