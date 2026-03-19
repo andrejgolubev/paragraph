@@ -9,6 +9,7 @@ from datetime import datetime
 from ..schemas.homework import HomeworkRequest
 from ..utils.converters import latin_to_cyrillic, get_group_datavalue_by_group_number
 from .helpers import DvConverter
+from .tasks import TaskService
 
 router = APIRouter(tags=["Homework"], prefix="/homework")
 
@@ -26,15 +27,16 @@ async def save_homework(
     if not user.name:
         raise HTTPException(status_code=401, detail="пожалуйста, войдите в аккаунт")
 
-    if "admin" not in (role := user.role):
-        raise HTTPException(
-            status_code=403, detail="недостаточно прав для управления этим д/з."
-        )
-
     group_data_value = homework_request.group_data_value
     date_data_value = homework_request.date_data_value
     lesson_index = homework_request.lesson_index
     homework_text = homework_request.homework_text
+
+
+    if "admin" not in (role := user.role):
+        raise HTTPException(
+            status_code=403, detail="недостаточно прав для управления этим д/з."
+        )
 
     # проверка прав на редактирование
     moderated_group_numbers = [
@@ -89,6 +91,8 @@ async def save_homework(
                 Homework.group_id == group.id,
                 Homework.dates_id == date.id,
                 Homework.lesson_index == lesson_index,
+                Homework.is_note == False,
+                
             )
         )
         homework = hmw_result.first()
@@ -101,6 +105,7 @@ async def save_homework(
                 lesson_index=lesson_index,
                 homework_text=homework_text,
                 updated=datetime.now(),
+                is_note=False,
             )
             db.add(homework)
         else:
@@ -133,45 +138,17 @@ async def get_homework(
     Возвращает текст домашнего задания, время и автора для конкретной группы,
     даты и урока.
     """
-    try:
-        # аналогичная логика поиска связи и возврата homework
-        group_result = await db.scalars(
-            select(Group).where(Group.data_value == group_data_value)
-        )
-        group = group_result.first()
-
-        date_result = await db.scalars(
-            select(Date).where(Date.data_value == date_data_value)
-        )
-        date = date_result.first()
-
-        if not group or not date:
-            return {"detail": "Группа или дата не выбраны или не найдены"}
-
-        hmw_result = await db.scalars(
-            select(Homework)
-            .where(
-                Homework.group_id == group.id,
-                Homework.dates_id == date.id,
-                Homework.lesson_index == lesson_index,
-                Homework.is_note == False,
-            )
-            .options(selectinload(Homework.user))
-        )
-        homework = hmw_result.first()
-
-        return {
-            "homework_text": homework.homework_text if homework else "",
-            "updated": (homework.updated if homework else ""),
-            "username": homework.user.name,
-        }
-
-    except Exception:
-        return {"homework_text": ""}
+    return await TaskService().get_task(
+        db, 
+        group_data_value,
+        date_data_value,
+        lesson_index,
+        is_note=False
+    )
 
 
-@router.get("/get-all")
-async def get_all_homeworks_for_schedule(
+@router.get("/presence")
+async def get_all_homework_indexes(
     group_data_value: str,
     date_data_value: str,
     db: AsyncSession = Depends(get_db),
@@ -180,35 +157,12 @@ async def get_all_homeworks_for_schedule(
     Возвращает словарь с индексами домашек и булевыми ключами,
     отвечающими за наличие/отсутствие домашки
     """
-    try:
-        group_result = await db.scalars(
-            select(Group).where(Group.data_value == group_data_value)
-        )
-        group = group_result.first()
-
-        date_result = await db.scalars(
-            select(Date).where(Date.data_value == date_data_value)
-        )
-        date = date_result.first()
-
-        if not group or not date:
-            return {"detail": "Группа или дата не выбраны или не найдены"}
-
-        hmw_result = (
-            await db.scalars(
-                select(Homework).where(
-                    Homework.group_id == group.id,
-                    Homework.dates_id == date.id,
-                )
-            )
-        ).all()
-
-        return {
-            hmw.lesson_index: bool(hmw.homework_text) for hmw in hmw_result  
-        }
-
-    except Exception:
-        return {}
+    return await TaskService().get_all_task_indexes(
+        db, 
+        group_data_value, 
+        date_data_value, 
+        is_note=False
+    )
 
 
 @router.get("/convert")

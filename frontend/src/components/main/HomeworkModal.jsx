@@ -50,6 +50,7 @@ const HomeworkModal = ({
 
   // срабатывает тогда когда модалка появляется
   useEffect(() => {
+    console.log(lessonInfo)
     if (dialog) {
       if (!homeworkUpdated) {
         setLastUpdate("")
@@ -57,10 +58,15 @@ const HomeworkModal = ({
         const hmwUpdatedTime = homeworkUpdated.split("T")
         const hmwDate = convertDate(hmwUpdatedTime[0])
         const hmwTime = hmwUpdatedTime[1].slice(0, 5)
-
+        
+        const lastUpdateText = 
         setLastUpdate(
-          "последнее изменение: " + hmwDate + ", " + hmwTime + 
-          ` (изменено: ${homeworkAuthor})`
+          "последнее изменение: " + hmwDate + ", " + hmwTime + (
+            homeworkAuthor 
+            ? ` (изменено: ${homeworkAuthor})`
+            : ' (Заметка)'
+            
+          )
         )
       }
       dialog.showModal() // используем нативный метод
@@ -102,8 +108,9 @@ const HomeworkModal = ({
   const handleHomeworkSubmit = (event) => {
     event.preventDefault()
     const homeworkTextClean = inputValue.trim()
-
-    API.saveHomework(
+    const currentAPI = notesEnabled? API.notes : API.homework 
+    
+    currentAPI.save(
       groupDataValue,
       dateDataValue,
       lessonIndex,

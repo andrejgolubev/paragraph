@@ -85,8 +85,9 @@ const ScheduleContainer = () => {
   const loadAllHomeworkStatus = async (scheduleData) => {
     setHomeworkExistsMap({}) // обнуляем при загрузке изначально, чтобы не было ложных подсвечиваний
     if (!scheduleData) return
-    
-    const homeworksMap = await API.getHomeworksMap(
+    const currentAPI = notesEnabled ? API.notes : API.homework
+
+    const homeworksMap = await currentAPI.getPresence(
       groupDataValue,
       scheduleDateDataValue,
     ) 
@@ -112,10 +113,14 @@ const ScheduleContainer = () => {
       lessonName,
     } = lessInfo
 
-    API
-      .getHomework(groupDataValue, scheduleDateDataValue, lessonIndex)
+    const currentAPI = notesEnabled? API.notes : API.homework 
+    
+    currentAPI
+      .get(groupDataValue, scheduleDateDataValue, lessonIndex)
       .then((resp) => {
         const { homework_text, updated, username } = resp
+        console.log('FROM SCHEDULECONT resp :>> ', resp);
+        console.log('FROM SCHEDULECONT currentAPI :>> ', currentAPI);
         setHomeworkUpdated(updated)
         setHomeworkText(homework_text)
         setHomeworkAuthor(username)

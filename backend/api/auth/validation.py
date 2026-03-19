@@ -82,7 +82,7 @@ async def get_current_auth_user(
 
     if not user.active: 
         raise HTTPException(status_code=403, detail='Отсутствуют необходимые права')
-
+    
     
     return user
     

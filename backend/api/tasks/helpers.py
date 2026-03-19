@@ -1,10 +1,12 @@
-from fastapi import HTTPException
+from fastapi import Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.api.db.models import Date, Group
+from backend.api.db.database import get_db
+from backend.api.db.models import Date, Group, Homework
 
-class DvConverter: 
+
+class DvConverter:
     async def convert_to_datavalue(
         self,
         db: AsyncSession,
@@ -35,7 +37,6 @@ class DvConverter:
             "group_data_value": db_group.data_value if db_group else "",
         }
 
-
     async def convert_from_datavalue(
         self,
         db: AsyncSession,
@@ -61,3 +62,6 @@ class DvConverter:
             "date": db_date.date if db_date else "",
             "group_number": db_group.group_number if db_group else "",
         }
+
+
+
