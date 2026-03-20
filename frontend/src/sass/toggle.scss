@@ -4,7 +4,7 @@
   }
 
   &.active {
-    opacity: 1;
+    opacity: 0.95;
     transition: all 0.3s ease 0s;
   }
 }
@@ -73,6 +73,6 @@
     position: fixed;
     scale: 1.2;
     bottom: 4vh;
-    right: 4vw;
+    right: 5vw;
   }
 }
