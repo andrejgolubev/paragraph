@@ -313,5 +313,5 @@ def auth_user_check_self_info(
         "username": user.name,
         "email": user.email,
         "role": user.role,
-        "group": user.group.group_number,
+        "group": user.group.group_number if user.group else None,
     }

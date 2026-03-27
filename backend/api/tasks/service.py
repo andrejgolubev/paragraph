@@ -89,16 +89,15 @@ class TaskService:
                 )
 
             # находим или создаем связь
-            hmw_result = await db.scalars(
-                select(Homework).where(
-                    Homework.group_id == group.id,
-                    Homework.dates_id == date.id,
-                    Homework.user_id == current_user.id,
-                    Homework.lesson_index == lesson_index,
-                    Homework.is_note == is_note,
-                )
+            stmt = select(Homework).where(
+                Homework.group_id == group.id,
+                Homework.dates_id == date.id,
+                Homework.lesson_index == lesson_index,
+                Homework.is_note == is_note,
             )
-            homework = hmw_result.first()
+            if is_note:
+                stmt = stmt.where(Homework.user_id == current_user.id)
+            homework = (await db.scalars(stmt)).first()
 
             if not homework:
                 homework = Homework(
@@ -121,14 +120,15 @@ class TaskService:
             return {
                 "status": "ok",
                 "detail": "saved",
-                "message": "Заметка добавлена" if is_note else "Домашнее задание сохранено" ,
+                "message": (
+                    "Заметка добавлена" if is_note else "Домашнее задание сохранено"
+                ),
                 "username": current_user.name,
             }
 
         except Exception:
             await db.rollback()
             raise HTTPException(status_code=500, detail="Ошибка сохранения.")
-
 
     async def get_task(
         self,
