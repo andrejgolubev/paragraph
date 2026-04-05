@@ -24,7 +24,8 @@ const ScheduleContainer = () => {
   const [homeworkAuthor, setHomeworkAuthor] = useState('')
   const [year, setYear] = useState(new Date().getFullYear())
   const [currentLessonInfo, setCurrentLessonInfo] = useState({})
-  const [mobileLesson, setMobileLesson] = useState((new Date().getDay()-1)%6)
+  const currentMobileLesson = (new Date().getDay() - 1) % 6
+  const [mobileLesson, setMobileLesson] = useState(currentMobileLesson >= 0 ? currentMobileLesson : 0)
   const windowSize = useWindowSize()
   const [debouncedWidth, setDebouncedWidth] = useState(windowSize.width)
   const widthDebounceRef = useRef(null)
@@ -343,8 +344,7 @@ const ScheduleContainer = () => {
 
     const renderMobileItem = (weekDayIndex) => {
       const datesArr = scheduleData.days.map((day) => day.date)
-
-      const mobileItem = daysArr[weekDayIndex].lessons.map(({lesson, lessonId, start, end }) => (
+      const mobileItem = daysArr[weekDayIndex]?.lessons.map(({lesson, lessonId, start, end }) => (
       <MobileItem 
         time={`${start}-${end}`} 
         texts={lesson?.map(sublesson => (sublesson.text))} 

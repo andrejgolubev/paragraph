@@ -10,7 +10,7 @@
 Там находятся удобные шорткаты, среди которых команда для запуска backend'а по 
 https. 
 Для этого нужен mkcert: 
-https://github.com/FiloSottile/mkcert , сертификаты от mkcert положите в директорию `certs` в корне   
+https://github.com/FiloSottile/mkcert , сертификаты от mkcert положите в директорию `./certs` и `./frontend/certs` 
 Затем вы запускате `make up-lite`, `make run-backend`, `make run-frontend`,
 именно в таком порядке. 
 
