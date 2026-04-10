@@ -168,8 +168,6 @@
       padding: 3px 0px
     }
 
-
-
     &:first-child {
       text-align: left;
       font-weight: bold;
@@ -182,7 +180,6 @@
   }
 
   tbody {
-
     tr {
       border-bottom: 1px solid #dddddd;
       transform: translateX(-30px);
@@ -223,7 +220,7 @@
     cursor: pointer;
 
     &.active img {
-      filter: sepia(1);
+      @include paperclip-hover;
     }
 
     img {

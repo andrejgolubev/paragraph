@@ -114,8 +114,14 @@ const ScheduleContainer = () => {
       lessonName,
     } = lessInfo
 
+    const resetHmwData = () => {
+      setHomeworkUpdated('')
+      setHomeworkAuthor('')
+      setHomeworkText('')
+    }
+
     const currentAPI = notesEnabled? API.notes : API.homework 
-    
+    resetHmwData()
     currentAPI
       .get(groupDataValue, scheduleDateDataValue, lessonIndex)
       .then((resp) => {
@@ -124,7 +130,7 @@ const ScheduleContainer = () => {
         setHomeworkText(homework_text)
         setHomeworkAuthor(username)
       }).catch( (error) => {
-        setHomeworkText('')
+        resetHmwData()
         showNotificationOuter(error.message, 'error')
       }
       )

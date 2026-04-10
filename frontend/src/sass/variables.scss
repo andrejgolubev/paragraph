@@ -34,3 +34,7 @@ $dark7: #1d1d20;
 
 $body-top: #111113;
 $body-bottom: #18181c;
+
+@mixin paperclip-hover {
+  filter: hue-rotate(65deg);
+}

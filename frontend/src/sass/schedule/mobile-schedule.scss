@@ -110,7 +110,7 @@
             }
 
             &.active &__time img {
-                filter: sepia(3); // 42
+                @include paperclip-hover;
             }
 
             &__time {

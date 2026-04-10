@@ -71,9 +71,7 @@ const HomeworkModal = ({
       return () => {
         dialog.close()
         setIsReadOnly(true)
-        // eslint-disable-next-line react-hooks/exhaustive-deps 
-        homeworkText = ""
-        // игнорим линтер т.к. homeworkText не надо хранить при ре-рендерах
+        setInputValue('')
       }
     }
   }, [dialog, homeworkUpdated])
