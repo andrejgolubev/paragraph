@@ -30,8 +30,9 @@ const ScheduleContainer = () => {
   const [debouncedWidth, setDebouncedWidth] = useState(windowSize.width)
   const widthDebounceRef = useRef(null)
   const isMobile = debouncedWidth < 1001
-
   const [homeworkExistsMap, setHomeworkExistsMap] = useState({})
+  
+  const weekdays = ["Пн","Вт","Ср","Чт","Пт","Сб"]
 
   useEffect(() => {
     if (widthDebounceRef.current) {
@@ -119,7 +120,7 @@ const ScheduleContainer = () => {
       setHomeworkAuthor('')
       setHomeworkText('')
     }
-
+    
     const currentAPI = notesEnabled? API.notes : API.homework 
     resetHmwData()
     currentAPI
@@ -333,11 +334,12 @@ const ScheduleContainer = () => {
     )
   }
 
+  
+
   // рендер мобильного расписания
   const renderMobileSchedule = (scheduleData) => {
     if (!scheduleData) return null 
 
-    const weekdays = ["Пн","Вт","Ср","Чт","Пт","Сб"]
     const daysArr = weekdays.map((day, dayIndex) => (
       {day,
       lessons: scheduleData.schedule.map(({lessons, time_start, time_end}, slotIndex) => ({
@@ -416,24 +418,14 @@ const ScheduleContainer = () => {
         <>
         <div className="mobile-schedule loading">
           <div className="mobile-schedule__header">
-            <button className="mobile-schedule__header__button">
-              Пн
-            </button>
-            <button className="mobile-schedule__header__button">
-              Вт
-            </button>
-            <button className="mobile-schedule__header__button">
-              Ср
-            </button>
-            <button className="mobile-schedule__header__button">
-              Чт
-            </button>
-            <button className="mobile-schedule__header__button">
-              Пт
-            </button>
-            <button className="mobile-schedule__header__button">
-              Сб
-            </button>
+            {weekdays.map((weekday, index) => (
+              <Button
+                isActive={index === mobileLesson}
+                onClick={() => setMobileLesson(index)}
+              >
+                {weekday}
+              </Button>
+            ))}
           </div>
           <div className="mobile-schedule__loading-wrap">
             <div className="loading-indicator mobile">
