@@ -15,6 +15,11 @@ jobs:
 
 
     steps:
+      - name: Add VPS to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H -p "${SSH_PORT:-22}" "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
       - name: Load SSH key
         uses: webfactory/ssh-agent@v0.6.0
         with:
@@ -22,7 +27,7 @@ jobs:
 
       - name: Git pull on VPS
         run: |
-          SSH_OPTS=(-o StrictHostKeyChecking=no)
+          SSH_OPTS=()
           if [ -n "$SSH_PORT" ]; then
             SSH_OPTS+=(-p "$SSH_PORT")
           fi
